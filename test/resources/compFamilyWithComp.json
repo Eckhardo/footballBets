@@ -1,0 +1,14 @@
+{
+  "name": "2. Bundesliga",
+  "description": "DFL 2. Bundesliga",
+  "hasLigaModus": true,
+  "hasClubs": true,
+  "competitions": [
+    {
+      "name": "Saison 2025/26",
+      "description": "Beschreibung des Wettbewerbs",
+      "winMultiplicator": 3,
+      "remisMultiplicator": 1
+    }
+  ]
+}

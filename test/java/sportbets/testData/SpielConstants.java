@@ -1,0 +1,42 @@
+package sportbets.testData;
+
+import sportbets.persistence.entity.Spiel;
+import sportbets.persistence.entity.Spieltag;
+import sportbets.persistence.entity.Team;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+public class SpielConstants {
+    public static List<Spiel> SPIELE = new ArrayList<>();
+
+    public static List<Spiel> getSpieleHinrunde(List<Spieltag> spieltage, Team heim, Team gast) {
+        SPIELE.clear();
+        for (int i = 0; i < spieltage.size(); i++) {
+
+            final Spieltag sp = spieltage.get(i);
+            for (int j = 1; j <= 9; j++) {
+
+                SPIELE.add(new Spiel(sp, j, new Date(),
+                        heim, gast));
+            }
+        }
+        return SPIELE;
+    }
+
+    public static List<Spiel> getSpieleRückrunde(List<Spieltag> spieltage, Team heim, Team gast) {
+        SPIELE.clear();
+        for (int i = 0; i < spieltage.size(); i++) {
+
+            Spieltag sp = spieltage.get(i);
+            for (int j = 1; j <= 9; j++) {
+
+                SPIELE.add(new Spiel(sp, j, new Date(),
+                        heim, gast));
+            }
+        }
+        return SPIELE;
+    }
+}
+

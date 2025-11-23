@@ -1,0 +1,147 @@
+package sportbets.persistence.repository;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.junit4.SpringRunner;
+import sportbets.persistence.entity.*;
+import sportbets.testData.CompetitionConstants;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Predicate;
+
+
+import static org.junit.jupiter.api.Assertions.*;
+
+
+@DataJpaTest
+
+@RunWith(SpringRunner.class)
+//@Transactional(propagation = Propagation.NOT_SUPPORTED)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+public class CompetitionTeamRepositoryTest {
+
+    private CompetitionFamily testFamily;
+    private Competition testComp;
+
+
+    private CompetitionRound testRound;
+    private Spieltag testSpieltag;
+    private Spieltag testSpieltag2;
+
+    @Autowired
+    private CompetitionFamilyRepository familyRepo;
+    @Autowired
+    private CompetitionRepository compRepo;
+    @Autowired
+    private CompetitionTeamRepository compTeamRepo;
+    @Autowired
+    private CompetitionRoundRepository compRoundRepo;
+
+    @Autowired
+    private SpieltagRepository spieltagRepo;
+    @Autowired
+    private SpielRepository spielRepo;
+
+    @Autowired
+    private TeamRepository teamRepo;
+
+    @Before
+    public void setUp() {
+        // Initialize test data before test methods
+
+        testFamily =new CompetitionFamily("2. Bundesliga","1. Deutsche Fussball Bundesliga",true,true);
+        testComp = new Competition("Saison 2005/26","2. Deutsche Fussball Bundesliga Saison 2025/26",3,1, testFamily);
+        testRound = new CompetitionRound(1, "Vorrunde", testComp, false);
+        testSpieltag= new Spieltag(1,new Date(),testRound);
+        testSpieltag2= new Spieltag(2,new Date(),testRound);
+        System.out.println("Save all cascade");
+        familyRepo.save(testFamily);
+        Team team1 = new Team("Test1", "1");
+        Team team2 = new Team("Test2", "2");
+        Team team3 = new Team("Test3", "3");
+        Team team4 = new Team("Test4", "4");
+        teamRepo.save(team1);
+        teamRepo.save(team2);
+        teamRepo.save(team3);
+        teamRepo.save(team4);
+
+        //  testGroup = new CompetitionGroup("Gruppe A", 1, testRound);
+
+        compTeamRepo.saveAll(List.of(new CompetitionTeam(team1, testComp),
+                new CompetitionTeam(team2, testComp),
+                new CompetitionTeam(team3, testComp),
+                new CompetitionTeam(team4, testComp)));
+
+
+
+
+
+        System.out.println("Save all cascade");
+
+        //  competitionDAO.save(testComp);
+    }
+
+    @After
+    public void tearDown() {
+
+
+        //     familyRepo.deleteAll();
+    }
+
+    @Test
+    public void givenFamily_whenFindByNameCalled_thenGroupsAreFound() {
+        CompetitionFamily foundFamily = familyRepo.findByName("1. Bundesliga").orElse(null);
+
+        assertNotNull(foundFamily);
+        assertEquals("1. Bundesliga", foundFamily.getName());
+        assertNotNull(foundFamily.getCompetitions());
+        Set<Competition> comps = foundFamily.getCompetitions();
+        for (Competition comp : comps) {
+            Set<CompetitionTeam> compTeams = comp.getCompetitionTeams();
+
+            compTeams.forEach(System.out::println);
+
+
+        }
+    }
+
+    @Test
+    public void whenFindByNameCalled_thenGroupsAreFound() {
+
+        // given
+        Predicate<CompetitionTeam> p1 = g -> g.getTeam().getAcronym().equals("1");
+        Predicate<CompetitionTeam> p2 = g -> g.getTeam().getAcronym().equals("2");
+        Predicate<CompetitionTeam> p3 = g -> g.getTeam().getAcronym().equals("5");
+
+        // when
+        List<CompetitionTeam> found = compTeamRepo.findAll();
+
+        // then
+        assertNotNull(found);
+        assertTrue(found.stream().anyMatch(p1));
+        assertTrue(found.stream().anyMatch(p2));
+        assertTrue(found.stream().noneMatch(p3));
+
+        Competition comp = compRepo.findByNameWithFamily(CompetitionConstants.BUNDESLIGA2_NAME_2025,testFamily.getId());
+        assertNotNull(comp);
+        System.out.println("Found competition name: " + comp.getName());
+        //  comp.getCompetitionTeams().forEach(System.out::println);
+
+        Optional<Spieltag> spieltag = spieltagRepo.findById(1L);
+
+        if (spieltag.isPresent()) {
+            System.out.println("spieltag: " + spieltag.get());
+            //  spieltag.get().getSpiele().forEach(System.out::println);
+        } else {
+            System.out.println("NO spieltag: ");
+        }
+    }
+}

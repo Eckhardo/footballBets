@@ -1,0 +1,30 @@
+package sportbets.testData;
+
+import sportbets.persistence.entity.CompetitionRound;
+import sportbets.persistence.entity.Spieltag;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+
+public class SpieltagConstants {
+    public static List<Spieltag> SPIELTAGE = new ArrayList<>();
+
+    public static List<Spieltag> getSpieltageHinrunde(CompetitionRound round) {
+        SPIELTAGE.clear();
+        for (int i = 1; i <= 17; i++) {
+
+            SPIELTAGE.add(new Spieltag(i, new Date(), round));
+        }
+        return SPIELTAGE;
+    }
+        public static List<Spieltag> getSpieltageRueckrunde(CompetitionRound round) {
+        SPIELTAGE.clear();
+        for (int j = 18; j <= 34; j++) {
+
+            SPIELTAGE.add(new Spieltag(j, new Date(), round));
+        }
+        return SPIELTAGE;
+    }
+}
