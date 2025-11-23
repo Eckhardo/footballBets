@@ -1,0 +1,147 @@
+package sportbets.persistence.entity;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+
+@Entity
+public class CompetitionRound {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(nullable = false)
+    private String name;
+
+    private boolean hasGroups=false;
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fk_comp_id")
+    @NotNull
+    private Competition competition;
+
+
+    @OneToMany(mappedBy = "competitionRound", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    private  Set<CompetitionGroup> competitionGroups = new HashSet<>();
+
+    @OneToMany(mappedBy = "competitionRound", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    private Set<Spieltag> spieltage=new HashSet<>();
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false)
+    private Date createdOn=new Date();
+
+    private int roundNumber;
+
+    public CompetitionRound() {
+
+    }
+
+//-------------- Constructor----------------------
+    /**
+     * Simple properties constructor.
+     */
+
+    public CompetitionRound(int roundNumber,String name, Competition competition,boolean hasGroups) {
+        this.roundNumber=roundNumber;
+        this.name = name;
+        this.competition=competition;
+        this.hasGroups=hasGroups;
+
+        // guarantee ref integrity
+        competition.addCompetitionRound(this);
+    }
+//-------- Getter & Setter-------------------
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Competition getCompetition() {
+        return competition;
+    }
+
+    public void setCompetition(Competition competition) {
+        this.competition = competition;
+    }
+
+    public Set<CompetitionGroup> getCompetitionGroups() {
+        return competitionGroups;
+    }
+
+    public void addCompetitionGroup(CompetitionGroup group) {
+        if (group == null)
+            throw new IllegalArgumentException("Can't add a null group.");
+        this.getCompetitionGroups().add(group);
+    }
+
+    public Set<Spieltag> getSpieltage() {
+        return spieltage;
+    }
+    public void addSpieltag(Spieltag spieltag) {
+        if (spieltage == null)
+            throw new IllegalArgumentException("Can't add a null spielt.");
+        this.getSpieltage().add(spieltag);
+    }
+
+
+    public boolean isHasGroups() {
+        return hasGroups;
+    }
+
+    public void setHasGroups(boolean hasGroups) {
+        this.hasGroups = hasGroups;
+    }
+
+    public Date getCreatedOn() {
+        return createdOn;
+    }
+
+    public int getRoundNumber() {
+        return roundNumber;
+    }
+
+    public void setRoundNumber(int roundNumber) {
+        this.roundNumber = roundNumber;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        CompetitionRound that = (CompetitionRound) o;
+        return id == that.id && hasGroups == that.hasGroups && roundNumber == that.roundNumber && Objects.equals(name, that.name) && Objects.equals(createdOn, that.createdOn);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, hasGroups, createdOn, roundNumber);
+    }
+
+    @Override
+    public String toString() {
+        return "CompetitionRound{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", hasGroups=" + hasGroups +
+                ", competition=" + competition +
+                ", createdOn=" + createdOn +
+                ", roundNumber=" + roundNumber +
+                '}';
+    }
+}
