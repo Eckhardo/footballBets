@@ -11,30 +11,30 @@ import sportbets.persistence.entity.CompetitionFamily;
 
 import java.util.Objects;
 
-public record CompDto(
+public record CompDtoOLD(
 
-        @NotNull(groups = {CompDto.CompUpdateValidationData.class},
-                message = "User id can't be null")
+        @NotNull(groups = {CompDtoOLD.CompUpdateValidationData.class},
+                message = "Competition id can't be null")
         Long id,
 
-        @NotBlank(groups = {CompDto.CompUpdateValidationData.class, Default.class},
+        @NotBlank(groups = {CompDtoOLD.CompUpdateValidationData.class, Default.class},
                 message = "name can't be blank")
         String name,
         @NotNull(groups = { CompUpdateValidationData.class, Default.class },
                 message = "familyId can't be null")
         Long compFamilyId,
 
-        @Size(groups = {CompDto.CompUpdateValidationData.class, Default.class},
+        @Size(groups = {CompDtoOLD.CompUpdateValidationData.class, Default.class},
                 min = 10, max = 50,
                 message = "description must be between 10 and 50 characters long")
         String description,
         int winMultiplicator,
         int remisMultiplicator
         ) {
-    private static final Logger log = LoggerFactory.getLogger(CompDto.class); // @formatter:on
+    private static final Logger log = LoggerFactory.getLogger(CompDtoOLD.class); // @formatter:on
 
     public static class Mapper {
-        public static Competition toModel(CompDto dto) {
+        public static Competition toModel(CompDtoOLD dto) {
             if (dto == null)
                 return null;
             log.info("Mapping competitionDTO to competition");
@@ -49,10 +49,10 @@ public record CompDto(
             return model;
         }
 
-        public static CompDto toDto(Competition model) {
+        public static CompDtoOLD toDto(Competition model) {
             if (model == null)
                 return null;
-            CompDto dto = new CompDto(model.getId(), model.getName(), model.getCompetitionFamily().getId(), model.getDescription(), model.getWinMultiplicator(), model.getRemisMultiplicator());
+            CompDtoOLD dto = new CompDtoOLD(model.getId(), model.getName(), model.getCompetitionFamily().getId(), model.getDescription(), model.getWinMultiplicator(), model.getRemisMultiplicator());
             return dto;
         }
     }

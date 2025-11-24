@@ -1,7 +1,6 @@
 package sportbets.web.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.groups.Default;
 import org.slf4j.Logger;
@@ -13,7 +12,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public record CompFamilyDto(
+public record CompFamilyDtoOLD(
 
         Long id,
 
@@ -27,12 +26,12 @@ public record CompFamilyDto(
         String description,
         boolean hasLigaModus,
         boolean hasClubs,
-        Set<CompDto> competitions
+        Set<CompDtoOLD> competitions
 ) {
-    private static final Logger log = LoggerFactory.getLogger(CompFamilyDto.class); // @formatter:on
+    private static final Logger log = LoggerFactory.getLogger(CompFamilyDtoOLD.class); // @formatter:on
 
     public static class Mapper {
-        public static CompetitionFamily toModel(CompFamilyDto dto,Long id) {
+        public static CompetitionFamily toModel(CompFamilyDtoOLD dto, Long id) {
 
             if (dto == null)
                 return null;
@@ -49,15 +48,15 @@ public record CompFamilyDto(
             return model;
         }
 
-        public static CompFamilyDto toDto(CompetitionFamily model) {
+        public static CompFamilyDtoOLD toDto(CompetitionFamily model) {
             if (model == null)
                 return null;
-            Set<CompDto> competitions = model.getCompetitions()
+            Set<CompDtoOLD> competitions = model.getCompetitions()
                     .stream()
-                    .map(CompDto.Mapper::toDto)
+                    .map(CompDtoOLD.Mapper::toDto)
                     .collect(Collectors.toSet());
 
-            CompFamilyDto dto = new CompFamilyDto(model.getId(), model.getName(), model.getDescription(), model.isHasLigaModus(), model.isHasClubs(), competitions);
+            CompFamilyDtoOLD dto = new CompFamilyDtoOLD(model.getId(), model.getName(), model.getDescription(), model.isHasLigaModus(), model.isHasClubs(), competitions);
            log.info("RETURN:: " +dto);
             return dto;
         }

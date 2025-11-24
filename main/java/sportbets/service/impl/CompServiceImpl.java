@@ -1,15 +1,20 @@
 package sportbets.service.impl;
 
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sportbets.persistence.entity.Competition;
 import sportbets.persistence.repository.CompetitionRepository;
 import sportbets.service.CompService;
 
+import java.util.List;
 import java.util.Optional;
 @Service
 public class CompServiceImpl implements CompService {
 
     private CompetitionRepository compRepository;
+    @Autowired
+    private ModelMapper modelMapper;
 
     public CompServiceImpl(CompetitionRepository compRepository) {
         this.compRepository = compRepository;
@@ -31,6 +36,16 @@ public class CompServiceImpl implements CompService {
         return compRepository.findById(id)
                 .map(base -> updateFields(base, comp))
                 .map(compRepository::save);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        compRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Competition> getAll() {
+        return compRepository.findAll();
     }
 
     private Competition updateFields(Competition base, Competition updatedComp) {

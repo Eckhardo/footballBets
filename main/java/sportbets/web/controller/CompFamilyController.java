@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import sportbets.persistence.entity.CompetitionFamily;
 import sportbets.service.CompFamilyService;
-import sportbets.web.dto.CompFamilyDto;
+import sportbets.web.dto.CompFamilyDtoOLD;
 
 @RestController
 public class CompFamilyController {
@@ -23,31 +23,31 @@ public class CompFamilyController {
     }
 
     @GetMapping("/families/{id}")
-    public CompFamilyDto findOne(@PathVariable Long id) {
-        System.out.println("CompFamilyController.findOne");
+    public CompFamilyDtoOLD findOne(@PathVariable Long id) {
+
         CompetitionFamily model = compFamilyService.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        return CompFamilyDto.Mapper.toDto(model);
+        return CompFamilyDtoOLD.Mapper.toDto(model);
     }
 
     @PostMapping("/families")
     @ResponseStatus(HttpStatus.CREATED)
-    public CompFamilyDto post(@RequestBody @Valid  CompFamilyDto newFam) {
+    public CompFamilyDtoOLD post(@RequestBody @Valid CompFamilyDtoOLD newFam) {
       log.info("CompFamilyController.create::" +newFam.toString());
-        CompetitionFamily model = CompFamilyDto.Mapper.toModel(newFam,null);
+        CompetitionFamily model = CompFamilyDtoOLD.Mapper.toModel(newFam,null);
         log.info("CompFamilyController.post::" +model.toString());
         CompetitionFamily createdModel = this.compFamilyService.save(model);
-        return CompFamilyDto.Mapper.toDto(createdModel);
+        return CompFamilyDtoOLD.Mapper.toDto(createdModel);
     }
 
     @PutMapping(value = "/families/{id}")
-    public CompFamilyDto update(@PathVariable Long id, @RequestBody @Validated(CompFamilyDto.CompFamilyUpdateValidationData.class) CompFamilyDto familyDto) {
+    public CompFamilyDtoOLD update(@PathVariable Long id, @RequestBody @Validated(CompFamilyDtoOLD.CompFamilyUpdateValidationData.class) CompFamilyDtoOLD familyDto) {
        // CompetitionFamily model = compFamilyService.findById(id) .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));;
         log.info("CompFamilyController.update::" +familyDto.toString());
-        CompetitionFamily model = CompFamilyDto.Mapper.toModel(familyDto,id);
+        CompetitionFamily model = CompFamilyDtoOLD.Mapper.toModel(familyDto,id);
         CompetitionFamily createdModel = this.compFamilyService.updateFamily(id, model)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        return CompFamilyDto.Mapper.toDto(createdModel);
+        return CompFamilyDtoOLD.Mapper.toDto(createdModel);
     }
 
     @DeleteMapping(value = "/families/{id}")

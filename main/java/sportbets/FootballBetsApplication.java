@@ -1,5 +1,6 @@
 package sportbets;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -13,6 +14,10 @@ public class FootballBetsApplication {
     public static void main(String[] args) {
 
         SpringApplication.run(FootballBetsApplication.class, args);
+    }
+    @Bean
+    public ModelMapper getModelMapper() {
+        return new ModelMapper();
     }
 
     @Autowired

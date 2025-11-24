@@ -11,7 +11,6 @@ import java.util.Optional;
 public interface CompetitionFamilyRepository extends JpaRepository<CompetitionFamily, Long> {
 
     Optional<CompetitionFamily> findByName(String name);
-
     @Query("select  ct.team from CompetitionTeam ct join  ct.competition c join c.competitionFamily cf "
             + " where cf.id =:id"
             + " order by ct.team.name asc")

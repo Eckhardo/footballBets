@@ -13,6 +13,9 @@ public class CompetitionRound {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private int roundNumber;
+
     @Column(nullable = false)
     private String name;
 
@@ -35,7 +38,6 @@ public class CompetitionRound {
     @Column(nullable = false)
     private Date createdOn=new Date();
 
-    private int roundNumber;
 
     public CompetitionRound() {
 

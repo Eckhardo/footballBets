@@ -3,9 +3,14 @@ package sportbets.persistence.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import sportbets.persistence.entity.Competition;
+import sportbets.persistence.entity.CompetitionFamily;
 import sportbets.persistence.rowObject.CompRecord;
 
+import java.util.Optional;
+
 public interface CompetitionRepository extends JpaRepository<Competition, Long> {
+    Optional<Competition> findByName(String name);
+
     @Query("select  c from Competition c join fetch  c.competitionFamily cf"
             + " where c.name =:name"
             + " and cf.id=:id"
