@@ -46,12 +46,15 @@ public class SpieltagRepositoryTest {
     @Before
     public void setUp() {
         // Initialize test data before test methods
-        testFamily =new CompetitionFamily("2. Bundesliga","1. Deutsche Fussball Bundesliga",true,true);
-        testComp = new Competition("Saison 2005/26","2. Deutsche Fussball Bundesliga Saison 2025/26",3,1, testFamily);
+        testFamily = new CompetitionFamily("2. Bundesliga", "1. Deutsche Fussball Bundesliga", true, true);
+        testComp = new Competition("Saison 2005/26", "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
+        testFamily.addCompetition(testComp);
         testRound = new CompetitionRound(1, "Vorrunde", testComp, false);
-        testSpieltag= new Spieltag(1,new Date(),testRound);
-        testSpieltag2= new Spieltag(2,new Date(),testRound);
-
+        testComp.addCompetitionRound(testRound);
+        testSpieltag = new Spieltag(1, new Date(), testRound);
+        testSpieltag2 = new Spieltag(2, new Date(), testRound);
+        testRound.addSpieltag(testSpieltag);
+        testRound.addSpieltag(testSpieltag2);
         System.out.println("Save all cascade");
         familyRepo.save(testFamily);
         //  competitionDAO.save(testComp);
@@ -79,11 +82,12 @@ public class SpieltagRepositoryTest {
             }
         }
     }
+
     @Test
     public void whenFindByNameCalled_thenGroupsAreFound() {
         // given
-        Predicate<Spieltag> p1 = g -> g.getSpieltagNumber()==1;
-        Predicate<Spieltag> p2 = g -> g.getSpieltagNumber()==100;
+        Predicate<Spieltag> p1 = g -> g.getSpieltagNumber() == 1;
+        Predicate<Spieltag> p2 = g -> g.getSpieltagNumber() == 100;
 
         // when
         List<Spieltag> spieltage = spieltagRepo.findAll();
@@ -91,7 +95,7 @@ public class SpieltagRepositoryTest {
         assertNotNull(spieltage);
         assertTrue(spieltage.stream().anyMatch(p1));
         assertTrue(spieltage.stream().noneMatch(p2));
-         spieltage.forEach(System.out::println);
+        spieltage.forEach(System.out::println);
 
         // then
 

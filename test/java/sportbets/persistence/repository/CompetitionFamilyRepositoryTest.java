@@ -32,7 +32,7 @@ public class CompetitionFamilyRepositoryTest {
     @Before
     public void setUp() {
         // Initialize test data before each test method
-        testFamily =new CompetitionFamily("2. Bundesliga","2. Deutsche Fussball Bundesliga",true,true);
+        testFamily = new CompetitionFamily("2. Bundesliga", "2. Deutsche Fussball Bundesliga", true, true);
 
         familyRepo.save(testFamily);
     }
@@ -42,6 +42,7 @@ public class CompetitionFamilyRepositoryTest {
         // Release test data after each test method
         familyRepo.delete(testFamily);
     }
+
     @Test
     public void whenFindAll_thenCheckWithAllAnyMatchers() {
         // given
@@ -56,6 +57,7 @@ public class CompetitionFamilyRepositoryTest {
         assertTrue(found.stream().anyMatch(p1));
         assertTrue(found.stream().noneMatch(p2));
     }
+
     @Test
     public void givenCompFamily_whenSaved_thenCanBeFoundById() {
         System.out.println("givenUser_whenSaved");

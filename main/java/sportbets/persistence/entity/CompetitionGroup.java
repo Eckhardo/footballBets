@@ -46,7 +46,7 @@ public class CompetitionGroup {
         this.competitionRound=competitionRound;
 
         //guarantee ref integrity
-        competitionRound.addCompetitionGroup(this);
+       // competitionRound.addCompetitionGroup(this);
     }
     //	********************** Getter/Setter Methods ********************** //
 

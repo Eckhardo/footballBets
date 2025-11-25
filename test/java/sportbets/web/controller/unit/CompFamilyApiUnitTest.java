@@ -11,7 +11,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import sportbets.FootballBetsApplication;
-
 import sportbets.config.TestProfileDatabase;
 import sportbets.persistence.entity.CompetitionFamily;
 import sportbets.persistence.repository.CompetitionFamilyRepository;
@@ -22,14 +21,14 @@ import java.util.List;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        classes  = {FootballBetsApplication.class, TestProfileDatabase.class})
+        classes = {FootballBetsApplication.class, TestProfileDatabase.class})
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class CompFamilyApiUnitTest{
+public class CompFamilyApiUnitTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -41,14 +40,14 @@ public class CompFamilyApiUnitTest{
     private ObjectMapper objectMapper;
 
     @BeforeEach
-    void setup(){
-       compFamilyRepository.deleteAll();
+    void setup() {
+        compFamilyRepository.deleteAll();
     }
 
     @Test
-    public void givenCompetitionFamilyObject_whenCreateCompetitionFamily_thenReturnSavedCompetitionFamily() throws Exception{
+    public void givenCompetitionFamilyObject_whenCreateCompetitionFamily_thenReturnSavedCompetitionFamily() throws Exception {
 
-     CompetitionFamily   family = new CompetitionFamily("2. Bundesliga", "2. Deutsche Fussball Bundesliga", true, true);
+        CompetitionFamily family = new CompetitionFamily("2. Bundesliga", "2. Deutsche Fussball Bundesliga", true, true);
         family.setId(1L);
 
         // when - action or behaviour that we are going test
@@ -70,7 +69,7 @@ public class CompFamilyApiUnitTest{
 
     // JUnit test for Get All familys REST API
     @Test
-    public void givenListOfCompetitionFamilys_whenGetAllCompetitionFamilys_thenReturnCompetitionFamilysList() throws Exception{
+    public void givenListOfCompetitionFamilys_whenGetAllCompetitionFamilys_thenReturnCompetitionFamilysList() throws Exception {
         // given - precondition or setup
         List<CompetitionFamily> listOfCompetitionFamilys = new ArrayList<>();
         listOfCompetitionFamilys.add(new CompetitionFamily("2. Bundesliga", "2. Deutsche Fussball Bundesliga", true, true));
@@ -90,9 +89,9 @@ public class CompFamilyApiUnitTest{
     // positive scenario - valid family id
     // JUnit test for GET family by id REST API
     @Test
-    public void givenCompetitionFamilyId_whenGetCompetitionFamilyById_thenReturnCompetitionFamilyObject() throws Exception{
+    public void givenCompetitionFamilyId_whenGetCompetitionFamilyById_thenReturnCompetitionFamilyObject() throws Exception {
         // given - precondition or setup
-        CompetitionFamily   family = new CompetitionFamily("2. Bundesliga", "2. Deutsche Fussball Bundesliga", true, true);
+        CompetitionFamily family = new CompetitionFamily("2. Bundesliga", "2. Deutsche Fussball Bundesliga", true, true);
         family.setId(1L);
 
         compFamilyRepository.save(family);
@@ -112,10 +111,10 @@ public class CompFamilyApiUnitTest{
     // negative scenario - valid family id
     // JUnit test for GET family by id REST API
     @Test
-    public void givenInvalidCompetitionFamilyId_whenGetCompetitionFamilyById_thenReturnEmpty() throws Exception{
+    public void givenInvalidCompetitionFamilyId_whenGetCompetitionFamilyById_thenReturnEmpty() throws Exception {
         // given - precondition or setup
 
-        CompetitionFamily   family = new CompetitionFamily("2. Bundesliga", "2. Deutsche Fussball Bundesliga", true, true);
+        CompetitionFamily family = new CompetitionFamily("2. Bundesliga", "2. Deutsche Fussball Bundesliga", true, true);
         family.setId(1L);
 
         compFamilyRepository.save(family);
@@ -131,15 +130,14 @@ public class CompFamilyApiUnitTest{
 
     // JUnit test for update family REST API - positive scenario
     @Test
-    public void givenUpdatedCompetitionFamily_whenUpdateCompetitionFamily_thenReturnUpdateCompetitionFamilyObject() throws Exception{
+    public void givenUpdatedCompetitionFamily_whenUpdateCompetitionFamily_thenReturnUpdateCompetitionFamilyObject() throws Exception {
         // given - precondition or setup
 
-        CompetitionFamily   family = new CompetitionFamily("2. Bundesliga", "2. Deutsche Fussball Bundesliga", true, true);
+        CompetitionFamily family = new CompetitionFamily("2. Bundesliga", "2. Deutsche Fussball Bundesliga", true, true);
 
         compFamilyRepository.save(family);
 
-        CompetitionFamily  updatedCompetitionFamily = new CompetitionFamily("2. Bundesliga", "2. Deutsche Fussballliga", true, true);
-
+        CompetitionFamily updatedCompetitionFamily = new CompetitionFamily("2. Bundesliga", "2. Deutsche Fussballliga", true, true);
 
 
         // when -  action or the behaviour that we are going test
@@ -158,13 +156,13 @@ public class CompFamilyApiUnitTest{
 
     // JUnit test for update family REST API - negative scenario
     @Test
-    public void givenUpdatedCompetitionFamily_whenUpdateCompetitionFamily_thenReturn404() throws Exception{
+    public void givenUpdatedCompetitionFamily_whenUpdateCompetitionFamily_thenReturn404() throws Exception {
         // given - precondition or setup
-        CompetitionFamily   family = new CompetitionFamily("2. Bundesliga", "2. Deutsche Fussball Bundesliga", true, true);
+        CompetitionFamily family = new CompetitionFamily("2. Bundesliga", "2. Deutsche Fussball Bundesliga", true, true);
 
         compFamilyRepository.save(family);
 
-        CompetitionFamily  updatedCompetitionFamily = new CompetitionFamily("2. Bundesliga", "2. Deutsche Fussballliga", true, true);
+        CompetitionFamily updatedCompetitionFamily = new CompetitionFamily("2. Bundesliga", "2. Deutsche Fussballliga", true, true);
 
 
         // when -  action or the behaviour that we are going test
@@ -179,7 +177,7 @@ public class CompFamilyApiUnitTest{
 
     // JUnit test for delete family REST API
     @Test
-    public void givenCompetitionFamilyId_whenDeleteCompetitionFamily_thenReturn200() throws Exception{
+    public void givenCompetitionFamilyId_whenDeleteCompetitionFamily_thenReturn200() throws Exception {
         // given - precondition or setup
         CompetitionFamily savedCompetitionFamily = new CompetitionFamily("2. Bundesliga", "2. Deutsche Fussball Bundesliga", true, true);
 

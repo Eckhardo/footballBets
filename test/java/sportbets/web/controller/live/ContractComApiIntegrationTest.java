@@ -15,8 +15,9 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.util.FileCopyUtils;
 import sportbets.FootballBetsApplication;
 import sportbets.config.TestProfileDatabase;
-import sportbets.persistence.entity.CompetitionFamily;
+import sportbets.persistence.entity.Competition;
 import sportbets.persistence.repository.CompetitionFamilyRepository;
+import sportbets.persistence.repository.CompetitionRepository;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -24,28 +25,31 @@ import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.Matchers.hasItem;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         classes = {FootballBetsApplication.class, TestProfileDatabase.class})
 @ActiveProfiles("test")
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class ContractCompFamilyApiIntegrationTest {
+public class ContractComApiIntegrationTest {
 
-    private static final Logger log = LoggerFactory.getLogger(ContractCompFamilyApiIntegrationTest.class);
+    private static final Logger log = LoggerFactory.getLogger(ContractComApiIntegrationTest.class);
     private static final String COMP_FAM = "2. Bundesliga";
+    private static final String TEST_COMP_NAME = "Saison 2025";
     @Autowired(required = true)
     WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();
-    @Autowired
     CompetitionFamilyRepository competitionFamilyRepository;
     @Value("classpath:compFamily/compFamily.json")
+    Resource resourceFamily;
+    @Autowired
+    CompetitionRepository repository;
+    @Value("classpath:comp/comp.json")
     Resource resource;
-    @Value("classpath:compFamily/compFamilyWithComp.json")
-    Resource resourceWithComp;
-    @Value("classpath:compFamily/compFamilyUpdate.json")
+    @Value("classpath:comp/compWithRound.json")
+    Resource resourceWithRound;
+    @Value("classpath:comp/compUpdate.json")
     Resource updateResource;
-    @Value("classpath:compFamily/compFamilyWithCompUpdate.json")
+    @Value("classpath:comp/compWithRoundUpdate.json")
     Resource updateWithCompResource;
 
     @AfterEach
@@ -55,9 +59,14 @@ public class ContractCompFamilyApiIntegrationTest {
 
 
     }
+    // @Test
+    //  @Order(1)
 
-    @Test
-    @Order(1)
+    /**
+     * Initiate once in order to provide a valid comFamily Id in the json test files for competition.
+     *
+     * @throws Exception
+     */
     void createNewFamily_withValidFamilyJsonInput_thenSuccess() throws Exception {
         String familyJson = generateFamilyInput();
 
@@ -81,12 +90,36 @@ public class ContractCompFamilyApiIntegrationTest {
     }
 
     @Test
+    @Order(1)
+    void createNewComp_withValidCompJsonInput_thenSuccess() throws Exception {
+        String testJSON = generateCompInput();
+
+        webClient.post()
+                .uri("/competitions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(testJSON)
+                .exchange()
+                .expectStatus()
+                .isCreated()
+                .expectBody()
+                .jsonPath("$.id")
+                .exists()
+                .jsonPath("$.name")
+                .isEqualTo(TEST_COMP_NAME)
+                .jsonPath("$.winMultiplicator")
+                .isEqualTo(3)
+                .jsonPath("$.remisMultiplicator")
+                .exists();
+
+    }
+
+    @Test
     @Order(2)
     void givenPreloadedData_whenGetSingleCampaign_thenResponseContainsFields() {
-        CompetitionFamily fam = competitionFamilyRepository.findByName(COMP_FAM).orElseThrow(() -> new EntityNotFoundException(COMP_FAM));
-        Long id = fam.getId();
+        Competition entity = repository.findByName(TEST_COMP_NAME).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_NAME));
+        Long id = entity.getId();
         webClient.get()
-                .uri("/families/" + id)
+                .uri("/competitions/" + id)
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -94,10 +127,10 @@ public class ContractCompFamilyApiIntegrationTest {
                 .jsonPath("$.id")
                 .value(Long.class, equalTo(id))
                 .jsonPath("$.name")
-                .isEqualTo(COMP_FAM)
-                .jsonPath("$.hasLigaModus")
+                .isEqualTo(TEST_COMP_NAME)
+                .jsonPath("$.winMultiplicator")
                 .exists()
-                .jsonPath("$.competitions")
+                .jsonPath("$.competitionRounds")
                 .isEmpty();
 
     }
@@ -105,16 +138,16 @@ public class ContractCompFamilyApiIntegrationTest {
 
     @Test
     @Order(3)
-    void updateFamily_withValidFamilyJsonInput_thenSuccess() throws Exception {
-        log.info("updateFamily_withValidFamilyJsonInput_thenSuccess");
-        String familyJson = generateFamilyUpdateInput();
-        CompetitionFamily fam = competitionFamilyRepository.findByName(COMP_FAM).orElseThrow(() -> new EntityNotFoundException(COMP_FAM));
-        Long id = fam.getId();
-        log.info("updateFamily with id::" + id);
+    void updateComp_withValidCompJsonInput_thenSuccess() throws Exception {
+        log.info("updateComp_withValidCompJsonInput_thenSuccess");
+        String testJSON = generateCompUpdateInput();
+        Competition entity = repository.findByName(TEST_COMP_NAME).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_NAME));
+        Long id = entity.getId();
+        log.info("updateComp with id::" + id);
         webClient.put()
-                .uri("/families/" + id)
+                .uri("/competitions/" + id)
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(familyJson)
+                .bodyValue(testJSON)
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -122,24 +155,24 @@ public class ContractCompFamilyApiIntegrationTest {
                 .jsonPath("$.id")
                 .exists()
                 .jsonPath("$.name")
-                .isEqualTo(COMP_FAM)
+                .isEqualTo(TEST_COMP_NAME)
                 .jsonPath("$.description")
                 .isEqualTo("changed description")
-                .jsonPath("$.hasLigaModus")
+                .jsonPath("$.winMultiplicator")
                 .exists();
 
     }
 
     @Test
     @Order(4)
-    void deleteFamily_withValidFamilyJsonInput_thenSuccess() throws Exception {
-        log.info("deleteFamily_withValidFamilyJsonInput_thenSuccess");
+    void deleteComp_withValidCompJsonInput_thenSuccess() throws Exception {
+        log.info("deleteComp_withValidCompJsonInput_thenSuccess");
 
-        CompetitionFamily fam = competitionFamilyRepository.findByName(COMP_FAM).orElseThrow(() -> new EntityNotFoundException(COMP_FAM));
-        Long id = fam.getId();
-        log.info("deleteFamily with id::" + id);
+        Competition entity = repository.findByName(TEST_COMP_NAME).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_NAME));
+        Long id = entity.getId();
+        log.info("deleteComp with id::" + id);
         webClient.delete()
-                .uri("/families/" + id)
+                .uri("/competitions/" + id)
                 .exchange()
                 .expectStatus()
                 .isNoContent();
@@ -149,13 +182,13 @@ public class ContractCompFamilyApiIntegrationTest {
 
     @Test
     @Order(5)
-    void createNewFamilyWithComp_withValidFamilyJsonInput_thenSuccess() throws Exception {
-        String familyJson = generateFamilyWithCompInput();
+    void createNewCompWithComp_withValidCompJsonInput_thenSuccess() throws Exception {
+        String testJSON = generateCompWithCompInput();
 
         webClient.post()
-                .uri("/families")
+                .uri("/competitions")
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(familyJson)
+                .bodyValue(testJSON)
                 .exchange()
                 .expectStatus()
                 .isCreated()
@@ -163,34 +196,29 @@ public class ContractCompFamilyApiIntegrationTest {
                 .jsonPath("$.id")
                 .exists()
                 .jsonPath("$.name")
-                .isEqualTo(COMP_FAM)
+                .isEqualTo(TEST_COMP_NAME)
                 .jsonPath("$.description")
-                .isEqualTo("DFL 2. Bundesliga")
-                .jsonPath("$.hasLigaModus")
-                .isEqualTo(true)
-                .jsonPath("$.competitions")
+                .isEqualTo("2. Deutsche Fussball Bundesliga Saison 2025")
+                .jsonPath("$.competitionRounds")
                 .exists()
-                .jsonPath("$.competitions..name")
-                .exists()
-                .jsonPath("$.competitions..winMultiplicator")
-                .value(hasItem(3))
-                .jsonPath("$.competitions..description")
-                .value(hasItem("Beschreibung des Wettbewerbs"));
+                .jsonPath("$.competitionRounds..name")
+                .exists();
+
 
     }
 
     @Test
     @Order(6)
-    void updateNewFamilyWithComp_withValidFamilyJsonInput_thenSuccess() throws Exception {
-        log.info("updateNewFamilyWithComp_withValidFamilyJsonInput_thenSuccess");
-        String familyJson = generateFamilyWithCompUpdateInput();
-        CompetitionFamily fam = competitionFamilyRepository.findByName(COMP_FAM).orElseThrow(() -> new EntityNotFoundException(COMP_FAM));
-        Long id = fam.getId();
-        log.info("updateFamily with id::" + id);
+    void updateNewCompWithComp_withValidCompJsonInput_thenSuccess() throws Exception {
+        log.info("updateNewCompWithComp_withValidCompJsonInput_thenSuccess");
+        String testJSON = generateCompWithCompUpdateInput();
+        Competition entity = repository.findByName(TEST_COMP_NAME).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_NAME));
+        Long id = entity.getId();
+        log.info("updateComp with id::" + id);
         webClient.put()
-                .uri("/families/" + id)
+                .uri("/competitions/" + id)
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(familyJson)
+                .bodyValue(testJSON)
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -198,7 +226,7 @@ public class ContractCompFamilyApiIntegrationTest {
                 .jsonPath("$.id")
                 .exists()
                 .jsonPath("$.name")
-                .isEqualTo(COMP_FAM)
+                .isEqualTo(TEST_COMP_NAME)
                 .jsonPath("$.description")
                 .isEqualTo("change of description")
                 .jsonPath("$.hasLigaModus")
@@ -209,14 +237,14 @@ public class ContractCompFamilyApiIntegrationTest {
 
     @Test
     @Order(7)
-    void deleteFamily2_withValidFamilyJsonInput_thenSuccess() throws Exception {
-        log.info("deleteFamily2_withValidFamilyJsonInput_thenSuccess");
+    void deleteComp2_withValidCompJsonInput_thenSuccess() throws Exception {
+        log.info("deleteComp2_withValidCompJsonInput_thenSuccess");
 
-        CompetitionFamily fam = competitionFamilyRepository.findByName(COMP_FAM).orElseThrow(() -> new EntityNotFoundException(COMP_FAM));
-        Long id = fam.getId();
-        log.info("deleteFamily with id::" + id);
+        Competition entity = repository.findByName(TEST_COMP_NAME).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_NAME));
+        Long id = entity.getId();
+        log.info("deleteComp with id::" + id);
         webClient.delete()
-                .uri("/families/" + id)
+                .uri("/competitions/" + id)
                 .exchange()
                 .expectStatus()
                 .isNoContent();
@@ -229,17 +257,22 @@ public class ContractCompFamilyApiIntegrationTest {
         return FileCopyUtils.copyToString(reader);
     }
 
-    private String generateFamilyWithCompInput() throws Exception {
-        Reader reader = new InputStreamReader(resourceWithComp.getInputStream(), StandardCharsets.UTF_8);
+    private String generateCompInput() throws Exception {
+        Reader reader = new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8);
         return FileCopyUtils.copyToString(reader);
     }
 
-    private String generateFamilyUpdateInput() throws Exception {
+    private String generateCompWithCompInput() throws Exception {
+        Reader reader = new InputStreamReader(resourceWithRound.getInputStream(), StandardCharsets.UTF_8);
+        return FileCopyUtils.copyToString(reader);
+    }
+
+    private String generateCompUpdateInput() throws Exception {
         Reader reader = new InputStreamReader(updateResource.getInputStream(), StandardCharsets.UTF_8);
         return FileCopyUtils.copyToString(reader);
     }
 
-    private String generateFamilyWithCompUpdateInput() throws IOException {
+    private String generateCompWithCompUpdateInput() throws IOException {
         Reader reader = new InputStreamReader(updateWithCompResource.getInputStream(), StandardCharsets.UTF_8);
         return FileCopyUtils.copyToString(reader);
     }

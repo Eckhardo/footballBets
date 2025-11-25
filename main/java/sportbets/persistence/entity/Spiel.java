@@ -56,7 +56,7 @@ public class Spiel implements Comparable<Spiel> {
         this.gastTeam = gastTeam;
 
         // Guarantee referential integrity
-        spieltag.addSpiel(this);
+      //  spieltag.addSpiel(this);
 
     }
     /**
@@ -67,7 +67,7 @@ public class Spiel implements Comparable<Spiel> {
         this(spieltag, spielNumber, startDate,heimTeam,gastTeam);
         this.competitionGroup=group;
         // Guarantee referential integrity
-        group.addSpiel(this);
+     //   group.addSpiel(this);
     }
 
     /**

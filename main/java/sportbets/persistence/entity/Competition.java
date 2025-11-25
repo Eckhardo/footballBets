@@ -56,7 +56,7 @@ public class Competition {
         this.description = description;
         this.competitionFamily = competitionFamily;
         //guarantee ref integrity
-        competitionFamily.addCompetition(this);
+     //   competitionFamily.addCompetition(this);
         this.winMultiplicator = winMultiplicator;
         this.remisMultiplicator = remisMultiplicator;
 

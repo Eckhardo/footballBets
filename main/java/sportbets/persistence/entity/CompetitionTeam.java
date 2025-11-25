@@ -29,9 +29,9 @@ public class CompetitionTeam {
 
     public CompetitionTeam(Team team, Competition competition) {
         this.team = team;
-        this.team.addCompetitionTeam(this);
+     //   this.team.addCompetitionTeam(this);
         this.competition = competition;
-        this.competition.addCompetitionTeam(this);
+    //    this.competition.addCompetitionTeam(this);
     }
 
     public CompetitionTeam() {

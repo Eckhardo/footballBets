@@ -43,11 +43,13 @@ public class CompetitionGroupRepositoryTest {
     @Before
     public void setUp() {
         // Initialize test data before test methods
-        testFamily =new CompetitionFamily("2. Bundesliga","1. Deutsche Fussball Bundesliga",true,true);
-        testComp = new Competition("Saison 2005/26","1. Deutsche Fussball Bundesliga Saison 2025/26",3,1, testFamily);
+        testFamily = new CompetitionFamily("2. Bundesliga", "1. Deutsche Fussball Bundesliga", true, true);
+        testComp = new Competition("Saison 2005/26", "1. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
+        testFamily.addCompetition(testComp);
         testRound = new CompetitionRound(1, "Vorrunde", testComp, false);
+        testComp.addCompetitionRound(testRound);
         testGroup = new CompetitionGroup("Gruppe A", 1, testRound);
-
+        testRound.addCompetitionGroup(testGroup);
         System.out.println("Save all cascade");
         familyRepo.save(testFamily);
         //  competitionDAO.save(testComp);
@@ -75,6 +77,7 @@ public class CompetitionGroupRepositoryTest {
             }
         }
     }
+
     @Test
     public void whenFindAll_thenCheckWithAllAnyMatchers() {
         // given

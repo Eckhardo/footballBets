@@ -17,7 +17,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 
-
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -57,11 +56,15 @@ public class CompetitionTeamRepositoryTest {
     public void setUp() {
         // Initialize test data before test methods
 
-        testFamily =new CompetitionFamily("2. Bundesliga","1. Deutsche Fussball Bundesliga",true,true);
-        testComp = new Competition("Saison 2005/26","2. Deutsche Fussball Bundesliga Saison 2025/26",3,1, testFamily);
+        testFamily = new CompetitionFamily("2. Bundesliga", "1. Deutsche Fussball Bundesliga", true, true);
+        testComp = new Competition("Saison 2005/26", "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
+        testFamily.addCompetition(testComp);
         testRound = new CompetitionRound(1, "Vorrunde", testComp, false);
-        testSpieltag= new Spieltag(1,new Date(),testRound);
-        testSpieltag2= new Spieltag(2,new Date(),testRound);
+        testComp.addCompetitionRound(testRound);
+        testSpieltag = new Spieltag(1, new Date(), testRound);
+        testSpieltag2 = new Spieltag(2, new Date(), testRound);
+        testRound.addSpieltag(testSpieltag);
+        testRound.addSpieltag(testSpieltag2);
         System.out.println("Save all cascade");
         familyRepo.save(testFamily);
         Team team1 = new Team("Test1", "1");
@@ -75,15 +78,20 @@ public class CompetitionTeamRepositoryTest {
 
         //  testGroup = new CompetitionGroup("Gruppe A", 1, testRound);
 
-        compTeamRepo.saveAll(List.of(new CompetitionTeam(team1, testComp),
-                new CompetitionTeam(team2, testComp),
-                new CompetitionTeam(team3, testComp),
-                new CompetitionTeam(team4, testComp)));
+        CompetitionTeam ct1 = new CompetitionTeam(team1, testComp);
+        team1.addCompetitionTeam(ct1);
+        CompetitionTeam ct2 = new CompetitionTeam(team2, testComp);
+        team2.addCompetitionTeam(ct2);
+        CompetitionTeam ct3 = new CompetitionTeam(team3, testComp);
+        team3.addCompetitionTeam(ct3);
+        CompetitionTeam ct4 = new CompetitionTeam(team4, testComp);
+        team4.addCompetitionTeam(ct4);
+        testComp.addCompetitionTeam(ct1);
+        testComp.addCompetitionTeam(ct2);
+        testComp.addCompetitionTeam(ct3);
+        testComp.addCompetitionTeam(ct4);
 
-
-
-
-
+        compTeamRepo.saveAll(List.of(ct1, ct2, ct3, ct4));
         System.out.println("Save all cascade");
 
         //  competitionDAO.save(testComp);
@@ -130,7 +138,7 @@ public class CompetitionTeamRepositoryTest {
         assertTrue(found.stream().anyMatch(p2));
         assertTrue(found.stream().noneMatch(p3));
 
-        Competition comp = compRepo.findByNameWithFamily(CompetitionConstants.BUNDESLIGA2_NAME_2025,testFamily.getId());
+        Competition comp = compRepo.findByNameWithFamily(CompetitionConstants.BUNDESLIGA2_NAME_2025, testFamily.getId());
         assertNotNull(comp);
         System.out.println("Found competition name: " + comp.getName());
         //  comp.getCompetitionTeams().forEach(System.out::println);

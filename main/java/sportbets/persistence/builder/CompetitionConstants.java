@@ -1,4 +1,4 @@
-package sportbets.testData;
+package sportbets.persistence.builder;
 
 import sportbets.persistence.entity.Competition;
 import sportbets.persistence.entity.CompetitionFamily;

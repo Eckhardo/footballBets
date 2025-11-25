@@ -55,7 +55,7 @@ public class CompetitionRound {
         this.hasGroups=hasGroups;
 
         // guarantee ref integrity
-        competition.addCompetitionRound(this);
+    //    ;
     }
 //-------- Getter & Setter-------------------
 

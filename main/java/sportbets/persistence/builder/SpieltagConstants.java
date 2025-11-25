@@ -1,4 +1,4 @@
-package sportbets.testData;
+package sportbets.persistence.builder;
 
 import sportbets.persistence.entity.CompetitionRound;
 import sportbets.persistence.entity.Spieltag;
@@ -17,6 +17,7 @@ public class SpieltagConstants {
 
             SPIELTAGE.add(new Spieltag(i, new Date(), round));
         }
+        SPIELTAGE.forEach(round::addSpieltag);
         return SPIELTAGE;
     }
 
@@ -26,6 +27,7 @@ public class SpieltagConstants {
 
             SPIELTAGE.add(new Spieltag(j, new Date(), round));
         }
+        SPIELTAGE.forEach(round::addSpieltag);
         return SPIELTAGE;
     }
 }

@@ -39,7 +39,7 @@ public class Spieltag {
         this.startDate = startDate;
         this.competitionRound = competitionRound;
         // guarantee ref integrity
-        competitionRound.addSpieltag(this);
+       // competitionRound.addSpieltag(this);
     }
 
 

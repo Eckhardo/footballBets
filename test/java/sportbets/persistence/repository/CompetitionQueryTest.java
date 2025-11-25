@@ -23,7 +23,7 @@ public class CompetitionQueryTest {
     private CompetitionRepository compRepo;
 
     @Test
-    public void findByName()  {
+    public void findByName() {
         System.out.println("\n");
         System.out.println("FindByName");
         CompRecord comp = compRepo.findCompByNameAndFamily(CompetitionConstants.BUNDESLIGA_NAME_2025, 1L);

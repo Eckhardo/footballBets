@@ -1,0 +1,16 @@
+{
+  "name": "Saison 2025",
+  "description": "2. Deutsche Fussball Bundesliga Saison 2025",
+  "compFamilyId": 31,
+  "winMultiplicator": 3,
+  "remisMultiplicator": 1,
+  "competitionRounds": [
+    {
+      "roundNumber":1,
+      "name": "Hinrunde",
+      "description": "Beschreibung des Wettbewerbs",
+      "hasGroups": false
+
+    }
+  ]
+}

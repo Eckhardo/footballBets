@@ -48,10 +48,14 @@ public class SpielRepositoryTest {
     public void setUp() {
         // Initialize test data before test methods
         testFamily = new CompetitionFamily("2. Bundesliga", "2. Deutsche Fussball Bundesliga", true, true);
-        testComp = new Competition("Saison 2005/26", "1. Deutsche Fussball Bundesliga Saison 2025/26",3,1, testFamily);
+        testComp = new Competition("Saison 2005/26", "1. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
+        testFamily.addCompetition(testComp);
         testRound = new CompetitionRound(1, "Hinrunde", testComp, false);
+        testComp.addCompetitionRound(testRound);
         testGroup = new CompetitionGroup("Gruppe A", 1, testRound);
+        testRound.addCompetitionGroup(testGroup);
         testSpieltag = new Spieltag(1, new Date(), testRound);
+        testRound.addSpieltag(testSpieltag);
         Team team1 = new Team("Test1", "1");
         Team team2 = new Team("Test2", "2");
         Team team3 = new Team("Test3", "3");
@@ -60,13 +64,24 @@ public class SpielRepositoryTest {
         teamRepo.save(team2);
         teamRepo.save(team3);
         teamRepo.save(team4);
-        new CompetitionTeam(team1, testComp);
-        new CompetitionTeam(team2, testComp);
-        new CompetitionTeam(team3, testComp);
-        new CompetitionTeam(team4, testComp);
+        CompetitionTeam ct1 = new CompetitionTeam(team1, testComp);
+        team1.addCompetitionTeam(ct1);
+        CompetitionTeam ct2 = new CompetitionTeam(team2, testComp);
+        team2.addCompetitionTeam(ct2);
+        CompetitionTeam ct3 = new CompetitionTeam(team3, testComp);
+        team3.addCompetitionTeam(ct3);
+        CompetitionTeam ct4 = new CompetitionTeam(team4, testComp);
+        team4.addCompetitionTeam(ct4);
+        testComp.addCompetitionTeam(ct1);
+        testComp.addCompetitionTeam(ct2);
+        testComp.addCompetitionTeam(ct3);
+        testComp.addCompetitionTeam(ct4);
+
+
         testSpiel1 = new Spiel(testSpieltag, 1, new Date(), team1, team2, 3, 1, false);
         testSpiel2 = new Spiel(testSpieltag, 2, new Date(), team3, team4, 2, 2, false);
-
+        testSpieltag.addSpiel(testSpiel1);
+        testSpieltag.addSpiel(testSpiel2);
         System.out.println("Save all cascade");
         familyRepo.save(testFamily);
         //  competitionDAO.save(testComp);
@@ -97,6 +112,7 @@ public class SpielRepositoryTest {
             }
         }
     }
+
     @Test
     public void whenFindByNameCalled_thenGroupsAreFound() {
         // given

@@ -1,5 +1,9 @@
 package sportbets.web.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import jakarta.validation.groups.Default;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
@@ -9,7 +13,14 @@ import java.util.Objects;
  */
 public class CompetitionDto implements Serializable {
     private Long id;
+
+    @NotBlank(groups = {CompDtoOLD.CompUpdateValidationData.class, Default.class},
+            message = "name can't be blank")
     private  String name;
+
+    @Size(groups = {CompDtoOLD.CompUpdateValidationData.class, Default.class},
+            min = 10, max = 50,
+            message = "description must be between 10 and 50 characters long")
     private  String description;
     private  int winMultiplicator;
     private  int remisMultiplicator;
