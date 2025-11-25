@@ -1,7 +1,6 @@
 package sportbets.service;
 
 import sportbets.persistence.entity.Competition;
-import sportbets.persistence.entity.CompetitionFamily;
 
 import java.util.List;
 import java.util.Optional;

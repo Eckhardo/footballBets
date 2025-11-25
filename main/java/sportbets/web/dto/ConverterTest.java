@@ -5,7 +5,6 @@ import org.modelmapper.spi.MappingContext;
 import sportbets.persistence.entity.Competition;
 
 import java.util.Collection;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ConverterTest {

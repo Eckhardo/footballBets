@@ -1,15 +1,12 @@
 package sportbets.persistence.dao;
 
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import sportbets.persistence.builder.GenericBuilder;
-import sportbets.persistence.dao.impl.CompetitionDAOImpl;
-import sportbets.persistence.dao.impl.CompetitionFamilyDAOImpl;
 import sportbets.persistence.entity.Competition;
 import sportbets.persistence.entity.CompetitionFamily;
 
