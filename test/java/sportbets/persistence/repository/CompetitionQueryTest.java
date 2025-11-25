@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import sportbets.persistence.builder.CompetitionConstants;
 import sportbets.persistence.entity.Competition;
 import sportbets.persistence.rowObject.CompRecord;
-import sportbets.testData.CompetitionConstants;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
