@@ -1,6 +1,15 @@
 {
-  "name": "2. Bundesliga",
+
+  "name": "Premier League",
   "description": "change of description",
   "hasLigaModus": true,
-  "hasClubs": true
+  "hasClubs": true,
+  "competitions": [
+    {
+      "name": "Season 2025",
+      "description": "Beschreibung des Wettbewerbs",
+      "winMultiplicator": 3,
+      "remisMultiplicator": 1
+    }
+  ]
 }

@@ -1,6 +1,6 @@
 {
-  "name": "2. Bundesliga",
-  "description": "DFL 2. Bundesliga",
+  "name": "Premier League",
+  "description": "UK Premier League",
   "hasLigaModus": true,
   "hasClubs": true
 }

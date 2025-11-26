@@ -3,6 +3,9 @@ package sportbets.web.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.groups.Default;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sportbets.persistence.entity.Competition;
 import sportbets.persistence.entity.CompetitionFamily;
 
 import java.io.Serializable;
@@ -26,7 +29,6 @@ public class CompetitionFamilyDto implements Serializable {
             min = 10, max = 50,
             message = "description must be between 10 and 50 characters long")
     private String description;
-    private Date createdOn = new Date();
     private boolean hasLigaModus;
     private boolean hasClubs;
     private Set<CompetitionDto> competitions = new HashSet<>();
@@ -34,11 +36,10 @@ public class CompetitionFamilyDto implements Serializable {
     public CompetitionFamilyDto() {
     }
 
-    public CompetitionFamilyDto(Long id, String name, String description, Date createdOn, boolean hasLigaModus, boolean hasClubs) {
+    public CompetitionFamilyDto(Long id, String name, String description,  boolean hasLigaModus, boolean hasClubs) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.createdOn = createdOn;
         this.hasLigaModus = hasLigaModus;
      //   this.hasClubs = hasClubs;
     }
@@ -67,13 +68,6 @@ public class CompetitionFamilyDto implements Serializable {
         this.description = description;
     }
 
-    public Date getCreatedOn() {
-        return createdOn;
-    }
-
-    public void setCreatedOn(Date createdOn) {
-        this.createdOn = createdOn;
-    }
 
     public boolean getHasLigaModus() {
         return hasLigaModus;
@@ -115,14 +109,13 @@ public class CompetitionFamilyDto implements Serializable {
         return Objects.equals(this.id, entity.id) &&
                 Objects.equals(this.name, entity.name) &&
                 Objects.equals(this.description, entity.description) &&
-                Objects.equals(this.createdOn, entity.createdOn) &&
                 Objects.equals(this.hasLigaModus, entity.hasLigaModus) &&
                 Objects.equals(this.hasClubs, entity.hasClubs);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, createdOn, hasLigaModus, hasClubs);
+        return Objects.hash(id, name, description,  hasLigaModus, hasClubs);
     }
 
     @Override
@@ -132,8 +125,33 @@ public class CompetitionFamilyDto implements Serializable {
                 "name = " + name + ", " +
                 "description = " + description + ", " +
                 "competition names = " +competitions.stream().map(CompetitionDto::getName).collect(Collectors.toSet()) + ", " +
-                "createdOn = " + createdOn + ", " +
                 "hasLigaModus = " + hasLigaModus + ", " +
                 "hasClubs = " + hasClubs + ")";
+    }
+
+    public static class Mapper {
+
+        private static final Logger log = LoggerFactory.getLogger(Mapper.class);
+
+        public static CompetitionFamily toModel(CompetitionFamilyDto dto) {
+
+            if (dto == null)
+                return null;
+            log.info("Mapper.toModel::" + dto);
+            CompetitionFamily model = new CompetitionFamily(dto.getName(), dto.getDescription(), dto.getHasLigaModus(), dto.getHasClubs());
+
+
+            log.info("Mapper.toModel return::" + model);
+            return model;
+        }
+
+        public static CompetitionFamilyDto toDto(CompetitionFamily model) {
+            if (model == null)
+                return null;
+
+            CompetitionFamilyDto dto = new CompetitionFamilyDto(model.getId(), model.getName(), model.getDescription(), model.isHasLigaModus(), model.isHasClubs());
+            log.info("RETURN:: " +dto);
+            return dto;
+        }
     }
 }

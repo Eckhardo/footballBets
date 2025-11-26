@@ -1,6 +1,8 @@
 package sportbets.service.impl;
 
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sportbets.persistence.entity.Competition;
@@ -12,6 +14,7 @@ import java.util.Optional;
 @Service
 public class CompServiceImpl implements CompService {
 
+    private static final Logger log = LoggerFactory.getLogger(CompServiceImpl.class);
     private CompetitionRepository compRepository;
     @Autowired
     private ModelMapper modelMapper;
@@ -46,6 +49,18 @@ public class CompServiceImpl implements CompService {
     @Override
     public List<Competition> getAll() {
         return compRepository.findAll();
+    }
+
+    @Override
+    public Optional<Competition> findByNameJoinFetchRounds(String name) {
+        log.info("CompService:findByNameJoinFetchRounds::" + name);
+        return compRepository.findByNameJoinFetchRounds(name);
+    }
+
+    @Override
+    public Competition findByIdJoinFetchRounds(Long id) {
+        log.info("CompService:findById::" + id);
+        return compRepository.findByIdJoinFetchRounds(id);
     }
 
     private Competition updateFields(Competition base, Competition updatedComp) {

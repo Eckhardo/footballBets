@@ -7,16 +7,21 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Qualifier;
 import sportbets.persistence.entity.CompetitionFamily;
 import sportbets.persistence.repository.CompetitionFamilyRepository;
 import sportbets.service.impl.CompFamilyServiceImpl;
+import sportbets.web.dto.CompetitionFamilyDto;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
@@ -32,6 +37,9 @@ public class CompFamilyServiceTest {
     private CompFamilyServiceImpl compFamilyService;
 
     private CompetitionFamily family;
+    @Spy
+    @Qualifier("myEntityMapper")
+    private ModelMapper modelMapper;
 
     @BeforeEach
     public void setup() {
@@ -50,16 +58,15 @@ public class CompFamilyServiceTest {
         // given - precondition or setup
 
         given(familyRepository.save(family)).willReturn(family);
-
-        System.out.println(familyRepository);
-        System.out.println(compFamilyService);
+        ModelMapper mapper= new ModelMapper();
+        CompetitionFamilyDto famDto = mapper.map(family, CompetitionFamilyDto.class);
 
         // when -  action or the behaviour that we are going test
-        CompetitionFamily savedCompFamily = compFamilyService.save(family);
+       Optional<CompetitionFamilyDto>  savedCompFamily = compFamilyService.save(famDto);
 
         System.out.println(savedCompFamily);
         // then - verify the output
-        assertThat(savedCompFamily).isNotNull();
+        assertTrue(savedCompFamily.isPresent());
     }
 
     // JUnit test for saveCompFamily method
@@ -69,11 +76,13 @@ public class CompFamilyServiceTest {
         // given - precondition or setup
         given(familyRepository.findByName(family.getName()))
                 .willReturn(Optional.of(family));
+        ModelMapper mapper= new ModelMapper();
+        CompetitionFamilyDto famDto = mapper.map(family, CompetitionFamilyDto.class);
 
 
         // when -  action or the behaviour that we are going test
         org.junit.jupiter.api.Assertions.assertThrows(EntityExistsException.class, () -> {
-            compFamilyService.save(family);
+            compFamilyService.save(famDto);
         });
 
         // then
@@ -114,7 +123,7 @@ public class CompFamilyServiceTest {
 
         // then - verify the output
         assertThat(compFamilyList).isEmpty();
-        assertThat(compFamilyList.size()).isEqualTo(0);
+
     }
 
     // JUnit test for getCompFamilyById method
@@ -125,10 +134,11 @@ public class CompFamilyServiceTest {
         given(familyRepository.findById(1L)).willReturn(Optional.of(family));
 
         // when
-        CompetitionFamily savedCompFamily = compFamilyService.findById(family.getId()).get();
+        Optional<CompetitionFamilyDto> savedCompFamily = compFamilyService.findById(family.getId());
+        assertTrue(savedCompFamily.isPresent());
 
         // then
-        assertThat(savedCompFamily).isNotNull();
+
 
     }
 
@@ -141,7 +151,9 @@ public class CompFamilyServiceTest {
         family.setName("Premier League");
         family.setDescription("Description of PL");
         // when -  action or the behaviour that we are going test
-        Optional<CompetitionFamily> updatedCompFamily = compFamilyService.updateFamily(family.getId(), family);
+        ModelMapper mapper= new ModelMapper();
+        CompetitionFamilyDto famDto = mapper.map(family, CompetitionFamilyDto.class);
+        Optional<CompetitionFamilyDto> updatedCompFamily = compFamilyService.updateFamily(family.getId(), famDto);
         // then - verify the output
         updatedCompFamily.ifPresent(compFamily -> {
             assertThat(compFamily.getName()).isEqualTo(family.getName());

@@ -1,6 +1,7 @@
 package sportbets.persistence.dao.impl;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -19,6 +20,7 @@ import java.util.List;
 public class CompetitionFamilyDAOImpl implements CompetitionFamilyDAO {
 
     // define field for entity manager
+    @PersistenceContext
     private final EntityManager entityManager;
 
     // inject entity manager using constructor injection

@@ -39,7 +39,10 @@ public record CompFamilyDtoOLD(
             CompetitionFamily model = new CompetitionFamily(dto.name(), dto.description(), dto.hasLigaModus(), dto.hasClubs());
             if (dto.competitions() != null) {
                 log.info("Mapper.toModel.competitions::" + dto.competitions());
-                dto.competitions.forEach(comp -> new Competition(comp.name(), comp.description(), comp.winMultiplicator(), comp.remisMultiplicator(), model));
+                dto.competitions.forEach(comp ->{
+                   Competition compEntity= new Competition(comp.name(), comp.description(), comp.winMultiplicator(), comp.remisMultiplicator(), model);
+                   model.addCompetition(compEntity);
+                }) ;
             }
                 if (!Objects.isNull(dto.id())) {
                 model.setId(id);

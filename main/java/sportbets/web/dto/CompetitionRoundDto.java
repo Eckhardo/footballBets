@@ -15,19 +15,17 @@ public class CompetitionRoundDto implements Serializable {
     private String name;
     private boolean hasGroups = false;
     @NotNull
-    private CompetitionDto competition;
-    private Date createdOn = new Date();
+    private Long compId;
 
     public CompetitionRoundDto() {
     }
 
-    public CompetitionRoundDto(Long id, int roundNumber, String name, boolean hasGroups, CompetitionDto competition, Date createdOn) {
+    public CompetitionRoundDto(Long id, int roundNumber, String name, boolean hasGroups, Date createdOn) {
         this.id = id;
         this.roundNumber = roundNumber;
         this.name = name;
         this.hasGroups = hasGroups;
-        this.competition = competition;
-        this.createdOn = createdOn;
+
     }
 
     public Long getId() {
@@ -62,21 +60,14 @@ public class CompetitionRoundDto implements Serializable {
         this.hasGroups = hasGroups;
     }
 
-    public CompetitionDto getCompetition() {
-        return competition;
+    public Long getCompId() {
+        return compId;
     }
 
-    public void setCompetition(CompetitionDto competition) {
-        this.competition = competition;
+    public void setCompId(Long compId) {
+        this.compId = compId;
     }
 
-    public Date getCreatedOn() {
-        return createdOn;
-    }
-
-    public void setCreatedOn(Date createdOn) {
-        this.createdOn = createdOn;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -87,13 +78,12 @@ public class CompetitionRoundDto implements Serializable {
                 Objects.equals(this.roundNumber, dto.roundNumber) &&
                 Objects.equals(this.name, dto.name) &&
                 Objects.equals(this.hasGroups, dto.hasGroups) &&
-                Objects.equals(this.competition, dto.competition) &&
-                Objects.equals(this.createdOn, dto.createdOn);
+                Objects.equals(this.compId, dto.compId) ;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, roundNumber, name, hasGroups, competition, createdOn);
+        return Objects.hash(id, roundNumber, name, hasGroups);
     }
 
     @Override
@@ -103,7 +93,6 @@ public class CompetitionRoundDto implements Serializable {
                 "roundNumber = " + roundNumber + ", " +
                 "name = " + name + ", " +
                 "hasGroups = " + hasGroups + ", " +
-                "competition = " + competition + ", " +
-                "createdOn = " + createdOn + ")";
+                "compId = " + compId +")" ;
     }
 }

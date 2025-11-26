@@ -2,10 +2,14 @@ package sportbets.persistence.dao;
 
 import org.junit.After;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 import sportbets.persistence.builder.GenericBuilder;
 import sportbets.persistence.entity.Competition;
 import sportbets.persistence.entity.CompetitionFamily;
@@ -30,18 +34,9 @@ public class CompetitionDAOITest {
   //  @Before
     public void setUp() {
         // Initialize test data before test methods
-        testFamily = GenericBuilder.of(CompetitionFamily::new)
-                .with(CompetitionFamily::setName, "3. Bundesliga")
-                .with(CompetitionFamily::setDescription, "3. Deutsche Fussball Bundesliga")
-                .with(CompetitionFamily::setHasClubs, true).with(CompetitionFamily::setHasLigaModus, true)
-                .build();
+        testFamily = new CompetitionFamily("2. Bundesliga", "1. Deutsche Fussball Bundesliga", true, true);
+        testComp = new Competition("Saison 2025/26", "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
 
-        testComp = GenericBuilder.of(Competition::new)
-                .with(Competition::setName, "Saison 2025")
-                .with(Competition::setDescription, "3. Deutsche Fussball Bundesliga Saison 2025")
-                .with(Competition::setRemisMultiplicator, 1).with(Competition::setWinMultiplicator, 3)
-                .with(Competition::setCompetitionFamily, testFamily)
-                .build();
         testFamily.addCompetition(testComp);
         log.info("Save all cascade");
         this.familyDAO.save(testFamily);
@@ -58,6 +53,9 @@ public class CompetitionDAOITest {
 
     @Test
     public void findById() {
+        System.out.println("findAll family::");
+        List<CompetitionFamily> fams = familyDAO.findAll();
+        fams.forEach(System.out::println);
     }
 
     @Test

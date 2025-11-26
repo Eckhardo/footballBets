@@ -1,6 +1,7 @@
 package sportbets.persistence.dao.impl;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -11,14 +12,16 @@ import sportbets.persistence.entity.Competition;
 import java.util.List;
 
 
-@Repository
+
 /**
  * An alternative to DAOs  specified by  {{@link org.springframework.data.jpa.repository.JpaRepository}}
  * Here we use real DAOs that use the Hibernate Entity Manager directly
  */
+@Repository
 public class CompetitionDAOImpl implements CompetitionDAO {
 
     // define field for entity manager
+    @PersistenceContext
     private final EntityManager entityManager;
 
     // inject entity manager using constructor injection

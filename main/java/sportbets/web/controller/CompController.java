@@ -1,6 +1,8 @@
 package sportbets.web.controller;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -11,6 +13,12 @@ import org.springframework.web.server.ResponseStatusException;
 import sportbets.persistence.entity.Competition;
 import sportbets.service.CompService;
 import sportbets.web.dto.CompDtoOLD;
+import sportbets.web.dto.CompetitionDto;
+import sportbets.web.dto.MapperUtil;
+
+import java.util.Optional;
+
+import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 
 @RestController
 public class CompController {
@@ -18,19 +26,23 @@ public class CompController {
     private static final Logger log = LoggerFactory.getLogger(CompController.class);
     private CompService compService;
 
-    public CompController(CompService compService) {
+    private ModelMapper mapper;
+
+    public CompController(CompService compService,ModelMapper mapper) {
         this.compService = compService;
+        this.mapper = mapper;
     }
 
     @GetMapping("/competitions/{id}")
-    public CompDtoOLD findOne(@PathVariable Long id) {
-
-        Competition model = compService.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-
-        CompDtoOLD dto = CompDtoOLD.Mapper.toDto(model);
+    public CompetitionDto findOne(@PathVariable Long id) {
+        log.info("CompController:findOne::" + id);
+        Competition model = compService.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        ModelMapper modelMapper = MapperUtil.getModelMapperForFamily();
         log.info("Competition found with {}", model);
-        return dto;
+        CompetitionDto compDto = modelMapper.map(model, CompetitionDto.class);
+
+        log.info("CompetitionDto found with {}", compDto);
+        return compDto;
     }
 
     @PostMapping("/competitions")

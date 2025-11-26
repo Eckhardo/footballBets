@@ -1,9 +1,5 @@
 package sportbets.web.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
-import jakarta.validation.groups.Default;
-
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
@@ -13,32 +9,25 @@ import java.util.Objects;
  */
 public class CompetitionDto implements Serializable {
     private Long id;
-
-    @NotBlank(groups = {CompDtoOLD.CompUpdateValidationData.class, Default.class},
-            message = "name can't be blank")
     private  String name;
-
-    @Size(groups = {CompDtoOLD.CompUpdateValidationData.class, Default.class},
-            min = 10, max = 50,
-            message = "description must be between 10 and 50 characters long")
     private  String description;
     private  int winMultiplicator;
     private  int remisMultiplicator;
-    private  Date createdOn;
-    private CompetitionFamilyDto competitionFamily;
+
+    private Long familyId;
 
 
     public CompetitionDto() {
     }
 
-    public CompetitionDto(Long id, String name, String description, int winMultiplicator, int remisMultiplicator, Date createdOn,CompetitionFamilyDto competitionFamily) {
+    public CompetitionDto(Long id, String name, String description, int winMultiplicator, int remisMultiplicator) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.winMultiplicator = winMultiplicator;
         this.remisMultiplicator = remisMultiplicator;
-        this.createdOn = createdOn;
-        this.competitionFamily = competitionFamily;
+
+
     }
 
     public Long getId() {
@@ -61,9 +50,7 @@ public class CompetitionDto implements Serializable {
         return remisMultiplicator;
     }
 
-    public Date getCreatedOn() {
-        return createdOn;
-    }
+
 
     public void setId(Long id) {
         this.id = id;
@@ -85,16 +72,12 @@ public class CompetitionDto implements Serializable {
         this.remisMultiplicator = remisMultiplicator;
     }
 
-    public void setCreatedOn(Date createdOn) {
-        this.createdOn = createdOn;
+    public Long getFamilyId() {
+        return familyId;
     }
 
-    public CompetitionFamilyDto getCompetitionFamily() {
-        return competitionFamily;
-    }
-
-    public void setCompetitionFamily(CompetitionFamilyDto competitionFamily) {
-        this.competitionFamily = competitionFamily;
+    public void setFamilyId(Long familyId) {
+        this.familyId = familyId;
     }
 
     @Override
@@ -105,14 +88,12 @@ public class CompetitionDto implements Serializable {
         return Objects.equals(this.id, entity.id) &&
                 Objects.equals(this.name, entity.name) &&
                 Objects.equals(this.description, entity.description) &&
-                Objects.equals(this.winMultiplicator, entity.winMultiplicator) &&
-                Objects.equals(this.remisMultiplicator, entity.remisMultiplicator) &&
-                Objects.equals(this.createdOn, entity.createdOn);
+                Objects.equals(this.winMultiplicator, entity.winMultiplicator) ;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, winMultiplicator, remisMultiplicator, createdOn);
+        return Objects.hash(id, name, description, winMultiplicator, remisMultiplicator);
     }
 
     @Override
@@ -121,9 +102,8 @@ public class CompetitionDto implements Serializable {
                 "id = " + id + ", " +
                 "name = " + name + ", " +
                 "description = " + description + ", " +
-                "family = " + competitionFamily + ", " +
+                "familyId = " + familyId + ", " +
                 "winMultiplicator = " + winMultiplicator + ", " +
-                "remisMultiplicator = " + remisMultiplicator + ", " +
-                "createdOn = " + createdOn + ")";
+                "remisMultiplicator = " + remisMultiplicator +")";
     }
 }

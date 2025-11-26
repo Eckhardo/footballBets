@@ -1,7 +1,7 @@
 {
-  "name": "Saison 2025",
+  "name": "Liga 2 Saison 2025",
   "description": "2. Deutsche Fussball Bundesliga Saison 2025",
-  "compFamilyId": 31,
+  "compFamilyId": 12,
   "winMultiplicator": 3,
   "remisMultiplicator": 1,
   "competitionRounds": [

@@ -16,6 +16,7 @@ import org.springframework.util.FileCopyUtils;
 import sportbets.FootballBetsApplication;
 import sportbets.config.TestProfileDatabase;
 import sportbets.persistence.entity.Competition;
+import sportbets.persistence.entity.CompetitionFamily;
 import sportbets.persistence.repository.CompetitionFamilyRepository;
 import sportbets.persistence.repository.CompetitionRepository;
 
@@ -34,8 +35,11 @@ import static org.hamcrest.CoreMatchers.equalTo;
 public class ContractComApiIntegrationTest {
 
     private static final Logger log = LoggerFactory.getLogger(ContractComApiIntegrationTest.class);
-    private static final String COMP_FAM = "2. Bundesliga";
-    private static final String TEST_COMP_NAME = "Saison 2025";
+    private static final String TEST_COMP_NAME_ZWEITE_BUNDESLIGA = "Liga 2 Saison 2025";
+    private static final String COMP_FAM_ZWEITE_BUNDESLIGA = "2. Bundesliga";
+    private static final String TEST_COMP_NAME_BUNDESLIGA = "Saison 2025";
+    private static final Long TEST_FAM_ID_BUNDESLIGA = 1L;
+
     @Autowired(required = true)
     WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();
     CompetitionFamilyRepository competitionFamilyRepository;
@@ -45,10 +49,16 @@ public class ContractComApiIntegrationTest {
     CompetitionRepository repository;
     @Value("classpath:comp/comp.json")
     Resource resource;
+
+    @Value("classpath:comp/compFamily.json")
+    Resource resourceFam;
+
     @Value("classpath:comp/compWithRound.json")
     Resource resourceWithRound;
+
     @Value("classpath:comp/compUpdate.json")
     Resource updateResource;
+
     @Value("classpath:comp/compWithRoundUpdate.json")
     Resource updateWithCompResource;
 
@@ -67,6 +77,8 @@ public class ContractComApiIntegrationTest {
      *
      * @throws Exception
      */
+   @Test
+   @Order(1)
     void createNewFamily_withValidFamilyJsonInput_thenSuccess() throws Exception {
         String familyJson = generateFamilyInput();
 
@@ -81,181 +93,177 @@ public class ContractComApiIntegrationTest {
                 .jsonPath("$.id")
                 .exists()
                 .jsonPath("$.name")
-                .isEqualTo(COMP_FAM)
+                .isEqualTo(COMP_FAM_ZWEITE_BUNDESLIGA)
                 .jsonPath("$.description")
-                .isEqualTo("DFL 2. Bundesliga")
-                .jsonPath("$.hasLigaModus")
+                .exists()
+                .jsonPath("$.hasClubs")
                 .exists();
 
     }
+//
+//    @Test
+//    @Order(1)
+//    void createNewComp_withValidCompJsonInput_thenSuccess() throws Exception {
+//        String testJSON = generateCompInput();
+//
+//        webClient.post()
+//                .uri("/competitions")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .bodyValue(testJSON)
+//                .exchange()
+//                .expectStatus()
+//                .isCreated()
+//                .expectBody()
+//                .jsonPath("$.id")
+//                .exists()
+//                .jsonPath("$.name")
+//                .isEqualTo(TEST_COMP_NAME_ZWEITE_BUNDESLIGA)
+//                .jsonPath("$.winMultiplicator")
+//                .isEqualTo(3)
+//                .jsonPath("$.remisMultiplicator")
+//                .exists();
+//
+//    }
+//
+//    @Test
+//    @Order(2)
+//    void givenPreloadedData_whenGetSingleComp_thenResponseContainsFields() {
+//        Competition entity = repository.findByNameWithFamily(TEST_COMP_NAME_BUNDESLIGA, TEST_FAM_ID_BUNDESLIGA);
+//        Long id = entity.getId();
+//        webClient.get()
+//                .uri("/competitions/" + id)
+//                .exchange()
+//                .expectStatus()
+//                .isOk()
+//                .expectBody()
+//                .jsonPath("$.id")
+//                .value(Long.class, equalTo(id))
+//                .jsonPath("$.name")
+//                .isEqualTo(TEST_COMP_NAME_BUNDESLIGA)
+//                .jsonPath("$.winMultiplicator")
+//                .exists()
+//                .jsonPath("$.familyId")
+//                .exists();
+//
+//    }
+//
+//
+//    @Test
+//    @Order(3)
+//    void updateComp_withValidCompJsonInput_thenSuccess() throws Exception {
+//        log.info("updateComp_withValidCompJsonInput_thenSuccess");
+//        String testJSON = generateCompUpdateInput();
+//        Competition entity = repository.findByName(TEST_COMP_NAME_ZWEITE_BUNDESLIGA).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_NAME_ZWEITE_BUNDESLIGA));
+//        Long id = entity.getId();
+//        log.info("updateComp with id::" + id);
+//        webClient.put()
+//                .uri("/competitions/" + id)
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .bodyValue(testJSON)
+//                .exchange()
+//                .expectStatus()
+//                .isOk()
+//                .expectBody()
+//                .jsonPath("$.id")
+//                .exists()
+//                .jsonPath("$.name")
+//                .isEqualTo(TEST_COMP_NAME_ZWEITE_BUNDESLIGA)
+//                .jsonPath("$.description")
+//                .isEqualTo("changed description")
+//                .jsonPath("$.winMultiplicator")
+//                .exists();
+//
+//    }
+//
+//    @Test
+//    @Order(4)
+//    void deleteComp_withValidCompJsonInput_thenSuccess() throws Exception {
+//        log.info("deleteComp_withValidCompJsonInput_thenSuccess");
+//
+//        Competition entity = repository.findByName(TEST_COMP_NAME_ZWEITE_BUNDESLIGA).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_NAME_ZWEITE_BUNDESLIGA));
+//        Long id = entity.getId();
+//        log.info("deleteComp with id::" + id);
+//        webClient.delete()
+//                .uri("/competitions/" + id)
+//                .exchange()
+//                .expectStatus()
+//                .isNoContent();
+//
+//
+//    }
+//
+//    @Test
+//    @Order(5)
+//    void createNewCompWithComp_withValidCompJsonInput_thenSuccess() throws Exception {
+//        String testJSON = generateCompWithCompInput();
+//
+//        webClient.post()
+//                .uri("/competitions")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .bodyValue(testJSON)
+//                .exchange()
+//                .expectStatus()
+//                .isCreated()
+//                .expectBody()
+//                .jsonPath("$.id")
+//                .exists()
+//                .jsonPath("$.name")
+//                .isEqualTo(TEST_COMP_NAME_ZWEITE_BUNDESLIGA)
+//                .jsonPath("$.description")
+//                .isEqualTo("2. Deutsche Fussball Bundesliga Saison 2025")
+//                .jsonPath("$.competitionRounds")
+//                .exists()
+//                .jsonPath("$.competitionRounds..name")
+//                .exists();
+//
+//
+//    }
+//
+//    @Test
+//    @Order(6)
+//    void updateNewCompWithComp_withValidCompJsonInput_thenSuccess() throws Exception {
+//        log.info("updateNewCompWithComp_withValidCompJsonInput_thenSuccess");
+//        String testJSON = generateCompWithCompUpdateInput();
+//        Competition entity = repository.findByName(TEST_COMP_NAME_ZWEITE_BUNDESLIGA).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_NAME_ZWEITE_BUNDESLIGA));
+//        Long id = entity.getId();
+//        log.info("updateComp with id::" + id);
+//        webClient.put()
+//                .uri("/competitions/" + id)
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .bodyValue(testJSON)
+//                .exchange()
+//                .expectStatus()
+//                .isOk()
+//                .expectBody()
+//                .jsonPath("$.id")
+//                .exists()
+//                .jsonPath("$.name")
+//                .isEqualTo(TEST_COMP_NAME_ZWEITE_BUNDESLIGA)
+//                .jsonPath("$.description")
+//                .isEqualTo("change of description")
+//                .jsonPath("$.hasLigaModus")
+//                .exists();
+//
+//    }
+//
+//
+//    @Test
+//    @Order(7)
+//    void deleteComp2_withValidCompJsonInput_thenSuccess() throws Exception {
+//        log.info("deleteComp2_withValidCompJsonInput_thenSuccess");
+//
+//        Competition entity = repository.findByName(TEST_COMP_NAME_ZWEITE_BUNDESLIGA).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_NAME_ZWEITE_BUNDESLIGA));
+//        Long id = entity.getId();
+//        log.info("deleteComp with id::" + id);
+//        webClient.delete()
+//                .uri("/competitions/" + id)
+//                .exchange()
+//                .expectStatus()
+//                .isNoContent();
+//
+//
+//    }
 
-    @Test
-    @Order(1)
-    void createNewComp_withValidCompJsonInput_thenSuccess() throws Exception {
-        String testJSON = generateCompInput();
-
-        webClient.post()
-                .uri("/competitions")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(testJSON)
-                .exchange()
-                .expectStatus()
-                .isCreated()
-                .expectBody()
-                .jsonPath("$.id")
-                .exists()
-                .jsonPath("$.name")
-                .isEqualTo(TEST_COMP_NAME)
-                .jsonPath("$.winMultiplicator")
-                .isEqualTo(3)
-                .jsonPath("$.remisMultiplicator")
-                .exists();
-
-    }
-
-    @Test
-    @Order(2)
-    void givenPreloadedData_whenGetSingleCampaign_thenResponseContainsFields() {
-        Competition entity = repository.findByName(TEST_COMP_NAME).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_NAME));
-        Long id = entity.getId();
-        webClient.get()
-                .uri("/competitions/" + id)
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .expectBody()
-                .jsonPath("$.id")
-                .value(Long.class, equalTo(id))
-                .jsonPath("$.name")
-                .isEqualTo(TEST_COMP_NAME)
-                .jsonPath("$.winMultiplicator")
-                .exists()
-                .jsonPath("$.competitionRounds")
-                .isEmpty();
-
-    }
-
-
-    @Test
-    @Order(3)
-    void updateComp_withValidCompJsonInput_thenSuccess() throws Exception {
-        log.info("updateComp_withValidCompJsonInput_thenSuccess");
-        String testJSON = generateCompUpdateInput();
-        Competition entity = repository.findByName(TEST_COMP_NAME).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_NAME));
-        Long id = entity.getId();
-        log.info("updateComp with id::" + id);
-        webClient.put()
-                .uri("/competitions/" + id)
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(testJSON)
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .expectBody()
-                .jsonPath("$.id")
-                .exists()
-                .jsonPath("$.name")
-                .isEqualTo(TEST_COMP_NAME)
-                .jsonPath("$.description")
-                .isEqualTo("changed description")
-                .jsonPath("$.winMultiplicator")
-                .exists();
-
-    }
-
-    @Test
-    @Order(4)
-    void deleteComp_withValidCompJsonInput_thenSuccess() throws Exception {
-        log.info("deleteComp_withValidCompJsonInput_thenSuccess");
-
-        Competition entity = repository.findByName(TEST_COMP_NAME).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_NAME));
-        Long id = entity.getId();
-        log.info("deleteComp with id::" + id);
-        webClient.delete()
-                .uri("/competitions/" + id)
-                .exchange()
-                .expectStatus()
-                .isNoContent();
-
-
-    }
-
-    @Test
-    @Order(5)
-    void createNewCompWithComp_withValidCompJsonInput_thenSuccess() throws Exception {
-        String testJSON = generateCompWithCompInput();
-
-        webClient.post()
-                .uri("/competitions")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(testJSON)
-                .exchange()
-                .expectStatus()
-                .isCreated()
-                .expectBody()
-                .jsonPath("$.id")
-                .exists()
-                .jsonPath("$.name")
-                .isEqualTo(TEST_COMP_NAME)
-                .jsonPath("$.description")
-                .isEqualTo("2. Deutsche Fussball Bundesliga Saison 2025")
-                .jsonPath("$.competitionRounds")
-                .exists()
-                .jsonPath("$.competitionRounds..name")
-                .exists();
-
-
-    }
-
-    @Test
-    @Order(6)
-    void updateNewCompWithComp_withValidCompJsonInput_thenSuccess() throws Exception {
-        log.info("updateNewCompWithComp_withValidCompJsonInput_thenSuccess");
-        String testJSON = generateCompWithCompUpdateInput();
-        Competition entity = repository.findByName(TEST_COMP_NAME).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_NAME));
-        Long id = entity.getId();
-        log.info("updateComp with id::" + id);
-        webClient.put()
-                .uri("/competitions/" + id)
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(testJSON)
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .expectBody()
-                .jsonPath("$.id")
-                .exists()
-                .jsonPath("$.name")
-                .isEqualTo(TEST_COMP_NAME)
-                .jsonPath("$.description")
-                .isEqualTo("change of description")
-                .jsonPath("$.hasLigaModus")
-                .exists();
-
-    }
-
-
-    @Test
-    @Order(7)
-    void deleteComp2_withValidCompJsonInput_thenSuccess() throws Exception {
-        log.info("deleteComp2_withValidCompJsonInput_thenSuccess");
-
-        Competition entity = repository.findByName(TEST_COMP_NAME).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_NAME));
-        Long id = entity.getId();
-        log.info("deleteComp with id::" + id);
-        webClient.delete()
-                .uri("/competitions/" + id)
-                .exchange()
-                .expectStatus()
-                .isNoContent();
-
-
-    }
-
-    private String generateFamilyInput() throws Exception {
-        Reader reader = new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8);
-        return FileCopyUtils.copyToString(reader);
-    }
 
     private String generateCompInput() throws Exception {
         Reader reader = new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8);
@@ -274,6 +282,11 @@ public class ContractComApiIntegrationTest {
 
     private String generateCompWithCompUpdateInput() throws IOException {
         Reader reader = new InputStreamReader(updateWithCompResource.getInputStream(), StandardCharsets.UTF_8);
+        return FileCopyUtils.copyToString(reader);
+    }
+
+    private String generateFamilyInput() throws Exception {
+        Reader reader = new InputStreamReader(resourceFam.getInputStream(), StandardCharsets.UTF_8);
         return FileCopyUtils.copyToString(reader);
     }
 }

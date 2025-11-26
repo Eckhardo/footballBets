@@ -19,13 +19,18 @@ public interface CompetitionRepository extends JpaRepository<Competition, Long> 
     @Query("select  c from Competition c join fetch c.competitionRounds"
             + " where c.name =:name"
             + " order by c.name asc")
-    Competition findByNameJoinFetchRounds(String name);
+    Optional<Competition>  findByNameJoinFetchRounds(String name);
 
+
+    @Query("select  c from Competition c join fetch c.competitionRounds"
+            + " where c.id =:id"
+            + " order by c.name asc")
+    Competition findByIdJoinFetchRounds(Long id);
 
     @Query("select  c from Competition c join fetch c.competitionRounds r"
             + " join fetch r.spieltage  where c.name =:name"
             + " order by c.name asc")
-    Competition findByNameJoinFetchRoundsAndSpieltage(String name);
+    Optional<Competition>  findByNameJoinFetchRoundsAndSpieltage(String name);
 
 
     @Query(" select new sportbets.persistence.rowObject.CompRecord ("

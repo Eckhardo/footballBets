@@ -17,7 +17,7 @@ public class CompetitionFamily {
     private String name;
 
 
-    @OneToMany(mappedBy = "competitionFamily",cascade ={ CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "competitionFamily",cascade ={ CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.LAZY)
     private final Set<Competition> competitions = new HashSet<>();
 
     private String description;
@@ -53,6 +53,7 @@ public class CompetitionFamily {
         this.description = description;
         this.hasLigaModus = ligaModus;
         this.hasClubs = hasClubs;
+        this.createdOn=new Date();
 
     }
 

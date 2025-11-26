@@ -14,6 +14,10 @@ public interface CompService {
     Optional<Competition> updateComp(Long id, Competition compFam);
 
     void deleteById(Long id);
+
     List<Competition> getAll();
 
+    Optional<Competition> findByNameJoinFetchRounds(String name);
+
+    Competition findByIdJoinFetchRounds(Long id);
 }

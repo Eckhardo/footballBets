@@ -1,5 +1,6 @@
 package sportbets.persistence.repository;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import sportbets.persistence.builder.CompetitionConstants;
 import sportbets.persistence.entity.Competition;
 import sportbets.persistence.rowObject.CompRecord;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -33,10 +36,24 @@ public class CompetitionQueryTest {
     }
 
     @Test
+    public void findByIdJoinFetchRounds() {
+        System.out.println("\n");
+        System.out.println("findByIdJoinFetchRounds");
+        Competition comp = compRepo.findByIdJoinFetchRounds(1L);
+        assertNotNull(comp);
+        System.out.println("Found competition name: " + comp.getName());
+        comp.getCompetitionRounds().forEach(compRound -> {
+
+            System.out.println("Found competitionRound name: " + compRound.getName());
+        });
+    }
+
+
+    @Test
     public void findByNameJoinFetchRounds() {
         System.out.println("\n");
         System.out.println("findByNameJoinFetchRounds");
-        Competition comp = compRepo.findByNameJoinFetchRounds(CompetitionConstants.BUNDESLIGA_NAME_2025);
+        Competition comp = compRepo.findByNameJoinFetchRounds(CompetitionConstants.BUNDESLIGA_NAME_2025).orElseThrow(EntityNotFoundException::new);
         assertNotNull(comp);
         System.out.println("Found competition name: " + comp.getName());
         comp.getCompetitionRounds().forEach(compRound -> {
@@ -50,7 +67,7 @@ public class CompetitionQueryTest {
     public void findByNameJoinFetchRoundsAndSpieltage() {
         System.out.println("\n");
         System.out.println("findByNameJoinFetchRoundsAndSpieltage");
-        Competition comp = compRepo.findByNameJoinFetchRoundsAndSpieltage(CompetitionConstants.BUNDESLIGA_NAME_2025);
+        Competition comp = compRepo.findByNameJoinFetchRoundsAndSpieltage(CompetitionConstants.BUNDESLIGA_NAME_2025).orElseThrow(EntityNotFoundException::new);
         assertNotNull(comp);
         System.out.println("Found competition name: " + comp.getName());
         comp.getCompetitionRounds().forEach(compRound -> {

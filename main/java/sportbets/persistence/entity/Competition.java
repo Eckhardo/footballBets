@@ -22,7 +22,7 @@ public class Competition {
     private String description;
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fk_comp_family_id")
     @NotNull
     private CompetitionFamily competitionFamily;
@@ -61,6 +61,10 @@ public class Competition {
         this.remisMultiplicator = remisMultiplicator;
 
 
+    }
+
+    public Competition(Long source) {
+        this.id = source;
     }
 
 
@@ -154,6 +158,7 @@ public class Competition {
                 ", winMultiplicator=" + winMultiplicator +
                 ", remisMultiplicator=" + remisMultiplicator +
                 ", createdOn=" + createdOn +
+                "competitionRounds=" + competitionRounds +
                 ", family=" + competitionFamily.getName() +
                 '}';
     }

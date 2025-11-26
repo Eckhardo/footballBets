@@ -1,11 +1,12 @@
 {
-  "name": "2. Bundesliga",
-  "description": "DFL 2. Bundesliga",
+
+  "name": "Premier League",
+  "description": "UK Premier League",
   "hasLigaModus": true,
   "hasClubs": true,
   "competitions": [
     {
-      "name": "Saison 2025/26",
+      "name": "Season 2025",
       "description": "Beschreibung des Wettbewerbs",
       "winMultiplicator": 3,
       "remisMultiplicator": 1
