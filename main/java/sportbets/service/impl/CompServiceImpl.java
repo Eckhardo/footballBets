@@ -8,14 +8,19 @@ import org.springframework.stereotype.Service;
 import sportbets.persistence.entity.Competition;
 import sportbets.persistence.repository.CompetitionRepository;
 import sportbets.service.CompService;
+import sportbets.web.dto.CompetitionDto;
+import sportbets.web.dto.MapperUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 @Service
 public class CompServiceImpl implements CompService {
 
     private static final Logger log = LoggerFactory.getLogger(CompServiceImpl.class);
-    private CompetitionRepository compRepository;
+    private final CompetitionRepository compRepository;
+
     @Autowired
     private ModelMapper modelMapper;
 
@@ -24,22 +29,47 @@ public class CompServiceImpl implements CompService {
     }
 
     @Override
-    public Optional<Competition> findById(Long id) {
-        return compRepository.findById(id);
+    public Optional<CompetitionDto> findById(Long id) {
+        Optional<Competition> model = compRepository.findById(id);
+        ModelMapper modelMapper = MapperUtil.getModelMapperForFamily();
+        log.info("Competition found with {}", model);
+        CompetitionDto compDto = modelMapper.map(model, CompetitionDto.class);
+        return Optional.of(compDto);
     }
 
     @Override
-    public Competition save(Competition comp) {
-        comp.setId(null);
-        return compRepository.save(comp);
+    public Optional<CompetitionDto> save(CompetitionDto comp) {
+        ModelMapper myModelMapper = MapperUtil.getModelMapperForFamily();
+
+        Competition model = myModelMapper.map(comp, Competition.class);
+
+        log.info("Competition saved with {}", model);
+        Competition createdModel = compRepository.save(model);
+        CompetitionDto compDto = modelMapper.map(createdModel, CompetitionDto.class);
+        log.info("Competition RETURN do {}", compDto);
+        return Optional.of(compDto);
     }
 
     @Override
-    public Optional<Competition> updateComp(Long id, Competition comp) {
-        return compRepository.findById(id)
-                .map(base -> updateFields(base, comp))
-                .map(compRepository::save);
+    public Optional<CompetitionDto> updateComp(Long id, CompetitionDto updatedComp) {
+        ModelMapper myModelMapper = MapperUtil.getModelMapperForFamily();
+
+        Competition model = myModelMapper.map(updatedComp, Competition.class);
+        log.info("Competition updated  with {}", model);
+        Optional<Competition> updateModel = compRepository.findById(id);
+
+        if (updateModel.isPresent()) {
+            Optional<Competition> updated = updateModel.map(base -> updateFields(base, model))
+                    .map(compRepository::save);
+            CompetitionDto compDto = modelMapper.map(updated, CompetitionDto.class);
+            log.info("Competition updated  RETURN dto {}", compDto);
+            return Optional.ofNullable(compDto);
+
+        }
+
+        return Optional.empty();
     }
+
 
     @Override
     public void deleteById(Long id) {
@@ -47,8 +77,15 @@ public class CompServiceImpl implements CompService {
     }
 
     @Override
-    public List<Competition> getAll() {
-        return compRepository.findAll();
+    public List<CompetitionDto> getAll() {
+
+        List<Competition> comps = compRepository.findAll();
+        List<CompetitionDto> competitionDtos = new ArrayList<>();
+        ModelMapper myMapper = MapperUtil.getModelMapperForFamily();
+        comps.forEach(comp -> {
+            competitionDtos.add(myMapper.map(comp, CompetitionDto.class));
+        });
+        return competitionDtos;
     }
 
     @Override

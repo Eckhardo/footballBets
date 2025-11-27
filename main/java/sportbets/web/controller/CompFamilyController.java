@@ -8,8 +8,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import sportbets.persistence.entity.CompetitionFamily;
 import sportbets.service.CompFamilyService;
 import sportbets.web.dto.CompetitionFamilyDto;
+
+import java.util.List;
 
 
 @RestController
@@ -66,4 +69,10 @@ public class CompFamilyController {
         }
 
     }
+    @GetMapping("/families")
+    public List<CompetitionFamilyDto> findAll() {
+
+        return compFamilyService.getAll();
+    }
+
 }

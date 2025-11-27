@@ -43,7 +43,7 @@ public class FootballBetsApplication {
     private TeamRepository teamRepo;
 
     @Bean
-    public CommandLineRunner run(String[] args) {
+    public CommandLineRunner run() {
         return runner -> {
 
 //            CompetitionFamily fam = familyRepo.save(CompFamilyConstants.BUNDESLIGA);

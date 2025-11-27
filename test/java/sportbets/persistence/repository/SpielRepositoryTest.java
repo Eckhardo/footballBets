@@ -40,15 +40,23 @@ public class SpielRepositoryTest {
 
     @Autowired
     private SpielRepository spielRepo;
+    @Autowired
+    private CompetitionRepository compRepo;
 
     @Autowired
     private TeamRepository teamRepo;
 
     @Before
     public void setUp() {
+      CompetitionFamily testFamily=  getCompFamily();
+        familyRepo.save(testFamily);
+        //  competitionDAO.save(testComp);
+    }
+
+    private CompetitionFamily getCompFamily() {
         // Initialize test data before test methods
-        testFamily = new CompetitionFamily("2. Bundesliga", "2. Deutsche Fussball Bundesliga", true, true);
-        testComp = new Competition("Saison 2025/26", "1. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
+        testFamily = new CompetitionFamily("TestLiga", "2. Deutsche Fussball Bundesliga", true, true);
+        testComp = new Competition("TestLiga: Saison 2025/26", "1. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
         testFamily.addCompetition(testComp);
         testRound = new CompetitionRound(1, "Hinrunde", testComp, false);
         testComp.addCompetitionRound(testRound);
@@ -60,10 +68,7 @@ public class SpielRepositoryTest {
         Team team2 = new Team("Test2", "2");
         Team team3 = new Team("Test3", "3");
         Team team4 = new Team("Test4", "4");
-        teamRepo.save(team1);
-        teamRepo.save(team2);
-        teamRepo.save(team3);
-        teamRepo.save(team4);
+      
         CompetitionTeam ct1 = new CompetitionTeam(team1, testComp);
         team1.addCompetitionTeam(ct1);
         CompetitionTeam ct2 = new CompetitionTeam(team2, testComp);
@@ -82,9 +87,7 @@ public class SpielRepositoryTest {
         testSpiel2 = new Spiel(testSpieltag, 2, new Date(), team3, team4, 2, 2, false);
         testSpieltag.addSpiel(testSpiel1);
         testSpieltag.addSpiel(testSpiel2);
-        System.out.println("Save all cascade");
-        familyRepo.save(testFamily);
-        //  competitionDAO.save(testComp);
+       return  testFamily;
     }
 
     @After
@@ -96,20 +99,18 @@ public class SpielRepositoryTest {
 
     @Test
     public void givenFamily_whenFindByNameCalled_thenGroupsAreFound() {
-        CompetitionFamily foundFamily = familyRepo.findByName("1. Bundesliga").orElse(null);
+        Competition foundComp = compRepo.findByName(testComp.getName()).orElse(null);
 
-        assertNotNull(foundFamily);
-        assertEquals("1. Bundesliga", foundFamily.getName());
-        assertNotNull(foundFamily.getCompetitions());
-        Set<Competition> comps = foundFamily.getCompetitions();
-        for (Competition comp : comps) {
-            for (CompetitionRound round : comp.getCompetitionRounds()) {
-                Set<Spieltag> spieltage = round.getSpieltage();
-                for (Spieltag spieltag : spieltage) {
-                    spieltag.getSpiele().forEach(System.out::println);
-                }
 
-            }
+        assertNotNull(foundComp);
+
+
+        for (CompetitionRound round : foundComp.getCompetitionRounds()) {
+            Set<Spieltag> spieltage = round.getSpieltage();
+
+            assertEquals(1, spieltage.size());
+
+
         }
     }
 
@@ -121,12 +122,21 @@ public class SpielRepositoryTest {
         Predicate<Spiel> p3 = g -> g.getSpielNumber() == 100;
 
         // when
-        List<Spiel> found = spielRepo.findAll();
+        Competition foundComp = compRepo.findByName(testComp.getName()).orElse(null);
+        assertNotNull(foundComp);
+        for (CompetitionRound round : foundComp.getCompetitionRounds()) {
+            Set<Spieltag> spieltage = round.getSpieltage();
+            for(Spieltag sp : spieltage) {
 
-        // then
-        assertNotNull(found);
-        assertTrue(found.stream().anyMatch(p1));
-        assertTrue(found.stream().anyMatch(p2));
-        assertTrue(found.stream().noneMatch(p3));
+                Set<Spiel> found= sp.getSpiele();
+                   assertNotNull(found);
+                   assertTrue(found.stream().anyMatch(p1));
+                   assertTrue(found.stream().anyMatch(p2));
+                   assertTrue(found.stream().noneMatch(p3));
+               }
+
+
+        }
+
     }
 }

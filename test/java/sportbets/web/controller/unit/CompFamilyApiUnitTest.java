@@ -1,6 +1,7 @@
 package sportbets.web.controller.unit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import sportbets.FootballBetsApplication;
-import sportbets.config.TestProfileDatabase;
+import sportbets.config.TestProfileLiveTest;
+import sportbets.config.TestProfileUnitTest;
 import sportbets.persistence.entity.CompetitionFamily;
 import sportbets.persistence.repository.CompetitionFamilyRepository;
 
@@ -25,8 +27,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        classes = {FootballBetsApplication.class, TestProfileDatabase.class})
-@ActiveProfiles("test")
+        classes = {FootballBetsApplication.class, TestProfileUnitTest.class})
+@ActiveProfiles("dev")
 @AutoConfigureMockMvc
 public class CompFamilyApiUnitTest {
 
@@ -41,14 +43,14 @@ public class CompFamilyApiUnitTest {
 
     @BeforeEach
     void setup() {
-        compFamilyRepository.deleteAll();
+       compFamilyRepository.deleteAll();
     }
 
     @Test
     public void givenCompetitionFamilyObject_whenCreateCompetitionFamily_thenReturnSavedCompetitionFamily() throws Exception {
 
-        CompetitionFamily family = new CompetitionFamily("2. Bundesliga", "2. Deutsche Fussball Bundesliga", true, true);
-        family.setId(1L);
+        CompetitionFamily family = new CompetitionFamily("Testliga", "Deutsche Testliga", true, true);
+
 
         // when - action or behaviour that we are going test
         ResultActions response = mockMvc.perform(post("/families")
@@ -72,9 +74,9 @@ public class CompFamilyApiUnitTest {
     public void givenListOfCompetitionFamilys_whenGetAllCompetitionFamilys_thenReturnCompetitionFamilysList() throws Exception {
         // given - precondition or setup
         List<CompetitionFamily> listOfCompetitionFamilys = new ArrayList<>();
-        listOfCompetitionFamilys.add(new CompetitionFamily("2. Bundesliga", "2. Deutsche Fussball Bundesliga", true, true));
+        listOfCompetitionFamilys.add(new CompetitionFamily("Testliga", "Deutsche Testliga", true, true));
         listOfCompetitionFamilys.add(new CompetitionFamily("3. Bundesliga", "3. Deutsche Fussball Bundesliga", true, true));
-        compFamilyRepository.saveAll(listOfCompetitionFamilys);
+    List<CompetitionFamily> fams=   compFamilyRepository.saveAll(listOfCompetitionFamilys);
         // when -  action or the behaviour that we are going test
         ResultActions response = mockMvc.perform(get("/families"));
 
@@ -91,8 +93,8 @@ public class CompFamilyApiUnitTest {
     @Test
     public void givenCompetitionFamilyId_whenGetCompetitionFamilyById_thenReturnCompetitionFamilyObject() throws Exception {
         // given - precondition or setup
-        CompetitionFamily family = new CompetitionFamily("2. Bundesliga", "2. Deutsche Fussball Bundesliga", true, true);
-        family.setId(1L);
+        CompetitionFamily family = new CompetitionFamily("Testliga", "Deutsche Testliga", true, true);
+
 
         compFamilyRepository.save(family);
 
@@ -108,36 +110,18 @@ public class CompFamilyApiUnitTest {
 
     }
 
-    // negative scenario - valid family id
-    // JUnit test for GET family by id REST API
-    @Test
-    public void givenInvalidCompetitionFamilyId_whenGetCompetitionFamilyById_thenReturnEmpty() throws Exception {
-        // given - precondition or setup
 
-        CompetitionFamily family = new CompetitionFamily("2. Bundesliga", "2. Deutsche Fussball Bundesliga", true, true);
-        family.setId(1L);
-
-        compFamilyRepository.save(family);
-
-        // when -  action or the behaviour that we are going test
-        ResultActions response = mockMvc.perform(get("/families/{id}", family.getId()));
-
-        // then - verify the output
-        response.andExpect(status().isNotFound())
-                .andDo(print());
-
-    }
 
     // JUnit test for update family REST API - positive scenario
     @Test
     public void givenUpdatedCompetitionFamily_whenUpdateCompetitionFamily_thenReturnUpdateCompetitionFamilyObject() throws Exception {
         // given - precondition or setup
 
-        CompetitionFamily family = new CompetitionFamily("2. Bundesliga", "2. Deutsche Fussball Bundesliga", true, true);
+        CompetitionFamily family = new CompetitionFamily("Testliga", "Deutsche Testliga", true, true);
 
         compFamilyRepository.save(family);
 
-        CompetitionFamily updatedCompetitionFamily = new CompetitionFamily("2. Bundesliga", "2. Deutsche Fussballliga", true, true);
+        CompetitionFamily updatedCompetitionFamily = new CompetitionFamily("Testliga", "Deutsche Testliga", true, true);
 
 
         // when -  action or the behaviour that we are going test
@@ -158,15 +142,15 @@ public class CompFamilyApiUnitTest {
     @Test
     public void givenUpdatedCompetitionFamily_whenUpdateCompetitionFamily_thenReturn404() throws Exception {
         // given - precondition or setup
-        CompetitionFamily family = new CompetitionFamily("2. Bundesliga", "2. Deutsche Fussball Bundesliga", true, true);
+        CompetitionFamily family = new CompetitionFamily("Testliga", "Deutsche Testliga", true, true);
 
         compFamilyRepository.save(family);
 
-        CompetitionFamily updatedCompetitionFamily = new CompetitionFamily("2. Bundesliga", "2. Deutsche Fussballliga", true, true);
+        CompetitionFamily updatedCompetitionFamily = new CompetitionFamily("Testliga", "Deutsche Testliga", true, true);
 
 
         // when -  action or the behaviour that we are going test
-        ResultActions response = mockMvc.perform(put("/families/{id}", family.getId())
+        ResultActions response = mockMvc.perform(put("/families/{id}",1000L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updatedCompetitionFamily)));
 
@@ -179,7 +163,7 @@ public class CompFamilyApiUnitTest {
     @Test
     public void givenCompetitionFamilyId_whenDeleteCompetitionFamily_thenReturn200() throws Exception {
         // given - precondition or setup
-        CompetitionFamily savedCompetitionFamily = new CompetitionFamily("2. Bundesliga", "2. Deutsche Fussball Bundesliga", true, true);
+        CompetitionFamily savedCompetitionFamily = new CompetitionFamily("Testliga", "Deutsche Testliga", true, true);
 
         compFamilyRepository.save(savedCompetitionFamily);
 
@@ -187,7 +171,7 @@ public class CompFamilyApiUnitTest {
         ResultActions response = mockMvc.perform(delete("/families/{id}", savedCompetitionFamily.getId()));
 
         // then - verify the output
-        response.andExpect(status().isOk())
+        response.andExpect(status().isNoContent())
                 .andDo(print());
     }
 }

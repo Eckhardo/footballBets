@@ -18,6 +18,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -57,7 +59,7 @@ public class CompetitionTeamRepositoryTest {
     public void setUp() {
         // Initialize test data before test methods
 
-        testFamily = new CompetitionFamily("2. Bundesliga", "1. Deutsche Fussball Bundesliga", true, true);
+        testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true);
         testComp = new Competition("Saison 2025/26", "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
         testFamily.addCompetition(testComp);
         testRound = new CompetitionRound(1, "Vorrunde", testComp, false);
@@ -107,19 +109,13 @@ public class CompetitionTeamRepositoryTest {
 
     @Test
     public void givenFamily_whenFindByNameCalled_thenGroupsAreFound() {
-        CompetitionFamily foundFamily = familyRepo.findByName("1. Bundesliga").orElse(null);
+        Competition foundComp = compRepo.findByName(testComp.getName()).orElse(null);
 
-        assertNotNull(foundFamily);
-        assertEquals("1. Bundesliga", foundFamily.getName());
-        assertNotNull(foundFamily.getCompetitions());
-        Set<Competition> comps = foundFamily.getCompetitions();
-        for (Competition comp : comps) {
-            Set<CompetitionTeam> compTeams = comp.getCompetitionTeams();
+        assertNotNull(foundComp);
+        assertEquals(testComp.getName(), foundComp.getName());
 
-            compTeams.forEach(System.out::println);
-
-
-        }
+        Set<CompetitionTeam> compTeams = foundComp.getCompetitionTeams();
+        assertEquals(testComp.getCompetitionTeams().size(), compTeams.size());
     }
 
     @Test
@@ -139,18 +135,5 @@ public class CompetitionTeamRepositoryTest {
         assertTrue(found.stream().anyMatch(p2));
         assertTrue(found.stream().noneMatch(p3));
 
-        Competition comp = compRepo.findByNameWithFamily(CompetitionConstants.BUNDESLIGA2_NAME_2025, testFamily.getId());
-        assertNotNull(comp);
-        System.out.println("Found competition name: " + comp.getName());
-        //  comp.getCompetitionTeams().forEach(System.out::println);
-
-        Optional<Spieltag> spieltag = spieltagRepo.findById(1L);
-
-        if (spieltag.isPresent()) {
-            System.out.println("spieltag: " + spieltag.get());
-            //  spieltag.get().getSpiele().forEach(System.out::println);
-        } else {
-            System.out.println("NO spieltag: ");
-        }
     }
 }

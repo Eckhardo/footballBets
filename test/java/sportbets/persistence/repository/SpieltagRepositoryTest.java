@@ -38,15 +38,14 @@ public class SpieltagRepositoryTest {
 
     @Autowired
     private CompetitionFamilyRepository familyRepo;
-
     @Autowired
-    private SpieltagRepository spieltagRepo;
+    private CompetitionRepository compRepo;
 
 
     @Before
     public void setUp() {
         // Initialize test data before test methods
-        testFamily = new CompetitionFamily("2. Bundesliga", "1. Deutsche Fussball Bundesliga", true, true);
+        testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true);
         testComp = new Competition("Saison 2025/26", "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
         testFamily.addCompetition(testComp);
         testRound = new CompetitionRound(1, "Vorrunde", testComp, false);
@@ -69,19 +68,17 @@ public class SpieltagRepositoryTest {
 
     @Test
     public void givenFamily_whenFindByNameCalled_thenGroupsAreFound() {
-        CompetitionFamily foundFamily = familyRepo.findByName("1. Bundesliga").orElse(null);
+        Competition foundComp = compRepo.findByName(testComp.getName()).orElse(null);
 
-        assertNotNull(foundFamily);
-        assertEquals("1. Bundesliga", foundFamily.getName());
-        assertNotNull(foundFamily.getCompetitions());
-        Set<Competition> comps = foundFamily.getCompetitions();
-        for (Competition comp : comps) {
-            for (CompetitionRound round : comp.getCompetitionRounds()) {
-                Set<Spieltag> spieltage = round.getSpieltage();
+        assertNotNull(foundComp);
 
-            }
+        for (CompetitionRound round : foundComp.getCompetitionRounds()) {
+            assertNotNull(round);
+            Set<Spieltag> spieltage = round.getSpieltage();
+            assertEquals(2, spieltage.size());
         }
     }
+
 
     @Test
     public void whenFindByNameCalled_thenGroupsAreFound() {
@@ -90,12 +87,18 @@ public class SpieltagRepositoryTest {
         Predicate<Spieltag> p2 = g -> g.getSpieltagNumber() == 100;
 
         // when
-        List<Spieltag> spieltage = spieltagRepo.findAll();
+        Competition foundComp = compRepo.findByName(testComp.getName()).orElse(null);
 
-        assertNotNull(spieltage);
-        assertTrue(spieltage.stream().anyMatch(p1));
-        assertTrue(spieltage.stream().noneMatch(p2));
-        spieltage.forEach(System.out::println);
+        assertNotNull(foundComp);
+
+        for (CompetitionRound round : foundComp.getCompetitionRounds()) {
+            assertNotNull(round);
+            Set<Spieltag> spieltage = round.getSpieltage();
+            assertNotNull(spieltage);
+            assertTrue(spieltage.stream().anyMatch(p1));
+            assertTrue(spieltage.stream().noneMatch(p2));
+        }
+
 
         // then
 

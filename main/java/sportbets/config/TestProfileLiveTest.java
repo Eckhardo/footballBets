@@ -6,7 +6,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
 
-public class TestProfileDatabase {
+public class TestProfileLiveTest {
 
     /**
      *  First create the testDB with name "bulitippertest" with application.properties

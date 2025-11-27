@@ -14,11 +14,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.util.FileCopyUtils;
 import sportbets.FootballBetsApplication;
-import sportbets.config.TestProfileDatabase;
+import sportbets.config.TestProfileLiveTest;
 import sportbets.persistence.entity.CompetitionFamily;
 import sportbets.persistence.repository.CompetitionFamilyRepository;
 
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
@@ -27,7 +26,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        classes = {FootballBetsApplication.class, TestProfileDatabase.class})
+        classes = {FootballBetsApplication.class, TestProfileLiveTest.class})
 @ActiveProfiles("test")
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)

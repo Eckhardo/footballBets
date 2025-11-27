@@ -17,7 +17,7 @@ public class CompetitionTeam {
     @Column(nullable = false)
     private Date createdOn=new Date();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_team_id")
     @NotNull
     private Team team;

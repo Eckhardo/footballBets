@@ -32,7 +32,7 @@ public class CompetitionFamilyRepositoryTest {
     @Before
     public void setUp() {
         // Initialize test data before each test method
-        testFamily = new CompetitionFamily("2. Bundesliga", "2. Deutsche Fussball Bundesliga", true, true);
+        testFamily = new CompetitionFamily("TestLiga", "2. Deutsche Fussball TestLiga", true, true);
 
         familyRepo.save(testFamily);
     }
@@ -46,7 +46,7 @@ public class CompetitionFamilyRepositoryTest {
     @Test
     public void whenFindAll_thenCheckWithAllAnyMatchers() {
         // given
-        Predicate<CompetitionFamily> p1 = g -> g.getName().equals("1. Bundesliga");
+        Predicate<CompetitionFamily> p1 = g -> g.getName().equals("TestLiga");
         Predicate<CompetitionFamily> p2 = g -> g.getName().equals("EURO");
 
         // when
@@ -63,7 +63,7 @@ public class CompetitionFamilyRepositoryTest {
         System.out.println("givenUser_whenSaved");
         CompetitionFamily family = familyRepo.findById(testFamily.getId()).orElse(null);
         assertNotNull(family);
-        System.out.println("Family::" + family);
+
 
         assertEquals(testFamily.getName(), family.getName());
 
@@ -84,9 +84,9 @@ public class CompetitionFamilyRepositoryTest {
 
     @Test
     public void givenFamily_whenFindByNameCalled_thenFamilyIsFound() {
-        CompetitionFamily foundFamily = familyRepo.findByName("1. Bundesliga").orElse(null);
+        CompetitionFamily foundFamily = familyRepo.findByName("TestLiga").orElse(null);
 
         assertNotNull(foundFamily);
-        assertEquals("1. Bundesliga", foundFamily.getName());
+        assertEquals(testFamily.getName(), foundFamily.getName());
     }
 }

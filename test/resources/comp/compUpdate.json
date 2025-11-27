@@ -1,7 +1,7 @@
 {
   "name": "Liga 2 Saison 2025",
   "description": "changed description",
-  "compFamilyId": 12,
+  "familyId": 40,
   "winMultiplicator": 3,
   "remisMultiplicator": 1
 }

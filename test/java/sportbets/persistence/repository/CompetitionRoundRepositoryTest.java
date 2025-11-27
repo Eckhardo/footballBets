@@ -13,12 +13,13 @@ import sportbets.persistence.entity.CompetitionFamily;
 import sportbets.persistence.entity.CompetitionRound;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest()
 
@@ -31,7 +32,8 @@ public class CompetitionRoundRepositoryTest {
 
 
     private CompetitionRound testRound;
-
+    @Autowired
+    private CompetitionRepository compRepo;
     @Autowired
     private CompetitionRoundRepository roundRepo;
     @Autowired
@@ -40,8 +42,8 @@ public class CompetitionRoundRepositoryTest {
     @Before
     public void setUp() {
         // Initialize test data before test methods
-        testFamily = new CompetitionFamily("2. Bundesliga", "1. Deutsche Fussball Bundesliga", true, true);
-        testComp = new Competition("Saison 2025/26", "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
+        testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true);
+        testComp = new Competition("TestLiga: Saison 2025/26", "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
         testFamily.addCompetition(testComp);
         testRound = new CompetitionRound(1, "Hinrunde", testComp, false);
         testComp.addCompetitionRound(testRound);
@@ -59,16 +61,13 @@ public class CompetitionRoundRepositoryTest {
 
     @Test
     public void givenFamily_whenFindByNameCalled_thenCompsAndRoundsAreFound() {
-        CompetitionFamily foundFamily = familyRepo.findByName("1. Bundesliga").orElse(null);
+       Competition foundComp = compRepo.findByName(testComp.getName()).orElse(null);
 
-        assertNotNull(foundFamily);
-        assertEquals("1. Bundesliga", foundFamily.getName());
-        assertNotNull(foundFamily.getCompetitions());
-        Set<Competition> comps = foundFamily.getCompetitions();
-        comps.forEach(System.out::println);
-        for (Competition comp : comps) {
-            comp.getCompetitionRounds().forEach(System.out::println);
-        }
+        assertNotNull(foundComp);
+        assertEquals(testComp.getName(), foundComp.getName());
+        assertFalse(foundComp.getCompetitionRounds().isEmpty());
+        assertEquals(testComp.getCompetitionRounds().size(), foundComp.getCompetitionRounds().size());
+
     }
 
     @Test

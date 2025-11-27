@@ -10,7 +10,6 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Qualifier;
 import sportbets.persistence.entity.CompetitionFamily;
 import sportbets.persistence.repository.CompetitionFamilyRepository;
 import sportbets.service.impl.CompFamilyServiceImpl;
@@ -23,9 +22,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willDoNothing;
-import static org.mockito.Mockito.*;
+import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class CompFamilyServiceTest {
@@ -38,7 +35,6 @@ public class CompFamilyServiceTest {
 
     private CompetitionFamily family;
     @Spy
-    @Qualifier("myEntityMapper")
     private ModelMapper modelMapper;
 
     @BeforeEach
@@ -56,13 +52,13 @@ public class CompFamilyServiceTest {
     @Test
     public void givenCompFamilyObject_whenSaveCompFamily_thenReturnCompFamilyObject() {
         // given - precondition or setup
-
-        given(familyRepository.save(family)).willReturn(family);
-        ModelMapper mapper= new ModelMapper();
+        ModelMapper mapper = new ModelMapper();
         CompetitionFamilyDto famDto = mapper.map(family, CompetitionFamilyDto.class);
+        given(compFamilyService.save(famDto)).willReturn(Optional.of(famDto));
+
 
         // when -  action or the behaviour that we are going test
-       Optional<CompetitionFamilyDto>  savedCompFamily = compFamilyService.save(famDto);
+        Optional<CompetitionFamilyDto> savedCompFamily = compFamilyService.save(famDto);
 
         System.out.println(savedCompFamily);
         // then - verify the output
@@ -76,7 +72,7 @@ public class CompFamilyServiceTest {
         // given - precondition or setup
         given(familyRepository.findByName(family.getName()))
                 .willReturn(Optional.of(family));
-        ModelMapper mapper= new ModelMapper();
+        ModelMapper mapper = new ModelMapper();
         CompetitionFamilyDto famDto = mapper.map(family, CompetitionFamilyDto.class);
 
 
@@ -100,7 +96,7 @@ public class CompFamilyServiceTest {
         given(familyRepository.findAll()).willReturn(List.of(family, employee1));
 
         // when -  action or the behaviour that we are going test
-        List<CompetitionFamily> employeeList = compFamilyService.getAll();
+        List<CompetitionFamilyDto> employeeList = compFamilyService.getAll();
 
         // then - verify the output
         assertThat(employeeList).isNotNull();
@@ -119,7 +115,7 @@ public class CompFamilyServiceTest {
         given(familyRepository.findAll()).willReturn(Collections.emptyList());
 
         // when -  action or the behaviour that we are going test
-        List<CompetitionFamily> compFamilyList = compFamilyService.getAll();
+        List<CompetitionFamilyDto> compFamilyList = compFamilyService.getAll();
 
         // then - verify the output
         assertThat(compFamilyList).isEmpty();
@@ -151,7 +147,7 @@ public class CompFamilyServiceTest {
         family.setName("Premier League");
         family.setDescription("Description of PL");
         // when -  action or the behaviour that we are going test
-        ModelMapper mapper= new ModelMapper();
+        ModelMapper mapper = new ModelMapper();
         CompetitionFamilyDto famDto = mapper.map(family, CompetitionFamilyDto.class);
         Optional<CompetitionFamilyDto> updatedCompFamily = compFamilyService.updateFamily(family.getId(), famDto);
         // then - verify the output

@@ -14,8 +14,10 @@ import sportbets.persistence.entity.Competition;
 import sportbets.service.CompService;
 import sportbets.web.dto.CompDtoOLD;
 import sportbets.web.dto.CompetitionDto;
+import sportbets.web.dto.CompetitionFamilyDto;
 import sportbets.web.dto.MapperUtil;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
@@ -26,20 +28,21 @@ public class CompController {
     private static final Logger log = LoggerFactory.getLogger(CompController.class);
     private CompService compService;
 
-    private ModelMapper mapper;
 
-    public CompController(CompService compService,ModelMapper mapper) {
+    public CompController(CompService compService) {
         this.compService = compService;
-        this.mapper = mapper;
+
+    }
+    @GetMapping("/competitions")
+    public List<CompetitionDto> findAll() {
+
+        return compService.getAll();
     }
 
     @GetMapping("/competitions/{id}")
     public CompetitionDto findOne(@PathVariable Long id) {
         log.info("CompController:findOne::" + id);
-        Competition model = compService.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        ModelMapper modelMapper = MapperUtil.getModelMapperForFamily();
-        log.info("Competition found with {}", model);
-        CompetitionDto compDto = modelMapper.map(model, CompetitionDto.class);
+        CompetitionDto compDto = compService.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         log.info("CompetitionDto found with {}", compDto);
         return compDto;
@@ -47,21 +50,21 @@ public class CompController {
 
     @PostMapping("/competitions")
     @ResponseStatus(HttpStatus.CREATED)
-    public CompDtoOLD post(@RequestBody @Valid CompDtoOLD newComp) {
+    public CompetitionDto post(@RequestBody @Valid CompetitionDto newComp) {
         log.info("New competition {}", newComp);
-        Competition model = CompDtoOLD.Mapper.toModel(newComp);
-        Competition createdModel = this.compService.save(model);
+
+        CompetitionDto createdModel = this.compService.save(newComp).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));;
         log.info("Created competition {}", createdModel);
-        return CompDtoOLD.Mapper.toDto(createdModel);
+        return createdModel;
     }
 
     @PutMapping(value = "/competitions/{id}")
-    public CompDtoOLD update(@PathVariable Long id, @RequestBody @Validated(CompDtoOLD.CompUpdateValidationData.class) CompDtoOLD compDto) {
-        Competition model = CompDtoOLD.Mapper.toModel(compDto);
-        Competition createdModel = this.compService.updateComp(id, model)
+    public CompetitionDto update(@PathVariable Long id, @RequestBody CompetitionDto compDto) {
+
+        CompetitionDto createdModel = this.compService.updateComp(id, compDto)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         log.info("Updated competition {}", createdModel);
-        return CompDtoOLD.Mapper.toDto(createdModel);
+        return createdModel;
     }
 
     @DeleteMapping(value = "/competitions/{id}")
@@ -73,6 +76,5 @@ public class CompController {
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
 }

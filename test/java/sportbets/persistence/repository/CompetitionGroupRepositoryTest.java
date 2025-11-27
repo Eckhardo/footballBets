@@ -43,7 +43,7 @@ public class CompetitionGroupRepositoryTest {
     @Before
     public void setUp() {
         // Initialize test data before test methods
-        testFamily = new CompetitionFamily("2. Bundesliga", "1. Deutsche Fussball Bundesliga", true, true);
+        testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true);
         testComp = new Competition("Saison 2025/26", "1. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
         testFamily.addCompetition(testComp);
         testRound = new CompetitionRound(1, "Vorrunde", testComp, false);
@@ -64,18 +64,11 @@ public class CompetitionGroupRepositoryTest {
 
     @Test
     public void givenFamily_whenFindByNameCalled_thenGroupsAreFound() {
-        CompetitionFamily foundFamily = familyRepo.findByName("1. Bundesliga").orElse(null);
+        CompetitionGroup foundGroup = groupRepo.findByName(testGroup.getName()).orElse(null);
 
-        assertNotNull(foundFamily);
-        assertEquals("1. Bundesliga", foundFamily.getName());
-        assertNotNull(foundFamily.getCompetitions());
-        Set<Competition> comps = foundFamily.getCompetitions();
-        for (Competition comp : comps) {
-            for (CompetitionRound round : comp.getCompetitionRounds()) {
-                Set<CompetitionGroup> groups = round.getCompetitionGroups();
-                groups.forEach(System.out::println);
-            }
-        }
+        assertNotNull(foundGroup);
+        assertEquals(testGroup.getName(), foundGroup.getName());
+
     }
 
     @Test

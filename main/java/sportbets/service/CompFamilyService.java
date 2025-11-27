@@ -20,6 +20,6 @@ public interface CompFamilyService {
     void deleteByName(String name );
 
     void deleteById(Long id);
-    List<CompetitionFamily> getAll();
+    List<CompetitionFamilyDto> getAll();
 
 }

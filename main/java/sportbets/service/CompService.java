@@ -1,21 +1,23 @@
 package sportbets.service;
 
+import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.Competition;
+import sportbets.web.dto.CompetitionDto;
 
 import java.util.List;
 import java.util.Optional;
-
+@Transactional
 public interface CompService {
 
-    Optional<Competition> findById(Long id);
+    Optional<CompetitionDto> findById(Long id);
 
-    Competition save(Competition compFam);
+    Optional<CompetitionDto> save(CompetitionDto compFam);
 
-    Optional<Competition> updateComp(Long id, Competition compFam);
+    Optional<CompetitionDto> updateComp(Long id, CompetitionDto compFam);
 
     void deleteById(Long id);
 
-    List<Competition> getAll();
+    List<CompetitionDto> getAll();
 
     Optional<Competition> findByNameJoinFetchRounds(String name);
 
