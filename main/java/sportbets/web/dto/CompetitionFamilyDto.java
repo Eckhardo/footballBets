@@ -2,18 +2,14 @@ package sportbets.web.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import jakarta.validation.groups.Default;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sportbets.persistence.entity.Competition;
 import sportbets.persistence.entity.CompetitionFamily;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * DTO for {@link CompetitionFamily}
@@ -21,12 +17,10 @@ import java.util.stream.Collectors;
 public class CompetitionFamilyDto implements Serializable {
     private Long id;
 
-    @NotBlank(groups = {CompFamilyDtoOLD.CompFamilyUpdateValidationData.class, Default.class},
-            message = "name can't be blank")
+    @NotBlank(message = "name can't be blank")
     private String name;
 
-    @Size(groups = {CompFamilyDtoOLD.CompFamilyUpdateValidationData.class, Default.class},
-            min = 10, max = 50,
+    @Size(min = 10, max = 50,
             message = "description must be between 10 and 50 characters long")
     private String description;
     private boolean hasLigaModus;
@@ -36,12 +30,12 @@ public class CompetitionFamilyDto implements Serializable {
     public CompetitionFamilyDto() {
     }
 
-    public CompetitionFamilyDto(Long id, String name, String description,  boolean hasLigaModus, boolean hasClubs) {
+    public CompetitionFamilyDto(Long id, String name, String description, boolean hasLigaModus, boolean hasClubs) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.hasLigaModus = hasLigaModus;
-     //   this.hasClubs = hasClubs;
+        this.hasClubs = hasClubs;
     }
 
     public Long getId() {
@@ -115,7 +109,7 @@ public class CompetitionFamilyDto implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description,  hasLigaModus, hasClubs);
+        return Objects.hash(id, name, description, hasLigaModus, hasClubs);
     }
 
     @Override
@@ -124,7 +118,7 @@ public class CompetitionFamilyDto implements Serializable {
                 "id = " + id + ", " +
                 "name = " + name + ", " +
                 "description = " + description + ", " +
-                "competition names = " +competitions.stream().map(CompetitionDto::getName).collect(Collectors.toSet()) + ", " +
+                "competition names = " + competitions + ", " +
                 "hasLigaModus = " + hasLigaModus + ", " +
                 "hasClubs = " + hasClubs + ")";
     }
@@ -150,7 +144,7 @@ public class CompetitionFamilyDto implements Serializable {
                 return null;
 
             CompetitionFamilyDto dto = new CompetitionFamilyDto(model.getId(), model.getName(), model.getDescription(), model.isHasLigaModus(), model.isHasClubs());
-            log.info("RETURN:: " +dto);
+            log.info("RETURN:: " + dto);
             return dto;
         }
     }

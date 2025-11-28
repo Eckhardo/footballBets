@@ -27,7 +27,7 @@ public class Competition {
     @NotNull
     private CompetitionFamily competitionFamily;
 
-    @OneToMany(mappedBy = "competition", cascade =CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "competition", cascade =CascadeType.ALL, fetch = FetchType.LAZY)
     private final Set<CompetitionRound> competitionRounds = new HashSet<>();
 
     @OneToMany(mappedBy = "competition", cascade ={ CascadeType.PERSIST}, fetch = FetchType.LAZY)
@@ -159,7 +159,7 @@ public class Competition {
                 ", remisMultiplicator=" + remisMultiplicator +
                 ", createdOn=" + createdOn +
                 "competitionRounds=" + competitionRounds +
-                ", family=" + competitionFamily.getName() +
+                ", family=" + competitionFamily +
                 '}';
     }
 }

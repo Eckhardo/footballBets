@@ -1,7 +1,6 @@
 package sportbets.service;
 
 import org.springframework.transaction.annotation.Transactional;
-import sportbets.persistence.entity.CompetitionFamily;
 import sportbets.persistence.entity.Team;
 import sportbets.web.dto.CompetitionFamilyDto;
 

@@ -1,7 +1,6 @@
 package sportbets.web.controller.unit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import sportbets.FootballBetsApplication;
-import sportbets.config.TestProfileLiveTest;
 import sportbets.config.TestProfileUnitTest;
 import sportbets.persistence.entity.CompetitionFamily;
 import sportbets.persistence.repository.CompetitionFamilyRepository;

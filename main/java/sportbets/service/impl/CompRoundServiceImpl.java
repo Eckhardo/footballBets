@@ -5,7 +5,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sportbets.persistence.entity.Competition;
 import sportbets.persistence.entity.CompetitionRound;
+import sportbets.persistence.repository.CompetitionRepository;
 import sportbets.persistence.repository.CompetitionRoundRepository;
 import sportbets.service.CompRoundService;
 import sportbets.web.dto.CompetitionRoundDto;
@@ -19,48 +21,54 @@ public class CompRoundServiceImpl implements CompRoundService {
 
     private static final Logger log = LoggerFactory.getLogger(CompRoundServiceImpl.class);
     private final CompetitionRoundRepository roundRepository;
-
+    private final CompetitionRepository compRepository;
     @Autowired
     private ModelMapper modelMapper;
 
-    public CompRoundServiceImpl(CompetitionRoundRepository compRepository) {
-        this.roundRepository = compRepository;
+    public CompRoundServiceImpl(CompetitionRoundRepository roundRepository, CompetitionRepository compRepository) {
+        this.roundRepository = roundRepository;
+        this.compRepository = compRepository;
     }
 
     @Override
     public Optional<CompetitionRoundDto> findById(Long id) {
         Optional<CompetitionRound> model =  roundRepository.findById(id);
         ModelMapper modelMapper = MapperUtil.getModelMapperForCompetition();
-        log.info("CompetitionRound found with {}", model);
         CompetitionRoundDto compRoundDto = modelMapper.map(model, CompetitionRoundDto.class);
         return Optional.of(compRoundDto);
     }
 
     @Override
-    public Optional<CompetitionRoundDto> save(CompetitionRoundDto comp) {
-        ModelMapper myModelMapper = MapperUtil.getModelMapperForCompetition();
+    public Optional<CompetitionRoundDto> save(CompetitionRoundDto compRoundDto) {
+        Optional<Competition> comp =  compRepository.findById(compRoundDto.getCompId());
 
-        CompetitionRound model =  myModelMapper.map(comp, CompetitionRound.class);
-
-        log.info("CompetitionRound saved with {}", model);
-        CompetitionRound createdModel= roundRepository.save(model);
-        CompetitionRoundDto compRoundDto = modelMapper.map(createdModel, CompetitionRoundDto.class);
-        log.info("CompetitionRound RETURN do {}", compRoundDto);
-        return Optional.of(compRoundDto);
+        if(comp.isPresent()) {
+            CompetitionRound model = modelMapper.map(compRoundDto, CompetitionRound.class);
+            model.setCompetition(comp.get());
+            CompetitionRound createdModel = roundRepository.save(model);
+            ModelMapper myModelMapper = MapperUtil.getModelMapperForCompetition();
+            CompetitionRoundDto createdDto = myModelMapper.map(createdModel, CompetitionRoundDto.class);
+            return Optional.of(createdDto);
+        }
+        return Optional.empty();
     }
 
     @Override
     public Optional<CompetitionRoundDto> updateRound(Long id, CompetitionRoundDto dto) {
         ModelMapper myModelMapper = MapperUtil.getModelMapperForCompetition();
 
-        CompetitionRound model =  myModelMapper.map(dto, CompetitionRound.class);
-        log.info("CompetitionRound updated  with {}", model);
-        Optional<CompetitionRound > updateModel= roundRepository.findById(id)
-                .map(base -> updateFields(base, model))
-                .map(roundRepository::save);
-        CompetitionRoundDto compRoundDto = modelMapper.map(updateModel, CompetitionRoundDto.class);
-        log.info("CompetitionRound updated  RETURN dto {}", compRoundDto);
-        return Optional.of(compRoundDto);
+
+        log.info("updateRound:: {}", dto);
+        Optional<CompetitionRound > updateModel= roundRepository.findById(id);
+        if (updateModel.isPresent()) {
+            Optional<CompetitionRound> updated = updateModel.map(base -> updateFields(base, dto))
+                    .map(roundRepository::save);
+
+            CompetitionRoundDto compRoundDto = myModelMapper.map(updateModel, CompetitionRoundDto.class);
+            log.info("CompetitionRound updated  RETURN dto {}", compRoundDto);
+            return Optional.ofNullable(compRoundDto);
+        }
+        return Optional.empty();
     }
 
     @Override
@@ -74,10 +82,10 @@ public class CompRoundServiceImpl implements CompRoundService {
     }
 
 
-    private CompetitionRound updateFields(CompetitionRound base, CompetitionRound updatedRound) {
+    private CompetitionRound updateFields(CompetitionRound base, CompetitionRoundDto updatedRound) {
         base.setName(updatedRound.getName());
         base.setRoundNumber(updatedRound.getRoundNumber());
-        base.setHasGroups(updatedRound.isHasGroups());
+        base.setHasGroups(updatedRound.getHasGroups());
 
         return base;
     }

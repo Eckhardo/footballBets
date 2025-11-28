@@ -51,15 +51,15 @@ public class CompServiceImpl implements CompService {
     }
 
     @Override
-    public Optional<CompetitionDto> updateComp(Long id, CompetitionDto updatedComp) {
+    public Optional<CompetitionDto> updateComp(Long id, CompetitionDto updatedCompDto) {
         ModelMapper myModelMapper = MapperUtil.getModelMapperForFamily();
 
-        Competition model = myModelMapper.map(updatedComp, Competition.class);
-        log.info("Competition updated  with {}", model);
+
+        log.info("updateComp  with {}", updatedCompDto);
         Optional<Competition> updateModel = compRepository.findById(id);
 
         if (updateModel.isPresent()) {
-            Optional<Competition> updated = updateModel.map(base -> updateFields(base, model))
+            Optional<Competition> updated = updateModel.map(base -> updateFields(base, updatedCompDto))
                     .map(compRepository::save);
             CompetitionDto compDto = modelMapper.map(updated, CompetitionDto.class);
             log.info("Competition updated  RETURN dto {}", compDto);
@@ -100,7 +100,7 @@ public class CompServiceImpl implements CompService {
         return compRepository.findByIdJoinFetchRounds(id);
     }
 
-    private Competition updateFields(Competition base, Competition updatedComp) {
+    private Competition updateFields(Competition base, CompetitionDto updatedComp) {
         base.setName(updatedComp.getName());
         base.setDescription(updatedComp.getDescription());
         base.setWinMultiplicator(updatedComp.getWinMultiplicator());

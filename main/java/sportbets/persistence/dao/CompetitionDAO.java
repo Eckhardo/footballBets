@@ -1,6 +1,5 @@
 package sportbets.persistence.dao;
 
-import org.springframework.stereotype.Repository;
 import sportbets.persistence.entity.Competition;
 
 import java.util.List;

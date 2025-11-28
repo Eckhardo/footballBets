@@ -13,13 +13,12 @@ import sportbets.persistence.entity.CompetitionFamily;
 import sportbets.persistence.entity.CompetitionRound;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 import java.util.function.Predicate;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DataJpaTest()
 

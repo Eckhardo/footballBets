@@ -1,7 +1,11 @@
 package sportbets.web.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import org.hibernate.validator.constraints.Range;
+
 import java.io.Serializable;
-import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -9,23 +13,30 @@ import java.util.Objects;
  */
 public class CompetitionDto implements Serializable {
     private Long id;
+    @NotBlank(message = "name must not be empty")
     private  String name;
+    @Size(min = 10, max = 50,
+            message = "description must be between 10 and 50 characters long")
     private  String description;
+    @Range(min = 1, max =9,message = "Win Multiplicator  must be single-digit number")
     private  int winMultiplicator;
+    @Range(min = 1, max = 9, message = "Remis Multiplicator  must be single-digit number")
     private  int remisMultiplicator;
 
+    @NotNull(message = " family id cannot be null")
     private Long familyId;
 
 
     public CompetitionDto() {
     }
 
-    public CompetitionDto(Long id, String name, String description, int winMultiplicator, int remisMultiplicator) {
+    public CompetitionDto(Long id, String name, String description, int winMultiplicator, int remisMultiplicator,Long familyId) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.winMultiplicator = winMultiplicator;
         this.remisMultiplicator = remisMultiplicator;
+        this.familyId = familyId;
 
 
     }

@@ -11,8 +11,6 @@ import sportbets.persistence.builder.CompetitionConstants;
 import sportbets.persistence.entity.Competition;
 import sportbets.persistence.rowObject.CompRecord;
 
-import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DataJpaTest

@@ -1,9 +1,7 @@
 package sportbets.service;
 
 import org.springframework.transaction.annotation.Transactional;
-import sportbets.persistence.entity.Competition;
 import sportbets.persistence.entity.CompetitionRound;
-import sportbets.web.dto.CompetitionDto;
 import sportbets.web.dto.CompetitionRoundDto;
 
 import java.util.List;

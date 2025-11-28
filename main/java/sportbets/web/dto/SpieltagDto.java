@@ -11,6 +11,7 @@ import java.util.Objects;
  */
 public class SpieltagDto implements Serializable {
     private Long id;
+    @NotNull(message = " spieltag number cannot be null")
     private int spieltagNumber;
     private Date startDate;
     @NotNull

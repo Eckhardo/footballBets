@@ -17,7 +17,7 @@ public class CompetitionFamily {
     private String name;
 
 
-    @OneToMany(mappedBy = "competitionFamily",cascade ={ CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "competitionFamily",cascade =CascadeType.ALL, fetch = FetchType.LAZY)
     private final Set<Competition> competitions = new HashSet<>();
 
     private String description;

@@ -1,14 +1,12 @@
 package sportbets.web.controller;
 
 import jakarta.validation.Valid;
-import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import sportbets.persistence.entity.CompetitionFamily;
 import sportbets.service.CompFamilyService;
 import sportbets.web.dto.CompetitionFamilyDto;
 

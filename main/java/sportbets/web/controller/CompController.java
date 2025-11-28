@@ -1,26 +1,16 @@
 package sportbets.web.controller;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
-import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import sportbets.persistence.entity.Competition;
 import sportbets.service.CompService;
-import sportbets.web.dto.CompDtoOLD;
 import sportbets.web.dto.CompetitionDto;
-import sportbets.web.dto.CompetitionFamilyDto;
-import sportbets.web.dto.MapperUtil;
 
 import java.util.List;
-import java.util.Optional;
-
-import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 
 @RestController
 public class CompController {

@@ -1,5 +1,6 @@
 package sportbets.web.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.io.Serializable;
@@ -11,16 +12,18 @@ import java.util.Objects;
  */
 public class CompetitionRoundDto implements Serializable {
     private Long id;
+    @NotNull(message = " round number cannot be null")
     private int roundNumber;
+    @NotBlank(message = "name must not be empty")
     private String name;
     private boolean hasGroups = false;
-    @NotNull
+    @NotNull(message = " competition id cannot be null")
     private Long compId;
 
     public CompetitionRoundDto() {
     }
 
-    public CompetitionRoundDto(Long id, int roundNumber, String name, boolean hasGroups, Date createdOn) {
+    public CompetitionRoundDto(Long id, int roundNumber, String name, boolean hasGroups) {
         this.id = id;
         this.roundNumber = roundNumber;
         this.name = name;

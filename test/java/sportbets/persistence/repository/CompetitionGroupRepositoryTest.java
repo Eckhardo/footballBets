@@ -15,7 +15,6 @@ import sportbets.persistence.entity.CompetitionGroup;
 import sportbets.persistence.entity.CompetitionRound;
 
 import java.util.List;
-import java.util.Set;
 import java.util.function.Predicate;
 
 import static org.junit.Assert.assertTrue;

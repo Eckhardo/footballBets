@@ -8,8 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import sportbets.service.CompRoundService;
-import sportbets.service.CompService;
-import sportbets.web.dto.CompetitionDto;
 import sportbets.web.dto.CompetitionRoundDto;
 
 @RestController
@@ -44,6 +42,7 @@ public class CompRoundController {
 
     @PutMapping(value = "/rounds/{id}")
     public CompetitionRoundDto update(@PathVariable Long id, @RequestBody CompetitionRoundDto roundDto) {
+        log.info("Update round {}", roundDto);
 
         CompetitionRoundDto createdModel = this.roundService.updateRound(id, roundDto)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
