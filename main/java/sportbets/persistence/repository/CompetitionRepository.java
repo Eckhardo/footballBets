@@ -14,7 +14,7 @@ public interface CompetitionRepository extends JpaRepository<Competition, Long> 
             + " where c.name =:name"
             + " and cf.id=:id"
             + " order by c.name asc")
-    Competition findByNameWithFamily(String name, Long id);
+    Optional<Competition> findByNameWithFamily(String name, Long id);
 
     @Query("select  c from Competition c join fetch c.competitionRounds"
             + " where c.name =:name"

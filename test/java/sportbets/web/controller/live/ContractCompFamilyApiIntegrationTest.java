@@ -6,22 +6,15 @@ import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.util.FileCopyUtils;
 import sportbets.FootballBetsApplication;
 import sportbets.config.TestProfileLiveTest;
 import sportbets.persistence.entity.CompetitionFamily;
 import sportbets.persistence.repository.CompetitionFamilyRepository;
 import sportbets.web.dto.CompetitionFamilyDto;
-
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.nio.charset.StandardCharsets;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 

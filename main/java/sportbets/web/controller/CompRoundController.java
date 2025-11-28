@@ -8,7 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import sportbets.service.CompRoundService;
+import sportbets.service.SpieltagService;
 import sportbets.web.dto.CompetitionRoundDto;
+import sportbets.web.dto.SpieltagDto;
+
+import java.util.List;
 
 @RestController
 public class CompRoundController {
@@ -16,9 +20,10 @@ public class CompRoundController {
 
     private static final Logger log = LoggerFactory.getLogger(CompRoundController.class);
     private final CompRoundService roundService;
-
-    public CompRoundController(CompRoundService roundService) {
+    private final SpieltagService    spieltagService;
+    public CompRoundController(CompRoundService roundService,SpieltagService spieltagService) {
         this.roundService = roundService;
+        this.spieltagService = spieltagService;
     }
 
     @GetMapping("/rounds/{id}")
@@ -38,6 +43,14 @@ public class CompRoundController {
         CompetitionRoundDto createdModel = this.roundService.save(roundDto).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));;
         log.info("Created round {}", createdModel);
         return createdModel;
+    }
+    @GetMapping("/rounds/{id}/matchdays")
+    public List<SpieltagDto> findAll(@PathVariable Long id) {
+        log.info("SpieltagDto:findAll::" + id);
+        List<SpieltagDto> spieltagDto = spieltagService.getAll(id);
+
+        log.info("SpieltagDto found with {}", spieltagDto);
+        return spieltagDto;
     }
 
     @PutMapping(value = "/rounds/{id}")

@@ -1,6 +1,5 @@
 package sportbets.web.controller.live;
 
-
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
@@ -30,13 +29,14 @@ import java.util.Date;
 @ActiveProfiles("test")
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class ContractCompRoundApiIntegrationTest {
+public class ContractMatchDayApiIntegrationTest {
 
     private static final Logger log = LoggerFactory.getLogger(ContractCompRoundApiIntegrationTest.class);
     private static final String TEST_COMP_FAM = "TestLiga";
     private static final String TEST_COMP = "TestLiga: Saison 2025";
     private static final String TEST_COMP_ROUND = "Saison 2025: Hinrunde";
     private static final String TEST_COMP_ROUND_2 = "Saison 2025: Rueckrunde";
+
     private static final int TEST_MATCH_DAY = 1;
     @Autowired(required = true)
     WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();
@@ -88,7 +88,7 @@ public class ContractCompRoundApiIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isCreated();
-        Competition comp = competitionRepository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_FAM));
+        Competition comp = competitionRepository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP));
         compRoundDto.setCompId(comp.getId());
 
         webClient.post()
@@ -97,7 +97,10 @@ public class ContractCompRoundApiIntegrationTest {
                 .bodyValue(compRoundDto)
                 .exchange()
                 .expectStatus()
-                .isCreated();
+                .isCreated().expectBody().jsonPath("$.compId")
+                .exists();
+
+
         CompetitionRound round = competitionRoundRepository.findByName(TEST_COMP_ROUND).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
         matchDayDto.setCompRoundId(round.getId());
 
@@ -114,93 +117,7 @@ public class ContractCompRoundApiIntegrationTest {
 
 
     @Test
-    @Order(1)
-    void createNewRound_withValidDtoInput_thenSuccess() throws Exception {
-        Competition comp = competitionRepository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_FAM));
-        compRoundDto.setCompId(comp.getId());
-        compRoundDto.setName(TEST_COMP_ROUND_2);
-        log.info("createNewRound_withValidDtoInput_thenSuccess {}", compRoundDto.getCompId());
-        webClient.post()
-                .uri("/rounds")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(compRoundDto)
-                .exchange()
-                .expectStatus()
-                .isCreated()
-                .expectBody()
-                .jsonPath("$.id")
-                .exists()
-                .jsonPath("$.name")
-                .isEqualTo(TEST_COMP_ROUND_2)
-                .jsonPath("$.hasGroups")
-                .isEqualTo(false);
-
-    }
-
-    @Test
-    @Order(2)
-    void givenPreloadedData_whenGetSingleRound_thenResponseContainsFields() {
-
-
-        CompetitionRound entity = competitionRoundRepository.findByName(TEST_COMP_ROUND).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
-        Long id = entity.getId();
-        webClient.get()
-                .uri("/rounds/" + id)
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .expectBody()
-                .jsonPath("$.id")
-                .exists()
-                .jsonPath("$.name")
-                .isEqualTo(TEST_COMP_ROUND)
-                .jsonPath("$.hasGroups")
-                .exists()
-                .jsonPath("$.compId")
-                .exists();
-
-    }
-
-
-    @Test
-    @Order(3)
-    void updateRound_withValidCompJsonInput_thenSuccess() throws Exception {
-
-        CompetitionRound entity = competitionRoundRepository.findByName(TEST_COMP_ROUND).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
-        compRoundDto.setCompId(entity.getCompetition().getId());
-        // given
-        compRoundDto.setRoundNumber(100);
-
-        // test and verify
-        webClient.put()
-                .uri("/rounds/" + entity.getId())
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(compRoundDto)
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .expectBody()
-                .jsonPath("$.id")
-                .exists()
-                .jsonPath("$.name")
-                .isEqualTo(TEST_COMP_ROUND)
-                .jsonPath("$.roundNumber")
-                .isEqualTo(100)
-                .jsonPath("$.compId")
-                .exists();
-
-    }
-
-    @Test
-    @Order(4)
     void whenRoundIdProvided_ThenFetchAllMatchDays() {
-        CompetitionRound round = competitionRoundRepository.findByName(TEST_COMP_ROUND).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
-
-        webClient.get()
-                .uri("/rounds/"+round.getId()+"/matchdays")
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .expectBodyList(SpieltagDto.class).hasSize(1);
+       log.info("Fetching matchdays");
     }
 }

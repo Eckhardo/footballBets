@@ -28,10 +28,10 @@ public class CompetitionRound {
     private Competition competition;
 
 
-    @OneToMany(mappedBy = "competitionRound", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "competitionRound", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private  Set<CompetitionGroup> competitionGroups = new HashSet<>();
 
-    @OneToMany(mappedBy = "competitionRound", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "competitionRound", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Spieltag> spieltage=new HashSet<>();
 
     @Temporal(TemporalType.TIMESTAMP)

@@ -12,10 +12,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import sportbets.persistence.entity.*;
 
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 import java.util.function.Predicate;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -38,7 +37,9 @@ public class SpieltagRepositoryTest {
     @Autowired
     private CompetitionFamilyRepository familyRepo;
     @Autowired
-    private CompetitionRepository compRepo;
+    private CompetitionRoundRepository compRoundRepo;
+    @Autowired
+    private SpieltagRepository spieltagRepo;
 
 
     @Before
@@ -66,37 +67,31 @@ public class SpieltagRepositoryTest {
     }
 
     @Test
-    public void givenFamily_whenFindByNameCalled_thenGroupsAreFound() {
-        Competition foundComp = compRepo.findByName(testComp.getName()).orElse(null);
+    public void givenRound_whenFindByNameCalled_thenSpieltagIsFound() {
+        CompetitionRound foundRound = compRoundRepo.findByName(testRound.getName()).orElse(null);
 
-        assertNotNull(foundComp);
+        assertNotNull(foundRound);
 
-        for (CompetitionRound round : foundComp.getCompetitionRounds()) {
-            assertNotNull(round);
-            Set<Spieltag> spieltage = round.getSpieltage();
-            assertEquals(2, spieltage.size());
-        }
+        Spieltag sp = spieltagRepo.findByNumberWithRoundId(1, foundRound.getId()).orElseThrow(() -> {
+            return new RuntimeException("Spieltag not found");
+        });
+        assertNotNull(sp);
     }
 
 
     @Test
-    public void whenFindByNameCalled_thenGroupsAreFound() {
+    public void whenFindAllForRoundIsCalled_thenMatchDaysAreFound() {
         // given
         Predicate<Spieltag> p1 = g -> g.getSpieltagNumber() == 1;
         Predicate<Spieltag> p2 = g -> g.getSpieltagNumber() == 100;
 
-        // when
-        Competition foundComp = compRepo.findByName(testComp.getName()).orElse(null);
+        CompetitionRound foundRound = compRoundRepo.findByName(testRound.getName()).orElse(null);
 
-        assertNotNull(foundComp);
+        assertNotNull(foundRound);
 
-        for (CompetitionRound round : foundComp.getCompetitionRounds()) {
-            assertNotNull(round);
-            Set<Spieltag> spieltage = round.getSpieltage();
-            assertNotNull(spieltage);
-            assertTrue(spieltage.stream().anyMatch(p1));
-            assertTrue(spieltage.stream().noneMatch(p2));
-        }
+        List<Spieltag> sp = spieltagRepo.findAllByRoundId(foundRound.getId());
+        assertNotNull(sp);
+        assertEquals(2,sp.size());
 
 
         // then

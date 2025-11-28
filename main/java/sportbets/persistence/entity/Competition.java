@@ -22,7 +22,7 @@ public class Competition {
     private String description;
 
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_comp_family_id")
     @NotNull
     private CompetitionFamily competitionFamily;

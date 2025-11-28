@@ -58,6 +58,7 @@ public class CompFamilyServiceImpl implements CompFamilyService {
         CompetitionFamily model = modelMapper.map(compFam, CompetitionFamily.class);
         log.info("model be save:: {}", model);
         CompetitionFamily createdModel = compFamilyRepository.save(model);
+        log.info("saved entity:: {}", createdModel);
         CompetitionFamilyDto famDto = modelMapper.map(createdModel, CompetitionFamilyDto.class);
         log.info("dto to return:: {}", famDto);
         return Optional.of(famDto);
