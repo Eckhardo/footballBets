@@ -15,5 +15,5 @@ public interface SpieltagService {
 
     void deleteById(Long id);
 
-    List<SpieltagDto> getAll(Long id);
+    List<SpieltagDto> getAllForRound(Long id);
 }

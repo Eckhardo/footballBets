@@ -3,7 +3,6 @@ package sportbets.service.impl;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sportbets.persistence.entity.Competition;
 import sportbets.persistence.entity.CompetitionRound;
@@ -22,12 +21,13 @@ public class CompRoundServiceImpl implements CompRoundService {
     private static final Logger log = LoggerFactory.getLogger(CompRoundServiceImpl.class);
     private final CompetitionRoundRepository roundRepository;
     private final CompetitionRepository compRepository;
-    @Autowired
-    private ModelMapper modelMapper;
 
-    public CompRoundServiceImpl(CompetitionRoundRepository roundRepository, CompetitionRepository compRepository) {
+    private final ModelMapper modelMapper;
+
+    public CompRoundServiceImpl(CompetitionRoundRepository roundRepository, CompetitionRepository compRepository, ModelMapper modelMapper) {
         this.roundRepository = roundRepository;
         this.compRepository = compRepository;
+        this.modelMapper = modelMapper;
     }
 
     @Override

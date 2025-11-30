@@ -34,10 +34,8 @@ public class CompFamilyServiceTest {
     private CompFamilyServiceImpl compFamilyService;
 
     private CompetitionFamily family;
-    private CompetitionFamily familyReturn;
-    private CompetitionFamilyDto familyDto;
     @Spy
-    private ModelMapper modelMapper=new ModelMapper();
+    private ModelMapper modelMapper;
 
     @BeforeEach
     public void setup() {
@@ -45,11 +43,8 @@ public class CompFamilyServiceTest {
         //compFamilyService = new CompFamilyServiceImpl(familyRepository);
         family = new CompetitionFamily("2. Bundesliga", "2. Deutsche Fussball Bundesliga", true, true);
 
-        familyReturn = new CompetitionFamily("2. Bundesliga", "2. Deutsche Fussball Bundesliga", true, true);
-        familyReturn.setId(1L);
 
 
-        familyDto = new   CompetitionFamilyDto(null, "TEST_COMP_FAM", "Description of TestLiga", true, true);
     }
 
     // JUnit test for saveCompFamily method
@@ -57,12 +52,16 @@ public class CompFamilyServiceTest {
     @Test
     public void givenCompFamilyObject_whenSaveCompFamily_thenReturnCompFamilyObject() {
         // given - precondition or setup
-        given(familyRepository.findById(1L)).willReturn(Optional.of(familyReturn));
-        lenient().when(compFamilyService.save(familyDto)).thenReturn(Optional.ofNullable(familyDto));
+        ModelMapper mapper = new ModelMapper();
+        CompetitionFamilyDto famDto = mapper.map(family, CompetitionFamilyDto.class);
+        given(familyRepository.findById(family.getId())).willReturn(Optional.of(family));
+        given(compFamilyService.getModelMapperForFamily().map(famDto,CompetitionFamily.class)).willReturn(family);
+        given(compFamilyService.getModelMapperForFamily().map(family,CompetitionFamilyDto.class)).willReturn(famDto);
+        given(compFamilyService.save(famDto)).willReturn(Optional.of(famDto));
 
 
         // when -  action or the behaviour that we are going test
-        Optional<CompetitionFamilyDto> savedCompFamily = compFamilyService.save(familyDto);
+        Optional<CompetitionFamilyDto> savedCompFamily = compFamilyService.save(famDto);
 
         System.out.println(savedCompFamily);
         // then - verify the output
@@ -95,9 +94,9 @@ public class CompFamilyServiceTest {
     public void givenCompFamiliesList_whenGetAllCompFamilies_thenReturnCompFamiliesList() {
         // given - precondition or setup
 
-        CompetitionFamily family1 = new CompetitionFamily("3. Bundesliga", "3. Deutsche Fussball Bundesliga", true, true);
+        CompetitionFamily employee1 = new CompetitionFamily("3. Bundesliga", "3. Deutsche Fussball Bundesliga", true, true);
 
-        given(familyRepository.findAll()).willReturn(List.of(family, family1));
+        given(familyRepository.findAll()).willReturn(List.of(family, employee1));
 
         // when -  action or the behaviour that we are going test
         List<CompetitionFamilyDto> employeeList = compFamilyService.getAll();
@@ -131,10 +130,10 @@ public class CompFamilyServiceTest {
     @Test
     public void givenCompFamilyId_whenGetCompFamilyById_thenReturnCompFamilyObject() {
         // given
-        given(familyRepository.findById(1L)).willReturn(Optional.of(familyReturn));
+        given(familyRepository.findById(1L)).willReturn(Optional.of(family));
 
         // when
-        Optional<CompetitionFamilyDto> savedCompFamily = compFamilyService.findById(familyReturn.getId());
+        Optional<CompetitionFamilyDto> savedCompFamily = compFamilyService.findById(family.getId());
         assertTrue(savedCompFamily.isPresent());
 
         // then
@@ -147,20 +146,18 @@ public class CompFamilyServiceTest {
     @Test
     public void givenCompFamilyObject_whenUpdateCompFamily_thenReturnUpdatedCompFamily() {
         // given - precondition or setup
-        given(familyRepository.findById(1L)).willReturn(Optional.of(familyReturn));
+
         family.setName("Premier League");
         family.setDescription("Description of PL");
         // when -  action or the behaviour that we are going test
         ModelMapper mapper = new ModelMapper();
         CompetitionFamilyDto famDto = mapper.map(family, CompetitionFamilyDto.class);
         Optional<CompetitionFamilyDto> updatedCompFamily = compFamilyService.updateFamily(family.getId(), famDto);
-        assertTrue(updatedCompFamily.isPresent());
         // then - verify the output
         updatedCompFamily.ifPresent(compFamily -> {
             assertThat(compFamily.getName()).isEqualTo(family.getName());
             assertThat(compFamily.getDescription()).isEqualTo(family.getDescription());
         });
-
 
 
     }

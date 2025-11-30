@@ -6,10 +6,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sportbets.persistence.entity.Competition;
+import sportbets.persistence.entity.Team;
 import sportbets.persistence.repository.CompetitionRepository;
 import sportbets.service.CompService;
 import sportbets.web.dto.CompetitionDto;
 import sportbets.web.dto.MapperUtil;
+import sportbets.web.dto.TeamDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,6 +94,17 @@ public class CompServiceImpl implements CompService {
     public Optional<Competition> findByNameJoinFetchRounds(String name) {
         log.info("CompService:findByNameJoinFetchRounds::" + name);
         return compRepository.findByNameJoinFetchRounds(name);
+    }
+
+    @Override
+    public List<TeamDto> findTeamsForComp(Long compId) {
+        List<Team> teams = compRepository.findTeamsForComp(compId);
+        List<TeamDto> teamDtos = new ArrayList<>();
+        ModelMapper myMapper = MapperUtil.getModelMapperForCompetition();
+        teams.forEach(team -> {
+            teamDtos.add(myMapper.map(team, TeamDto.class));
+        });
+        return teamDtos;
     }
 
     @Override

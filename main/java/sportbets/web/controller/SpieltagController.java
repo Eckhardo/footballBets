@@ -10,8 +10,6 @@ import org.springframework.web.server.ResponseStatusException;
 import sportbets.service.SpieltagService;
 import sportbets.web.dto.SpieltagDto;
 
-import java.util.List;
-
 @RestController
 public class SpieltagController {
 

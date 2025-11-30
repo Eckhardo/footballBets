@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import sportbets.service.CompService;
 import sportbets.web.dto.CompetitionDto;
+import sportbets.web.dto.TeamDto;
 
 import java.util.List;
 
@@ -37,7 +38,13 @@ public class CompController {
         log.info("CompetitionDto found with {}", compDto);
         return compDto;
     }
+    @GetMapping("/competitions/{id}/teams")
+    public List<TeamDto> findAllTeams(@PathVariable Long id) {
 
+        List<TeamDto> teamDtos = compService.findTeamsForComp(id);
+        log.info("TeamDtos found with {}", teamDtos);
+        return teamDtos;
+    }
     @PostMapping("/competitions")
     @ResponseStatus(HttpStatus.CREATED)
     public CompetitionDto post(@RequestBody @Valid CompetitionDto newComp) {

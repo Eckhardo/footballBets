@@ -14,10 +14,13 @@ import sportbets.FootballBetsApplication;
 import sportbets.config.TestProfileLiveTest;
 import sportbets.persistence.entity.Competition;
 import sportbets.persistence.entity.CompetitionFamily;
+import sportbets.persistence.entity.CompetitionRound;
 import sportbets.persistence.repository.CompetitionFamilyRepository;
 import sportbets.persistence.repository.CompetitionRepository;
 import sportbets.web.dto.CompetitionDto;
 import sportbets.web.dto.CompetitionFamilyDto;
+import sportbets.web.dto.SpieltagDto;
+import sportbets.web.dto.TeamDto;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 
@@ -163,6 +166,19 @@ public class ContractComApiIntegrationTest {
                 .jsonPath("$.familyId")
                 .exists();
 
+    }
+
+    @Test
+    @Order(4)
+    void whenCompIdProvided_ThenFetchAllTeams() {
+        Competition entity = repository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_2));
+        Long id = entity.getId();
+        webClient.get()
+                .uri("/competitions/"+id +"/teams")
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBodyList(TeamDto.class).hasSize(0);
     }
 
 }

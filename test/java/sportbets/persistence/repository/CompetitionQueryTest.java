@@ -9,7 +9,10 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import sportbets.persistence.builder.CompetitionConstants;
 import sportbets.persistence.entity.Competition;
+import sportbets.persistence.entity.Team;
 import sportbets.persistence.rowObject.CompRecord;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -72,6 +75,17 @@ public class CompetitionQueryTest {
 
             System.out.println("Found competitionRound name: " + compRound.getName());
             compRound.getSpieltage().forEach(spieltag -> System.out.println("Found spieltag name: " + spieltag.getSpieltagNumber()));
+        });
+    }
+
+    @Test
+    public void findTeamsForCompetition() {
+        System.out.println("\n");
+        System.out.println("findTeamsForCompetition");
+        List<Team> teams = compRepo.findTeamsForComp(1L);
+        assertNotNull(teams);
+        teams.forEach(team -> {
+            System.out.println("Found team name: " + team);
         });
     }
 }

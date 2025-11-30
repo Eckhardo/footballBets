@@ -3,8 +3,10 @@ package sportbets.persistence.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import sportbets.persistence.entity.Competition;
+import sportbets.persistence.entity.Team;
 import sportbets.persistence.rowObject.CompRecord;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface CompetitionRepository extends JpaRepository<Competition, Long> {
@@ -19,7 +21,7 @@ public interface CompetitionRepository extends JpaRepository<Competition, Long> 
     @Query("select  c from Competition c join fetch c.competitionRounds"
             + " where c.name =:name"
             + " order by c.name asc")
-    Optional<Competition>  findByNameJoinFetchRounds(String name);
+    Optional<Competition> findByNameJoinFetchRounds(String name);
 
 
     @Query("select  c from Competition c join fetch c.competitionRounds"
@@ -30,7 +32,14 @@ public interface CompetitionRepository extends JpaRepository<Competition, Long> 
     @Query("select  c from Competition c join fetch c.competitionRounds r"
             + " join fetch r.spieltage  where c.name =:name"
             + " order by c.name asc")
-    Optional<Competition>  findByNameJoinFetchRoundsAndSpieltage(String name);
+    Optional<Competition> findByNameJoinFetchRoundsAndSpieltage(String name);
+
+    @Query("select  t from Team t  "
+            + " join fetch t.competitionTeams ct"
+            + " join fetch ct.competition c "
+            + " where c.id =:compId"
+            + " order by t.acronym asc")
+    List<Team> findTeamsForComp(Long compId);
 
 
     @Query(" select new sportbets.persistence.rowObject.CompRecord ("

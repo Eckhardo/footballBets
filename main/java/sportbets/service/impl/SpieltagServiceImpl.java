@@ -45,15 +45,11 @@ public class SpieltagServiceImpl implements SpieltagService {
         Optional<CompetitionRound> round =  roundRepository.findByIdWithParents(spieltagDto.getCompRoundId());
 
         if(round.isPresent()) {
-            log.info("round present:: {}", round.get().getRoundNumber());
             Spieltag model = modelMapper.map(spieltagDto, Spieltag.class);
             model.setCompetitionRound(round.get());
-            log.info("save matchday:: {}", model.getSpieltagNumber());
             Spieltag createdModel = spieltagRepository.save(model);
-            log.info("saved matchday:: {}", model.getSpieltagNumber());
             ModelMapper myModelMapper = MapperUtil.getModelMapperForCompetitionRound();
             SpieltagDto createdDto = myModelMapper.map(createdModel, SpieltagDto.class);
-            log.info("return matchday dto:: {}", createdDto);
             return Optional.of(createdDto);
         }
         return Optional.empty();
@@ -83,7 +79,7 @@ public class SpieltagServiceImpl implements SpieltagService {
     }
 
     @Override
-    public List<SpieltagDto> getAll(Long roundId) {
+    public List<SpieltagDto> getAllForRound(Long roundId) {
         List<Spieltag> matchDays = spieltagRepository.findAllByRoundId(roundId);
         List<SpieltagDto> spieltagDtos = new ArrayList<>();
         ModelMapper myMapper = MapperUtil.getModelMapperForCompetitionRound();

@@ -3,6 +3,7 @@ package sportbets.service;
 import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.Competition;
 import sportbets.web.dto.CompetitionDto;
+import sportbets.web.dto.TeamDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,5 +22,6 @@ public interface CompService {
 
     Optional<Competition> findByNameJoinFetchRounds(String name);
 
+    List<TeamDto> findTeamsForComp(Long compId);
     Competition findByIdJoinFetchRounds(Long id);
 }

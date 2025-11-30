@@ -44,11 +44,10 @@ public class CompRoundController {
         log.info("Created round {}", createdModel);
         return createdModel;
     }
-    @GetMapping("/rounds/{id}/matchdays")
-    public List<SpieltagDto> findAll(@PathVariable Long id) {
-        log.info("SpieltagDto:findAll::" + id);
-        List<SpieltagDto> spieltagDto = spieltagService.getAll(id);
-
+    @GetMapping("/rounds/{roundId}/matchdays")
+    public List<SpieltagDto> findAll(@PathVariable Long roundId) {
+        log.info("SpieltagDto:findAll::" + roundId);
+        List<SpieltagDto> spieltagDto = spieltagService.getAllForRound(roundId);
         log.info("SpieltagDto found with {}", spieltagDto);
         return spieltagDto;
     }

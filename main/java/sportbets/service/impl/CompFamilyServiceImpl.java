@@ -132,4 +132,9 @@ public class CompFamilyServiceImpl implements CompFamilyService {
     public void deleteById(Long id) {
         compFamilyRepository.deleteById(id);
     }
+
+    @Override
+    public ModelMapper getModelMapperForFamily() {
+        return modelMapper;
+    }
 }
