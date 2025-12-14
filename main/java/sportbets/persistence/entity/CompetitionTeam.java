@@ -3,7 +3,7 @@ package sportbets.persistence.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -13,9 +13,9 @@ public class CompetitionTeam {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Temporal(TemporalType.TIMESTAMP)
+
     @Column(nullable = false)
-    private Date createdOn=new Date();
+    private LocalDateTime createdOn=LocalDateTime.now();
 
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_team_id")
@@ -38,7 +38,7 @@ public class CompetitionTeam {
 
     }
 
-    public Date getCreatedOn() {
+    public LocalDateTime getCreatedOn() {
         return createdOn;
     }
 

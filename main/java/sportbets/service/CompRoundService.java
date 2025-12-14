@@ -16,6 +16,6 @@ public interface CompRoundService {
 
     void deleteById(Long id);
 
-    List<CompetitionRound> getAll();
+    List<CompetitionRoundDto> getAll();
 
 }

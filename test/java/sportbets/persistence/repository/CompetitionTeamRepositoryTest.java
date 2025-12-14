@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import sportbets.persistence.entity.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -61,8 +62,8 @@ public class CompetitionTeamRepositoryTest {
         testFamily.addCompetition(testComp);
         testRound = new CompetitionRound(1, "Vorrunde", testComp, false);
         testComp.addCompetitionRound(testRound);
-        testSpieltag = new Spieltag(1, new Date(), testRound);
-        testSpieltag2 = new Spieltag(2, new Date(), testRound);
+        testSpieltag = new Spieltag(1, LocalDateTime.now(), testRound);
+        testSpieltag2 = new Spieltag(2, LocalDateTime.now(), testRound);
         testRound.addSpieltag(testSpieltag);
         testRound.addSpieltag(testSpieltag2);
         System.out.println("Save all cascade");

@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import sportbets.persistence.entity.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -61,7 +62,7 @@ public class SpielRepositoryTest {
         testComp.addCompetitionRound(testRound);
         testGroup = new CompetitionGroup("Gruppe A", 1, testRound);
         testRound.addCompetitionGroup(testGroup);
-        testSpieltag = new Spieltag(1, new Date(), testRound);
+        testSpieltag = new Spieltag(1,LocalDateTime.now(), testRound);
         testRound.addSpieltag(testSpieltag);
         Team team1 = new Team("Test1", "1");
         Team team2 = new Team("Test2", "2");
@@ -82,8 +83,8 @@ public class SpielRepositoryTest {
         testComp.addCompetitionTeam(ct4);
 
 
-        testSpiel1 = new Spiel(testSpieltag, 1, new Date(), team1, team2, 3, 1, false);
-        testSpiel2 = new Spiel(testSpieltag, 2, new Date(), team3, team4, 2, 2, false);
+        testSpiel1 = new Spiel(testSpieltag, 1, LocalDateTime.now(), team1, team2, 3, 1, false);
+        testSpiel2 = new Spiel(testSpieltag, 2, LocalDateTime.now(), team3, team4, 2, 2, false);
         testSpieltag.addSpiel(testSpiel1);
         testSpieltag.addSpiel(testSpiel2);
        return  testFamily;

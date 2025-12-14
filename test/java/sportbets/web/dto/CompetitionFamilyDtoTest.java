@@ -9,6 +9,7 @@ import sportbets.persistence.entity.CompetitionFamily;
 import sportbets.persistence.entity.CompetitionRound;
 import sportbets.persistence.entity.Spieltag;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -86,9 +87,9 @@ class CompetitionFamilyDtoTest {
         testComp.setId(5L);
         CompetitionRound testRound = new CompetitionRound(1, "Hinrunde", testComp, false);
         testRound.setId(7L);
-        Spieltag testSpieltag = new Spieltag(1, new Date(), testRound);
-        Spieltag testSpieltag2 = new Spieltag(2, new Date(), testRound);
-        Spieltag testSpieltag3 = new Spieltag(4, new Date(), testRound);
+        Spieltag testSpieltag = new Spieltag(1, LocalDateTime.now(), testRound);
+        Spieltag testSpieltag2 = new Spieltag(2, LocalDateTime.now(), testRound);
+        Spieltag testSpieltag3 = new Spieltag(4, LocalDateTime.now(), testRound);
         List<Spieltag> spieltage = List.of(testSpieltag, testSpieltag2, testSpieltag3);
 
         spieltage.forEach(spieltag -> {

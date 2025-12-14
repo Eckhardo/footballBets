@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sportbets.common.DateUtil;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -20,7 +20,7 @@ public class Spieltag {
 
     private int spieltagNumber;
 
-    private Date startDate;
+    private LocalDateTime  startDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_comp_round_id")
@@ -34,7 +34,7 @@ public class Spieltag {
 
     }
 
-    public Spieltag(int spieltagNumber, Date startDate, CompetitionRound competitionRound) {
+    public Spieltag(int spieltagNumber, LocalDateTime startDate, CompetitionRound competitionRound) {
         this.spieltagNumber = spieltagNumber;
         this.startDate = startDate;
         this.competitionRound = competitionRound;
@@ -74,7 +74,7 @@ public class Spieltag {
         this.spieltagNumber = spieltagNumber;
     }
 
-    public Date getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
@@ -83,7 +83,7 @@ public class Spieltag {
     }
 
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
@@ -106,7 +106,7 @@ public class Spieltag {
         return "Spieltag{" +
                 "id=" + id +
                 ", spieltagNumber=" + spieltagNumber +
-                ", createdOn=" + startDate +
+                ", startDate=" + startDate +
                 ", competitionRound=" + competitionRound +
                 '}';
     }

@@ -3,7 +3,7 @@ package sportbets.persistence.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -34,9 +34,9 @@ public class CompetitionRound {
     @OneToMany(mappedBy = "competitionRound", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Spieltag> spieltage=new HashSet<>();
 
-    @Temporal(TemporalType.TIMESTAMP)
+
     @Column(nullable = false)
-    private Date createdOn=new Date();
+    private LocalDateTime createdOn=LocalDateTime.now();
 
 
     public CompetitionRound() {
@@ -111,7 +111,7 @@ public class CompetitionRound {
         this.hasGroups = hasGroups;
     }
 
-    public Date getCreatedOn() {
+    public LocalDateTime getCreatedOn() {
         return createdOn;
     }
 

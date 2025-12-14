@@ -14,12 +14,10 @@ import sportbets.FootballBetsApplication;
 import sportbets.config.TestProfileLiveTest;
 import sportbets.persistence.entity.Competition;
 import sportbets.persistence.entity.CompetitionFamily;
-import sportbets.persistence.entity.CompetitionRound;
 import sportbets.persistence.repository.CompetitionFamilyRepository;
 import sportbets.persistence.repository.CompetitionRepository;
 import sportbets.web.dto.CompetitionDto;
 import sportbets.web.dto.CompetitionFamilyDto;
-import sportbets.web.dto.SpieltagDto;
 import sportbets.web.dto.TeamDto;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -45,7 +43,7 @@ public class ContractComApiIntegrationTest {
     private static final String TEST_COMP = "TestLiga: Saison 2025";
     private static final String TEST_COMP_2 = "TestLiga: Saison 2026";
     CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, TEST_COMP_FAM, "Description of TestLiga", true, true);
-    CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, null);
+    CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, null, "familyName");
 
 
 
@@ -135,6 +133,8 @@ public class ContractComApiIntegrationTest {
                 .jsonPath("$.winMultiplicator")
                 .exists()
                 .jsonPath("$.familyId")
+                .exists()
+                .jsonPath("$.familyName")
                 .exists();
 
     }
@@ -164,6 +164,8 @@ public class ContractComApiIntegrationTest {
                 .jsonPath("$.description")
                 .isEqualTo("changed description")
                 .jsonPath("$.familyId")
+                .exists()
+                .jsonPath("$.familyName")
                 .exists();
 
     }

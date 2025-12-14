@@ -17,11 +17,9 @@ import sportbets.persistence.entity.CompetitionRound;
 import sportbets.persistence.repository.CompetitionFamilyRepository;
 import sportbets.persistence.repository.CompetitionRepository;
 import sportbets.persistence.repository.CompetitionRoundRepository;
-import sportbets.web.dto.CompetitionDto;
-import sportbets.web.dto.CompetitionFamilyDto;
-import sportbets.web.dto.CompetitionRoundDto;
-import sportbets.web.dto.SpieltagDto;
+import sportbets.web.dto.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -51,9 +49,9 @@ public class ContractMatchDayApiIntegrationTest {
 
 
     CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, TEST_COMP_FAM, "Description of TestLiga", true, true);
-    CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, null);
+    CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, null, "familyName");
     CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, TEST_COMP_ROUND, false);
-    SpieltagDto matchDayDto = new SpieltagDto(null, TEST_MATCH_DAY, new Date());
+    SpieltagDto matchDayDto = new SpieltagDto(null, TEST_MATCH_DAY, LocalDateTime.now());
 
     @AfterEach
     public void cleanup() {
@@ -117,7 +115,29 @@ public class ContractMatchDayApiIntegrationTest {
 
 
     @Test
+    @Order(1)
     void whenRoundIdProvided_ThenFetchAllMatchDays() {
-       log.info("Fetching matchdays");
+
+        CompetitionRound entity = competitionRoundRepository.findByName(TEST_COMP_ROUND).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
+        Long id = entity.getId();
+        webClient.get()
+                .uri("/rounds/"+id+"/matchdays")
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBodyList(SpieltagDto.class).hasSize(1);
+
     }
+    @Test
+    @Order(2)
+    void givenPreloadedData_whenGetSingleRound_thenResponseContainsFields() {
+
+    webClient.get()
+                .uri("/matchdays")
+                .exchange()
+                .expectStatus()
+                .isOk();
+
+    }
+
 }

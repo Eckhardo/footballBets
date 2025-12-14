@@ -25,7 +25,6 @@ public class CompetitionFamilyDto implements Serializable {
     private String description;
     private boolean hasLigaModus;
     private boolean hasClubs;
-    private Set<CompetitionDto> competitions = new HashSet<>();
 
     public CompetitionFamilyDto() {
     }
@@ -87,13 +86,6 @@ public class CompetitionFamilyDto implements Serializable {
         return hasClubs;
     }
 
-    public Set<CompetitionDto> getCompetitions() {
-        return competitions;
-    }
-
-    public void setCompetitions(Set<CompetitionDto> comps) {
-        this.competitions = comps;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -118,34 +110,8 @@ public class CompetitionFamilyDto implements Serializable {
                 "id = " + id + ", " +
                 "name = " + name + ", " +
                 "description = " + description + ", " +
-                "competition names = " + competitions + ", " +
                 "hasLigaModus = " + hasLigaModus + ", " +
                 "hasClubs = " + hasClubs + ")";
     }
 
-    public static class Mapper {
-
-        private static final Logger log = LoggerFactory.getLogger(Mapper.class);
-
-        public static CompetitionFamily toModel(CompetitionFamilyDto dto) {
-
-            if (dto == null)
-                return null;
-            log.info("Mapper.toModel::" + dto);
-            CompetitionFamily model = new CompetitionFamily(dto.getName(), dto.getDescription(), dto.getHasLigaModus(), dto.getHasClubs());
-
-
-            log.info("Mapper.toModel return::" + model);
-            return model;
-        }
-
-        public static CompetitionFamilyDto toDto(CompetitionFamily model) {
-            if (model == null)
-                return null;
-
-            CompetitionFamilyDto dto = new CompetitionFamilyDto(model.getId(), model.getName(), model.getDescription(), model.isHasLigaModus(), model.isHasClubs());
-            log.info("RETURN:: " + dto);
-            return dto;
-        }
-    }
 }

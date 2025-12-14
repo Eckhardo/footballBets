@@ -23,6 +23,7 @@ import sportbets.web.dto.CompetitionFamilyDto;
 import sportbets.web.dto.CompetitionRoundDto;
 import sportbets.web.dto.SpieltagDto;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -51,9 +52,9 @@ public class ContractCompRoundApiIntegrationTest {
 
 
     CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, TEST_COMP_FAM, "Description of TestLiga", true, true);
-    CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, null);
+    CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, null, "familyName");
     CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, TEST_COMP_ROUND, false);
-    SpieltagDto matchDayDto = new SpieltagDto(null, TEST_MATCH_DAY, new Date());
+    SpieltagDto matchDayDto = new SpieltagDto(null, TEST_MATCH_DAY, LocalDateTime.now());
 
     @AfterEach
     public void cleanup() {
@@ -118,6 +119,7 @@ public class ContractCompRoundApiIntegrationTest {
     void createNewRound_withValidDtoInput_thenSuccess() throws Exception {
         Competition comp = competitionRepository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_FAM));
         compRoundDto.setCompId(comp.getId());
+        compRoundDto.setCompName(comp.getName());
         compRoundDto.setName(TEST_COMP_ROUND_2);
         log.info("createNewRound_withValidDtoInput_thenSuccess {}", compRoundDto.getCompId());
         webClient.post()
@@ -157,6 +159,8 @@ public class ContractCompRoundApiIntegrationTest {
                 .jsonPath("$.hasGroups")
                 .exists()
                 .jsonPath("$.compId")
+                .exists()
+                .jsonPath("$.compName")
                 .exists();
 
     }
@@ -187,6 +191,8 @@ public class ContractCompRoundApiIntegrationTest {
                 .jsonPath("$.roundNumber")
                 .isEqualTo(100)
                 .jsonPath("$.compId")
+                .exists()
+                .jsonPath("$.compName")
                 .exists();
 
     }
@@ -202,5 +208,16 @@ public class ContractCompRoundApiIntegrationTest {
                 .expectStatus()
                 .isOk()
                 .expectBodyList(SpieltagDto.class).hasSize(1);
+    }
+    @Test
+    @Order(4)
+    void whenFindAll_ThenFetchAll() {
+
+        webClient.get()
+                .uri("/rounds")
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBodyList(CompetitionRoundDto.class).hasSize(3);
     }
 }

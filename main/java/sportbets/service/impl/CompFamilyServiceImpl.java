@@ -64,35 +64,6 @@ public class CompFamilyServiceImpl implements CompFamilyService {
         return Optional.of(famDto);
     }
 
-    public Optional<CompetitionFamilyDto> saveHierarchyTest(CompetitionFamilyDto compFam) {
-
-        log.info("Dto to be save:: {}", compFam.toString());
-        Optional<CompetitionFamily> savedCompFamily = compFamilyRepository.findByName(compFam.getName());
-        if (savedCompFamily.isPresent()) {
-            throw new EntityExistsException("CompFamily already exist with given name:" + compFam.getName());
-        }
-        CompetitionFamily model = modelMapper.map(compFam, CompetitionFamily.class);
-        ModelMapper myModelMapper = MapperUtil.getModelMapperForFamily();
-        if(!compFam.getCompetitions().isEmpty()){
-
-            for(CompetitionDto compDto : compFam.getCompetitions()){
-                log.info("iterate comp dtos:: {}", compDto.toString());
-                Competition compModel=  myModelMapper.map(compDto, Competition.class);
-                log.info("CompModel to save:: {}", compModel.toString());
-                model.addCompetition(compModel);
-            }
-        }
-        log.info("Model to save:: {}", model.toString());
-        CompetitionFamily createdModel = compFamilyRepository.save(model);
-        CompetitionFamilyDto famDto = modelMapper.map(createdModel, CompetitionFamilyDto.class);
-        Set<CompetitionDto> compDtos = new HashSet<>();
-
-        for(Competition comp : createdModel.getCompetitions()){
-            compDtos.add(myModelMapper.map(comp, CompetitionDto.class));
-        }
-        famDto.setCompetitions(compDtos);
-        return Optional.of(famDto);
-    }
     @Override
     public Optional<CompetitionFamilyDto> updateFamily(Long id, CompetitionFamilyDto compFam) {
         log.info("updateFamily:: {}",compFam);

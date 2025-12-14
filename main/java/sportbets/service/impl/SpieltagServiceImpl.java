@@ -23,12 +23,23 @@ public class SpieltagServiceImpl implements SpieltagService {
     private final CompetitionRoundRepository roundRepository;
     private final SpieltagRepository spieltagRepository;
 
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
     public SpieltagServiceImpl(CompetitionRoundRepository roundRepository, SpieltagRepository spieltagRepository, ModelMapper modelMapper) {
         this.roundRepository = roundRepository;
         this.spieltagRepository = spieltagRepository;
         this.modelMapper = modelMapper;
+    }
+
+    @Override
+    public List<SpieltagDto> getAll() {
+        List<Spieltag> matchDays = spieltagRepository.findAll();
+        List<SpieltagDto> spieltagDtos = new ArrayList<>();
+       final ModelMapper myMapper = MapperUtil.getModelMapperForCompetitionRound();
+        matchDays.forEach(spieltag -> {
+            spieltagDtos.add(myMapper.map(spieltag, SpieltagDto.class));
+        });
+        return spieltagDtos;
     }
 
     @Override

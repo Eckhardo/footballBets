@@ -3,7 +3,7 @@ package sportbets.persistence.entity;
 import jakarta.persistence.*;
 import sportbets.common.DateUtil;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -22,7 +22,7 @@ public class Spiel implements Comparable<Spiel> {
     private boolean stattgefunden;
 
 
-    private Date anpfiffdate;
+    private LocalDateTime anpfiffdate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_heim_team_id")
@@ -46,7 +46,7 @@ public class Spiel implements Comparable<Spiel> {
     /**
      * Simple properties only constructor for not-group spiele.
      */
-    public Spiel(Spieltag spieltag, int spielNumber, Date startDate,
+    public Spiel(Spieltag spieltag, int spielNumber, LocalDateTime startDate,
                  Team heimTeam, Team gastTeam) {
         this.spieltag = spieltag;
         this.spielNumber = spielNumber;
@@ -62,7 +62,7 @@ public class Spiel implements Comparable<Spiel> {
     /**
      * Simple properties only constructor for group spiele.
      */
-    public Spiel(Spieltag spieltag, int spielNumber, Date startDate,
+    public Spiel(Spieltag spieltag, int spielNumber, LocalDateTime startDate,
                  Team heimTeam, Team gastTeam,CompetitionGroup group) {
         this(spieltag, spielNumber, startDate,heimTeam,gastTeam);
         this.competitionGroup=group;
@@ -73,7 +73,7 @@ public class Spiel implements Comparable<Spiel> {
     /**
      * Full constructor without group spiele
      */
-    public Spiel(Spieltag spieltag, int spielNumber, Date startDate,
+    public Spiel(Spieltag spieltag, int spielNumber, LocalDateTime startDate,
                  Team heimTeam, Team gastTeam, Integer heimTore, Integer gastTore,
                  Boolean stattgefunden) {
         this(spieltag, spielNumber, startDate, heimTeam, gastTeam);
@@ -85,7 +85,7 @@ public class Spiel implements Comparable<Spiel> {
     /**
      * Full constructor group spiele
      */
-    public Spiel(Spieltag spieltag, int spielNumber, Date startDate,
+    public Spiel(Spieltag spieltag, int spielNumber, LocalDateTime startDate,
                  Team heimTeam, Team gastTeam,CompetitionGroup group, Integer heimTore, Integer gastTore,
                  Boolean stattgefunden) {
         this(spieltag, spielNumber, startDate, heimTeam, gastTeam,group);
@@ -136,7 +136,7 @@ public class Spiel implements Comparable<Spiel> {
         this.stattgefunden = stattgefunden;
     }
 
-    public Date getAnpfiffdate() {
+    public LocalDateTime getAnpfiffdate() {
         return anpfiffdate;
     }
 
@@ -144,7 +144,7 @@ public class Spiel implements Comparable<Spiel> {
         return DateUtil.formatDate(this.anpfiffdate);
     }
 
-    public void setAnpfiffdate(Date anpfiffdate) {
+    public void setAnpfiffdate(LocalDateTime anpfiffdate) {
         this.anpfiffdate = anpfiffdate;
     }
 

@@ -17,6 +17,7 @@ public class MapperUtil {
                 // Map the 'id' of the 'parent' object in the source
                 // to the 'parentId' field in the destination
                 map(source.getCompetitionFamily().getId()).setFamilyId(null);
+                map(source.getCompetitionFamily().getName()).setFamilyName(null);
             }
         });
 
@@ -32,6 +33,8 @@ public class MapperUtil {
                 // Map the 'id' of the 'parent' object in the source
                 // to the 'parentId' field in the destination
                 map(source.getCompetition().getId()).setCompId(null);
+                map(source.getCompetition().getName()).setCompName(null);
+
             }
         });
 

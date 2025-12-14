@@ -4,6 +4,7 @@ import sportbets.persistence.entity.Spiel;
 import sportbets.persistence.entity.Spieltag;
 import sportbets.persistence.entity.Team;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,7 +19,7 @@ public class SpielConstants {
             final Spieltag sp = spieltage.get(i);
             for (int j = 1; j <= 9; j++) {
 
-                SPIELE.add(new Spiel(sp, j, new Date(),
+                SPIELE.add(new Spiel(sp, j, LocalDateTime.now(),
                         heim, gast));
             }
         }
@@ -36,7 +37,7 @@ public class SpielConstants {
             Spieltag sp = spieltage.get(i);
             for (int j = 1; j <= 9; j++) {
 
-                SPIELE.add(new Spiel(sp, j, new Date(),
+                SPIELE.add(new Spiel(sp, j, LocalDateTime.now(),
                         heim, gast));
             }
         }

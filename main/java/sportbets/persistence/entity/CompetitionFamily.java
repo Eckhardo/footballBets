@@ -2,7 +2,7 @@ package sportbets.persistence.entity;
 
 import jakarta.persistence.*;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -22,9 +22,9 @@ public class CompetitionFamily {
 
     private String description;
 
-    @Temporal(TemporalType.TIMESTAMP)
+
     @Column(nullable = false)
-    private Date createdOn=new Date();
+    private LocalDateTime createdOn=LocalDateTime.now();
 
     private boolean hasLigaModus;
     /**
@@ -53,7 +53,7 @@ public class CompetitionFamily {
         this.description = description;
         this.hasLigaModus = ligaModus;
         this.hasClubs = hasClubs;
-        this.createdOn=new Date();
+        this.createdOn=LocalDateTime.now();
 
     }
 
@@ -90,7 +90,7 @@ public class CompetitionFamily {
         this.hasLigaModus = hasLigaModus;
     }
 
-    public Date getCreatedOn() {
+    public LocalDateTime getCreatedOn() {
         return createdOn;
     }
 

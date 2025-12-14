@@ -115,7 +115,7 @@ public class ContractTeamApiIntegrationTest {
 
     @Test
     @Order(3)
-    void whenCompIdProvided_ThenFetchAllTeams() {
+    void whenCallForAll_ThenNewTeamIsPartOfCollection() {
         Team team = teamRepository.findByName(TEAM_NAME).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME));
         teamDto.setId(team.getId());
 

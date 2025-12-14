@@ -82,9 +82,8 @@ public class ContractCompFamilyApiIntegrationTest {
                 .jsonPath("$.hasLigaModus")
                 .isEqualTo(true)
                 .jsonPath("$.hasClubs")
-                .isEqualTo(true)
-                .jsonPath("$.competitions")
-                .exists();
+                .isEqualTo(true);
+
 
     }
 

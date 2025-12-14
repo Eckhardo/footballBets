@@ -51,6 +51,13 @@ public class CompRoundController {
         log.info("SpieltagDto found with {}", spieltagDto);
         return spieltagDto;
     }
+    @GetMapping("/rounds")
+    public List<CompetitionRoundDto> findAll() {
+        log.info(" CompetitionRoundDto:findAll::");
+        List< CompetitionRoundDto> compRounds = roundService.getAll();
+        log.info("CompetitionRoundDto found with {}", compRounds);
+        return compRounds;
+    }
 
     @PutMapping(value = "/rounds/{id}")
     public CompetitionRoundDto update(@PathVariable Long id, @RequestBody CompetitionRoundDto roundDto) {

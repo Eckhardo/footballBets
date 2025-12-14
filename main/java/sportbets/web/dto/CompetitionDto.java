@@ -25,18 +25,19 @@ public class CompetitionDto implements Serializable {
 
     @NotNull(message = " family id cannot be null")
     private Long familyId;
-
+    private String familyName;
 
     public CompetitionDto() {
     }
 
-    public CompetitionDto(Long id, String name, String description, int winMultiplicator, int remisMultiplicator,Long familyId) {
+    public CompetitionDto(Long id, String name, String description, int winMultiplicator, int remisMultiplicator, Long familyId, String familyName) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.winMultiplicator = winMultiplicator;
         this.remisMultiplicator = remisMultiplicator;
         this.familyId = familyId;
+        this.familyName= familyName;
 
 
     }
@@ -91,6 +92,14 @@ public class CompetitionDto implements Serializable {
         this.familyId = familyId;
     }
 
+    public String getFamilyName() {
+        return familyName;
+    }
+
+    public void setFamilyName(String familyName) {
+        this.familyName = familyName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -114,6 +123,7 @@ public class CompetitionDto implements Serializable {
                 "name = " + name + ", " +
                 "description = " + description + ", " +
                 "familyId = " + familyId + ", " +
+                "familyName = " + familyName + ", " +
                 "winMultiplicator = " + winMultiplicator + ", " +
                 "remisMultiplicator = " + remisMultiplicator +")";
     }

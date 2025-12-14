@@ -3,6 +3,7 @@ package sportbets.web.dto;
 import jakarta.validation.constraints.NotNull;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Objects;
 
@@ -13,14 +14,14 @@ public class SpieltagDto implements Serializable {
     private Long id;
     @NotNull(message = " spieltag number cannot be null")
     private int spieltagNumber;
-    private Date startDate;
+    private LocalDateTime startDate;
     @NotNull
     private Long compRoundId;
 
     public SpieltagDto() {
     }
 
-    public SpieltagDto(Long id, int spieltagNumber, Date startDate) {
+    public SpieltagDto(Long id, int spieltagNumber, LocalDateTime startDate) {
         this.id = id;
         this.spieltagNumber = spieltagNumber;
         this.startDate = startDate;
@@ -43,11 +44,11 @@ public class SpieltagDto implements Serializable {
         this.spieltagNumber = spieltagNumber;
     }
 
-    public Date getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 

@@ -12,6 +12,7 @@ import sportbets.service.CompRoundService;
 import sportbets.web.dto.CompetitionRoundDto;
 import sportbets.web.dto.MapperUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,7 +33,7 @@ public class CompRoundServiceImpl implements CompRoundService {
 
     @Override
     public Optional<CompetitionRoundDto> findById(Long id) {
-        Optional<CompetitionRound> model =  roundRepository.findById(id);
+        Optional<CompetitionRound> model = roundRepository.findById(id);
         ModelMapper modelMapper = MapperUtil.getModelMapperForCompetition();
         CompetitionRoundDto compRoundDto = modelMapper.map(model, CompetitionRoundDto.class);
         return Optional.of(compRoundDto);
@@ -40,9 +41,9 @@ public class CompRoundServiceImpl implements CompRoundService {
 
     @Override
     public Optional<CompetitionRoundDto> save(CompetitionRoundDto compRoundDto) {
-        Optional<Competition> comp =  compRepository.findById(compRoundDto.getCompId());
+        Optional<Competition> comp = compRepository.findById(compRoundDto.getCompId());
 
-        if(comp.isPresent()) {
+        if (comp.isPresent()) {
             CompetitionRound model = modelMapper.map(compRoundDto, CompetitionRound.class);
             model.setCompetition(comp.get());
             CompetitionRound createdModel = roundRepository.save(model);
@@ -59,7 +60,7 @@ public class CompRoundServiceImpl implements CompRoundService {
 
 
         log.info("updateRound:: {}", dto);
-        Optional<CompetitionRound > updateModel= roundRepository.findById(id);
+        Optional<CompetitionRound> updateModel = roundRepository.findById(id);
         if (updateModel.isPresent()) {
             Optional<CompetitionRound> updated = updateModel.map(base -> updateFields(base, dto))
                     .map(roundRepository::save);
@@ -76,9 +77,16 @@ public class CompRoundServiceImpl implements CompRoundService {
         roundRepository.deleteById(id);
     }
 
+
     @Override
-    public List<CompetitionRound> getAll() {
-        return roundRepository.findAll();
+    public List<CompetitionRoundDto> getAll() {
+        List<CompetitionRound> rounds = roundRepository.findAll();
+        List<CompetitionRoundDto> roundDtos = new ArrayList<>();
+        ModelMapper myMapper = MapperUtil.getModelMapperForCompetition();
+        rounds.forEach(round -> {
+            roundDtos.add(myMapper.map(round, CompetitionRoundDto.class));
+        });
+        return roundDtos;
     }
 
 
