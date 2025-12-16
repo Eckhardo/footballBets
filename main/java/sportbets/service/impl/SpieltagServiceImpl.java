@@ -4,12 +4,15 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.CompetitionRound;
+import sportbets.persistence.entity.Spiel;
 import sportbets.persistence.entity.Spieltag;
 import sportbets.persistence.repository.CompetitionRoundRepository;
 import sportbets.persistence.repository.SpieltagRepository;
 import sportbets.service.SpieltagService;
 import sportbets.web.dto.MapperUtil;
+import sportbets.web.dto.SpielDto;
 import sportbets.web.dto.SpieltagDto;
 
 import java.util.ArrayList;
@@ -41,7 +44,19 @@ public class SpieltagServiceImpl implements SpieltagService {
         });
         return spieltagDtos;
     }
-
+    @Override
+    @Transactional
+    public List<SpielDto> getAllForMatchday(Long id) {
+        log.info("getAllForMatchday:: {}", id);
+        List<Spiel> spiele = spieltagRepository.findAllForMatchday(id);
+        log.info("Spiele:: {}", spiele);
+        List<SpielDto> spielDtos = new ArrayList<>();
+        final ModelMapper myMapper = MapperUtil.getModelMapperForSpiel();
+        for (Spiel spiel : spiele) {
+            spielDtos.add(myMapper.map(spiel, SpielDto.class));
+        }
+        return spielDtos;
+    }
     @Override
     public Optional<SpieltagDto> findById(Long id) {
         Optional<Spieltag> model =  spieltagRepository.findById(id);
@@ -51,6 +66,7 @@ public class SpieltagServiceImpl implements SpieltagService {
     }
 
     @Override
+    @Transactional
     public Optional<SpieltagDto> save(SpieltagDto spieltagDto) {
         log.info("save spieltag:: {}", spieltagDto);
         Optional<CompetitionRound> round =  roundRepository.findByIdWithParents(spieltagDto.getCompRoundId());
@@ -59,14 +75,17 @@ public class SpieltagServiceImpl implements SpieltagService {
             Spieltag model = modelMapper.map(spieltagDto, Spieltag.class);
             model.setCompetitionRound(round.get());
             Spieltag createdModel = spieltagRepository.save(model);
+            log.info("saved spieltag:: {}", createdModel);
             ModelMapper myModelMapper = MapperUtil.getModelMapperForCompetitionRound();
             SpieltagDto createdDto = myModelMapper.map(createdModel, SpieltagDto.class);
+            log.info("returned spieltagDto:: {}", createdModel);
             return Optional.of(createdDto);
         }
         return Optional.empty();
     }
 
     @Override
+    @Transactional
     public Optional<SpieltagDto> updateMatchDay(Long id, SpieltagDto spieltagDto) {
         ModelMapper myModelMapper = MapperUtil.getModelMapperForCompetition();
 
@@ -85,6 +104,7 @@ public class SpieltagServiceImpl implements SpieltagService {
     }
 
     @Override
+    @Transactional
     public void deleteById(Long id) {
         spieltagRepository.deleteById(id);
     }

@@ -1,11 +1,10 @@
 package sportbets.service;
 
-import org.springframework.transaction.annotation.Transactional;
 import sportbets.web.dto.TeamDto;
 
 import java.util.List;
 import java.util.Optional;
-@Transactional
+
 public interface TeamService {
     Optional<TeamDto> findById(Long id);
 

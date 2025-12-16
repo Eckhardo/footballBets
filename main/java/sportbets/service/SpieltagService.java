@@ -1,5 +1,6 @@
 package sportbets.service;
 
+import sportbets.web.dto.SpielDto;
 import sportbets.web.dto.SpieltagDto;
 
 import java.util.List;
@@ -18,4 +19,5 @@ public interface SpieltagService {
     List<SpieltagDto> getAllForRound(Long id);
 
     List<SpieltagDto> getAll();
+    List<SpielDto> getAllForMatchday(Long id);
 }

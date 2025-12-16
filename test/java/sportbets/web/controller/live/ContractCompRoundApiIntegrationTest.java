@@ -24,7 +24,6 @@ import sportbets.web.dto.CompetitionRoundDto;
 import sportbets.web.dto.SpieltagDto;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         classes = {FootballBetsApplication.class, TestProfileLiveTest.class})

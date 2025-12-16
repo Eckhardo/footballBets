@@ -12,7 +12,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import sportbets.FootballBetsApplication;
 import sportbets.config.TestProfileLiveTest;
-import sportbets.persistence.entity.Competition;
 import sportbets.persistence.entity.Team;
 import sportbets.persistence.repository.TeamRepository;
 import sportbets.web.dto.TeamDto;
@@ -95,7 +94,6 @@ public class ContractTeamApiIntegrationTest {
         Team team = teamRepository.findByName(TEAM_NAME).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME));
         teamDto.setAcronym("Changed Description");
         Long id = team.getId();
-        log.info("updateFamily with id::" + id);
         webClient.put()
                 .uri("/teams/" + id)
                 .contentType(MediaType.APPLICATION_JSON)

@@ -5,16 +5,16 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import sportbets.persistence.entity.Competition;
+import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.CompetitionFamily;
 import sportbets.persistence.entity.Team;
 import sportbets.persistence.repository.CompetitionFamilyRepository;
 import sportbets.service.CompFamilyService;
-import sportbets.web.dto.CompetitionDto;
 import sportbets.web.dto.CompetitionFamilyDto;
-import sportbets.web.dto.MapperUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CompFamilyServiceImpl implements CompFamilyService {
@@ -49,6 +49,7 @@ public class CompFamilyServiceImpl implements CompFamilyService {
     }
 
     @Override
+    @Transactional
     public Optional<CompetitionFamilyDto> save(CompetitionFamilyDto compFam) {
         log.info("FmDto to be save:: {}", compFam);
         Optional<CompetitionFamily> savedCompFamily = compFamilyRepository.findByName(compFam.getName());
@@ -65,14 +66,15 @@ public class CompFamilyServiceImpl implements CompFamilyService {
     }
 
     @Override
+    @Transactional
     public Optional<CompetitionFamilyDto> updateFamily(Long id, CompetitionFamilyDto compFam) {
         log.info("updateFamily:: {}",compFam);
         Optional<CompetitionFamily> updateModel = compFamilyRepository.findById(id);
 
         if (updateModel.isPresent()) {
-            Optional<CompetitionFamily> updatedModel = updateModel.map(base -> updateFields(base, compFam))
+            Optional<CompetitionFamily> updated = updateModel.map(base -> updateFields(base, compFam))
                     .map(compFamilyRepository::save);
-            CompetitionFamilyDto famDto = modelMapper.map(updatedModel, CompetitionFamilyDto.class);
+            CompetitionFamilyDto famDto = modelMapper.map(updated, CompetitionFamilyDto.class);
             return Optional.of(famDto);
         } else {
             return Optional.empty();
@@ -95,11 +97,13 @@ public class CompFamilyServiceImpl implements CompFamilyService {
     }
 
     @Override
+    @Transactional
     public void deleteByName(String name) {
         compFamilyRepository.deleteByName(name);
     }
 
     @Override
+    @Transactional
     public void deleteById(Long id) {
         compFamilyRepository.deleteById(id);
     }

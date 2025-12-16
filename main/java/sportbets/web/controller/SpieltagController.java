@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import sportbets.service.SpieltagService;
-import sportbets.web.dto.CompetitionRoundDto;
+import sportbets.web.dto.SpielDto;
 import sportbets.web.dto.SpieltagDto;
 
 import java.util.List;
@@ -27,6 +27,13 @@ public class SpieltagController {
         log.info(" SpieltagDto:findAll::");
         List< SpieltagDto> matchdays = spieltagService.getAll();
         log.info("SpieltagDto found with {}", matchdays);
+        return matchdays;
+    }
+    @GetMapping("/matchdays/{matchdayId}/matches")
+    public List<SpielDto> findAllForMatchday(@PathVariable Long matchdayId) {
+        log.info(" SpielDto:findAll::");
+        List< SpielDto> matchdays = spieltagService.getAllForMatchday(matchdayId);
+        log.info("SpielDto found with {}", matchdays);
         return matchdays;
     }
 

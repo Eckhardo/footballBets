@@ -17,10 +17,12 @@ import sportbets.persistence.entity.CompetitionRound;
 import sportbets.persistence.repository.CompetitionFamilyRepository;
 import sportbets.persistence.repository.CompetitionRepository;
 import sportbets.persistence.repository.CompetitionRoundRepository;
-import sportbets.web.dto.*;
+import sportbets.web.dto.CompetitionDto;
+import sportbets.web.dto.CompetitionFamilyDto;
+import sportbets.web.dto.CompetitionRoundDto;
+import sportbets.web.dto.SpieltagDto;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         classes = {FootballBetsApplication.class, TestProfileLiveTest.class})
@@ -109,7 +111,10 @@ public class ContractMatchDayApiIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isCreated()
-                .expectBody().jsonPath("$.compRoundId")
+                .expectBody()
+                .jsonPath("$.spieltagNumber")
+                .exists()
+                .jsonPath("$.compRoundId")
                 .exists();
     }
 

@@ -3,8 +3,8 @@ package sportbets.service.impl;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.Competition;
 import sportbets.persistence.entity.Team;
 import sportbets.persistence.repository.CompetitionRepository;
@@ -23,14 +23,16 @@ public class CompServiceImpl implements CompService {
     private static final Logger log = LoggerFactory.getLogger(CompServiceImpl.class);
     private final CompetitionRepository compRepository;
 
-    @Autowired
-    private ModelMapper modelMapper;
 
-    public CompServiceImpl(CompetitionRepository compRepository) {
+    private final ModelMapper modelMapper;
+
+    public CompServiceImpl(CompetitionRepository compRepository, ModelMapper modelMapper) {
         this.compRepository = compRepository;
+        this.modelMapper = modelMapper;
     }
 
     @Override
+    @Transactional
     public Optional<CompetitionDto> findById(Long id) {
         Optional<Competition> model = compRepository.findById(id);
         ModelMapper modelMapper = MapperUtil.getModelMapperForFamily();
@@ -40,6 +42,7 @@ public class CompServiceImpl implements CompService {
     }
 
     @Override
+    @Transactional
     public Optional<CompetitionDto> save(CompetitionDto comp) {
         ModelMapper myModelMapper = MapperUtil.getModelMapperForFamily();
 
@@ -53,6 +56,7 @@ public class CompServiceImpl implements CompService {
     }
 
     @Override
+    @Transactional
     public Optional<CompetitionDto> updateComp(Long id, CompetitionDto updatedCompDto) {
         ModelMapper myModelMapper = MapperUtil.getModelMapperForFamily();
 
@@ -74,6 +78,7 @@ public class CompServiceImpl implements CompService {
 
 
     @Override
+    @Transactional
     public void deleteById(Long id) {
         compRepository.deleteById(id);
     }

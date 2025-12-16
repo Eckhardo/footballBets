@@ -1,13 +1,12 @@
 package sportbets.service;
 
-import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.Competition;
 import sportbets.web.dto.CompetitionDto;
 import sportbets.web.dto.TeamDto;
 
 import java.util.List;
 import java.util.Optional;
-@Transactional
+
 public interface CompService {
 
     Optional<CompetitionDto> findById(Long id);

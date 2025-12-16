@@ -141,7 +141,7 @@ public class CompetitionRound {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", hasGroups=" + hasGroups +
-                ", competition=" + competition +
+                ", competition=" + competition.getId() +
                 ", createdOn=" + createdOn +
                 ", roundNumber=" + roundNumber +
                 '}';

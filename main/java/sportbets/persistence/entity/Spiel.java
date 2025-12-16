@@ -1,6 +1,8 @@
 package sportbets.persistence.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import org.springframework.format.annotation.DateTimeFormat;
 import sportbets.common.DateUtil;
 
 import java.time.LocalDateTime;
@@ -21,7 +23,9 @@ public class Spiel implements Comparable<Spiel> {
 
     private boolean stattgefunden;
 
-
+    @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
+    // Specifies the format for JSON serialization (when the entity is returned as a response)
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
     private LocalDateTime anpfiffdate;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -168,6 +172,14 @@ public class Spiel implements Comparable<Spiel> {
         return spieltag;
     }
 
+    public void setSpieltag(Spieltag spieltag) {
+        this.spieltag = spieltag;
+    }
+
+    public void setCompetitionGroup(CompetitionGroup competitionGroup) {
+        this.competitionGroup = competitionGroup;
+    }
+
     public CompetitionGroup getCompetitionGroup() {
         return competitionGroup;
     }
@@ -193,9 +205,9 @@ public class Spiel implements Comparable<Spiel> {
                 ", gastTore=" + gastTore +
                 ", stattgefunden=" + stattgefunden +
                 ", anpfiffdate=" + anpfiffdate +
-                ", heimTeam=" + heimTeam +
-                ", gastTeam=" + gastTeam +
-                ", spieltag=" + spieltag +
+                ", heimTeam=" + heimTeam.getAcronym() +
+                ", gastTeam=" + gastTeam.getAcronym() +
+                ", spieltagNr=" + spieltag.getSpieltagNumber() +
                 ", competitionGroup=" + competitionGroup +
                 '}';
     }

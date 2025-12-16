@@ -2,7 +2,7 @@ package sportbets.persistence.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import sportbets.persistence.entity.Competition;
+import sportbets.persistence.entity.Spiel;
 import sportbets.persistence.entity.Spieltag;
 
 import java.util.List;
@@ -29,8 +29,13 @@ public interface SpieltagRepository extends JpaRepository<Spieltag, Long> {
             + " where sp.competitionRound.id = cr.id"
             + " and cr.competition.id=c.id"
             + " and c.competitionFamily.id=cf.id "
-            + " and cr.id=:roundId")
-    Optional<Spieltag> findByIdWithParents(Long roundId);
+            + " and sp.id=:spieltagId")
+    Optional<Spieltag> findByIdWithParents(Long spieltagId);
+
+    @Query("select  s from Spiel s join fetch  s.spieltag sp"
+            + " where  sp.id=:matchDayId")
+    List<Spiel> findAllForMatchday(Long matchDayId);
+
 
 
 }

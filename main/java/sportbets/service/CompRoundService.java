@@ -1,12 +1,10 @@
 package sportbets.service;
 
-import org.springframework.transaction.annotation.Transactional;
-import sportbets.persistence.entity.CompetitionRound;
 import sportbets.web.dto.CompetitionRoundDto;
 
 import java.util.List;
 import java.util.Optional;
-@Transactional
+
 public interface CompRoundService {
     Optional<CompetitionRoundDto> findById(Long id);
 

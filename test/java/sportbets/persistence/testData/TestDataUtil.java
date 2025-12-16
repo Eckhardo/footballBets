@@ -3,7 +3,6 @@ package sportbets.persistence.testData;
 import sportbets.persistence.entity.*;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 public class TestDataUtil {
 
@@ -20,8 +19,8 @@ public class TestDataUtil {
     public static Team team4 = new Team("Test4", "4");
 
 
-    public static Spieltag  testSpieltag = new Spieltag(1, LocalDateTime.now(), testRound);
-    public static  Spiel testSpiel1 = new Spiel(testSpieltag, 1, LocalDateTime.now(), team1, team2, 3, 1, false);
+    public static Spieltag testSpieltag = new Spieltag(1, LocalDateTime.now(), testRound);
+    public static Spiel testSpiel1 = new Spiel(testSpieltag, 1, LocalDateTime.now(), team1, team2, 3, 1, false);
     public static Spiel testSpiel2 = new Spiel(testSpieltag, 2, LocalDateTime.now(), team3, team4, 2, 2, false);
 
 

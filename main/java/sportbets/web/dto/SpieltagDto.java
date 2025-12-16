@@ -1,19 +1,25 @@
 package sportbets.web.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Objects;
 
 /**
  * DTO for {@link sportbets.persistence.entity.Spieltag}
  */
+
 public class SpieltagDto implements Serializable {
     private Long id;
     @NotNull(message = " spieltag number cannot be null")
     private int spieltagNumber;
+
+    @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
+    // Specifies the format for JSON serialization (when the entity is returned as a response)
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
     private LocalDateTime startDate;
     @NotNull
     private Long compRoundId;

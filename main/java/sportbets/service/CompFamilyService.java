@@ -1,13 +1,12 @@
 package sportbets.service;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.Team;
 import sportbets.web.dto.CompetitionFamilyDto;
 
 import java.util.List;
 import java.util.Optional;
-@Transactional
+
 public interface CompFamilyService {
 
     ModelMapper getModelMapperForFamily();

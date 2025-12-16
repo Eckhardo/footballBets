@@ -12,7 +12,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import sportbets.persistence.entity.*;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.function.Predicate;
 

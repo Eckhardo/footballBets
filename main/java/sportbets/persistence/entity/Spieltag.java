@@ -1,9 +1,11 @@
 package sportbets.persistence.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.format.annotation.DateTimeFormat;
 import sportbets.common.DateUtil;
 
 import java.time.LocalDateTime;
@@ -20,6 +22,9 @@ public class Spieltag {
 
     private int spieltagNumber;
 
+    @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
+    // Specifies the format for JSON serialization (when the entity is returned as a response)
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
     private LocalDateTime  startDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -27,7 +32,7 @@ public class Spieltag {
     @NotNull
     private CompetitionRound competitionRound;
 
-    @OneToMany(mappedBy = "spieltag", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "spieltag",  cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private SortedSet<Spiel> spiele=new TreeSet<>();
 
     public Spieltag() {
@@ -107,7 +112,7 @@ public class Spieltag {
                 "id=" + id +
                 ", spieltagNumber=" + spieltagNumber +
                 ", startDate=" + startDate +
-                ", competitionRound=" + competitionRound +
+                ", competitionRound=" + competitionRound.getName() +
                 '}';
     }
 }

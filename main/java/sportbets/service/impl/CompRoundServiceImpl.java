@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.Competition;
 import sportbets.persistence.entity.CompetitionRound;
 import sportbets.persistence.repository.CompetitionRepository;
@@ -32,6 +33,7 @@ public class CompRoundServiceImpl implements CompRoundService {
     }
 
     @Override
+    @Transactional
     public Optional<CompetitionRoundDto> findById(Long id) {
         Optional<CompetitionRound> model = roundRepository.findById(id);
         ModelMapper modelMapper = MapperUtil.getModelMapperForCompetition();
@@ -40,6 +42,7 @@ public class CompRoundServiceImpl implements CompRoundService {
     }
 
     @Override
+    @Transactional
     public Optional<CompetitionRoundDto> save(CompetitionRoundDto compRoundDto) {
         Optional<Competition> comp = compRepository.findById(compRoundDto.getCompId());
 
@@ -55,6 +58,7 @@ public class CompRoundServiceImpl implements CompRoundService {
     }
 
     @Override
+    @Transactional
     public Optional<CompetitionRoundDto> updateRound(Long id, CompetitionRoundDto dto) {
         ModelMapper myModelMapper = MapperUtil.getModelMapperForCompetition();
 
@@ -65,7 +69,7 @@ public class CompRoundServiceImpl implements CompRoundService {
             Optional<CompetitionRound> updated = updateModel.map(base -> updateFields(base, dto))
                     .map(roundRepository::save);
 
-            CompetitionRoundDto compRoundDto = myModelMapper.map(updateModel, CompetitionRoundDto.class);
+            CompetitionRoundDto compRoundDto = myModelMapper.map(updated, CompetitionRoundDto.class);
             log.info("CompetitionRound updated  RETURN dto {}", compRoundDto);
             return Optional.ofNullable(compRoundDto);
         }
@@ -73,12 +77,14 @@ public class CompRoundServiceImpl implements CompRoundService {
     }
 
     @Override
+    @Transactional
     public void deleteById(Long id) {
         roundRepository.deleteById(id);
     }
 
 
     @Override
+    @Transactional
     public List<CompetitionRoundDto> getAll() {
         List<CompetitionRound> rounds = roundRepository.findAll();
         List<CompetitionRoundDto> roundDtos = new ArrayList<>();

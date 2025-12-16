@@ -6,6 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.Team;
 import sportbets.persistence.repository.TeamRepository;
 import sportbets.service.TeamService;
@@ -38,6 +39,7 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
+    @Transactional
     public Optional<TeamDto> save(TeamDto teamDto) {
         Optional<Team> savedTeam = teamRepository.findByName(teamDto.getName());
         if (savedTeam.isPresent()) {
@@ -54,6 +56,7 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
+    @Transactional
     public Optional<TeamDto> updateTeam(Long id, TeamDto teamDto) {
         log.info("updateDto:: {}", teamDto);
         Optional<Team> updateModel = teamRepository.findById(id);
@@ -61,9 +64,9 @@ public class TeamServiceImpl implements TeamService {
         if (updateModel.isEmpty()) {
             throw new EntityNotFoundException("Team  with given name not found:" + teamDto.getName());
         }
-        Optional<Team> updatedModel = updateModel.map(base -> updateFields(base, teamDto))
+        Optional<Team> updated = updateModel.map(base -> updateFields(base, teamDto))
                 .map(teamRepository::save);
-        TeamDto famDto = modelMapper.map(updatedModel, TeamDto.class);
+        TeamDto famDto = modelMapper.map(updated, TeamDto.class);
         return Optional.of(famDto);
 
     }
@@ -75,6 +78,7 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
+    @Transactional
     public void deleteById(Long id) {
         teamRepository.deleteById(id);
     }
