@@ -81,7 +81,11 @@ public class CompRoundServiceImpl implements CompRoundService {
     public void deleteById(Long id) {
         roundRepository.deleteById(id);
     }
-
+    @Override
+    @Transactional
+    public void deleteByName(String name) {
+        roundRepository.deleteByName(name);
+    }
 
     @Override
     @Transactional

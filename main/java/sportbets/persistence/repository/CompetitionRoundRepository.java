@@ -16,5 +16,6 @@ public interface CompetitionRoundRepository extends JpaRepository<CompetitionRou
             + " and c.competitionFamily.id=cf.id "
             + " and cr.id=:roundId")
     Optional<CompetitionRound> findByIdWithParents(Long roundId);
+    void deleteByName(String name);
 
 }

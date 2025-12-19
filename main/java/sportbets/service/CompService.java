@@ -16,7 +16,7 @@ public interface CompService {
     Optional<CompetitionDto> updateComp(Long id, CompetitionDto compFam);
 
     void deleteById(Long id);
-
+    void deleteByName(String name );
     List<CompetitionDto> getAll();
 
     Optional<Competition> findByNameJoinFetchRounds(String name);

@@ -8,12 +8,13 @@ import java.util.Optional;
 public interface CompTeamService {
     Optional<CompetitionTeamDto> findById(Long id);
 
-   Optional<CompetitionTeamDto> save(CompetitionTeamDto dto);
+    Optional<CompetitionTeamDto> save(CompetitionTeamDto dto);
 
     List<CompetitionTeamDto> saveAll(List<CompetitionTeamDto> dtos);
 
     Optional<CompetitionTeamDto> update(Long id, CompetitionTeamDto dto);
-    void deleteAll(List<CompetitionTeamDto> dtos);
+
+    void deleteAll(List<Long> ids);
 
     void deleteById(Long id);
 

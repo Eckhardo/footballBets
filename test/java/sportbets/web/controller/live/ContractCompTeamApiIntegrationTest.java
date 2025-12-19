@@ -52,7 +52,7 @@ public class ContractCompTeamApiIntegrationTest {
     TeamRepository teamRepository;
 
     CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, TEST_COMP_FAM, "Description of TestLiga", true, true);
-    CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, null, "familyName");
+    CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, null, TEST_COMP_FAM);
 
     private static final String TEAM_NAME = "Eintracht Braunschweig";
     private static final String TEAM_NAME_2 = "Holstein Kiel";
@@ -196,7 +196,10 @@ public class ContractCompTeamApiIntegrationTest {
                 .isOk()
                 .expectBody()
                 .jsonPath("$.teamId").isEqualTo(team.getId())
-                .jsonPath("$.compId").isEqualTo(comp.getId());
+                .jsonPath("$.compId").isEqualTo(comp.getId())
+               .jsonPath("$.teamAcronym").isEqualTo(team.getAcronym())
+                .jsonPath("$.compName").isEqualTo(comp.getName());
+
 
 
 
@@ -211,7 +214,10 @@ public class ContractCompTeamApiIntegrationTest {
                 .isOk()
                 .expectBody()
                 .jsonPath("$.teamId").isEqualTo(team2.getId())
-                .jsonPath("$.compId").isEqualTo(comp.getId());
+                .jsonPath("$.compId").isEqualTo(comp.getId())
+                .jsonPath("$.teamAcronym").isEqualTo(team2.getAcronym())
+                .jsonPath("$.compName").isEqualTo(comp.getName());
+
 
     }
 

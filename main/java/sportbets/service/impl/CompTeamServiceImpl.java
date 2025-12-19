@@ -56,27 +56,23 @@ public class CompTeamServiceImpl implements CompTeamService {
     @Override
     @Transactional
     public Optional<CompetitionTeamDto> save(CompetitionTeamDto dto) {
-        Optional<Team> team = teamRepo.findById(dto.getTeamId());
-        Optional<Competition> comp = compRepo.findById(dto.getCompId());
-        if(team.isPresent() && comp.isPresent()) {
+        Team team = teamRepo.findById(dto.getTeamId()).orElseThrow(() -> new EntityNotFoundException("Team not found"));
+        Competition comp = compRepo.findById(dto.getCompId()).orElseThrow(() -> new EntityNotFoundException("Comp not found"));
 
-            CompetitionTeam model = new CompetitionTeam(team.get(),comp.get());
 
-            log.info("compTeam model to be saved:: {}", model);
-            CompetitionTeam createdModel = compTeamRepo.save(model);
+        CompetitionTeam model = new CompetitionTeam(team, comp);
 
-            log.info("compTeam saved model:: {}", createdModel);
-            ModelMapper myModelMapper = MapperUtil.getModelMapperForCompTeam();
-            CompetitionTeamDto createdDto = myModelMapper.map(createdModel, CompetitionTeamDto.class);
-            log.info("compTeam dto to return:: {}", dto);
-            return Optional.of(createdDto);
-        }
-        else {
-            throw  new EntityNotFoundException("entities for tem and/or comp not found");
-        }
+        log.info("compTeam model to be saved:: {}", model);
+        CompetitionTeam createdModel = compTeamRepo.save(model);
 
+        log.info("compTeam saved model:: {}", createdModel);
+        ModelMapper myModelMapper = MapperUtil.getModelMapperForCompTeam();
+        CompetitionTeamDto createdDto = myModelMapper.map(createdModel, CompetitionTeamDto.class);
+        log.info("compTeam dto to return:: {}", dto);
+        return Optional.of(createdDto);
 
     }
+
 
     /**
      * @param dtos
@@ -85,18 +81,28 @@ public class CompTeamServiceImpl implements CompTeamService {
     @Override
     @Transactional
     public List<CompetitionTeamDto> saveAll(List<CompetitionTeamDto> dtos) {
-        List<CompetitionTeam> competitionTeams = new ArrayList<>();
+
         ModelMapper myMapper = MapperUtil.getModelMapperForCompTeam();
-
-        for (CompetitionTeamDto competitionTeamDto : dtos) {
-            competitionTeams.add(myMapper.map(competitionTeamDto, CompetitionTeam.class));
-        }
-
-        List<CompetitionTeam> savedModels = compTeamRepo.saveAll(competitionTeams);
         List<CompetitionTeamDto> theDtos = new ArrayList<>();
-        for (CompetitionTeam savedModel : savedModels) {
-            theDtos.add(modelMapper.map(savedModel, CompetitionTeamDto.class));
+        for (CompetitionTeamDto dto : dtos) {
+            Team team = teamRepo.findById(dto.getTeamId()).orElseThrow(() -> new EntityNotFoundException("Team not found"));
+            Competition comp = compRepo.findById(dto.getCompId()).orElseThrow(() -> new EntityNotFoundException("Comp not found"));
+
+
+            CompetitionTeam model = new CompetitionTeam(team, comp);
+
+            log.info("compTeam model to be saved:: {}", model);
+            CompetitionTeam createdModel = compTeamRepo.save(model);
+
+            log.info("compTeam saved model:: {}", createdModel);
+
+            CompetitionTeamDto createdDto = myMapper.map(createdModel, CompetitionTeamDto.class);
+            log.info("compTeam dto to return:: {}", dto);
+            theDtos.add(createdDto);
+
         }
+
+
         return theDtos;
     }
 
@@ -109,20 +115,24 @@ public class CompTeamServiceImpl implements CompTeamService {
     @Transactional
     public Optional<CompetitionTeamDto> update(Long id, CompetitionTeamDto dto) {
         ModelMapper myModelMapper = MapperUtil.getModelMapperForCompTeam();
-        Optional<Team> team = teamRepo.findById(dto.getTeamId());
-
+        Team team = teamRepo.findById(dto.getTeamId()).orElseThrow(() -> new EntityNotFoundException("Team not found"));
+        Competition comp = compRepo.findById(dto.getCompId()).orElseThrow(() -> new EntityNotFoundException("Comp not found"));
+        ;
 
         log.info("update Match dto:: {}", dto);
         Optional<CompetitionTeam> updateModel = compTeamRepo.findById(id);
-        if (updateModel.isPresent() &&  team.isPresent()) {
-            Optional<CompetitionTeam> updated = updateModel.map(base -> updateFields(base, dto,team.get()))
+        if (updateModel.isPresent()) {
+
+            Optional<CompetitionTeam> updated = updateModel.map(base -> updateFields(base, dto, team, comp))
                     .map(compTeamRepo::save);
-            log.info("update Match entity:: {}", updated);
+            log.info("update CompTeam entity:: {}", updated);
             CompetitionTeamDto matchDto = myModelMapper.map(updated, CompetitionTeamDto.class);
-            log.info("Spiel updated  RETURN dto {}", matchDto);
+            log.info("CompTeam updated  RETURN dto {}", matchDto);
             return Optional.ofNullable(matchDto);
+        } else {
+            throw new EntityNotFoundException("entity compTeam not found");
         }
-        return Optional.empty();
+
     }
 
     /**
@@ -131,24 +141,15 @@ public class CompTeamServiceImpl implements CompTeamService {
      */
     @Override
     @Transactional
-    public void deleteAll(List<CompetitionTeamDto> dtos) {
-        List<CompetitionTeam> competitionTeams = new ArrayList<>();
-        ModelMapper myMapper = MapperUtil.getModelMapperForCompTeam();
-
-        for (CompetitionTeamDto competitionTeamDto : dtos) {
-            competitionTeams.add(myMapper.map(competitionTeamDto, CompetitionTeam.class));
+    public void deleteAll(List<Long> ids) {
+        for (Long id : ids) {
+            compTeamRepo.deleteById(id);
         }
-
-        compTeamRepo.deleteAll(competitionTeams);
-
     }
 
-    private CompetitionTeam updateFields(CompetitionTeam base, CompetitionTeamDto dto,Team team) {
+    private CompetitionTeam updateFields(CompetitionTeam base, CompetitionTeamDto dto, Team team, Competition comp) {
         base.setTeam(team);
-
-        Competition competition = new Competition();
-        competition.setId(dto.getCompId());
-        base.setCompetition(competition);
+        base.setCompetition(comp);
 
         return base;
     }

@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface CompetitionRepository extends JpaRepository<Competition, Long> {
     Optional<Competition> findByName(String name);
-
+    void deleteByName(String name);
     @Query("select  c from Competition c join fetch  c.competitionFamily cf"
             + " where c.name =:name"
             + " and cf.id=:id"

@@ -82,6 +82,11 @@ public class TeamServiceImpl implements TeamService {
     public void deleteById(Long id) {
         teamRepository.deleteById(id);
     }
+    @Override
+    @Transactional
+    public void deleteByName(String name) {
+        teamRepository.deleteByName(name);
+    }
 
     @Override
     public List<TeamDto> getAll() {

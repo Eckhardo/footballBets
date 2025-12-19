@@ -125,4 +125,9 @@ public class CompServiceImpl implements CompService {
         base.setRemisMultiplicator(updatedComp.getRemisMultiplicator());
         return base;
     }
+    @Override
+    @Transactional
+    public void deleteByName(String name) {
+        compRepository.deleteByName(name);
+    }
 }

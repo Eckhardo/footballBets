@@ -30,6 +30,12 @@ public class CompetitionRoundDto implements Serializable {
 
     }
 
+    public CompetitionRoundDto(Long id, int roundNumber, String name, boolean hasGroups, Long compId, String compName) {
+       this(id,roundNumber,name,hasGroups);
+        this.compId = compId;
+        this.compName = compName;
+    }
+
     public Long getId() {
         return id;
     }
