@@ -48,6 +48,7 @@ public class MapperUtil {
                 // Map the 'id' of the 'parent' object in the source
                 // to the 'parentId' field in the destination
                 map(source.getCompetitionRound().getId()).setCompRoundId(null);
+                map(source.getCompetitionRound().getName()).setCompRoundName(null);
             }
         });
 

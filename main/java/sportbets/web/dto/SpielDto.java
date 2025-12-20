@@ -171,8 +171,11 @@ public class SpielDto implements Serializable, Comparable<SpielDto> {
                 ", heimTore=" + heimTore +
                 ", gastTore=" + gastTore +
                 ", spieltagId=" + spieltagId +
+                ", spieltag number=" + spieltagNumber +
                 ", heimTeamId=" + heimTeamId +
                 ", gastTeamId=" + gastTeamId +
+                ", heimTeam name=" + heimTeamAcronym +
+                ", gastTeam name=" + gastTeamAcronym +
                 '}';
     }
 

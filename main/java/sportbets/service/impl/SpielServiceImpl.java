@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sportbets.persistence.entity.CompetitionRound;
 import sportbets.persistence.entity.Spiel;
 import sportbets.persistence.entity.Spieltag;
 import sportbets.persistence.entity.Team;
@@ -16,7 +15,6 @@ import sportbets.persistence.repository.TeamRepository;
 import sportbets.service.SpielService;
 import sportbets.web.dto.MapperUtil;
 import sportbets.web.dto.SpielDto;
-import sportbets.web.dto.SpieltagDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +37,7 @@ public class SpielServiceImpl implements SpielService {
 
     @Override
     public Optional<SpielDto> findById(Long id) {
-        Optional<Spiel> model =  spielRepo.findById(id);
+        Optional<Spiel> model = spielRepo.findById(id);
         ModelMapper modelMapper = MapperUtil.getModelMapperForSpiel();
         SpielDto matchDto = modelMapper.map(model, SpielDto.class);
         return Optional.of(matchDto);
@@ -49,35 +47,34 @@ public class SpielServiceImpl implements SpielService {
     @Transactional
     public Optional<SpielDto> save(SpielDto spielDto) {
         log.info("save spiel:: {}", spielDto);
-        Optional<Spieltag> spieltag =  spieltagRepo.findById(spielDto.getSpieltagId());
-        Optional<Team> heimTeam =  teamRepo.findById(spielDto.getHeimTeamId());
-        Optional<Team> gastTeam =  teamRepo.findById(spielDto.getGastTeamId());
-        if(spieltag.isPresent() && heimTeam.isPresent() && gastTeam.isPresent()) {
-            Spiel model = modelMapper.map(spielDto, Spiel.class);
+        Spiel model = modelMapper.map(spielDto, Spiel.class);
 
-            log.info("save spiel  entity:: {}", model);
-            Spiel createdModel = spielRepo.save(model);
-            ModelMapper myModelMapper = MapperUtil.getModelMapperForSpiel();
-            SpielDto createdDto = myModelMapper.map(createdModel, SpielDto.class);
-            log.info("return spiel  dto:: {}", createdDto);
-            return Optional.of(createdDto);
-        }
-        else{
-            throw new EntityNotFoundException("spieltag or heim- or gastteam not found");
-        }
+        log.info("save spiel  entity:: {}", model);
+        Spiel createdModel = spielRepo.save(model);
+        ModelMapper myModelMapper = MapperUtil.getModelMapperForSpiel();
+        SpielDto createdDto = myModelMapper.map(createdModel, SpielDto.class);
+        log.info("return spiel  dto:: {}", createdDto);
+        return Optional.of(createdDto);
+
 
     }
 
     @Override
     @Transactional
-    public Optional<SpielDto> updateSpiel(Long id, SpielDto dto) {
+    public Optional<SpielDto> updateSpiel(Long id, SpielDto spielDto) {
         ModelMapper myModelMapper = MapperUtil.getModelMapperForSpiel();
+        Spieltag spieltag = spieltagRepo.findById(spielDto.getSpieltagId()).orElseThrow(() -> new EntityNotFoundException("Matchday not found"));
+        Team heimTeam = teamRepo.findById(spielDto.getHeimTeamId()).orElseThrow(() -> new EntityNotFoundException("Team heim not found"));
+        Team gastTeam = teamRepo.findById(spielDto.getGastTeamId()).orElseThrow(() -> new EntityNotFoundException("Team gast not found"));
 
 
-        log.info("update Match dto:: {}", dto);
-        Optional<Spiel > updateModel= spielRepo.findById(id);
+        log.info("update Match dto:: {}", spielDto);
+        Optional<Spiel> updateModel = spielRepo.findById(id);
         if (updateModel.isPresent()) {
-            Optional<Spiel> updated = updateModel.map(base -> updateFields(base, dto))
+            updateModel.get().setHeimTeam(heimTeam);
+            updateModel.get().setGastTeam(gastTeam);
+            updateModel.get().setSpieltag(spieltag);
+            Optional<Spiel> updated = updateModel.map(base -> updateFields(base, spielDto))
                     .map(spielRepo::save);
             log.info("update Match entity:: {}", updated);
             SpielDto matchDto = myModelMapper.map(updated, SpielDto.class);
@@ -91,24 +88,16 @@ public class SpielServiceImpl implements SpielService {
         base.setAnpfiffdate(updatedMatch.getAnpfiffdate());
         base.setSpielNumber(updatedMatch.getSpielNumber());
         base.setHeimTore(updatedMatch.getHeimTore());
+        base.setStattgefunden(updatedMatch.isStattgefunden());
         base.setGastTore(updatedMatch.getGastTore());
-        Spieltag sp=new Spieltag();
-        sp.setId(updatedMatch.getSpieltagId());
-        base.setSpieltag(sp);
-        Team heimTeam=new Team();
-        heimTeam.setId(updatedMatch.getHeimTeamId());
-        base.setHeimTeam(heimTeam);
-        Team gastTeam=new Team();
-        gastTeam.setId(updatedMatch.getGastTeamId());
-        base.setGastTeam(gastTeam);
         log.info("Sthis will be persistedo {}", base);
         return base;
     }
+
     @Override
     public void deleteById(Long id) {
         spielRepo.deleteById(id);
     }
-
 
 
     @Override

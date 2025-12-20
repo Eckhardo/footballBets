@@ -1,5 +1,6 @@
 package sportbets.service.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,17 +45,16 @@ public class CompRoundServiceImpl implements CompRoundService {
     @Override
     @Transactional
     public Optional<CompetitionRoundDto> save(CompetitionRoundDto compRoundDto) {
-        Optional<Competition> comp = compRepository.findById(compRoundDto.getCompId());
+        Competition comp = compRepository.findById(compRoundDto.getCompId()).orElseThrow(() -> new EntityNotFoundException("Comp not found"));
 
-        if (comp.isPresent()) {
-            CompetitionRound model = modelMapper.map(compRoundDto, CompetitionRound.class);
-            model.setCompetition(comp.get());
-            CompetitionRound createdModel = roundRepository.save(model);
-            ModelMapper myModelMapper = MapperUtil.getModelMapperForCompetition();
-            CompetitionRoundDto createdDto = myModelMapper.map(createdModel, CompetitionRoundDto.class);
-            return Optional.of(createdDto);
-        }
-        return Optional.empty();
+
+        CompetitionRound model = modelMapper.map(compRoundDto, CompetitionRound.class);
+        model.setCompetition(comp);
+        CompetitionRound createdModel = roundRepository.save(model);
+        ModelMapper myModelMapper = MapperUtil.getModelMapperForCompetition();
+        CompetitionRoundDto createdDto = myModelMapper.map(createdModel, CompetitionRoundDto.class);
+        return Optional.of(createdDto);
+
     }
 
     @Override
@@ -68,7 +68,7 @@ public class CompRoundServiceImpl implements CompRoundService {
         if (updateModel.isPresent()) {
             Optional<CompetitionRound> updated = updateModel.map(base -> updateFields(base, dto))
                     .map(roundRepository::save);
-
+            log.info("CompetitionRound updated entity {}", updated.get());
             CompetitionRoundDto compRoundDto = myModelMapper.map(updated, CompetitionRoundDto.class);
             log.info("CompetitionRound updated  RETURN dto {}", compRoundDto);
             return Optional.ofNullable(compRoundDto);
@@ -81,6 +81,7 @@ public class CompRoundServiceImpl implements CompRoundService {
     public void deleteById(Long id) {
         roundRepository.deleteById(id);
     }
+
     @Override
     @Transactional
     public void deleteByName(String name) {

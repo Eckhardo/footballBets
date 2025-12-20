@@ -23,6 +23,9 @@ public class SpieltagDto implements Serializable {
     private LocalDateTime startDate;
     @NotNull
     private Long compRoundId;
+    @NotNull
+    private String compRoundName;
+
 
     public SpieltagDto() {
     }
@@ -32,6 +35,12 @@ public class SpieltagDto implements Serializable {
         this.spieltagNumber = spieltagNumber;
         this.startDate = startDate;
 
+    }
+
+    public SpieltagDto(Long id, int spieltagNumber, LocalDateTime startDate, Long compRoundId, String compRoundName) {
+        this(id, spieltagNumber, startDate);
+        this.compRoundId = compRoundId;
+        this.compRoundName = compRoundName;
     }
 
     public Long getId() {
@@ -64,6 +73,14 @@ public class SpieltagDto implements Serializable {
 
     public void setCompRoundId(Long compRoundId) {
         this.compRoundId = compRoundId;
+    }
+
+    public String getCompRoundName() {
+        return compRoundName;
+    }
+
+    public void setCompRoundName(String compRoundName) {
+        this.compRoundName = compRoundName;
     }
 
     @Override

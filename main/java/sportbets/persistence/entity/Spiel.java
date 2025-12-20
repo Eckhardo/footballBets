@@ -205,6 +205,8 @@ public class Spiel implements Comparable<Spiel> {
                 ", gastTore=" + gastTore +
                 ", stattgefunden=" + stattgefunden +
                 ", anpfiffdate=" + anpfiffdate +
+                ", heimTeam id=" + heimTeam.getId()+
+                ", gastTeam id=" + gastTeam.getId() +
                 ", heimTeam=" + heimTeam.getAcronym() +
                 ", gastTeam=" + gastTeam.getAcronym() +
                 ", spieltagNr=" + spieltag.getSpieltagNumber() +

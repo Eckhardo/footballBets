@@ -1,5 +1,6 @@
 package sportbets.service.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,12 +39,13 @@ public class SpieltagServiceImpl implements SpieltagService {
     public List<SpieltagDto> getAll() {
         List<Spieltag> matchDays = spieltagRepository.findAll();
         List<SpieltagDto> spieltagDtos = new ArrayList<>();
-       final ModelMapper myMapper = MapperUtil.getModelMapperForCompetitionRound();
+        final ModelMapper myMapper = MapperUtil.getModelMapperForCompetitionRound();
         matchDays.forEach(spieltag -> {
             spieltagDtos.add(myMapper.map(spieltag, SpieltagDto.class));
         });
         return spieltagDtos;
     }
+
     @Override
     @Transactional
     public List<SpielDto> getAllForMatchday(Long id) {
@@ -57,9 +59,10 @@ public class SpieltagServiceImpl implements SpieltagService {
         }
         return spielDtos;
     }
+
     @Override
     public Optional<SpieltagDto> findById(Long id) {
-        Optional<Spieltag> model =  spieltagRepository.findById(id);
+        Optional<Spieltag> model = spieltagRepository.findById(id);
         ModelMapper modelMapper = MapperUtil.getModelMapperForCompetitionRound();
         SpieltagDto matchDayDto = modelMapper.map(model, SpieltagDto.class);
         return Optional.of(matchDayDto);
@@ -69,35 +72,37 @@ public class SpieltagServiceImpl implements SpieltagService {
     @Transactional
     public Optional<SpieltagDto> save(SpieltagDto spieltagDto) {
         log.info("save spieltag:: {}", spieltagDto);
-        Optional<CompetitionRound> round =  roundRepository.findByIdWithParents(spieltagDto.getCompRoundId());
+        CompetitionRound round = roundRepository.findByIdWithParents(spieltagDto.getCompRoundId()).orElseThrow(() -> new EntityNotFoundException("CompRound not found"));
 
-        if(round.isPresent()) {
-            Spieltag model = modelMapper.map(spieltagDto, Spieltag.class);
-            model.setCompetitionRound(round.get());
-            Spieltag createdModel = spieltagRepository.save(model);
-            log.info("saved spieltag:: {}", createdModel);
-            ModelMapper myModelMapper = MapperUtil.getModelMapperForCompetitionRound();
-            SpieltagDto createdDto = myModelMapper.map(createdModel, SpieltagDto.class);
-            log.info("returned spieltagDto:: {}", createdModel);
-            return Optional.of(createdDto);
-        }
-        return Optional.empty();
+
+        Spieltag model = modelMapper.map(spieltagDto, Spieltag.class);
+        model.setCompetitionRound(round);
+        Spieltag createdModel = spieltagRepository.save(model);
+        log.info("saved spieltag:: {}", createdModel);
+        ModelMapper myModelMapper = MapperUtil.getModelMapperForCompetitionRound();
+        SpieltagDto createdDto = myModelMapper.map(createdModel, SpieltagDto.class);
+        log.info("returned spieltagDto:: {}", createdModel);
+        return Optional.of(createdDto);
+
     }
 
     @Override
     @Transactional
     public Optional<SpieltagDto> updateMatchDay(Long id, SpieltagDto spieltagDto) {
-        ModelMapper myModelMapper = MapperUtil.getModelMapperForCompetition();
+
+        CompetitionRound round = roundRepository.findByIdWithParents(spieltagDto.getCompRoundId()).orElseThrow(() -> new EntityNotFoundException("CompRound not found"));
 
 
-        log.info("updateRound:: {}", spieltagDto);
-        Optional<Spieltag > updateModel= spieltagRepository.findById(id);
+        log.info("updateMatchday:: {}", spieltagDto);
+        Optional<Spieltag> updateModel = spieltagRepository.findById(id);
         if (updateModel.isPresent()) {
+
             Optional<Spieltag> updated = updateModel.map(base -> updateFields(base, spieltagDto))
                     .map(spieltagRepository::save);
-
-            SpieltagDto matchDayDto = myModelMapper.map(updateModel, SpieltagDto.class);
-            log.info("CompetitionRound updated  RETURN dto {}", matchDayDto);
+            log.info("updated Matchday:: {}", updated);
+            ModelMapper myModelMapper = MapperUtil.getModelMapperForCompetitionRound();
+            SpieltagDto matchDayDto = myModelMapper.map(updated, SpieltagDto.class);
+            log.info("Matchday updated  RETURN dto {}", matchDayDto);
             return Optional.ofNullable(matchDayDto);
         }
         return Optional.empty();

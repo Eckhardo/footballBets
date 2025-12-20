@@ -1,0 +1,83 @@
+package sportbets.service;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import sportbets.web.dto.CompetitionDto;
+import sportbets.web.dto.CompetitionFamilyDto;
+import sportbets.web.dto.CompetitionRoundDto;
+import sportbets.web.dto.SpieltagDto;
+
+import java.time.LocalDateTime;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
+@SpringBootTest
+public class MatchdayServiceTest {
+    @Autowired
+    private CompFamilyService familyService; // Real service being tested
+    @Autowired
+    private CompService compService; // Real service being tested
+    private static final String TEST_COMP_FAM = "TestLiga";
+    private static final String TEST_COMP = "TestLiga: Saison 2025";
+    private static final String TEST_COMP_ROUND = "Saison 2025: Hinrunde";
+    private static final int TEST_MATCH_DAY = 1;
+
+    CompetitionRoundDto savedCompRound = null;
+    @Autowired
+    private CompRoundService compRoundService;
+
+    @Autowired
+    private SpieltagService spieltagService;
+
+    @BeforeEach
+    public void setup() {
+        CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, TEST_COMP_FAM, "Description of TestLiga", true, true);
+        CompetitionFamilyDto savedFam = familyService.save(compFamilyDto).orElseThrow();
+        CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, savedFam.getId(), TEST_COMP_FAM);
+
+        CompetitionDto savedComp = compService.save(compDto).orElseThrow();
+        CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, TEST_COMP_ROUND, false, savedComp.getId(), savedComp.getName());
+        savedCompRound = compRoundService.save(compRoundDto).orElseThrow();
+
+    }
+
+    @AfterEach
+    public void tearDown() {
+        familyService.deleteByName(TEST_COMP_FAM);
+        compService.deleteByName(TEST_COMP);
+        compRoundService.deleteByName(TEST_COMP_ROUND);
+    }
+
+    @Test
+    void whenValidMatchday_thenMatchdayShouldBeSaved() {
+
+        SpieltagDto matchDayDto = new SpieltagDto(null, TEST_MATCH_DAY, LocalDateTime.now(), savedCompRound.getId(), savedCompRound.getName());
+        SpieltagDto savedMatchday = spieltagService.save(matchDayDto).orElseThrow();
+
+        assertThat(savedMatchday.getId()).isNotNull();
+        assertThat(savedMatchday.getSpieltagNumber()).isEqualTo(TEST_MATCH_DAY);
+        assertThat(savedMatchday.getCompRoundName()).isEqualTo(savedCompRound.getName());
+        assertThat(savedMatchday.getCompRoundId()).isEqualTo(savedCompRound.getId());
+        assertThat(savedMatchday.getStartDate()).isEqualTo(matchDayDto.getStartDate());
+        spieltagService.deleteById(savedMatchday.getId());
+    }
+
+    @Test
+    void whenValidMatchday_thenMatchdayShouldBeUpdated() {
+
+        SpieltagDto matchDayDto = new SpieltagDto(null, TEST_MATCH_DAY, LocalDateTime.now(), savedCompRound.getId(), savedCompRound.getName());
+        SpieltagDto savedMatchday = spieltagService.save(matchDayDto).orElseThrow();
+        savedMatchday.setSpieltagNumber(5);
+        SpieltagDto updatedMatchday = spieltagService.updateMatchDay(savedMatchday.getId(), savedMatchday).orElseThrow();
+
+        assertThat(updatedMatchday.getId()).isNotNull();
+        assertThat(updatedMatchday.getSpieltagNumber()).isEqualTo(5);
+        assertThat(savedMatchday.getStartDate()).isEqualTo(matchDayDto.getStartDate());
+        assertThat(updatedMatchday.getCompRoundName()).isEqualTo(savedCompRound.getName());
+        assertThat(updatedMatchday.getCompRoundId()).isEqualTo(savedCompRound.getId());
+        spieltagService.deleteById(savedMatchday.getId());
+    }
+}

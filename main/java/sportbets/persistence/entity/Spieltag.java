@@ -112,7 +112,8 @@ public class Spieltag {
                 "id=" + id +
                 ", spieltagNumber=" + spieltagNumber +
                 ", startDate=" + startDate +
-                ", competitionRound=" + competitionRound.getName() +
+                ", competitionRound.name=" + competitionRound.getName() +
+                ", competitionRound.id=" + competitionRound.getId() +
                 '}';
     }
 }

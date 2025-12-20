@@ -136,7 +136,7 @@ public class CompTeamServiceImpl implements CompTeamService {
     }
 
     /**
-     * @param dtos
+     * @param ids
      * @return
      */
     @Override
