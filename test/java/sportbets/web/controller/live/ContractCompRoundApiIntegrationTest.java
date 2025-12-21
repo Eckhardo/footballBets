@@ -2,6 +2,7 @@ package sportbets.web.controller.live;
 
 
 import jakarta.persistence.EntityNotFoundException;
+import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +25,8 @@ import sportbets.web.dto.CompetitionRoundDto;
 import sportbets.web.dto.SpieltagDto;
 
 import java.time.LocalDateTime;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         classes = {FootballBetsApplication.class, TestProfileLiveTest.class})
@@ -80,6 +83,7 @@ public class ContractCompRoundApiIntegrationTest {
         ;
         CompetitionFamily fam = competitionFamilyRepository.findByName(TEST_COMP_FAM).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_FAM));
         compDto.setFamilyId(fam.getId());
+        compDto.setFamilyName(fam.getName());
 
         webClient.post()
                 .uri("/competitions")
@@ -90,6 +94,7 @@ public class ContractCompRoundApiIntegrationTest {
                 .isCreated();
         Competition comp = competitionRepository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_FAM));
         compRoundDto.setCompId(comp.getId());
+        compRoundDto.setCompName(comp.getName());
 
         webClient.post()
                 .uri("/rounds")
@@ -100,6 +105,7 @@ public class ContractCompRoundApiIntegrationTest {
                 .isCreated();
         CompetitionRound round = competitionRoundRepository.findByName(TEST_COMP_ROUND).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
         matchDayDto.setCompRoundId(round.getId());
+        matchDayDto.setCompRoundName(round.getName());
 
         webClient.post()
                 .uri("/matchdays")
@@ -218,5 +224,18 @@ public class ContractCompRoundApiIntegrationTest {
                 .expectStatus()
                 .isOk()
                 .expectBodyList(CompetitionRoundDto.class).hasSize(3);
+    }
+
+    @Test
+    @Order(4)
+    void whenFindAllForComp_ThenFetchAll() {
+        Competition comp = competitionRepository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_FAM));
+
+        webClient.get()
+                .uri("/competitions/" +comp.getId()+"/rounds")
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBodyList(CompetitionRoundDto.class).hasSize(1);
     }
 }

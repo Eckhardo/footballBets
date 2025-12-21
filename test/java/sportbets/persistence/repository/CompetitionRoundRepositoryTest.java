@@ -83,4 +83,19 @@ public class CompetitionRoundRepositoryTest {
         assertTrue(found.stream().anyMatch(p1));
         assertTrue(found.stream().noneMatch(p2));
     }
+
+    @Test
+    public void whenFindAllFormComp_thenCheckWithAllAnyMatchers() {
+        // given
+        Predicate<CompetitionRound> p1 = g -> g.getName().equals(testRound.getName());
+        Predicate<CompetitionRound> p2 = g -> g.getName().equals("Finale");
+
+        // when
+        List<CompetitionRound> found = compRepo.findAllForComp(testComp.getId());
+
+        // then
+        assertNotNull(found);
+        assertTrue(found.stream().anyMatch(p1));
+        assertTrue(found.stream().noneMatch(p2));
+    }
 }

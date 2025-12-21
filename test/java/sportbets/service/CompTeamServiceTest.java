@@ -121,4 +121,28 @@ public class CompTeamServiceTest {
         compTeamService.deleteAll(ids);
 
     }
+
+    @Test
+    void whenValidComp_thenAllCompTeamsShouldBeRetrieved() {
+
+        CompetitionTeamDto compTeamDto = new CompetitionTeamDto(null, savedComp.getId(),savedComp.getName(), savedTeam1.getId() ,savedTeam1.getAcronym());
+        CompetitionTeamDto savedCompTeam = compTeamService.save(compTeamDto).orElseThrow();
+
+        CompetitionTeamDto compTeamDto2 = new CompetitionTeamDto(null, savedComp.getId(),savedComp.getName(), savedTeam2.getId() ,savedTeam2.getAcronym());
+        CompetitionTeamDto savedCompTeam2 = compTeamService.save(compTeamDto2).orElseThrow();
+
+        List<CompetitionTeamDto> competitionTeamDtos= compTeamService.getAllFormComp(savedComp.getId());
+        assertThat(competitionTeamDtos.size()).isEqualTo(2);
+
+        for (CompetitionTeamDto competitionTeam : competitionTeamDtos) {
+            assertThat(competitionTeam.getId()).isNotNull();
+            assertThat(competitionTeam.getCompId()).isEqualTo(savedComp.getId());
+            assertThat(competitionTeam.getCompName()).isEqualTo(savedComp.getName());
+            assertThat(competitionTeam.getTeamAcronym()).isIn(compTeamDto.getTeamAcronym(), compTeamDto2.getTeamAcronym());
+            assertThat(competitionTeam.getTeamId()).isIn(savedCompTeam.getTeamId(),savedCompTeam2.getTeamId());
+
+        }
+
+
+    }
 }

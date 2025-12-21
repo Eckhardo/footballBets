@@ -116,6 +116,7 @@ public class ContractMatchApiIntegrationTest {
                 .isCreated();
         Competition comp = competitionRepository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP));
         compRoundDto.setCompId(comp.getId());
+        compRoundDto.setCompName(comp.getName());
 
         webClient.post()
                 .uri("/rounds")
@@ -129,7 +130,7 @@ public class ContractMatchApiIntegrationTest {
 
         CompetitionRound round = competitionRoundRepository.findByName(TEST_COMP_ROUND).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
         matchDayDto.setCompRoundId(round.getId());
-
+matchDayDto.setCompRoundName(round.getName());
         webClient.post()
                 .uri("/matchdays")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -212,6 +213,7 @@ public class ContractMatchApiIntegrationTest {
                 .isOk()
                 .expectBodyList(SpielDto.class).hasSize(2);
 
+
     }
 
 
@@ -223,7 +225,7 @@ public class ContractMatchApiIntegrationTest {
         Spieltag spieltag = spieltagRepository.findByNumberWithRoundId(TEST_MATCH_DAY, round.getId()).orElseThrow(() -> new EntityNotFoundException(String.valueOf(TEST_MATCH_DAY)));
         assertNotNull(spieltag);
 
-        List<Spiel> spiele = spieltagRepository.findAllForMatchday(spieltag.getId());
+        List<Spiel> spiele = spielRepository.findAllForMatchday(spieltag.getId());
         assertNotNull(spiele);
         Spiel spiel = spiele.stream().findFirst().orElseThrow(() -> new EntityNotFoundException(String.valueOf(spieltag.getId())));
         Team team = teamRepository.findByName(TEAM_NAME).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));

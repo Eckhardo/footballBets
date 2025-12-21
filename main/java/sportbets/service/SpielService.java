@@ -14,7 +14,7 @@ public interface SpielService {
 
     void deleteById(Long id);
 
-
+    List<SpielDto> getAllForMatchday(Long id);
 
     List<SpielDto> getAll();
 }

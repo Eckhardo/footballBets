@@ -36,6 +36,19 @@ public class SpielServiceImpl implements SpielService {
     }
 
     @Override
+    @Transactional
+    public List<SpielDto> getAllForMatchday(Long id) {
+        log.info("getAllForMatchday:: {}", id);
+        List<Spiel> spiele = spielRepo.findAllForMatchday(id);
+        log.info("Spiele:: {}", spiele);
+        List<SpielDto> spielDtos = new ArrayList<>();
+        final ModelMapper myMapper = MapperUtil.getModelMapperForSpiel();
+        for (Spiel spiel : spiele) {
+            spielDtos.add(myMapper.map(spiel, SpielDto.class));
+        }
+        return spielDtos;
+    }
+    @Override
     public Optional<SpielDto> findById(Long id) {
         Optional<Spiel> model = spielRepo.findById(id);
         ModelMapper modelMapper = MapperUtil.getModelMapperForSpiel();

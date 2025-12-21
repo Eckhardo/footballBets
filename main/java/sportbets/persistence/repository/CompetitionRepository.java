@@ -3,6 +3,7 @@ package sportbets.persistence.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import sportbets.persistence.entity.Competition;
+import sportbets.persistence.entity.CompetitionRound;
 import sportbets.persistence.entity.Team;
 import sportbets.persistence.rowObject.CompRecord;
 
@@ -48,4 +49,6 @@ public interface CompetitionRepository extends JpaRepository<Competition, Long> 
             + " where c.name = :name and cf.id=:id ")
     CompRecord findCompByNameAndFamily(String name, Long id);
 
+    @Query("select cr from CompetitionRound cr join cr.competition c where c.id=:compId")
+    List<CompetitionRound> findAllForComp(Long compId);
 }

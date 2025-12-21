@@ -19,5 +19,5 @@ public interface SpieltagService {
     List<SpieltagDto> getAllForRound(Long id);
 
     List<SpieltagDto> getAll();
-    List<SpielDto> getAllForMatchday(Long id);
+
 }

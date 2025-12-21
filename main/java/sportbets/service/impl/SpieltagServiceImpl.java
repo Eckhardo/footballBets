@@ -36,29 +36,19 @@ public class SpieltagServiceImpl implements SpieltagService {
     }
 
     @Override
+    @Transactional
     public List<SpieltagDto> getAll() {
+        log.info("get all matchdays::");
         List<Spieltag> matchDays = spieltagRepository.findAll();
         List<SpieltagDto> spieltagDtos = new ArrayList<>();
         final ModelMapper myMapper = MapperUtil.getModelMapperForCompetitionRound();
         matchDays.forEach(spieltag -> {
             spieltagDtos.add(myMapper.map(spieltag, SpieltagDto.class));
         });
+        log.info("return all matchdays::");
         return spieltagDtos;
     }
 
-    @Override
-    @Transactional
-    public List<SpielDto> getAllForMatchday(Long id) {
-        log.info("getAllForMatchday:: {}", id);
-        List<Spiel> spiele = spieltagRepository.findAllForMatchday(id);
-        log.info("Spiele:: {}", spiele);
-        List<SpielDto> spielDtos = new ArrayList<>();
-        final ModelMapper myMapper = MapperUtil.getModelMapperForSpiel();
-        for (Spiel spiel : spiele) {
-            spielDtos.add(myMapper.map(spiel, SpielDto.class));
-        }
-        return spielDtos;
-    }
 
     @Override
     public Optional<SpieltagDto> findById(Long id) {

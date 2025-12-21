@@ -18,6 +18,7 @@ import sportbets.persistence.repository.CompetitionFamilyRepository;
 import sportbets.persistence.repository.CompetitionRepository;
 import sportbets.web.dto.CompetitionDto;
 import sportbets.web.dto.CompetitionFamilyDto;
+import sportbets.web.dto.CompetitionRoundDto;
 import sportbets.web.dto.TeamDto;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -181,6 +182,19 @@ public class ContractComApiIntegrationTest {
                 .expectStatus()
                 .isOk()
                 .expectBodyList(TeamDto.class).hasSize(0);
+    }
+
+    @Test
+    @Order(4)
+    void whenFindAllForComp_ThenFetchAll() {
+        Competition comp = repository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_FAM));
+
+        webClient.get()
+                .uri("/competitions/" +comp.getId()+"/rounds")
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBodyList(CompetitionRoundDto.class).hasSize(0);
     }
 
 }

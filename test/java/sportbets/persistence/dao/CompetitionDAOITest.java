@@ -1,17 +1,24 @@
 package sportbets.persistence.dao;
 
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
+import sportbets.persistence.dao.impl.CompetitionDAOImpl;
+import sportbets.persistence.dao.impl.CompetitionFamilyDAOImpl;
 import sportbets.persistence.entity.Competition;
 import sportbets.persistence.entity.CompetitionFamily;
 
 import java.util.List;
 
-@SpringBootTest
+@DataJpaTest()
+@Import({CompetitionFamilyDAOImpl.class, CompetitionDAOImpl.class})
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class CompetitionDAOITest {
 
     private static final Logger log = LoggerFactory.getLogger(CompetitionDAOITest.class);
@@ -26,11 +33,11 @@ public class CompetitionDAOITest {
     private Competition testComp;
 
 
-  //  @Before
+    @BeforeEach
     public void setUp() {
         // Initialize test data before test methods
-        testFamily = new CompetitionFamily("2. Bundesliga", "1. Deutsche Fussball Bundesliga", true, true);
-        testComp = new Competition("Saison 2025/26", "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
+        testFamily = new CompetitionFamily("3. Bundesliga", "1. Deutsche Fussball Bundesliga", true, true);
+        testComp = new Competition("Saison 2025/26", "3. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
 
         testFamily.addCompetition(testComp);
         log.info("Save all cascade");
@@ -38,7 +45,7 @@ public class CompetitionDAOITest {
         this.competitionDAO.save(testComp);
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
 
         //    competitionDAO.deleteAll();
@@ -49,14 +56,14 @@ public class CompetitionDAOITest {
     @Test
     public void findById() {
         System.out.println("findAll family::");
-        List<CompetitionFamily> fams = familyDAO.findAll();
+        List<CompetitionFamily> fams = this.familyDAO.findAll();
         fams.forEach(System.out::println);
     }
 
     @Test
     public void findAll() {
         System.out.println("findAll::");
-        List<Competition> competitions = competitionDAO.findAll();
+        List<Competition> competitions = this.competitionDAO.findAll();
         competitions.forEach(System.out::println);
     }
 

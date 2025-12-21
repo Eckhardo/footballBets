@@ -87,17 +87,9 @@ public class CompTeamServiceImpl implements CompTeamService {
         for (CompetitionTeamDto dto : dtos) {
             Team team = teamRepo.findById(dto.getTeamId()).orElseThrow(() -> new EntityNotFoundException("Team not found"));
             Competition comp = compRepo.findById(dto.getCompId()).orElseThrow(() -> new EntityNotFoundException("Comp not found"));
-
-
             CompetitionTeam model = new CompetitionTeam(team, comp);
-
-            log.info("compTeam model to be saved:: {}", model);
             CompetitionTeam createdModel = compTeamRepo.save(model);
-
-            log.info("compTeam saved model:: {}", createdModel);
-
             CompetitionTeamDto createdDto = myMapper.map(createdModel, CompetitionTeamDto.class);
-            log.info("compTeam dto to return:: {}", dto);
             theDtos.add(createdDto);
 
         }
@@ -125,7 +117,6 @@ public class CompTeamServiceImpl implements CompTeamService {
 
             Optional<CompetitionTeam> updated = updateModel.map(base -> updateFields(base, dto, team, comp))
                     .map(compTeamRepo::save);
-            log.info("update CompTeam entity:: {}", updated);
             CompetitionTeamDto matchDto = myModelMapper.map(updated, CompetitionTeamDto.class);
             log.info("CompTeam updated  RETURN dto {}", matchDto);
             return Optional.ofNullable(matchDto);
@@ -167,13 +158,15 @@ public class CompTeamServiceImpl implements CompTeamService {
      * @return
      */
     @Override
+    @Transactional
     public List<CompetitionTeamDto> getAllFormComp(Long compId) {
 
+        ModelMapper myMapper = MapperUtil.getModelMapperForCompTeam();
 
         List<CompetitionTeam> savedModels = compTeamRepo.getAllFormComp(compId);
         List<CompetitionTeamDto> theDtos = new ArrayList<>();
         for (CompetitionTeam savedModel : savedModels) {
-            theDtos.add(modelMapper.map(savedModel, CompetitionTeamDto.class));
+            theDtos.add(myMapper.map(savedModel, CompetitionTeamDto.class));
         }
         return theDtos;
     }

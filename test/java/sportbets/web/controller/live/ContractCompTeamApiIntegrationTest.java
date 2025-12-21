@@ -157,7 +157,7 @@ public class ContractCompTeamApiIntegrationTest {
     @Order(1)
     void givenPreloadedData_whenGetSingleTeam_thenResponseContainsFields() {
 
-        System.out.println("getSingleTeam");
+
         Team team = teamRepository.findByName(TEAM_NAME).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME));
         Long id = team.getId();
         webClient.get()
@@ -217,6 +217,23 @@ public class ContractCompTeamApiIntegrationTest {
                 .jsonPath("$.compId").isEqualTo(comp.getId())
                 .jsonPath("$.teamAcronym").isEqualTo(team2.getAcronym())
                 .jsonPath("$.compName").isEqualTo(comp.getName());
+
+
+    }
+
+    @Test
+    @Order(2)
+    void whenCompIdIsProvided_ThenAllCompTeamsAreRetrieved() {
+        Competition comp = competitionRepository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP));
+
+        webClient.get()
+                .uri("/compTeams/" +comp.getId())
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBodyList(CompetitionTeamDto.class).hasSize(2);
+
+
 
 
     }

@@ -8,6 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import sportbets.web.dto.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -116,4 +118,31 @@ public class MatchServiceTest {
         matchService.deleteById(savedMatch.getId());
         matchService.deleteById(savedMatch2.getId());
     }
+
+    @Test
+    void whenValidMatchDay_thenMatchesShouldBeRetrieved() {
+
+        SpielDto testSpiel1 = new SpielDto(null, 1, 3, 1, false, LocalDateTime.now(), savedMatchday.getId(), savedMatchday.getSpieltagNumber(), savedTeam1.getId(), savedTeam1.getAcronym(), savedTeam2.getId(), savedTeam2.getAcronym());
+        SpielDto savedMatch = matchService.save(testSpiel1).orElseThrow();
+
+        List<SpielDto> spielDtos = matchService.getAllForMatchday(savedMatchday.getId());
+        assertThat(spielDtos.size()).isEqualTo(1);
+        for (SpielDto spielDto : spielDtos) {
+        assertThat(spielDto.getId()).isNotNull();
+        assertThat(spielDto.getAnpfiffdate()).isNotNull();
+        assertThat(spielDto.getSpielNumber()).isEqualTo(testSpiel1.getSpielNumber());
+        assertThat(spielDto.getHeimTore()).isEqualTo(testSpiel1.getHeimTore());
+        assertThat(spielDto.getGastTore()).isEqualTo(testSpiel1.getGastTore());
+
+        assertThat(spielDto.getSpieltagNumber()).isEqualTo(savedMatchday.getSpieltagNumber());
+        assertThat(spielDto.getSpieltagId()).isEqualTo(savedMatchday.getId());
+        assertThat(spielDto.getHeimTeamId()).isEqualTo(savedTeam1.getId());
+        assertThat(spielDto.getHeimTeamAcronym()).isEqualTo(savedTeam1.getAcronym());
+        assertThat(spielDto.getGastTeamId()).isEqualTo(savedTeam2.getId());
+        assertThat(spielDto.getGastTeamAcronym()).isEqualTo(savedTeam2.getAcronym());
+
+        matchService.deleteById(spielDto.getId());
+        }
+    }
+
 }

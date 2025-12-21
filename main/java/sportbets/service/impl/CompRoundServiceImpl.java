@@ -88,6 +88,8 @@ public class CompRoundServiceImpl implements CompRoundService {
         roundRepository.deleteByName(name);
     }
 
+
+
     @Override
     @Transactional
     public List<CompetitionRoundDto> getAll() {

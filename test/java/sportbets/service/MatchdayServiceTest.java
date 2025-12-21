@@ -11,6 +11,7 @@ import sportbets.web.dto.CompetitionRoundDto;
 import sportbets.web.dto.SpieltagDto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -75,9 +76,27 @@ public class MatchdayServiceTest {
 
         assertThat(updatedMatchday.getId()).isNotNull();
         assertThat(updatedMatchday.getSpieltagNumber()).isEqualTo(5);
-        assertThat(savedMatchday.getStartDate()).isEqualTo(matchDayDto.getStartDate());
+        assertThat(updatedMatchday.getStartDate()).isEqualTo(matchDayDto.getStartDate());
         assertThat(updatedMatchday.getCompRoundName()).isEqualTo(savedCompRound.getName());
         assertThat(updatedMatchday.getCompRoundId()).isEqualTo(savedCompRound.getId());
         spieltagService.deleteById(savedMatchday.getId());
+    }
+
+    @Test
+    void whenValidRound_thenAllMatchdaysShouldRetrieved() {
+
+        SpieltagDto matchDayDto = new SpieltagDto(null, TEST_MATCH_DAY, LocalDateTime.now(), savedCompRound.getId(), savedCompRound.getName());
+        SpieltagDto savedMatchday = spieltagService.save(matchDayDto).orElseThrow();
+
+        List<SpieltagDto> matchdays= spieltagService.getAllForRound(savedCompRound.getId());
+        assertThat(matchdays.size()).isEqualTo(1);
+        for (SpieltagDto matchday : matchdays) {
+            assertThat(matchday.getId()).isNotNull();
+            assertThat(matchday.getSpieltagNumber()).isEqualTo(savedMatchday.getSpieltagNumber());
+            assertThat(matchday.getStartDate()).isNotNull();
+            assertThat(matchday.getCompRoundName()).isEqualTo(savedCompRound.getName());
+            assertThat(matchday.getCompRoundId()).isEqualTo(savedCompRound.getId());
+            spieltagService.deleteById(matchday.getId());
+        }
     }
 }

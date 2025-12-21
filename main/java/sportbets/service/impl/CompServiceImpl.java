@@ -1,15 +1,18 @@
 package sportbets.service.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.Competition;
+import sportbets.persistence.entity.CompetitionRound;
 import sportbets.persistence.entity.Team;
 import sportbets.persistence.repository.CompetitionRepository;
 import sportbets.service.CompService;
 import sportbets.web.dto.CompetitionDto;
+import sportbets.web.dto.CompetitionRoundDto;
 import sportbets.web.dto.MapperUtil;
 import sportbets.web.dto.TeamDto;
 
@@ -116,6 +119,18 @@ public class CompServiceImpl implements CompService {
     public Competition findByIdJoinFetchRounds(Long id) {
         log.info("CompService:findById::" + id);
         return compRepository.findByIdJoinFetchRounds(id);
+    }
+    @Override
+    @Transactional
+    public List<CompetitionRoundDto> getAllFormComp(Long compId) {
+        Competition comp = compRepository.findById(compId).orElseThrow(() -> new EntityNotFoundException("Comp not found"));
+        List<CompetitionRound> rounds = compRepository.findAllForComp(compId);
+        List<CompetitionRoundDto> roundDtos = new ArrayList<>();
+        ModelMapper myMapper = MapperUtil.getModelMapperForCompetition();
+        rounds.forEach(round -> {
+            roundDtos.add(myMapper.map(round, CompetitionRoundDto.class));
+        });
+        return roundDtos;
     }
 
     private Competition updateFields(Competition base, CompetitionDto updatedComp) {

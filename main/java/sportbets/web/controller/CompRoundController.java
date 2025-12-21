@@ -51,6 +51,7 @@ public class CompRoundController {
         log.info("SpieltagDto found with {}", spieltagDto);
         return spieltagDto;
     }
+
     @GetMapping("/rounds")
     public List<CompetitionRoundDto> findAll() {
         log.info(" CompetitionRoundDto:findAll::");

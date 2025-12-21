@@ -90,6 +90,7 @@ public class ContractMatchDayApiIntegrationTest {
                 .isCreated();
         Competition comp = competitionRepository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP));
         compRoundDto.setCompId(comp.getId());
+        compRoundDto.setCompName(comp.getName());
 
         webClient.post()
                 .uri("/rounds")
@@ -103,7 +104,7 @@ public class ContractMatchDayApiIntegrationTest {
 
         CompetitionRound round = competitionRoundRepository.findByName(TEST_COMP_ROUND).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
         matchDayDto.setCompRoundId(round.getId());
-
+        matchDayDto.setCompRoundName(round.getName());
         webClient.post()
                 .uri("/matchdays")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -135,7 +136,7 @@ public class ContractMatchDayApiIntegrationTest {
     }
     @Test
     @Order(2)
-    void givenPreloadedData_whenGetSingleRound_thenResponseContainsFields() {
+    void givenPreloadedData_whenGetAllMatchdays_thenResponseIsOK() {
 
     webClient.get()
                 .uri("/matchdays")

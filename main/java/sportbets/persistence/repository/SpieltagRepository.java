@@ -32,9 +32,6 @@ public interface SpieltagRepository extends JpaRepository<Spieltag, Long> {
             + " and sp.id=:spieltagId")
     Optional<Spieltag> findByIdWithParents(Long spieltagId);
 
-    @Query("select  s from Spiel s join fetch  s.spieltag sp"
-            + " where  sp.id=:matchDayId")
-    List<Spiel> findAllForMatchday(Long matchDayId);
 
 
 

@@ -9,4 +9,7 @@ import java.util.List;
 
 public interface SpielRepository extends JpaRepository<Spiel, Long> {
 
+    @Query("select  s from Spiel s join fetch  s.spieltag sp"
+            + " where  sp.id=:matchDayId")
+    List<Spiel> findAllForMatchday(Long matchDayId);
 }
