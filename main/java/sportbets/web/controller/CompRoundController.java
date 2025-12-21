@@ -40,7 +40,7 @@ public class CompRoundController {
     public CompetitionRoundDto post(@RequestBody @Valid CompetitionRoundDto roundDto) {
         log.info("New round {}", roundDto);
 
-        CompetitionRoundDto createdModel = this.roundService.save(roundDto).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));;
+        CompetitionRoundDto createdModel = this.roundService.save(roundDto).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
         log.info("Created round {}", createdModel);
         return createdModel;
     }

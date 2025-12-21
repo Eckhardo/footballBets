@@ -47,8 +47,6 @@ public class ContractCompTeamApiIntegrationTest {
     @Autowired
     CompetitionTeamRepository compTeamRepo;
     @Autowired
-    SpieltagRepository spieltagRepository;
-    @Autowired
     TeamRepository teamRepository;
 
     CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, TEST_COMP_FAM, "Description of TestLiga", true, true);

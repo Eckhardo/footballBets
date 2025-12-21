@@ -35,7 +35,6 @@ public class ContractMatchDayApiIntegrationTest {
     private static final String TEST_COMP_FAM = "TestLiga";
     private static final String TEST_COMP = "TestLiga: Saison 2025";
     private static final String TEST_COMP_ROUND = "Saison 2025: Hinrunde";
-    private static final String TEST_COMP_ROUND_2 = "Saison 2025: Rueckrunde";
 
     private static final int TEST_MATCH_DAY = 1;
     @Autowired

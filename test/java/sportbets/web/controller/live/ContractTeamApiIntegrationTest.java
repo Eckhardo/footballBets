@@ -40,11 +40,18 @@ public class ContractTeamApiIntegrationTest {
 
     @BeforeEach
     public void setUp() {
-        log.info("setup {}", teamDto);
+
         webClient.post()
                 .uri("/teams")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(teamDto)
+                .exchange()
+                .expectStatus()
+                .isCreated();
+        webClient.post()
+                .uri("/teams")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(teamDto1)
                 .exchange()
                 .expectStatus()
                 .isCreated();
@@ -60,6 +67,15 @@ public class ContractTeamApiIntegrationTest {
         log.info("delete team with id::" + id);
         webClient.delete()
                 .uri("/teams/" + id)
+                .exchange()
+                .expectStatus()
+                .isNoContent();
+
+        Team team2 = teamRepository.findByName(TEAM_NAME_2).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME));
+        Long id2 = team2.getId();
+        log.info("delete team with id::" + id2);
+        webClient.delete()
+                .uri("/teams/" + id2)
                 .exchange()
                 .expectStatus()
                 .isNoContent();
@@ -88,7 +104,7 @@ public class ContractTeamApiIntegrationTest {
 
     @Test
     @Order(2)
-    void updateTeam_withValidTeamJsonInput_thenSuccess() throws Exception {
+    void updateTeam_withValidTeamJsonInput_thenSuccess()  {
         log.info("updateTeam_withValidTeamJsonInput_thenSuccess");
 
         Team team = teamRepository.findByName(TEAM_NAME).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME));

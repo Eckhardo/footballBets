@@ -40,9 +40,7 @@ public class SpieltagServiceImpl implements SpieltagService {
         List<Spieltag> matchDays = spieltagRepository.findAll();
         List<SpieltagDto> spieltagDtos = new ArrayList<>();
         final ModelMapper myMapper = MapperUtil.getModelMapperForCompetitionRound();
-        matchDays.forEach(spieltag -> {
-            spieltagDtos.add(myMapper.map(spieltag, SpieltagDto.class));
-        });
+        matchDays.forEach(spieltag -> spieltagDtos.add(myMapper.map(spieltag, SpieltagDto.class)));
         log.info("return all matchdays::");
         return spieltagDtos;
     }
@@ -78,8 +76,6 @@ public class SpieltagServiceImpl implements SpieltagService {
     @Transactional
     public Optional<SpieltagDto> updateMatchDay(Long id, SpieltagDto spieltagDto) {
 
-        CompetitionRound round = roundRepository.findByIdWithParents(spieltagDto.getCompRoundId()).orElseThrow(() -> new EntityNotFoundException("CompRound not found"));
-
 
         log.info("updateMatchday:: {}", spieltagDto);
         Optional<Spieltag> updateModel = spieltagRepository.findById(id);
@@ -107,9 +103,7 @@ public class SpieltagServiceImpl implements SpieltagService {
         List<Spieltag> matchDays = spieltagRepository.findAllByRoundId(roundId);
         List<SpieltagDto> spieltagDtos = new ArrayList<>();
         ModelMapper myMapper = MapperUtil.getModelMapperForCompetitionRound();
-        matchDays.forEach(spieltag -> {
-            spieltagDtos.add(myMapper.map(spieltag, SpieltagDto.class));
-        });
+        matchDays.forEach(spieltag -> spieltagDtos.add(myMapper.map(spieltag, SpieltagDto.class)));
         return spieltagDtos;
     }
 
