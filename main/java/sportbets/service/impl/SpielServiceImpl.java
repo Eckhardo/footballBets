@@ -119,7 +119,7 @@ public class SpielServiceImpl implements SpielService {
         List<SpielDto> spielDtos = new ArrayList<>();
         final ModelMapper myMapper = MapperUtil.getModelMapperForSpiel();
         for (Spiel spiel : spiele) {
-            spielDtos.add(myMapper.map(spiele, SpielDto.class));
+            spielDtos.add(myMapper.map(spiel, SpielDto.class));
         }
         return spielDtos;
     }

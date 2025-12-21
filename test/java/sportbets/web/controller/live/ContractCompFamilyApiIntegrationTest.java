@@ -27,7 +27,6 @@ public class ContractCompFamilyApiIntegrationTest {
 
     private static final Logger log = LoggerFactory.getLogger(ContractCompFamilyApiIntegrationTest.class);
     private static final String COMP_FAM = "Premier League";
-    private static final String COMP_FAM_2 = "Serie A Italia";
     CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, COMP_FAM, "Description of TestLiga", true, true);
 
     @Autowired
@@ -90,7 +89,7 @@ public class ContractCompFamilyApiIntegrationTest {
 
     @Test
     @Order(2)
-    void updateFamily_withValidFamilyJsonInput_thenSuccess() throws Exception {
+    void updateFamily_withValidFamilyJsonInput_thenSuccess()  {
         log.info("updateFamily_withValidFamilyJsonInput_thenSuccess");
 
         CompetitionFamily fam = competitionFamilyRepository.findByName(COMP_FAM).orElseThrow(() -> new EntityNotFoundException(COMP_FAM));

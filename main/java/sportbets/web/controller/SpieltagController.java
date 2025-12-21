@@ -55,7 +55,7 @@ public class SpieltagController {
     public SpieltagDto post(@RequestBody @Valid SpieltagDto spieltagDto) {
         log.info("New match day {}", spieltagDto);
 
-        SpieltagDto createdModel = this.spieltagService.save(spieltagDto).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));;
+        SpieltagDto createdModel = this.spieltagService.save(spieltagDto).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
         log.info("Created match day {}", createdModel);
         return createdModel;
     }

@@ -92,7 +92,7 @@ public class ContractComApiIntegrationTest {
 
     @Test
     @Order(1)
-    void createNewComp_withValidCompJsonInput_thenSuccess() throws Exception {
+    void createNewComp_withValidCompJsonInput_thenSuccess()  {
         CompetitionFamily fam = competitionFamilyRepository.findByName(TEST_COMP_FAM).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_FAM));
         compDto.setFamilyId(fam.getId());
         compDto.setName(TEST_COMP_2);
@@ -143,7 +143,7 @@ public class ContractComApiIntegrationTest {
 
     @Test
     @Order(3)
-    void updateComp_withValidCompJsonInput_thenSuccess() throws Exception {
+    void updateComp_withValidCompJsonInput_thenSuccess()  {
         log.info("updateComp_withValidCompJsonInput_thenSuccess");
 
         Competition entity = repository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP));
