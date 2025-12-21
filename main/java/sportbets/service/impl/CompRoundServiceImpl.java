@@ -96,9 +96,7 @@ public class CompRoundServiceImpl implements CompRoundService {
         List<CompetitionRound> rounds = roundRepository.findAll();
         List<CompetitionRoundDto> roundDtos = new ArrayList<>();
         ModelMapper myMapper = MapperUtil.getModelMapperForCompetition();
-        rounds.forEach(round -> {
-            roundDtos.add(myMapper.map(round, CompetitionRoundDto.class));
-        });
+        rounds.forEach(round -> roundDtos.add(myMapper.map(round, CompetitionRoundDto.class)));
         return roundDtos;
     }
 

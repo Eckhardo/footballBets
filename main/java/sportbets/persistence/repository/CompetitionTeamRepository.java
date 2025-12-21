@@ -3,7 +3,6 @@ package sportbets.persistence.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import sportbets.persistence.entity.CompetitionTeam;
-import sportbets.persistence.entity.Spiel;
 
 import java.util.List;
 

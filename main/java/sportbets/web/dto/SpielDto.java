@@ -3,7 +3,6 @@ package sportbets.web.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
-import sportbets.persistence.entity.Team;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;

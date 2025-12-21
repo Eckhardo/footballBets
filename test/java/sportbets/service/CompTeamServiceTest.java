@@ -5,11 +5,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import sportbets.web.dto.*;
+import sportbets.web.dto.CompetitionDto;
+import sportbets.web.dto.CompetitionFamilyDto;
+import sportbets.web.dto.CompetitionTeamDto;
+import sportbets.web.dto.TeamDto;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 

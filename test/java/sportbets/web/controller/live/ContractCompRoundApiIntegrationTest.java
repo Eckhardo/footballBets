@@ -2,7 +2,6 @@ package sportbets.web.controller.live;
 
 
 import jakarta.persistence.EntityNotFoundException;
-import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,8 +24,6 @@ import sportbets.web.dto.CompetitionRoundDto;
 import sportbets.web.dto.SpieltagDto;
 
 import java.time.LocalDateTime;
-
-import static org.hamcrest.MatcherAssert.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         classes = {FootballBetsApplication.class, TestProfileLiveTest.class})
@@ -121,7 +118,7 @@ public class ContractCompRoundApiIntegrationTest {
 
     @Test
     @Order(1)
-    void createNewRound_withValidDtoInput_thenSuccess() throws Exception {
+    void createNewRound_withValidDtoInput_thenSuccess() {
         Competition comp = competitionRepository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_FAM));
         compRoundDto.setCompId(comp.getId());
         compRoundDto.setCompName(comp.getName());
@@ -173,7 +170,7 @@ public class ContractCompRoundApiIntegrationTest {
 
     @Test
     @Order(3)
-    void updateRound_withValidCompJsonInput_thenSuccess() throws Exception {
+    void updateRound_withValidCompJsonInput_thenSuccess()  {
 
         CompetitionRound entity = competitionRoundRepository.findByName(TEST_COMP_ROUND).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
         compRoundDto.setCompId(entity.getCompetition().getId());

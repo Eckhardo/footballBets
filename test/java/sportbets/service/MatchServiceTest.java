@@ -8,7 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import sportbets.web.dto.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;

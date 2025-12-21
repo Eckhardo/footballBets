@@ -9,11 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import sportbets.service.SpielService;
-import sportbets.service.SpieltagService;
 import sportbets.web.dto.SpielDto;
-import sportbets.web.dto.SpieltagDto;
-
-import java.util.List;
 
 @RestController
 public class MatchController {

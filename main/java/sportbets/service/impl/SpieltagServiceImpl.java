@@ -7,13 +7,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.CompetitionRound;
-import sportbets.persistence.entity.Spiel;
 import sportbets.persistence.entity.Spieltag;
 import sportbets.persistence.repository.CompetitionRoundRepository;
 import sportbets.persistence.repository.SpieltagRepository;
 import sportbets.service.SpieltagService;
 import sportbets.web.dto.MapperUtil;
-import sportbets.web.dto.SpielDto;
 import sportbets.web.dto.SpieltagDto;
 
 import java.util.ArrayList;
