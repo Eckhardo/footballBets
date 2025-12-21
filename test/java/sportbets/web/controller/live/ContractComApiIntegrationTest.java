@@ -32,7 +32,7 @@ public class ContractComApiIntegrationTest {
 
     private static final Logger log = LoggerFactory.getLogger(ContractComApiIntegrationTest.class);
 
-    @Autowired(required = true)
+    @Autowired
     WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();
 
     @Autowired

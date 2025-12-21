@@ -30,7 +30,7 @@ public class ContractCompFamilyApiIntegrationTest {
     private static final String COMP_FAM_2 = "Serie A Italia";
     CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, COMP_FAM, "Description of TestLiga", true, true);
 
-    @Autowired(required = true)
+    @Autowired
     WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();
     @Autowired
     CompetitionFamilyRepository competitionFamilyRepository;

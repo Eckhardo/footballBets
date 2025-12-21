@@ -25,7 +25,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ContractTeamApiIntegrationTest {
     private static final Logger log = LoggerFactory.getLogger(ContractTeamApiIntegrationTest.class);
-    @Autowired(required = true)
+    @Autowired
     WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();
 
     @Autowired

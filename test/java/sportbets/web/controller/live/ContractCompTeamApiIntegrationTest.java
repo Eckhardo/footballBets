@@ -36,7 +36,7 @@ public class ContractCompTeamApiIntegrationTest {
     private static final Logger log = LoggerFactory.getLogger(ContractCompRoundApiIntegrationTest.class);
     private static final String TEST_COMP_FAM = "TestLiga";
     private static final String TEST_COMP = "TestLiga: Saison 2025";
-    @Autowired(required = true)
+    @Autowired
     WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();
     @Autowired
     CompetitionFamilyRepository competitionFamilyRepository;

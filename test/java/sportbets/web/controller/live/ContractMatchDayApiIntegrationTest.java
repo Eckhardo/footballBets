@@ -38,7 +38,7 @@ public class ContractMatchDayApiIntegrationTest {
     private static final String TEST_COMP_ROUND_2 = "Saison 2025: Rueckrunde";
 
     private static final int TEST_MATCH_DAY = 1;
-    @Autowired(required = true)
+    @Autowired
     WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();
     @Autowired
     CompetitionFamilyRepository competitionFamilyRepository;

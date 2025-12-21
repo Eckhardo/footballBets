@@ -37,7 +37,7 @@ public class MatchController {
     public SpielDto post(@RequestBody @Valid SpielDto dto) {
         log.info("New match day {}", dto);
 
-        SpielDto createdModel = this.spielService.save(dto).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));;
+        SpielDto createdModel = this.spielService.save(dto).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
         log.info("Created match day {}", createdModel);
         return createdModel;
     }
