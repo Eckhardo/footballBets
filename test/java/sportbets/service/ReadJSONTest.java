@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import sportbets.common.DateUtil;
+import sportbets.persistence.entity.Spiel;
+import sportbets.persistence.entity.Spieltag;
 import sportbets.persistence.entity.Team;
 import sportbets.persistence.rowObject.SpielRow;
 
@@ -87,10 +89,7 @@ public class ReadJSONTest {
     @Test
     void retrieveSpiele() {
 
-        SortedMap<Integer, SpielRow> spieltags = new TreeMap<>(
-                Comparator.nullsFirst(Comparator.naturalOrder())
-        );
-
+       List<Spiel> spiele= new ArrayList<>();
         try (FileReader reader = new FileReader(filePath)) {
 
             JsonObject jsonObject = (JsonObject) Jsoner.deserialize(reader);
@@ -145,9 +144,14 @@ public class ReadJSONTest {
                 }
                 Integer homeGoals=heimTor!=null ? heimTor.intValue():null;
                 Integer guestGoals=gastTor!=null ? gastTor.intValue():null;
-                Long ID= (long) i;
-                spieltags.put(i, new SpielRow(ID,dt,heim,auswärts,homeGoals,guestGoals, stattgefunden));
 
+                Team heimTeam=  teamService.findByName(heim).orElseThrow();
+                Team gastTeam=  teamService.findByName(auswärts).orElseThrow();
+                Long ID= (long) i;
+                spiele.add( new Spiel(null,i,dt,heimTeam,gastTeam,homeGoals,guestGoals, stattgefunden));
+//                (Spieltag spieltag, int spielNumber, LocalDateTime startDate,
+//                        Team heimTeam, Team gastTeam, Integer heimTore, Integer gastTore,
+//                        Boolean stattgefunden
                 i++;
             }
 
@@ -157,11 +161,9 @@ public class ReadJSONTest {
             throw new RuntimeException(e);
         }
 
-        System.out.println("size::" + spieltags.size());
-        for (Map.Entry<Integer, SpielRow> entry : spieltags.entrySet()) {
-            System.out.println(entry.getKey() + " => " + entry.getValue());
-        }
-        // return teams;
+        System.out.println("size::" + spiele.size());
+
+
     }
 
     @Test

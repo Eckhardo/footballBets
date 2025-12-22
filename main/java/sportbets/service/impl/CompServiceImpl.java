@@ -87,6 +87,7 @@ public class CompServiceImpl implements CompService {
     }
 
     @Override
+    @Transactional
     public List<CompetitionDto> getAll() {
 
         List<Competition> comps = compRepository.findAll();

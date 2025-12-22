@@ -16,6 +16,10 @@ public interface SpieltagRepository extends JpaRepository<Spieltag, Long> {
             + " and cr.id=:id")
     Optional<Spieltag> findByNumberWithRoundId(int number, Long id);
 
+    @Query("select  sp from Spieltag sp "
+            + " where sp.spieltagNumber =:number")
+   Spieltag findByNumber(int number);
+
 
     @Query("select  sp from Spieltag sp join fetch  sp.competitionRound cr"
             + " where  cr.id=:id")
