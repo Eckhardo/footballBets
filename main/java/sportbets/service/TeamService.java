@@ -1,5 +1,6 @@
 package sportbets.service;
 
+import sportbets.persistence.entity.Team;
 import sportbets.web.dto.TeamDto;
 
 import java.util.List;
@@ -15,4 +16,6 @@ public interface TeamService {
     void deleteById(Long id);
     void deleteByName(String name );
     List<TeamDto> getAll();
+
+    Optional<Team> findByName(String name);
 }

@@ -26,7 +26,8 @@ public class CompetitionTeam {
     @JoinColumn(name = "fk_comp_id")
     @NotNull
     private Competition competition;
-
+    @Version
+    private Long version; // Managed automatically by JPA
     public CompetitionTeam(Team team, Competition competition) {
         this.team = team;
      //   this.team.addCompetitionTeam(this);

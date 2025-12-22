@@ -31,7 +31,8 @@ public class CompetitionFamily {
      * has clubs or countries
      */
     private boolean hasClubs;
-
+    @Version
+    private Long version; // Managed automatically by JPA
 
     //	********************** Constructors ********************** //
 

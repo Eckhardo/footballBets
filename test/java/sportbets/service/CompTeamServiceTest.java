@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import sportbets.persistence.repository.CompetitionRepository;
 import sportbets.web.dto.CompetitionDto;
 import sportbets.web.dto.CompetitionFamilyDto;
 import sportbets.web.dto.CompetitionTeamDto;
@@ -24,6 +25,8 @@ public class CompTeamServiceTest {
 
     @Autowired
     private TeamService teamService;
+    @Autowired
+    CompetitionRepository compRepo;
 
     private static final String TEST_COMP_FAM = "TestLiga";
     private static final String TEST_COMP = "TestLiga: Saison 2025";

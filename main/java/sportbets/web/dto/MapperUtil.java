@@ -1,8 +1,10 @@
 package sportbets.web.dto;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
+import org.springframework.stereotype.Component;
 import sportbets.persistence.entity.*;
 
+@Component
 public class MapperUtil {
 
     public static ModelMapper getModelMapperForFamily() {

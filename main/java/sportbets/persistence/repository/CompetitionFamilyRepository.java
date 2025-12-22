@@ -2,12 +2,13 @@ package sportbets.persistence.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 import sportbets.persistence.entity.CompetitionFamily;
 import sportbets.persistence.entity.Team;
 
 import java.util.List;
 import java.util.Optional;
-
+@Repository
 public interface CompetitionFamilyRepository extends JpaRepository<CompetitionFamily, Long> {
 
     Optional<CompetitionFamily> findByName(String name);

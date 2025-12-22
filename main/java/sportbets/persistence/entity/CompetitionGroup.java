@@ -29,7 +29,8 @@ public class CompetitionGroup {
     @OneToMany(mappedBy = "competitionGroup", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private Set<Spiel> spiele=new HashSet<>();
 
-
+    @Version
+    private Long version; // Managed automatically by JPA
 
     //	********************** Constructors ********************** //
     /**

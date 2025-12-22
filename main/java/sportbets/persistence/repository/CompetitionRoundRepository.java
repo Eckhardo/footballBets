@@ -2,10 +2,11 @@ package sportbets.persistence.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 import sportbets.persistence.entity.CompetitionRound;
 
 import java.util.Optional;
-
+@Repository
 public interface CompetitionRoundRepository extends JpaRepository<CompetitionRound, Long> {
     Optional<CompetitionRound> findByName(String name);
 

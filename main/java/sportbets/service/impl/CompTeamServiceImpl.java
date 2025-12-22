@@ -27,13 +27,12 @@ public class CompTeamServiceImpl implements CompTeamService {
     private final CompetitionTeamRepository compTeamRepo;
     private final CompetitionRepository compRepo;
     private final TeamRepository teamRepo;
-    private final ModelMapper modelMapper;
 
-    public CompTeamServiceImpl(CompetitionTeamRepository compTeamRepo, CompetitionRepository compRepo, TeamRepository teamRepo, ModelMapper modelMapper) {
+    public CompTeamServiceImpl(CompetitionTeamRepository compTeamRepo, CompetitionRepository compRepo, TeamRepository teamRepo) {
         this.compTeamRepo = compTeamRepo;
         this.compRepo = compRepo;
         this.teamRepo = teamRepo;
-        this.modelMapper = modelMapper;
+
     }
 
     /**

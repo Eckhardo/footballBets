@@ -2,6 +2,7 @@ package sportbets.persistence.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 import sportbets.persistence.entity.Competition;
 import sportbets.persistence.entity.CompetitionRound;
 import sportbets.persistence.entity.Team;
@@ -9,7 +10,7 @@ import sportbets.persistence.rowObject.CompRecord;
 
 import java.util.List;
 import java.util.Optional;
-
+@Repository
 public interface CompetitionRepository extends JpaRepository<Competition, Long> {
     Optional<Competition> findByName(String name);
     void deleteByName(String name);

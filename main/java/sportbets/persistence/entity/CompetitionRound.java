@@ -38,7 +38,8 @@ public class CompetitionRound {
     @Column(nullable = false)
     private LocalDateTime createdOn=LocalDateTime.now();
 
-
+    @Version
+    private Long version; // Managed automatically by JPA
     public CompetitionRound() {
 
     }

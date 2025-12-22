@@ -34,7 +34,8 @@ public class Spieltag {
 
     @OneToMany(mappedBy = "spieltag",  cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private SortedSet<Spiel> spiele=new TreeSet<>();
-
+    @Version
+    private Long version; // Managed automatically by JPA
     public Spieltag() {
 
     }

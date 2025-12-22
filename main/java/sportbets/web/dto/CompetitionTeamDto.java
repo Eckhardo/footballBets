@@ -12,7 +12,6 @@ import java.util.Objects;
  * DTO for {@link CompetitionTeam}
  */
 public class CompetitionTeamDto implements Serializable {
-    private static final Logger log = LoggerFactory.getLogger(CompetitionTeamDto.class);
     private Long id;
     @NotNull(message = " competition id cannot be null")
     private Long compId;
@@ -26,7 +25,6 @@ public class CompetitionTeamDto implements Serializable {
 
     public CompetitionTeamDto(Long id, Long compId, String compName, Long teamId, String teamAcronym) {
         this.id = id;
-
         this.compId = compId;
         this.compName = compName;
         this.teamId = teamId;

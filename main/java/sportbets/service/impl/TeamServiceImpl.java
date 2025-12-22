@@ -38,6 +38,16 @@ public class TeamServiceImpl implements TeamService {
         return Optional.ofNullable(modelMapper.map(team, TeamDto.class));
     }
 
+    /**
+     * @param name
+     * @return
+     */
+    @Override
+    public Optional<Team> findByName(String name) {
+       return teamRepository.findByName(name);
+
+    }
+
     @Override
     @Transactional
     public Optional<TeamDto> save(TeamDto teamDto) {

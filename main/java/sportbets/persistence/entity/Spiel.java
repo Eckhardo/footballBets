@@ -42,7 +42,8 @@ public class Spiel implements Comparable<Spiel> {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private CompetitionGroup competitionGroup;
-
+    @Version
+    private Long version; // Managed automatically by JPA
     public Spiel() {
 
     }
