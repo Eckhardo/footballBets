@@ -15,7 +15,9 @@ import sportbets.common.DateUtil;
 import sportbets.persistence.entity.Spiel;
 import sportbets.persistence.entity.Spieltag;
 import sportbets.persistence.entity.Team;
-import sportbets.persistence.rowObject.SpielRow;
+import sportbets.persistence.repository.SpielRepository;
+import sportbets.persistence.repository.SpieltagRepository;
+
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -29,6 +31,14 @@ public class ReadJSONTest {
     private static final Logger log = LoggerFactory.getLogger(ReadJSONTest.class);
     @Autowired
     private TeamService teamService;
+
+    @Autowired
+
+
+    private SpielRepository spielRepo;
+
+    @Autowired
+    private SpieltagRepository spieltagRepo;
     String filePath = "src/test/java/sportbets/testdata/bl.json";
 
     @BeforeEach
@@ -89,7 +99,7 @@ public class ReadJSONTest {
     @Test
     void retrieveSpiele() {
 
-       List<Spiel> spiele= new ArrayList<>();
+        List<Spiel> spiele = new ArrayList<>();
         try (FileReader reader = new FileReader(filePath)) {
 
             JsonObject jsonObject = (JsonObject) Jsoner.deserialize(reader);
@@ -101,6 +111,7 @@ public class ReadJSONTest {
             JsonArray msg = (JsonArray) jsonObject.get("matches");
 
             int i = 1;
+            int k =1;
             String lastSpieltag = null;
             for (Object o : msg) {
                 JsonObject nestedObj = (JsonObject) o;
@@ -116,50 +127,57 @@ public class ReadJSONTest {
 
 
                 String auswärts = (String) nestedObj.get("team2");
-                JsonObject  scores  = (JsonObject) nestedObj.get("score");
+                JsonObject scores = (JsonObject) nestedObj.get("score");
                 JsonArray fts = (JsonArray) scores.get("ft");
-                BigDecimal heimTor=null;
-                BigDecimal gastTor=null;
-                if(fts !=null) {
-                    int j=1;
+                BigDecimal heimTor = null;
+                BigDecimal gastTor = null;
+                if (fts != null) {
+                    int j = 1;
                     for (Object ft : fts) {
 
-                        if (j==1) {
+                        if (j == 1) {
                             heimTor = (BigDecimal) ft;
                             j++;
-                        }
-                        else if (j==2) {
+                        } else if (j == 2) {
                             gastTor = (BigDecimal) ft;
-                            j=1;
+                            j = 1;
                         }
-                    ;
+                        ;
 
                     }
                 }
 
-                System.out.println(dt + " - " + heim + "-  " + auswärts + " " + ( heimTor!=null ? heimTor.intValue():null) + " " + (gastTor !=null ? gastTor.intValue():null));
+            //    System.out.println(dt + " - " + heim + "-  " + auswärts + " " + (heimTor != null ? heimTor.intValue() : null) + " " + (gastTor != null ? gastTor.intValue() : null));
                 boolean stattgefunden = true;
-                if (heimTor==null || gastTor==null) {
+                if (heimTor == null || gastTor == null) {
                     stattgefunden = false;
                 }
-                Integer homeGoals=heimTor!=null ? heimTor.intValue():null;
-                Integer guestGoals=gastTor!=null ? gastTor.intValue():null;
+                Integer homeGoals = heimTor != null ? heimTor.intValue() : 0;
+                Integer guestGoals = gastTor != null ? gastTor.intValue() : 0;
 
-                Team heimTeam=  teamService.findByName(heim).orElseThrow();
-                Team gastTeam=  teamService.findByName(auswärts).orElseThrow();
-                Long ID= (long) i;
-                spiele.add( new Spiel(null,i,dt,heimTeam,gastTeam,homeGoals,guestGoals, stattgefunden));
-//                (Spieltag spieltag, int spielNumber, LocalDateTime startDate,
-//                        Team heimTeam, Team gastTeam, Integer heimTore, Integer gastTore,
-//                        Boolean stattgefunden
+                Spieltag spieltag= spieltagRepo.findByNumber(k);
+
+                Team heimTeam = teamService.findByName(heim).orElseThrow();
+                Team gastTeam = teamService.findByName(auswärts).orElseThrow();
+                Long ID = (long) i;
+                spiele.add(new Spiel(spieltag, i, dt, heimTeam, gastTeam, homeGoals, guestGoals, stattgefunden));
+
+                if (i % 9 == 0) {
+
+                    log.info(""+ k);
+                    k++;
+                }
                 i++;
             }
-
+             spielRepo.saveAll(spiele);
 
         } catch (IOException | JsonException e) {
             System.out.println("##" + e.getMessage());
             throw new RuntimeException(e);
         }
+
+        System.out.println("size::" + spiele.size());
+
 
         System.out.println("size::" + spiele.size());
 

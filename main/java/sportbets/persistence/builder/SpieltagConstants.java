@@ -3,7 +3,6 @@ package sportbets.persistence.builder;
 import sportbets.persistence.entity.CompetitionRound;
 import sportbets.persistence.entity.Spieltag;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

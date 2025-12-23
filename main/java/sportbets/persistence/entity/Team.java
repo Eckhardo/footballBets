@@ -17,9 +17,7 @@ public class Team {
     private String acronym;
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    private Set<CompetitionTeam> competitionTeams= new HashSet();
-    @Version
-    private Long version; // Managed automatically by JPA
+    private final Set<CompetitionTeam> competitionTeams= new HashSet();
     public Team() {
 
     }

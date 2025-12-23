@@ -1,8 +1,6 @@
 package sportbets.web.dto;
 
 import jakarta.validation.constraints.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import sportbets.persistence.entity.CompetitionTeam;
 
 import java.io.Serializable;

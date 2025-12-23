@@ -1,12 +1,13 @@
 package sportbets.web.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import sportbets.persistence.entity.Team;
 
 import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * DTO for {@link sportbets.persistence.entity.Team}
+ * DTO for {@link Team}
  */
 public class TeamDto implements Serializable {
     private Long id;

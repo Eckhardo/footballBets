@@ -41,9 +41,7 @@ public class Competition {
     @Column(nullable = false)
     private LocalDateTime createdOn=LocalDateTime.now();
 
-    @Version
-    private Long version; // Managed automatically by JPA
-    /**
+     /**
      * No-arg constructor for JavaBean tools.
      */
     public Competition() {

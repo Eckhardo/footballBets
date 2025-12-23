@@ -27,7 +27,6 @@ public class SpieltagRepositoryTest {
     private CompetitionFamily testFamily;
     private Competition testComp;
 
-
     private CompetitionRound testRound;
 
     private CompetitionGroup testGroup;

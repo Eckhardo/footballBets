@@ -3,13 +3,14 @@ package sportbets.web.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
+import sportbets.persistence.entity.Spieltag;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
- * DTO for {@link sportbets.persistence.entity.Spieltag}
+ * DTO for {@link Spieltag}
  */
 
 public class SpieltagDto implements Serializable {

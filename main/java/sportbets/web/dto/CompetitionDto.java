@@ -4,12 +4,13 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.Range;
+import sportbets.persistence.entity.Competition;
 
 import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * DTO for {@link sportbets.persistence.entity.Competition}
+ * DTO for {@link Competition}
  */
 public class CompetitionDto implements Serializable {
     private Long id;

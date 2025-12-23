@@ -2,12 +2,13 @@ package sportbets.web.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import sportbets.persistence.entity.CompetitionRound;
 
 import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * DTO for {@link sportbets.persistence.entity.CompetitionRound}
+ * DTO for {@link CompetitionRound}
  */
 public class CompetitionRoundDto implements Serializable {
     private Long id;
