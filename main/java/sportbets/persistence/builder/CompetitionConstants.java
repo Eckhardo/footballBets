@@ -1,7 +1,7 @@
 package sportbets.persistence.builder;
 
-import sportbets.persistence.entity.Competition;
-import sportbets.persistence.entity.CompetitionFamily;
+import sportbets.persistence.entity.competition.Competition;
+import sportbets.persistence.entity.competition.CompetitionFamily;
 
 public class CompetitionConstants {
 

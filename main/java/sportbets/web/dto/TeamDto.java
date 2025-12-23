@@ -1,7 +1,7 @@
 package sportbets.web.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import sportbets.persistence.entity.Team;
+import sportbets.persistence.entity.competition.Team;
 
 import java.io.Serializable;
 import java.util.Objects;

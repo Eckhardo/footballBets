@@ -7,20 +7,15 @@ import com.github.cliftonlabs.json_simple.Jsoner;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import sportbets.common.DateUtil;
-import sportbets.persistence.builder.*;
-import sportbets.persistence.entity.*;
-import sportbets.persistence.repository.*;
-import sportbets.service.TeamService;
+import sportbets.persistence.entity.competition.Spiel;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 

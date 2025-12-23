@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.dao.CompetitionFamilyDAO;
-import sportbets.persistence.entity.CompetitionFamily;
+import sportbets.persistence.entity.competition.CompetitionFamily;
 
 import java.util.List;
 

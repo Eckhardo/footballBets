@@ -12,9 +12,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import sportbets.common.DateUtil;
-import sportbets.persistence.entity.Spiel;
-import sportbets.persistence.entity.Spieltag;
-import sportbets.persistence.entity.Team;
+import sportbets.persistence.entity.competition.Spiel;
+import sportbets.persistence.entity.competition.Spieltag;
+import sportbets.persistence.entity.competition.Team;
 import sportbets.persistence.repository.SpielRepository;
 import sportbets.persistence.repository.SpieltagRepository;
 

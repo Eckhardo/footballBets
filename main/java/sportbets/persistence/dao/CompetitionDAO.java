@@ -1,6 +1,6 @@
 package sportbets.persistence.dao;
 
-import sportbets.persistence.entity.Competition;
+import sportbets.persistence.entity.competition.Competition;
 
 import java.util.List;
 

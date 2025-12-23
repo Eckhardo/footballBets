@@ -1,4 +1,4 @@
-package sportbets.persistence.entity;
+package sportbets.persistence.entity.competition;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
@@ -33,7 +33,7 @@ public class Spieltag {
     private CompetitionRound competitionRound;
 
     @OneToMany(mappedBy = "spieltag",  cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private SortedSet<Spiel> spiele=new TreeSet<>();
+    private final SortedSet<Spiel> spiele=new TreeSet<>();
 
      public Spieltag() {
 

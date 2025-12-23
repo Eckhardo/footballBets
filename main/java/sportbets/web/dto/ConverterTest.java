@@ -2,7 +2,7 @@ package sportbets.web.dto;
 
 import org.modelmapper.Converter;
 import org.modelmapper.spi.MappingContext;
-import sportbets.persistence.entity.Competition;
+import sportbets.persistence.entity.competition.Competition;
 
 import java.util.Collection;
 import java.util.stream.Collectors;

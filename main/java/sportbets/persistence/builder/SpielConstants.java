@@ -1,8 +1,8 @@
 package sportbets.persistence.builder;
 
-import sportbets.persistence.entity.Spiel;
-import sportbets.persistence.entity.Spieltag;
-import sportbets.persistence.entity.Team;
+import sportbets.persistence.entity.competition.Spiel;
+import sportbets.persistence.entity.competition.Spieltag;
+import sportbets.persistence.entity.competition.Team;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

@@ -1,6 +1,6 @@
 package sportbets.persistence.builder;
 
-import sportbets.persistence.entity.CompetitionFamily;
+import sportbets.persistence.entity.competition.CompetitionFamily;
 
 public class CompFamilyConstants {
 

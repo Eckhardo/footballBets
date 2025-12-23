@@ -1,6 +1,6 @@
 package sportbets.persistence.builder;
 
-import sportbets.persistence.entity.Team;
+import sportbets.persistence.entity.competition.Team;
 
 public class TeamConstants {
 

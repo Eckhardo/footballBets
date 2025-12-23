@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.Range;
-import sportbets.persistence.entity.Competition;
+import sportbets.persistence.entity.competition.Competition;
 
 import java.io.Serializable;
 import java.util.Objects;

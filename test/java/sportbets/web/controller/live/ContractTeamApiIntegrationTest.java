@@ -12,7 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import sportbets.FootballBetsApplication;
 import sportbets.config.TestProfileLiveTest;
-import sportbets.persistence.entity.Team;
+import sportbets.persistence.entity.competition.Team;
 import sportbets.persistence.repository.TeamRepository;
 import sportbets.web.dto.TeamDto;
 

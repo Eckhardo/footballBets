@@ -3,9 +3,9 @@ package sportbets.persistence.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import sportbets.persistence.entity.Competition;
-import sportbets.persistence.entity.CompetitionRound;
-import sportbets.persistence.entity.Team;
+import sportbets.persistence.entity.competition.Competition;
+import sportbets.persistence.entity.competition.CompetitionRound;
+import sportbets.persistence.entity.competition.Team;
 import sportbets.persistence.rowObject.CompRecord;
 
 import java.util.List;

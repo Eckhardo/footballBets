@@ -12,7 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import sportbets.FootballBetsApplication;
 import sportbets.config.TestProfileUnitTest;
-import sportbets.persistence.entity.CompetitionFamily;
+import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.repository.CompetitionFamilyRepository;
 
 import java.util.ArrayList;

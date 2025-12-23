@@ -1,6 +1,6 @@
 package sportbets.service;
 
-import sportbets.persistence.entity.Competition;
+import sportbets.persistence.entity.competition.Competition;
 import sportbets.web.dto.CompetitionDto;
 import sportbets.web.dto.CompetitionRoundDto;
 import sportbets.web.dto.TeamDto;

@@ -2,7 +2,7 @@ package sportbets.web.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import sportbets.persistence.entity.CompetitionRound;
+import sportbets.persistence.entity.competition.CompetitionRound;
 
 import java.io.Serializable;
 import java.util.Objects;

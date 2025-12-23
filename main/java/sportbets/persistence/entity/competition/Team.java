@@ -1,4 +1,4 @@
-package sportbets.persistence.entity;
+package sportbets.persistence.entity.competition;
 
 import jakarta.persistence.*;
 

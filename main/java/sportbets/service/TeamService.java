@@ -1,6 +1,6 @@
 package sportbets.service;
 
-import sportbets.persistence.entity.Team;
+import sportbets.persistence.entity.competition.Team;
 import sportbets.web.dto.TeamDto;
 
 import java.util.List;

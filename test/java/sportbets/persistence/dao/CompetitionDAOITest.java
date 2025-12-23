@@ -11,8 +11,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import sportbets.persistence.dao.impl.CompetitionDAOImpl;
 import sportbets.persistence.dao.impl.CompetitionFamilyDAOImpl;
-import sportbets.persistence.entity.Competition;
-import sportbets.persistence.entity.CompetitionFamily;
+import sportbets.persistence.entity.competition.Competition;
+import sportbets.persistence.entity.competition.CompetitionFamily;
 
 import java.util.List;
 

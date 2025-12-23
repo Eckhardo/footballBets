@@ -1,4 +1,4 @@
-package sportbets.persistence.entity;
+package sportbets.persistence.entity.competition;
 
 import jakarta.persistence.*;
 
@@ -87,10 +87,6 @@ public class CompetitionFamily {
 
     public void setHasLigaModus(boolean hasLigaModus) {
         this.hasLigaModus = hasLigaModus;
-    }
-
-    public LocalDateTime getCreatedOn() {
-        return createdOn;
     }
 
 

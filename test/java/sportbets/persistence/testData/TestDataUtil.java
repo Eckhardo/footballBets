@@ -1,6 +1,6 @@
 package sportbets.persistence.testData;
 
-import sportbets.persistence.entity.*;
+import sportbets.persistence.entity.competition.*;
 
 import java.time.LocalDateTime;
 

@@ -1,4 +1,4 @@
-package sportbets.persistence.entity;
+package sportbets.persistence.entity.competition;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
