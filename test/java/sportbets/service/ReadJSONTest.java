@@ -15,8 +15,8 @@ import sportbets.common.DateUtil;
 import sportbets.persistence.entity.competition.Spiel;
 import sportbets.persistence.entity.competition.Spieltag;
 import sportbets.persistence.entity.competition.Team;
-import sportbets.persistence.repository.SpielRepository;
-import sportbets.persistence.repository.SpieltagRepository;
+import sportbets.persistence.repository.competition.SpielRepository;
+import sportbets.persistence.repository.competition.SpieltagRepository;
 
 
 import java.io.FileReader;

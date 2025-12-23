@@ -7,15 +7,20 @@ import com.github.cliftonlabs.json_simple.Jsoner;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import sportbets.common.DateUtil;
-import sportbets.persistence.entity.competition.Spiel;
+import sportbets.persistence.builder.*;
+import sportbets.persistence.entity.competition.*;
+import sportbets.persistence.repository.competition.*;
+import sportbets.service.TeamService;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -33,7 +38,7 @@ public class FootballBetsApplication {
     public ModelMapper getModelMapper() {
         return new ModelMapper();
     }
-//
+
 //    @Autowired
 //    private CompetitionFamilyRepository familyRepo;
 //    @Autowired
@@ -50,7 +55,7 @@ public class FootballBetsApplication {
 //
 //    @Autowired
 //    private TeamService teamService;
-
+//
 
     @Bean
     public CommandLineRunner run() {
@@ -172,12 +177,6 @@ public class FootballBetsApplication {
 //
 //            }
 
-       ///     List<Spiel> spieleHin = spielRepo.saveAll(SpielConstants.getSpieleHinrunde(spieltagHin, pauli, hsv));
-
-
-
-       //     List<Spiel> spieleRueck = spielRepo.saveAll(SpielConstants.getSpieleRückrunde(spieltagRueck, werder, bay));
-
 
             System.out.println("Save all cascade");
         };
@@ -240,9 +239,9 @@ public class FootballBetsApplication {
     }
 
     List<Spiel> retrieveSpiele() {
-//        String filePath = "src/test/java/sportbets/testdata/bl.json";
-//
-     List<Spiel> spiele = new ArrayList<>();
+        String filePath = "src/test/java/sportbets/testdata/bl.json";
+
+        List<Spiel> spiele = new ArrayList<>();
 //        try (FileReader reader = new FileReader(filePath)) {
 //
 //            JsonObject jsonObject = (JsonObject) Jsoner.deserialize(reader);
@@ -304,6 +303,9 @@ public class FootballBetsApplication {
 //                Team gastTeam = teamService.findByName(auswärts).orElseThrow();
 //                Long ID = (long) i;
 //                spiele.add(new Spiel(spieltag, i, dt, heimTeam, gastTeam, homeGoals, guestGoals, stattgefunden));
+////                (Spieltag spieltag, int spielNumber, LocalDateTime startDate,
+////                        Team heimTeam, Team gastTeam, Integer heimTore, Integer gastTore,
+////                        Boolean stattgefunden
 //
 //                if (i % 9 == 0) {
 //
@@ -320,8 +322,8 @@ public class FootballBetsApplication {
 //        }
 //
 //        System.out.println("size::" + spiele.size());
-//
-     return spiele;
+
+        return spiele;
     }
 }
 

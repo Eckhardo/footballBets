@@ -13,7 +13,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import sportbets.FootballBetsApplication;
 import sportbets.config.TestProfileLiveTest;
 import sportbets.persistence.entity.competition.CompetitionFamily;
-import sportbets.persistence.repository.CompetitionFamilyRepository;
+import sportbets.persistence.repository.competition.CompetitionFamilyRepository;
 import sportbets.web.dto.CompetitionFamilyDto;
 
 import static org.hamcrest.CoreMatchers.equalTo;

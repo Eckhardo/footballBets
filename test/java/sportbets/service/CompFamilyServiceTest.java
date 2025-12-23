@@ -11,7 +11,7 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import sportbets.persistence.entity.competition.CompetitionFamily;
-import sportbets.persistence.repository.CompetitionFamilyRepository;
+import sportbets.persistence.repository.competition.CompetitionFamilyRepository;
 import sportbets.service.impl.CompFamilyServiceImpl;
 import sportbets.web.dto.CompetitionFamilyDto;
 

@@ -13,7 +13,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import sportbets.FootballBetsApplication;
 import sportbets.config.TestProfileLiveTest;
 import sportbets.persistence.entity.competition.*;
-import sportbets.persistence.repository.*;
+import sportbets.persistence.repository.competition.*;
 import sportbets.web.dto.*;
 
 import java.time.LocalDateTime;

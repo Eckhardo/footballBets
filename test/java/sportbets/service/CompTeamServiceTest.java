@@ -5,7 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import sportbets.persistence.repository.CompetitionRepository;
+import sportbets.persistence.repository.competition.CompetitionRepository;
 import sportbets.web.dto.CompetitionDto;
 import sportbets.web.dto.CompetitionFamilyDto;
 import sportbets.web.dto.CompetitionTeamDto;

@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionRound;
 import sportbets.persistence.entity.competition.Team;
-import sportbets.persistence.repository.CompetitionRepository;
+import sportbets.persistence.repository.competition.CompetitionRepository;
 import sportbets.service.CompService;
 import sportbets.web.dto.CompetitionDto;
 import sportbets.web.dto.CompetitionRoundDto;

@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.competition.Team;
-import sportbets.persistence.repository.TeamRepository;
+import sportbets.persistence.repository.competition.TeamRepository;
 import sportbets.service.TeamService;
 import sportbets.web.dto.MapperUtil;
 import sportbets.web.dto.TeamDto;

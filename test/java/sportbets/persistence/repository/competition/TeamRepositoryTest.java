@@ -1,4 +1,4 @@
-package sportbets.persistence.repository;
+package sportbets.persistence.repository.competition;
 
 
 import com.github.cliftonlabs.json_simple.JsonArray;

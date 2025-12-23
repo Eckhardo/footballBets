@@ -1,4 +1,4 @@
-package sportbets.persistence.repository;
+package sportbets.persistence.repository.competition;
 
 import org.junit.After;
 import org.junit.Before;

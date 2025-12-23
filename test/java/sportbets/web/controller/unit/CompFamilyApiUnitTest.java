@@ -13,7 +13,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import sportbets.FootballBetsApplication;
 import sportbets.config.TestProfileUnitTest;
 import sportbets.persistence.entity.competition.CompetitionFamily;
-import sportbets.persistence.repository.CompetitionFamilyRepository;
+import sportbets.persistence.repository.competition.CompetitionFamilyRepository;
 
 import java.util.ArrayList;
 import java.util.List;

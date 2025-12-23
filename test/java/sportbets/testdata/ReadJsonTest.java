@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.stereotype.Component;
 import sportbets.persistence.entity.competition.Team;
-import sportbets.persistence.repository.TeamRepository;
+import sportbets.persistence.repository.competition.TeamRepository;
 
 import java.io.FileReader;
 import java.io.IOException;

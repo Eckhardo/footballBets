@@ -1,4 +1,4 @@
-package sportbets.persistence.repository;
+package sportbets.persistence.repository.competition;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.Test;
