@@ -16,10 +16,10 @@ import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.repository.competition.CompetitionFamilyRepository;
 import sportbets.persistence.repository.competition.CompetitionRepository;
-import sportbets.web.dto.CompetitionDto;
-import sportbets.web.dto.CompetitionFamilyDto;
-import sportbets.web.dto.CompetitionRoundDto;
-import sportbets.web.dto.TeamDto;
+import sportbets.web.dto.competition.CompetitionDto;
+import sportbets.web.dto.competition.CompetitionFamilyDto;
+import sportbets.web.dto.competition.CompetitionRoundDto;
+import sportbets.web.dto.competition.TeamDto;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 

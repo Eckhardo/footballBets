@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import sportbets.service.CompFamilyService;
-import sportbets.web.dto.CompetitionFamilyDto;
+import sportbets.web.dto.competition.CompetitionFamilyDto;
 
 import java.util.List;
 

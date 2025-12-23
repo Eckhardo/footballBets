@@ -5,10 +5,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import sportbets.web.dto.CompetitionDto;
-import sportbets.web.dto.CompetitionFamilyDto;
-import sportbets.web.dto.CompetitionRoundDto;
-import sportbets.web.dto.SpieltagDto;
+import sportbets.web.dto.competition.CompetitionDto;
+import sportbets.web.dto.competition.CompetitionFamilyDto;
+import sportbets.web.dto.competition.CompetitionRoundDto;
+import sportbets.web.dto.competition.SpieltagDto;
 
 import java.time.LocalDateTime;
 import java.util.List;

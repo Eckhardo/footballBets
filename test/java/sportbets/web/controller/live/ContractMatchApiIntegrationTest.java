@@ -14,7 +14,7 @@ import sportbets.FootballBetsApplication;
 import sportbets.config.TestProfileLiveTest;
 import sportbets.persistence.entity.competition.*;
 import sportbets.persistence.repository.competition.*;
-import sportbets.web.dto.*;
+import sportbets.web.dto.competition.*;
 
 import java.time.LocalDateTime;
 import java.util.List;

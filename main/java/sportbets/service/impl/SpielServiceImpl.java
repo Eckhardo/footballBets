@@ -13,8 +13,8 @@ import sportbets.persistence.repository.competition.SpielRepository;
 import sportbets.persistence.repository.competition.SpieltagRepository;
 import sportbets.persistence.repository.competition.TeamRepository;
 import sportbets.service.SpielService;
-import sportbets.web.dto.MapperUtil;
-import sportbets.web.dto.SpielDto;
+import sportbets.web.dto.competition.MapperUtil;
+import sportbets.web.dto.competition.SpielDto;
 
 import java.util.ArrayList;
 import java.util.List;

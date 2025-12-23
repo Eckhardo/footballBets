@@ -1,4 +1,4 @@
-package sportbets.web.dto;
+package sportbets.web.dto.competition;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotNull;

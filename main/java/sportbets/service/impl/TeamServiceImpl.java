@@ -10,8 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.competition.Team;
 import sportbets.persistence.repository.competition.TeamRepository;
 import sportbets.service.TeamService;
-import sportbets.web.dto.MapperUtil;
-import sportbets.web.dto.TeamDto;
+import sportbets.web.dto.competition.MapperUtil;
+import sportbets.web.dto.competition.TeamDto;
 
 import java.util.ArrayList;
 import java.util.List;

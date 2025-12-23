@@ -1,49 +1,36 @@
-package sportbets.persistence.entity.community;
+package sportbets.web.dto.community;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import sportbets.persistence.entity.authorization.TipperRole;
+import sportbets.persistence.entity.community.Tipper;
 
-import java.util.HashSet;
+import java.io.Serializable;
 import java.util.Objects;
-import java.util.Set;
 
-@Entity
-@Table(name = "tipper")
-public class Tipper {
-    private static final Logger log = LoggerFactory.getLogger(Tipper.class);
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+/**
+ * DTO for {@link Tipper}
+ */
+public class TipperDto implements Serializable {
     private Long id;
-
-    @NotNull
     private String firstname;
-
-    @NotNull
     private String lastname;
-    @Column(unique = true, nullable = false)
+    @NotNull
     private String username;
     @NotNull
     private String passwort;
+
     private String passwortHint;
-
-
+    @NotNull
     @Email
     private String email;
 
     private Long defaultCompetitionId;
 
-    @OneToMany(mappedBy = "tipper", cascade =CascadeType.ALL, fetch = FetchType.LAZY)
-    Set<TipperRole> tipperRoles= new HashSet<>();
-
-    public Tipper() {
+    public TipperDto() {
     }
 
-    public Tipper(String firstname, String lastname, String username, String passwort, String passwortHint, String email, Long defaultCompetitionId) {
+    public TipperDto(Long id, String firstname, String lastname, String username, String passwort, String passwortHint, String email, Long defaultCompetitionId) {
+        this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
         this.username = username;
@@ -117,36 +104,36 @@ public class Tipper {
         this.defaultCompetitionId = defaultCompetitionId;
     }
 
-    public Set<TipperRole> getTipperRoles() {
-        return tipperRoles;
-    }
-    public void addTipperRole(TipperRole role) {
-        if (role == null) {
-            throw new IllegalArgumentException("Can't add a null tipper role.");
-        }
-        this.getTipperRoles().add(role);
-    }
     @Override
     public boolean equals(Object o) {
+        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Tipper tipper = (Tipper) o;
-        return Objects.equals(firstname, tipper.firstname) && Objects.equals(lastname, tipper.lastname) && Objects.equals(username, tipper.username) && Objects.equals(passwort, tipper.passwort) && Objects.equals(email, tipper.email);
+        TipperDto entity = (TipperDto) o;
+        return Objects.equals(this.id, entity.id) &&
+                Objects.equals(this.firstname, entity.firstname) &&
+                Objects.equals(this.lastname, entity.lastname) &&
+                Objects.equals(this.username, entity.username) &&
+                Objects.equals(this.passwort, entity.passwort) &&
+                Objects.equals(this.passwortHint, entity.passwortHint) &&
+                Objects.equals(this.email, entity.email) &&
+                Objects.equals(this.defaultCompetitionId, entity.defaultCompetitionId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(firstname, lastname, username, passwort, email);
+        return Objects.hash(id, firstname, lastname, username, passwort, passwortHint, email, defaultCompetitionId);
     }
 
     @Override
     public String toString() {
-        return "Tipper{" +
-                "id=" + id +
-                ", firstname='" + firstname + '\'' +
-                ", lastname='" + lastname + '\'' +
-                ", username='" + username + '\'' +
-                ", email='" + email + '\'' +
-                ", defaultCompetitionId=" + defaultCompetitionId +
-                '}';
+        return getClass().getSimpleName() + "(" +
+                "id = " + id + ", " +
+                "firstname = " + firstname + ", " +
+                "lastname = " + lastname + ", " +
+                "username = " + username + ", " +
+                "passwort = " + passwort + ", " +
+                "passwortHint = " + passwortHint + ", " +
+                "email = " + email + ", " +
+                "defaultCompetitionId = " + defaultCompetitionId + ")";
     }
 }

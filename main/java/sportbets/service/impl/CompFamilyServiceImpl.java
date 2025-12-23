@@ -10,7 +10,7 @@ import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.entity.competition.Team;
 import sportbets.persistence.repository.competition.CompetitionFamilyRepository;
 import sportbets.service.CompFamilyService;
-import sportbets.web.dto.CompetitionFamilyDto;
+import sportbets.web.dto.competition.CompetitionFamilyDto;
 
 import java.util.ArrayList;
 import java.util.List;

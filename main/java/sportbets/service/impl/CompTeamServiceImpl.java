@@ -13,8 +13,8 @@ import sportbets.persistence.repository.competition.CompetitionRepository;
 import sportbets.persistence.repository.competition.CompetitionTeamRepository;
 import sportbets.persistence.repository.competition.TeamRepository;
 import sportbets.service.CompTeamService;
-import sportbets.web.dto.CompetitionTeamDto;
-import sportbets.web.dto.MapperUtil;
+import sportbets.web.dto.competition.CompetitionTeamDto;
+import sportbets.web.dto.competition.MapperUtil;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import sportbets.service.CompRoundService;
 import sportbets.service.SpieltagService;
-import sportbets.web.dto.CompetitionRoundDto;
-import sportbets.web.dto.SpieltagDto;
+import sportbets.web.dto.competition.CompetitionRoundDto;
+import sportbets.web.dto.competition.SpieltagDto;
 
 import java.util.List;
 

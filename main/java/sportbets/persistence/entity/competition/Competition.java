@@ -2,6 +2,7 @@ package sportbets.persistence.entity.competition;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import sportbets.persistence.entity.authorization.CompetitionRole;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -33,6 +34,8 @@ public class Competition {
     @OneToMany(mappedBy = "competition",  cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private final Set<CompetitionTeam> competitionTeams= new HashSet<>();
 
+    @OneToMany(mappedBy = "competition", cascade =CascadeType.ALL, fetch = FetchType.LAZY)
+      Set<CompetitionRole> competitionRoles = new HashSet<>();
     private int winMultiplicator =3;
 
     private int remisMultiplicator=1;
@@ -116,6 +119,18 @@ public class Competition {
             throw new IllegalArgumentException("Can't add a null competitionTeam.");
         this.getCompetitionTeams().add(competitionTeam);
 
+    }
+
+
+    public Set<CompetitionRole> getCompetitionRoles() {
+        return competitionRoles;
+    }
+
+    public void addCompetitionRole(CompetitionRole role) {
+        if (role == null) {
+            throw new IllegalArgumentException("Can't add a null competiiton role.");
+        }
+        this.getCompetitionRoles().add(role);
     }
     public int getWinMultiplicator() {
         return winMultiplicator;

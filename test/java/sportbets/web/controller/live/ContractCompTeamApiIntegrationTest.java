@@ -20,10 +20,10 @@ import sportbets.persistence.repository.competition.CompetitionFamilyRepository;
 import sportbets.persistence.repository.competition.CompetitionRepository;
 import sportbets.persistence.repository.competition.CompetitionTeamRepository;
 import sportbets.persistence.repository.competition.TeamRepository;
-import sportbets.web.dto.CompetitionDto;
-import sportbets.web.dto.CompetitionFamilyDto;
-import sportbets.web.dto.CompetitionTeamDto;
-import sportbets.web.dto.TeamDto;
+import sportbets.web.dto.competition.CompetitionDto;
+import sportbets.web.dto.competition.CompetitionFamilyDto;
+import sportbets.web.dto.competition.CompetitionTeamDto;
+import sportbets.web.dto.competition.TeamDto;
 
 import java.util.List;
 

@@ -1,9 +1,9 @@
 package sportbets.service;
 
 import sportbets.persistence.entity.competition.Competition;
-import sportbets.web.dto.CompetitionDto;
-import sportbets.web.dto.CompetitionRoundDto;
-import sportbets.web.dto.TeamDto;
+import sportbets.web.dto.competition.CompetitionDto;
+import sportbets.web.dto.competition.CompetitionRoundDto;
+import sportbets.web.dto.competition.TeamDto;
 
 import java.util.List;
 import java.util.Optional;

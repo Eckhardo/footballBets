@@ -11,10 +11,10 @@ import sportbets.persistence.entity.competition.CompetitionRound;
 import sportbets.persistence.entity.competition.Team;
 import sportbets.persistence.repository.competition.CompetitionRepository;
 import sportbets.service.CompService;
-import sportbets.web.dto.CompetitionDto;
-import sportbets.web.dto.CompetitionRoundDto;
-import sportbets.web.dto.MapperUtil;
-import sportbets.web.dto.TeamDto;
+import sportbets.web.dto.competition.CompetitionDto;
+import sportbets.web.dto.competition.CompetitionRoundDto;
+import sportbets.web.dto.competition.MapperUtil;
+import sportbets.web.dto.competition.TeamDto;
 
 import java.util.ArrayList;
 import java.util.List;

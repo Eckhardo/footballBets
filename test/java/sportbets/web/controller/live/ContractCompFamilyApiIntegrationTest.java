@@ -14,7 +14,7 @@ import sportbets.FootballBetsApplication;
 import sportbets.config.TestProfileLiveTest;
 import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.repository.competition.CompetitionFamilyRepository;
-import sportbets.web.dto.CompetitionFamilyDto;
+import sportbets.web.dto.competition.CompetitionFamilyDto;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 

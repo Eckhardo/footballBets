@@ -6,10 +6,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import sportbets.persistence.repository.competition.CompetitionRepository;
-import sportbets.web.dto.CompetitionDto;
-import sportbets.web.dto.CompetitionFamilyDto;
-import sportbets.web.dto.CompetitionTeamDto;
-import sportbets.web.dto.TeamDto;
+import sportbets.web.dto.competition.CompetitionDto;
+import sportbets.web.dto.competition.CompetitionFamilyDto;
+import sportbets.web.dto.competition.CompetitionTeamDto;
+import sportbets.web.dto.competition.TeamDto;
 
 import java.util.List;
 import java.util.Optional;

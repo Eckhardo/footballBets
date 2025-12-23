@@ -11,8 +11,8 @@ import sportbets.persistence.entity.competition.Spieltag;
 import sportbets.persistence.repository.competition.CompetitionRoundRepository;
 import sportbets.persistence.repository.competition.SpieltagRepository;
 import sportbets.service.SpieltagService;
-import sportbets.web.dto.MapperUtil;
-import sportbets.web.dto.SpieltagDto;
+import sportbets.web.dto.competition.MapperUtil;
+import sportbets.web.dto.competition.SpieltagDto;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package sportbets.web.dto;
+package sportbets.web.dto.competition;
 
 import org.modelmapper.Converter;
 import org.modelmapper.spi.MappingContext;

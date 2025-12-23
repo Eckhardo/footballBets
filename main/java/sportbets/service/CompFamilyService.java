@@ -2,7 +2,7 @@ package sportbets.service;
 
 import org.modelmapper.ModelMapper;
 import sportbets.persistence.entity.competition.Team;
-import sportbets.web.dto.CompetitionFamilyDto;
+import sportbets.web.dto.competition.CompetitionFamilyDto;
 
 import java.util.List;
 import java.util.Optional;

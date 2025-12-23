@@ -1,4 +1,4 @@
-package sportbets.web.dto;
+package sportbets.web.dto.competition;
 
 import jakarta.validation.constraints.NotBlank;
 import sportbets.persistence.entity.competition.Team;

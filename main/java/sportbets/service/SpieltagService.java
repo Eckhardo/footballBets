@@ -1,6 +1,6 @@
 package sportbets.service;
 
-import sportbets.web.dto.SpieltagDto;
+import sportbets.web.dto.competition.SpieltagDto;
 
 import java.util.List;
 import java.util.Optional;

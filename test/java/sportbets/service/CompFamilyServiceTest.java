@@ -13,7 +13,7 @@ import org.modelmapper.ModelMapper;
 import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.repository.competition.CompetitionFamilyRepository;
 import sportbets.service.impl.CompFamilyServiceImpl;
-import sportbets.web.dto.CompetitionFamilyDto;
+import sportbets.web.dto.competition.CompetitionFamilyDto;
 
 import java.util.Collections;
 import java.util.List;

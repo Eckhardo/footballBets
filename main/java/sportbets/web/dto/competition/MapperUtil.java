@@ -1,4 +1,4 @@
-package sportbets.web.dto;
+package sportbets.web.dto.competition;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.springframework.stereotype.Component;
