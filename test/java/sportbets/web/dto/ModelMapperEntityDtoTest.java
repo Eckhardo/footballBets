@@ -1,16 +1,25 @@
 package sportbets.web.dto;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sportbets.persistence.entity.authorization.CommunityRole;
+import sportbets.persistence.entity.authorization.CompetitionRole;
+import sportbets.persistence.entity.authorization.TipperRole;
+import sportbets.persistence.entity.community.Community;
+import sportbets.persistence.entity.community.Tipper;
 import sportbets.persistence.entity.competition.*;
+import sportbets.web.dto.authorization.CommunityRoleDto;
+import sportbets.web.dto.authorization.CompetitionRoleDto;
+import sportbets.web.dto.authorization.TipperRoleDto;
 import sportbets.web.dto.competition.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class ModelMapperEntityDtoTest {
 
@@ -143,17 +152,17 @@ class ModelMapperEntityDtoTest {
         }
 
         for (SpielDto spielDto : spielDtos) {
-            Assertions.assertNotNull(spielDto.getId());
-            Assertions.assertTrue(spielDto.getSpielNumber() != 0);
-            Assertions.assertNotNull(spielDto.getAnpfiffdate());
-            Assertions.assertTrue(spielDto.getHeimTore() != 0);
-            Assertions.assertTrue(spielDto.getGastTore() != 0);
-            Assertions.assertNotNull(spielDto.getSpieltagId());
-            Assertions.assertNotNull(spielDto.getSpieltagNumber());
-            Assertions.assertNotNull(spielDto.getHeimTeamId());
-            Assertions.assertNotNull(spielDto.getHeimTeamAcronym());
-            Assertions.assertNotNull(spielDto.getGastTeamId());
-            Assertions.assertNotNull(spielDto.getGastTeamAcronym());
+            assertNotNull(spielDto.getId());
+            assertTrue(spielDto.getSpielNumber() != 0);
+            assertNotNull(spielDto.getAnpfiffdate());
+            assertTrue(spielDto.getHeimTore() != 0);
+            assertTrue(spielDto.getGastTore() != 0);
+            assertNotNull(spielDto.getSpieltagId());
+            assertNotNull(spielDto.getSpieltagNumber());
+            assertNotNull(spielDto.getHeimTeamId());
+            assertNotNull(spielDto.getHeimTeamAcronym());
+            assertNotNull(spielDto.getGastTeamId());
+            assertNotNull(spielDto.getGastTeamAcronym());
         }
     }
 
@@ -188,16 +197,104 @@ class ModelMapperEntityDtoTest {
         }
 
         for (CompetitionTeamDto dto : dtos) {
-            Assertions.assertNotNull(dto.getId());
+            assertNotNull(dto.getId());
 
-            Assertions.assertNotNull(dto.getTeamId());
-            Assertions.assertNotNull(dto.getTeamAcronym());
+            assertNotNull(dto.getTeamId());
+            assertNotNull(dto.getTeamAcronym());
 
-            Assertions.assertNotNull(dto.getCompId());
-            Assertions.assertNotNull(dto.getCompName());
+            assertNotNull(dto.getCompId());
+            assertNotNull(dto.getCompName());
         }
-
-
-
     }
+
+    @Test
+    public void checkTipperRole() {
+        String COMP_NAME = "1. Bundesliga Saison 2025/26";
+        String COMM_NAME = "Bulitipper";
+
+        final ModelMapper myMapper = MapperUtil.getModelMapperForTipperRole();
+
+        CompetitionFamily testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true);
+        Competition testComp = new Competition(COMP_NAME, "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
+        testComp.setId(4L);
+
+        CompetitionRole competitionRole = new CompetitionRole(COMP_NAME, "Meine Test Rolle", testComp);
+        competitionRole.setId(5L);
+        testComp.addCompetitionRole(competitionRole);
+
+
+        Community testComm = new Community(COMM_NAME, "Beschreibung");
+        testComm.setId(3L);
+        CommunityRole communityRole = new CommunityRole(COMM_NAME, "", testComm);
+        communityRole.setId(6L);
+        testComm.addCommunityRole(communityRole);
+
+        Tipper testTipper = new Tipper("Eckhard", "Kirschning", "Eckhardo", "root", "hint", "eki@gmx.de", testComp.getId());
+        testTipper.setId(7L);
+        TipperRole compTipperRole = new TipperRole(competitionRole, testTipper);
+        compTipperRole.setId(1L);
+        TipperRole communityTipperRole = new TipperRole(communityRole, testTipper);
+        communityTipperRole.setId(2L);
+
+        TipperRoleDto myCompRole = myMapper.map(compTipperRole, TipperRoleDto.class);
+        assertNotNull(myCompRole.getId());
+        assertNotNull(myCompRole.getRoleId());
+        assertNotNull(myCompRole.getRoleName());
+        assertNotNull(myCompRole.getTipperId());
+        assertNotNull(myCompRole.getTipperUserName());
+
+        TipperRoleDto myCommRole = myMapper.map(communityTipperRole, TipperRoleDto.class);
+        assertNotNull(myCommRole.getId());
+        assertNotNull(myCommRole.getRoleId());
+        assertNotNull(myCommRole.getRoleName());
+        assertNotNull(myCommRole.getTipperId());
+        assertNotNull(myCommRole.getTipperUserName());
+    }
+
+    @Test
+    public void checkCompetitionRole() {
+        String COMP_NAME = "1. Bundesliga Saison 2025/26";
+        String COMM_NAME = "Bulitipper";
+
+        final ModelMapper myCompRoleMapper = MapperUtil.getModelMapperForCompetitionRole();
+
+        CompetitionFamily testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true);
+        Competition testComp = new Competition(COMP_NAME, "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
+        testComp.setId(4L);
+
+        CompetitionRole competitionRole = new CompetitionRole(COMP_NAME, "Meine Test Rolle", testComp);
+        competitionRole.setId(5L);
+        testComp.addCompetitionRole(competitionRole);
+
+        CompetitionRoleDto testRoleDto = myCompRoleMapper.map(competitionRole, CompetitionRoleDto.class);
+        assertNotNull(testRoleDto.getId());
+        assertNotNull(testRoleDto.getName());
+        assertNotNull(testRoleDto.getDescription());
+        assertNotNull(testRoleDto.getCompetitionId());
+        assertNotNull(testRoleDto.getCompetitionName());
+        assertEquals(testComp.getName(), testRoleDto.getName());
+        assertEquals(competitionRole.getCompetition().getName(), testRoleDto.getCompetitionName());
+        assertEquals(competitionRole.getCompetition().getId(), testRoleDto.getCompetitionId());
+    }
+
+    @Test
+    public void checkCommunityRole() {
+        String COMM_NAME = "Bulitipper";
+
+        final ModelMapper myCommRoleMapeer = MapperUtil.getModelMapperForCommunityRole();
+
+        Community community = new Community(COMM_NAME, "Beschreibung");
+        CommunityRole communityRole = new CommunityRole(COMM_NAME, "Meine Test Rolle", community);
+        communityRole.setId(5L);
+        community.addCommunityRole(communityRole);
+
+        CommunityRoleDto testRoleDto = myCommRoleMapeer.map(communityRole, CommunityRoleDto.class);
+        assertNotNull(testRoleDto.getId());
+        assertNotNull(testRoleDto.getName());
+        assertNotNull(testRoleDto.getDescription());
+        assertEquals(community.getName(), testRoleDto.getName());
+        assertEquals(communityRole.getCommunity().getName(), testRoleDto.getCommunityName());
+        assertEquals(communityRole.getCommunity().getId(), testRoleDto.getCommunityId());
+    }
+
 }

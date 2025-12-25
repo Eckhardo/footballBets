@@ -1,14 +1,19 @@
 package sportbets.persistence.repository.competition;
 
 import jakarta.persistence.EntityNotFoundException;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
-import sportbets.persistence.builder.CompetitionConstants;
 import sportbets.persistence.entity.competition.Competition;
+import sportbets.persistence.entity.competition.CompetitionFamily;
+import sportbets.persistence.entity.competition.CompetitionRound;
 import sportbets.persistence.entity.competition.Team;
 import sportbets.persistence.rowObject.CompRecord;
 
@@ -19,73 +24,84 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @DataJpaTest
 
 @RunWith(SpringRunner.class)
-//@Transactional(propagation = Propagation.NOT_SUPPORTED)
+@ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class CompetitionQueryTest {
 
+    public static final String TEST_LIGA = "TestLiga";
+    public static final String TEST_LIGA_SAISON_2025_26 = "TestLiga: Saison 2025/26";
+    private static final Logger log = LoggerFactory.getLogger(CompetitionQueryTest.class);
+
+    private CompetitionFamily testFamily;
+    private Competition testComp;
+    private CompetitionRound testRound;
+
     @Autowired
     private CompetitionRepository compRepo;
+    @Autowired
+    private CompetitionRoundRepository roundRepo;
+
+    @Autowired
+    private CompetitionFamilyRepository familyRepo;
+
+    @Before
+    public void setUp() {
+        // Initialize test data before test methods
+        testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true);
+        testComp = new Competition("TestLiga: Saison 2025/26", "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
+        testFamily.addCompetition(testComp);
+        testRound = new CompetitionRound(1, "Hinrunde", testComp, false);
+        testComp.addCompetitionRound(testRound);
+        System.out.println("Save all cascade");
+        familyRepo.save(testFamily);
+
+    }
 
     @Test
     public void findByName() {
-        System.out.println("\n");
-        System.out.println("FindByName");
-        CompRecord comp = compRepo.findCompByNameAndFamily(CompetitionConstants.BUNDESLIGA_NAME_2025, 1L);
+
+        CompRecord comp = compRepo.findCompByNameAndFamily(TEST_LIGA_SAISON_2025_26, testFamily.getId());
         assertNotNull(comp);
-        System.out.println("Found competition : " + comp);
+
 
     }
 
     @Test
     public void findByIdJoinFetchRounds() {
-        System.out.println("\n");
-        System.out.println("findByIdJoinFetchRounds");
-        Competition comp = compRepo.findByIdJoinFetchRounds(1L);
+        Competition foundComp = compRepo.findByName(testComp.getName()).orElse(null);
+
+        Competition comp = compRepo.findByIdJoinFetchRounds(testComp.getId());
         assertNotNull(comp);
         System.out.println("Found competition name: " + comp.getName());
         comp.getCompetitionRounds().forEach(compRound -> {
 
-            System.out.println("Found competitionRound name: " + compRound.getName());
+          log.info("Found competitionRound name: " + compRound.getName());
         });
     }
 
 
     @Test
     public void findByNameJoinFetchRounds() {
-        System.out.println("\n");
-        System.out.println("findByNameJoinFetchRounds");
-        Competition comp = compRepo.findByNameJoinFetchRounds(CompetitionConstants.BUNDESLIGA_NAME_2025).orElseThrow(EntityNotFoundException::new);
+
+        Competition comp = compRepo.findByNameJoinFetchRounds(TEST_LIGA_SAISON_2025_26).orElseThrow(EntityNotFoundException::new);
         assertNotNull(comp);
-        System.out.println("Found competition name: " + comp.getName());
+
         comp.getCompetitionRounds().forEach(compRound -> {
 
-            System.out.println("Found competitionRound name: " + compRound.getName());
+            log.info("Found competitionRound name: " + compRound.getName());
             compRound.getSpieltage().forEach(spieltag -> System.out.println("Found spieltag name: " + spieltag.getSpieltagNumber()));
         });
     }
 
-    @Test
-    public void findByNameJoinFetchRoundsAndSpieltage() {
-        System.out.println("\n");
-        System.out.println("findByNameJoinFetchRoundsAndSpieltage");
-        Competition comp = compRepo.findByNameJoinFetchRoundsAndSpieltage(CompetitionConstants.BUNDESLIGA_NAME_2025).orElseThrow(EntityNotFoundException::new);
-        assertNotNull(comp);
-        System.out.println("Found competition name: " + comp.getName());
-        comp.getCompetitionRounds().forEach(compRound -> {
-
-            System.out.println("Found competitionRound name: " + compRound.getName());
-            compRound.getSpieltage().forEach(spieltag -> System.out.println("Found spieltag name: " + spieltag.getSpieltagNumber()));
-        });
-    }
 
     @Test
     public void findTeamsForCompetition() {
         System.out.println("\n");
         System.out.println("findTeamsForCompetition");
-        List<Team> teams = compRepo.findTeamsForComp(1L);
+        List<Team> teams = compRepo.findTeamsForComp(testComp.getId());
         assertNotNull(teams);
         teams.forEach(team -> {
-            System.out.println("Found team name: " + team);
+          log.info("Found team name: " + team);
         });
     }
 }

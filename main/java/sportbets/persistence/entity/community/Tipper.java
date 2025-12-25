@@ -37,7 +37,7 @@ public class Tipper {
 
     private Long defaultCompetitionId;
 
-    @OneToMany(mappedBy = "tipper", cascade =CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "tipper", cascade =CascadeType.ALL,   orphanRemoval = true, fetch = FetchType.LAZY)
     Set<TipperRole> tipperRoles= new HashSet<>();
 
     public Tipper() {

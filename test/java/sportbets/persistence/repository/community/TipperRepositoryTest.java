@@ -9,24 +9,23 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import sportbets.persistence.entity.authorization.CompetitionRole;
-import sportbets.persistence.entity.authorization.Role;
 import sportbets.persistence.entity.authorization.TipperRole;
 import sportbets.persistence.entity.community.Tipper;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
+import sportbets.persistence.repository.authorization.RoleRepository;
+import sportbets.persistence.repository.authorization.TipperRoleRepository;
 import sportbets.persistence.repository.competition.CompetitionFamilyRepository;
 import sportbets.persistence.repository.competition.CompetitionRepository;
 
-import java.util.List;
-import java.util.Set;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 @DataJpaTest()
+@ActiveProfiles("test")
 @RunWith(SpringRunner.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class TipperRepositoryTest {
@@ -58,9 +57,9 @@ public class TipperRepositoryTest {
         familyRepo.save(testFamily);
         Competition savedComp = compRepo.findByName(testComp.getName()).orElseThrow();
 
-        testTipper = new Tipper("Eckhard", "Kirschning", "Eckhardo", "root", "hint", "eki@gmx.de", savedComp.getId());
+        testTipper = new Tipper("Eckhard", "Kirschning", "TestTipper", "root", "hint", "eki@gmx.de", savedComp.getId());
         testTipper = tipperRepo.save(testTipper);
-        testRole = new CompetitionRole("TestRolle", "Meine Test Rolle", savedComp);
+        testRole = new CompetitionRole("1. Bundesliga Saison 2025/26", "Meine Test Rolle", savedComp);
         testTipperRole = new TipperRole(testRole, testTipper);
         roleRepo.save(testRole);
         tRoleRepo.save(testTipperRole);
@@ -77,18 +76,7 @@ public class TipperRepositoryTest {
         assertNotNull(tipper);
         log.info("tipper {}", tipper);
 
-        List<TipperRole> tipperRoles1 = tRoleRepo.getAllForTipper(tipper.getId());
-        for (TipperRole role : tipperRoles1) {
-            assertNotNull(role);
-            log.info("tipper role={}", role.getRole());
-            assertEquals(role.getRolle().getName(), testTipperRole.getRolle().getName());
-        }
-        List<Role> roles= roleRepo.getAllCompRolesForTipper(tipper.getId());
-        for (Role role : roles) {
-            assertNotNull(role);
-            log.info("role={}", role);
-            assertEquals(role.getName(), testRole.getName());
-        }
+
     }
 
     @Test

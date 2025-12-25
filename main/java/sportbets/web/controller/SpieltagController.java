@@ -7,8 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import sportbets.service.SpielService;
-import sportbets.service.SpieltagService;
+import sportbets.service.competition.SpielService;
+import sportbets.service.competition.SpieltagService;
 import sportbets.web.dto.competition.SpielDto;
 import sportbets.web.dto.competition.SpieltagDto;
 

@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import sportbets.service.CompTeamService;
+import sportbets.service.competition.CompTeamService;
 import sportbets.web.dto.competition.CompetitionTeamDto;
 
 import java.util.List;

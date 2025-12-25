@@ -2,9 +2,11 @@ package sportbets.persistence.entity.authorization;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import sportbets.persistence.entity.community.Community;
 import sportbets.persistence.entity.competition.Competition;
 
 import java.util.Objects;
+import java.util.Optional;
 
 @Entity
 @DiscriminatorValue("COMP")
@@ -13,7 +15,7 @@ public class CompetitionRole extends Role {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_comp_id")
     @NotNull
-    public Competition competition;
+    public  Competition competition;
 
 
     public CompetitionRole() {
@@ -26,7 +28,7 @@ public class CompetitionRole extends Role {
     }
 
     public Competition getCompetition() {
-        return competition;
+        return this.competition;
     }
 
     public void setCompetition(Competition competition) {

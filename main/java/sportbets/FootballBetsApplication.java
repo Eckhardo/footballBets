@@ -17,7 +17,7 @@ import sportbets.persistence.builder.*;
 import sportbets.persistence.entity.community.Tipper;
 import sportbets.persistence.entity.competition.*;
 import sportbets.persistence.repository.competition.*;
-import sportbets.service.competition.TeamService;
+
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -54,8 +54,6 @@ public class FootballBetsApplication {
     @Autowired
     private SpielRepository spielRepo;
 
-    @Autowired
-    private TeamService teamService;
 
 
     @Bean

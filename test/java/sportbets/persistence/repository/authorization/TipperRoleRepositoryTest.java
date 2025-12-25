@@ -1,0 +1,159 @@
+package sportbets.persistence.repository.authorization;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
+import sportbets.persistence.entity.authorization.CommunityRole;
+import sportbets.persistence.entity.authorization.CompetitionRole;
+import sportbets.persistence.entity.authorization.Role;
+import sportbets.persistence.entity.authorization.TipperRole;
+import sportbets.persistence.entity.community.Community;
+import sportbets.persistence.entity.community.Tipper;
+import sportbets.persistence.entity.competition.Competition;
+import sportbets.persistence.entity.competition.CompetitionFamily;
+import sportbets.persistence.entity.competition.Spiel;
+import sportbets.persistence.repository.community.CommunityRepository;
+import sportbets.persistence.repository.community.TipperRepository;
+import sportbets.persistence.repository.community.TipperRepositoryTest;
+import sportbets.persistence.repository.competition.CompetitionFamilyRepository;
+import sportbets.persistence.repository.competition.CompetitionRepository;
+import sportbets.persistence.repository.competition.SpielRepository;
+
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@DataJpaTest()
+@ActiveProfiles("test")
+@RunWith(SpringRunner.class)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+public class TipperRoleRepositoryTest {
+    public static final String TESTUSER = "Testuser";
+    private static final Logger log = LoggerFactory.getLogger(TipperRepositoryTest.class);
+
+    private Tipper testTipper;
+    TipperRole compTipperRole;
+    TipperRole communityTipperRole;
+    @Autowired
+    private TipperRepository tipperRepo;
+    @Autowired
+    private CommunityRepository commRepo;
+
+    @Autowired
+    private SpielRepository spielRepo;
+    @Autowired
+    private CompetitionFamilyRepository familyRepo;
+    @Autowired
+    private CompetitionRepository compRepo;
+    @Autowired
+    TipperRoleRepository tRoleRepo;
+    @Autowired
+    RoleRepository roleRepo;
+private static String COMP_NAME ="TEST Saison 2025/26";
+    private static String COMM_NAME ="TEST_COMM";
+    @Before
+    public void setUp() {
+        CompetitionFamily testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true);
+        Competition testComp = new Competition(COMP_NAME, "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
+        testFamily.addCompetition(testComp);
+        CompetitionRole competitionRole = new CompetitionRole(COMP_NAME, "Meine Test Rolle", testComp);
+        testComp.addCompetitionRole(competitionRole);
+        familyRepo.save(testFamily);
+
+        Competition savedComp = compRepo.findByName(testComp.getName()).orElseThrow();
+
+
+        Community testComm = new Community(COMM_NAME, "Beschreibung");
+        CommunityRole communityRole = new CommunityRole(COMM_NAME, "", testComm);
+        testComm.addCommunityRole(communityRole);
+        Community savedCommunity=commRepo.save(testComm);
+
+      
+        testTipper = new Tipper("Eckhard", "Kirschning", TESTUSER, "root", "hint", "eki@gmx.de", savedComp.getId());
+        Tipper savedTipper = tipperRepo.save(testTipper);
+        compTipperRole = new TipperRole(competitionRole, savedTipper);
+        communityTipperRole = new TipperRole(communityRole, savedTipper);
+        roleRepo.saveAll(List.of(communityRole, competitionRole));
+        tRoleRepo.saveAll(List.of(communityTipperRole,compTipperRole));
+    }
+
+    @After
+    public void tearDown() {
+        tRoleRepo.deleteAll();
+
+        tipperRepo.deleteAll();
+    }
+
+    @Test
+    public void getAllTipperRolesForTipper
+            () {
+        log.info("findByUsername");
+        Tipper tipper = tipperRepo.findByUsername(testTipper.getUsername()).orElseThrow();
+        assertNotNull(tipper);
+
+        List<TipperRole> tipperRoles1 = tRoleRepo.getAllForTipper(tipper.getId());
+        for (TipperRole role : tipperRoles1) {
+            assertNotNull(role);
+            log.info("TIPPER ROLE ={}", role.getRole());
+         //   assertEquals(role.getRolle().getName(), compTipperRole.getRolle().getName());
+        }
+
+    }
+
+    @Test
+    public void getAllCompetitionRolesForTipper() {
+        log.info("findByUsername");
+        Tipper tipper = tipperRepo.findByUsername(testTipper.getUsername()).orElseThrow();
+        assertNotNull(tipper);
+        List<CompetitionRole> roles= roleRepo.getAllCompRoles();
+        assertSame(1, roles.size());
+        for (CompetitionRole role : roles) {
+            // assertEquals(role.getName(), competitionRole.getName());
+            assertInstanceOf(CompetitionRole.class, role);
+        }
+    }
+    @Test
+    public void getAllCommunityRolesForTipper() {
+        log.info("findByUsername");
+        Tipper tipper = tipperRepo.findByUsername(testTipper.getUsername()).orElseThrow();
+        assertNotNull(tipper);
+        List<CommunityRole> roles= roleRepo.getAllCommunityRoles();
+        assertSame(1, roles.size());
+        for (CommunityRole role : roles) {
+            // assertEquals(role.getName(), competitionRole.getName());
+             assertInstanceOf(CommunityRole.class, role);
+        }
+    }
+    @Test
+    public void getAllTippers() {
+        List<Tipper> tippers = tipperRepo.findAll();
+       for (Tipper tipper : tippers) {
+           log.info("TIPPER ={}", tipper.getUsername());
+       }
+        assertSame(1, tippers.size());
+
+       List<Competition> competitions = compRepo.findAll();
+       for (Competition competition : competitions) {
+           log.info("COMPETITION ={}", competition.getName());
+       }
+
+
+    }
+    @Test
+    public void getAllRolesForTipper() {
+        Tipper tipper = tipperRepo.findByUsername(testTipper.getUsername()).orElseThrow();
+        assertNotNull(tipper);
+
+        List<Role> roles= roleRepo.findRolesByTipperId(tipper.getId());
+        assertSame(2, roles.size());
+
+    }
+}

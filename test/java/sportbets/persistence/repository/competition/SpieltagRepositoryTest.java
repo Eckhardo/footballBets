@@ -5,6 +5,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -22,8 +24,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @RunWith(SpringRunner.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+
 public class SpieltagRepositoryTest {
 
+    private static final Logger log = LoggerFactory.getLogger(SpieltagRepositoryTest.class);
     private CompetitionFamily testFamily;
     private Competition testComp;
 
@@ -62,7 +66,6 @@ public class SpieltagRepositoryTest {
     public void tearDown() {
 
 
-        //   familyRepo.deleteAll();
     }
 
     @Test

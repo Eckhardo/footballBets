@@ -32,7 +32,7 @@ public class Spieltag {
     @NotNull
     private CompetitionRound competitionRound;
 
-    @OneToMany(mappedBy = "spieltag",  cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "spieltag",  cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private final SortedSet<Spiel> spiele=new TreeSet<>();
 
      public Spieltag() {
