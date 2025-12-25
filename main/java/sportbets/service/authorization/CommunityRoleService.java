@@ -13,9 +13,11 @@ public interface CommunityRoleService {
     Optional<CommunityRoleDto> save(CommunityRoleDto dto);
 
     Optional<CommunityRoleDto> update(Long id, CommunityRoleDto dto);
+
     List<CommunityRoleDto> getAllCommunityRoles();
 
-    void  deleteByName(String name);
+    void deleteByName(String name);
+
     void deleteById(Long id);
 
 }

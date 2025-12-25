@@ -13,7 +13,8 @@ public interface CompRoundService {
     Optional<CompetitionRoundDto> updateRound(Long id, CompetitionRoundDto compFam);
 
     void deleteById(Long id);
-    void deleteByName(String name );
+
+    void deleteByName(String name);
 
     List<CompetitionRoundDto> getAll();
 }

@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class DateUtil {
-    private static String datePattern = "dd/MM/yyyy HH:mm";
+    private static final String datePattern = "dd/MM/yyyy HH:mm";
 
     public static String formatDate(LocalDateTime date) {
 
@@ -13,10 +13,10 @@ public class DateUtil {
         return df.format(date);
     }
 
-    public static LocalDateTime formatDate(String englishDate ) {
+    public static LocalDateTime formatDate(String englishDate) {
         // 1. Parse the input string (yyyy-MM-dd HH:mm )
         DateTimeFormatter englishFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-      return LocalDateTime.parse(englishDate, englishFormatter);
+        return LocalDateTime.parse(englishDate, englishFormatter);
 
     }
 }

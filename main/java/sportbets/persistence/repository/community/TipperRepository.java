@@ -5,8 +5,10 @@ import org.springframework.stereotype.Repository;
 import sportbets.persistence.entity.community.Tipper;
 
 import java.util.Optional;
+
 @Repository
 public interface TipperRepository extends JpaRepository<Tipper, Long> {
-  Optional<Tipper> findByUsername(String username);
-  void  deleteByUsername(String username);
+    Optional<Tipper> findByUsername(String username);
+
+    void deleteByUsername(String username);
 }

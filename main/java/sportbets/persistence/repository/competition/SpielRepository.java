@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import sportbets.persistence.entity.competition.Spiel;
 
 import java.util.List;
+
 @Repository
 public interface SpielRepository extends JpaRepository<Spiel, Long> {
 

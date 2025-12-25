@@ -170,7 +170,7 @@ public class ContractCompRoundApiIntegrationTest {
 
     @Test
     @Order(3)
-    void updateRound_withValidCompJsonInput_thenSuccess()  {
+    void updateRound_withValidCompJsonInput_thenSuccess() {
 
         CompetitionRound entity = competitionRoundRepository.findByName(TEST_COMP_ROUND).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
         compRoundDto.setCompId(entity.getCompetition().getId());
@@ -205,12 +205,13 @@ public class ContractCompRoundApiIntegrationTest {
         CompetitionRound round = competitionRoundRepository.findByName(TEST_COMP_ROUND).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
 
         webClient.get()
-                .uri("/rounds/"+round.getId()+"/matchdays")
+                .uri("/rounds/" + round.getId() + "/matchdays")
                 .exchange()
                 .expectStatus()
                 .isOk()
                 .expectBodyList(SpieltagDto.class).hasSize(1);
     }
+
     @Test
     @Order(4)
     void whenFindAll_ThenFetchAll() {
@@ -229,7 +230,7 @@ public class ContractCompRoundApiIntegrationTest {
         Competition comp = competitionRepository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_FAM));
 
         webClient.get()
-                .uri("/competitions/" +comp.getId()+"/rounds")
+                .uri("/competitions/" + comp.getId() + "/rounds")
                 .exchange()
                 .expectStatus()
                 .isOk()

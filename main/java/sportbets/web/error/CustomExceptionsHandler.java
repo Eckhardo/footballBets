@@ -21,7 +21,7 @@ import java.net.URI;
 @ControllerAdvice
 public class CustomExceptionsHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler({ EntityNotFoundException.class, TransientObjectException.class })
+    @ExceptionHandler({EntityNotFoundException.class, TransientObjectException.class})
     public ProblemDetail resolveEntityNotFoundException2(Exception ex, ServletRequest request, HttpServletResponse response) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Invalid associated entity: " + ex.getMessage());
         problemDetail.setType(URI.create("https://example.com/errors/invalid-associated-entity"));
@@ -29,14 +29,14 @@ public class CustomExceptionsHandler extends ResponseEntityExceptionHandler {
         return problemDetail;
     }
 
-    @ExceptionHandler({ DataIntegrityViolationException.class })
+    @ExceptionHandler({DataIntegrityViolationException.class})
     public ErrorResponse resolveDuplicatedKey(DataIntegrityViolationException ex) {
         ErrorResponseException response = new ErrorResponseException(HttpStatus.BAD_REQUEST);
         response.setDetail("Duplicated key:" + ex.getMessage());
         response.setType(URI.create("https://example.com/errors/duplicated-key"));
         response.setTitle("Duplicated key");
         response.getHeaders()
-            .add("Custom-Header", "Value");
+                .add("Custom-Header", "Value");
         return response;
     }
 

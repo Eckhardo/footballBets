@@ -17,7 +17,7 @@ import java.io.IOException;
 @Component
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ReadJsonTest {
-@Autowired
+    @Autowired
     private TeamRepository teamRepository;
 
 

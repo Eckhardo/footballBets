@@ -25,7 +25,7 @@ public class MatchController {
     @GetMapping("/matches/{id}")
     public SpielDto findOne(@PathVariable Long id) {
         log.info("SpielDto:findOne::" + id);
-        SpielDto dto = spielService.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        SpielDto dto = spielService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         log.info("SpielDto found with {}", dto);
         return dto;

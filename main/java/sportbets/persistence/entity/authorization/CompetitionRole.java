@@ -13,7 +13,7 @@ public class CompetitionRole extends Role {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_comp_id")
     @NotNull
-    public  Competition competition;
+    public Competition competition;
 
 
     public CompetitionRole() {

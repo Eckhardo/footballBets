@@ -25,15 +25,12 @@ import static org.hamcrest.CoreMatchers.equalTo;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ContractTeamApiIntegrationTest {
     private static final Logger log = LoggerFactory.getLogger(ContractTeamApiIntegrationTest.class);
-    @Autowired
-    WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();
-
-    @Autowired
-    TeamRepository teamRepository;
-
-
     private static final String TEAM_NAME = "Eintracht Braunschweig";
     private static final String TEAM_NAME_2 = "Holstein Kiel";
+    @Autowired
+    WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();
+    @Autowired
+    TeamRepository teamRepository;
     TeamDto teamDto = new TeamDto(null, TEAM_NAME, "Braunschweig");
     TeamDto teamDto1 = new TeamDto(null, TEAM_NAME_2, "Kiel");
 
@@ -104,7 +101,7 @@ public class ContractTeamApiIntegrationTest {
 
     @Test
     @Order(2)
-    void updateTeam_withValidTeamJsonInput_thenSuccess()  {
+    void updateTeam_withValidTeamJsonInput_thenSuccess() {
         log.info("updateTeam_withValidTeamJsonInput_thenSuccess");
 
         Team team = teamRepository.findByName(TEAM_NAME).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME));

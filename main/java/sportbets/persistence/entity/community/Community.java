@@ -14,19 +14,15 @@ import java.util.Set;
 @Table(name = "community")
 public class Community {
     private static final Logger log = LoggerFactory.getLogger(Community.class);
+    @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    Set<CommunityRole> communityRoles = new HashSet<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
     private Long id;
-
     private String name;
-
     private String description;
-
-    private LocalDateTime createdOn=LocalDateTime.now();
-
-    @OneToMany(mappedBy = "community", cascade =CascadeType.ALL, fetch = FetchType.LAZY)
-    Set<CommunityRole> communityRoles = new HashSet<>();
+    private final LocalDateTime createdOn = LocalDateTime.now();
 
     public Community() {
 

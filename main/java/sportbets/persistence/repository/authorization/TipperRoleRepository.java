@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import sportbets.persistence.entity.authorization.TipperRole;
 
 import java.util.List;
+
 @Repository
 public interface TipperRoleRepository extends JpaRepository<TipperRole, Long> {
 

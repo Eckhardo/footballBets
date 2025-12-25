@@ -37,27 +37,26 @@ import static org.junit.jupiter.api.Assertions.*;
 public class TipperRoleRepositoryTest {
     public static final String TESTUSER = "Testuser";
     private static final Logger log = LoggerFactory.getLogger(TipperRepositoryTest.class);
-
-    private Tipper testTipper;
+    private static final String COMP_NAME = "TEST Saison 2025/26";
+    private static final String COMM_NAME = "TEST_COMM";
     TipperRole compTipperRole;
     TipperRole communityTipperRole;
+    @Autowired
+    TipperRoleRepository tRoleRepo;
+    @Autowired
+    RoleRepository roleRepo;
+    private Tipper testTipper;
     @Autowired
     private TipperRepository tipperRepo;
     @Autowired
     private CommunityRepository commRepo;
-
     @Autowired
     private SpielRepository spielRepo;
     @Autowired
     private CompetitionFamilyRepository familyRepo;
     @Autowired
     private CompetitionRepository compRepo;
-    @Autowired
-    TipperRoleRepository tRoleRepo;
-    @Autowired
-    RoleRepository roleRepo;
-private static String COMP_NAME ="TEST Saison 2025/26";
-    private static String COMM_NAME ="TEST_COMM";
+
     @Before
     public void setUp() {
         CompetitionFamily testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true);
@@ -73,15 +72,15 @@ private static String COMP_NAME ="TEST Saison 2025/26";
         Community testComm = new Community(COMM_NAME, "Beschreibung");
         CommunityRole communityRole = new CommunityRole(COMM_NAME, "", testComm);
         testComm.addCommunityRole(communityRole);
-        Community savedCommunity=commRepo.save(testComm);
+        Community savedCommunity = commRepo.save(testComm);
 
-      
+
         testTipper = new Tipper("Eckhard", "Kirschning", TESTUSER, "root", "hint", "eki@gmx.de", savedComp.getId());
         Tipper savedTipper = tipperRepo.save(testTipper);
         compTipperRole = new TipperRole(competitionRole, savedTipper);
         communityTipperRole = new TipperRole(communityRole, savedTipper);
         roleRepo.saveAll(List.of(communityRole, competitionRole));
-        tRoleRepo.saveAll(List.of(communityTipperRole,compTipperRole));
+        tRoleRepo.saveAll(List.of(communityTipperRole, compTipperRole));
     }
 
     @After
@@ -102,7 +101,7 @@ private static String COMP_NAME ="TEST Saison 2025/26";
         for (TipperRole role : tipperRoles1) {
             assertNotNull(role);
             log.info("TIPPER ROLE ={}", role.getRole());
-         //   assertEquals(role.getRolle().getName(), compTipperRole.getRolle().getName());
+            //   assertEquals(role.getRolle().getName(), compTipperRole.getRolle().getName());
         }
 
     }
@@ -112,46 +111,49 @@ private static String COMP_NAME ="TEST Saison 2025/26";
         log.info("findByUsername");
         Tipper tipper = tipperRepo.findByUsername(testTipper.getUsername()).orElseThrow();
         assertNotNull(tipper);
-        List<CompetitionRole> roles= roleRepo.getAllCompRoles();
+        List<CompetitionRole> roles = roleRepo.getAllCompRoles();
         assertSame(1, roles.size());
         for (CompetitionRole role : roles) {
             // assertEquals(role.getName(), competitionRole.getName());
             assertInstanceOf(CompetitionRole.class, role);
         }
     }
+
     @Test
     public void getAllCommunityRolesForTipper() {
         log.info("findByUsername");
         Tipper tipper = tipperRepo.findByUsername(testTipper.getUsername()).orElseThrow();
         assertNotNull(tipper);
-        List<CommunityRole> roles= roleRepo.getAllCommunityRoles();
+        List<CommunityRole> roles = roleRepo.getAllCommunityRoles();
         assertSame(1, roles.size());
         for (CommunityRole role : roles) {
             // assertEquals(role.getName(), competitionRole.getName());
-             assertInstanceOf(CommunityRole.class, role);
+            assertInstanceOf(CommunityRole.class, role);
         }
     }
+
     @Test
     public void getAllTippers() {
         List<Tipper> tippers = tipperRepo.findAll();
-       for (Tipper tipper : tippers) {
-           log.info("TIPPER ={}", tipper.getUsername());
-       }
+        for (Tipper tipper : tippers) {
+            log.info("TIPPER ={}", tipper.getUsername());
+        }
         assertSame(1, tippers.size());
 
-       List<Competition> competitions = compRepo.findAll();
-       for (Competition competition : competitions) {
-           log.info("COMPETITION ={}", competition.getName());
-       }
+        List<Competition> competitions = compRepo.findAll();
+        for (Competition competition : competitions) {
+            log.info("COMPETITION ={}", competition.getName());
+        }
 
 
     }
+
     @Test
     public void getAllRolesForTipper() {
         Tipper tipper = tipperRepo.findByUsername(testTipper.getUsername()).orElseThrow();
         assertNotNull(tipper);
 
-        List<Role> roles= roleRepo.findRolesByTipperId(tipper.getId());
+        List<Role> roles = roleRepo.findRolesByTipperId(tipper.getId());
         assertSame(2, roles.size());
 
     }

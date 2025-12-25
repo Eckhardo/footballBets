@@ -22,23 +22,22 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 public class CompRoundServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(CompRoundServiceTest.class);
-    @Autowired
-    private CompFamilyService familyService; // Real service being tested
-    @Autowired
-    private CompService compService; // Real service being tested
     private static final String TEST_COMP_FAM = "TestLiga";
     private static final String TEST_COMP = "TestLiga: Saison 2025";
     private static final String TEST_COMP_ROUND = "Saison 2025: Hinrunde";
     CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, TEST_COMP_FAM, "Description of TestLiga", true, true);
-
     CompetitionDto savedComp = null;
+    @Autowired
+    private CompFamilyService familyService; // Real service being tested
+    @Autowired
+    private CompService compService; // Real service being tested
     @Autowired
     private CompRoundService compRoundService;
 
     @BeforeEach
     public void setup() {
 
-        CompetitionFamilyDto    savedFam = familyService.save(compFamilyDto).orElseThrow();
+        CompetitionFamilyDto savedFam = familyService.save(compFamilyDto).orElseThrow();
         CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, savedFam.getId(), TEST_COMP_FAM);
 
         savedComp = compService.save(compDto).orElseThrow();
@@ -50,13 +49,13 @@ public class CompRoundServiceTest {
         log.info("Delete All Test data");
         familyService.deleteByName(TEST_COMP_FAM);
         //compService.deleteByName(TEST_COMP);
-      //  compRoundService.deleteByName(TEST_COMP_ROUND);
+        //  compRoundService.deleteByName(TEST_COMP_ROUND);
     }
 
     @Test
     void whenValidCompRound_thenCompRoundShouldBeSaved() {
 
-        CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, TEST_COMP_ROUND, false,savedComp.getId(), savedComp.getName());
+        CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, TEST_COMP_ROUND, false, savedComp.getId(), savedComp.getName());
         Optional<CompetitionRoundDto> savedCompRound = compRoundService.save(compRoundDto);
         if (savedCompRound.isPresent()) {
             assertThat(savedCompRound.get().getId()).isNotNull();
@@ -73,10 +72,10 @@ public class CompRoundServiceTest {
     @Test
     void whenValidCompRound_thenCompRoundShouldBeUpdated() {
 
-        CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, TEST_COMP_ROUND, false,savedComp.getId(), savedComp.getName());
+        CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, TEST_COMP_ROUND, false, savedComp.getId(), savedComp.getName());
         CompetitionRoundDto savedRound = compRoundService.save(compRoundDto).orElseThrow();
         savedRound.setRoundNumber(2);
-        CompetitionRoundDto updatedCompRound = compRoundService.updateRound(savedRound.getId(),savedRound).orElseThrow();
+        CompetitionRoundDto updatedCompRound = compRoundService.updateRound(savedRound.getId(), savedRound).orElseThrow();
 
         assertThat(updatedCompRound.getId()).isNotNull();
         assertThat(updatedCompRound.getName()).isEqualTo(TEST_COMP_ROUND);

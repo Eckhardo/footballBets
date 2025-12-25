@@ -25,6 +25,7 @@ public class CompController {
         this.compService = compService;
 
     }
+
     @GetMapping("/competitions")
     public List<CompetitionDto> findAll() {
 
@@ -34,11 +35,12 @@ public class CompController {
     @GetMapping("/competitions/{id}")
     public CompetitionDto findOne(@PathVariable Long id) {
         log.info("CompController:findOne::" + id);
-        CompetitionDto compDto = compService.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        CompetitionDto compDto = compService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         log.info("CompetitionDto found with {}", compDto);
         return compDto;
     }
+
     @GetMapping("/competitions/{id}/teams")
     public List<TeamDto> findAllTeams(@PathVariable Long id) {
 
@@ -50,16 +52,17 @@ public class CompController {
     @GetMapping("/competitions/{id}/rounds")
     public List<CompetitionRoundDto> findAllRounds(@PathVariable Long id) {
         log.info(" CompetitionRoundDto:findAll for comp::");
-        List< CompetitionRoundDto> compRounds = compService.getAllFormComp(id);
+        List<CompetitionRoundDto> compRounds = compService.getAllFormComp(id);
         log.info("CompetitionRoundDto found with {}", compRounds);
         return compRounds;
     }
+
     @PostMapping("/competitions")
     @ResponseStatus(HttpStatus.CREATED)
     public CompetitionDto post(@RequestBody @Valid CompetitionDto newComp) {
         log.info("New competition {}", newComp);
 
-        CompetitionDto createdModel = this.compService.save(newComp).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));;
+        CompetitionDto createdModel = this.compService.save(newComp).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
         log.info("Created competition {}", createdModel);
         return createdModel;
     }

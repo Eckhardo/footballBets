@@ -21,12 +21,11 @@ public class CommunityRole extends Role {
     public CommunityRole() {
 
     }
+
     public CommunityRole(String name, String description, Community community) {
         super(name, description);
         this.community = community;
     }
-
-
 
 
     public Community getCommunity() {

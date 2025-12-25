@@ -39,24 +39,20 @@ public class ContractCompTeamApiIntegrationTest {
     private static final Logger log = LoggerFactory.getLogger(ContractCompRoundApiIntegrationTest.class);
     private static final String TEST_COMP_FAM = "TestLiga";
     private static final String TEST_COMP = "TestLiga: Saison 2025";
+    private static final String TEAM_NAME = "Eintracht Braunschweig";
+    private static final String TEAM_NAME_2 = "Holstein Kiel";
     @Autowired
     WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();
     @Autowired
     CompetitionFamilyRepository competitionFamilyRepository;
-
     @Autowired
     CompetitionRepository competitionRepository;
-
     @Autowired
     CompetitionTeamRepository compTeamRepo;
     @Autowired
     TeamRepository teamRepository;
-
     CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, TEST_COMP_FAM, "Description of TestLiga", true, true);
     CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, null, TEST_COMP_FAM);
-
-    private static final String TEAM_NAME = "Eintracht Braunschweig";
-    private static final String TEAM_NAME_2 = "Holstein Kiel";
     TeamDto teamDto = new TeamDto(null, TEAM_NAME, "Braunschweig");
     TeamDto teamDto1 = new TeamDto(null, TEAM_NAME_2, "Kiel");
 
@@ -198,10 +194,8 @@ public class ContractCompTeamApiIntegrationTest {
                 .expectBody()
                 .jsonPath("$.teamId").isEqualTo(team.getId())
                 .jsonPath("$.compId").isEqualTo(comp.getId())
-               .jsonPath("$.teamAcronym").isEqualTo(team.getAcronym())
+                .jsonPath("$.teamAcronym").isEqualTo(team.getAcronym())
                 .jsonPath("$.compName").isEqualTo(comp.getName());
-
-
 
 
         Team team2 = teamRepository.findByName(TEAM_NAME_2).orElseThrow(() -> new EntityNotFoundException("entity not found"));
@@ -228,13 +222,11 @@ public class ContractCompTeamApiIntegrationTest {
         Competition comp = competitionRepository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP));
 
         webClient.get()
-                .uri("/compTeams/" +comp.getId())
+                .uri("/compTeams/" + comp.getId())
                 .exchange()
                 .expectStatus()
                 .isOk()
                 .expectBodyList(CompetitionTeamDto.class).hasSize(2);
-
-
 
 
     }

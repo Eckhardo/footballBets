@@ -31,6 +31,9 @@ class TipperRoleServiceTest {
     private static final String TEST_USERNAME = "TEST_USER";
 
     private static final Logger log = LoggerFactory.getLogger(TipperRoleServiceTest.class);
+    CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, TEST_COMP_FAM, "Description of TestLiga", true, true);
+    CompetitionDto savedComp = null;
+    TipperDto savedTipper;
     @Autowired
     private CompFamilyService familyService;
     @Autowired
@@ -41,15 +44,10 @@ class TipperRoleServiceTest {
     private TipperRoleService tipperRoleService;
     @Autowired
     private TipperRoleRepository tipperRoleRepository;
-    CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, TEST_COMP_FAM, "Description of TestLiga", true, true);
-
-
     @Autowired
     private TipperService tipperService;
-    CompetitionDto savedComp = null;
-    TipperDto savedTipper;
 
-   @BeforeEach
+    @BeforeEach
     public void setup() {
 
         CompetitionFamilyDto savedFam = familyService.save(compFamilyDto).orElseThrow();
@@ -62,21 +60,22 @@ class TipperRoleServiceTest {
 
     @AfterEach
     public void tearDown() {
-       log.info("\n");
-       log.info("Delete All Test data");
+        log.info("\n");
+        log.info("Delete All Test data");
 
         tipperRoleRepository.deleteAll();
-      familyService.deleteByName(TEST_COMP_FAM);
-     //   compService.deleteByName(TEST_COMP);
+        familyService.deleteByName(TEST_COMP_FAM);
+        //   compService.deleteByName(TEST_COMP);
         tipperService.deleteByUserName(TEST_USERNAME);
 
     }
+
     @Test
     public void testSave() {
         log.info("testSave");
     }
 
-   @Test
+    @Test
     public void saveTipperRole() {
         log.info("saveTipperRole");
         CompetitionRoleDto compRole = new CompetitionRoleDto(null, TEST_COMP, "", savedComp.getId(), savedComp.getName());
@@ -96,7 +95,7 @@ class TipperRoleServiceTest {
 
 
         log.info("\n");
-        TipperRoleDto savedTR = tipperRoleService.save(tipperRoleDto).orElseThrow(()-> new EntityNotFoundException("tipperRole not found"));
+        TipperRoleDto savedTR = tipperRoleService.save(tipperRoleDto).orElseThrow(() -> new EntityNotFoundException("tipperRole not found"));
         assertNotNull(savedTR);
         log.info("savedTR {}", savedTR);
         assertNotNull(savedTR.getId());
@@ -104,9 +103,9 @@ class TipperRoleServiceTest {
 
         assertEquals(savedRole.getName(), savedTR.getRoleName());
         assertEquals(savedTipper.getId(), savedTR.getTipperId());
-        assertEquals(savedTipper.getUsername(),savedTR.getTipperUserName());
+        assertEquals(savedTipper.getUsername(), savedTR.getTipperUserName());
         log.info("\n");
-       tipperRoleService.deleteById(savedTR.getId());
+        tipperRoleService.deleteById(savedTR.getId());
 
     }
 

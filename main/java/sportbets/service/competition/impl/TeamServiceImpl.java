@@ -44,7 +44,7 @@ public class TeamServiceImpl implements TeamService {
      */
     @Override
     public Optional<Team> findByName(String name) {
-       return teamRepository.findByName(name);
+        return teamRepository.findByName(name);
 
     }
 
@@ -92,6 +92,7 @@ public class TeamServiceImpl implements TeamService {
     public void deleteById(Long id) {
         teamRepository.deleteById(id);
     }
+
     @Override
     @Transactional
     public void deleteByName(String name) {

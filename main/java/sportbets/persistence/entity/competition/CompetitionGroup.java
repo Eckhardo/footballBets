@@ -19,7 +19,7 @@ public class CompetitionGroup {
 
 
     @Column(nullable = false)
-    private LocalDateTime createdOn=LocalDateTime.now();
+    private LocalDateTime createdOn = LocalDateTime.now();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_comp_round_id")
@@ -27,25 +27,27 @@ public class CompetitionGroup {
     private CompetitionRound competitionRound;
 
     @OneToMany(mappedBy = "competitionGroup", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    private Set<Spiel> spiele=new HashSet<>();
+    private final Set<Spiel> spiele = new HashSet<>();
 
 
     //	********************** Constructors ********************** //
+
     /**
      * No-arg constructor for JavaBean tools.
      */
-   public CompetitionGroup() {}
+    public CompetitionGroup() {
+    }
 
     /**
      * Full constructor.
      */
-    public CompetitionGroup(String name, Integer groupNumber,CompetitionRound competitionRound) {
-        this.name=name;
-        this.groupNumber=groupNumber;
-        this.competitionRound=competitionRound;
+    public CompetitionGroup(String name, Integer groupNumber, CompetitionRound competitionRound) {
+        this.name = name;
+        this.groupNumber = groupNumber;
+        this.competitionRound = competitionRound;
 
         //guarantee ref integrity
-       // competitionRound.addCompetitionGroup(this);
+        // competitionRound.addCompetitionGroup(this);
     }
     //	********************** Getter/Setter Methods ********************** //
 
@@ -70,25 +72,28 @@ public class CompetitionGroup {
         return groupNumber;
     }
 
-    public LocalDateTime getCreatedOn() {
-        return createdOn;
-    }
-
     public void setGroupNumber(int groupNumber) {
         this.groupNumber = groupNumber;
+    }
+
+    public LocalDateTime getCreatedOn() {
+        return createdOn;
     }
 
     public CompetitionRound getCompetitionRound() {
         return competitionRound;
     }
+
+    public void setCompetitionRound(CompetitionRound competitionRound) {
+        this.competitionRound = competitionRound;
+    }
+
     public Set<Spiel> getSpiele() {
         return spiele;
     }
+
     public void addSpiel(Spiel spiel) {
         spiele.add(spiel);
-    }
-    public void setCompetitionRound(CompetitionRound competitionRound) {
-        this.competitionRound = competitionRound;
     }
 
     @Override

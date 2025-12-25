@@ -19,9 +19,11 @@ public interface CompFamilyService {
     Optional<CompetitionFamilyDto> updateFamily(Long id, CompetitionFamilyDto compFam);
 
     List<Team> findTeams(Long id);
-    void deleteByName(String name );
+
+    void deleteByName(String name);
 
     void deleteById(Long id);
+
     List<CompetitionFamilyDto> getAll();
 
     Optional<CompetitionFamily> findByIdTest(Long familyId);

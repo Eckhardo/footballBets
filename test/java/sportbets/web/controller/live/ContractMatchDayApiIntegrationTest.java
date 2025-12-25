@@ -126,18 +126,19 @@ public class ContractMatchDayApiIntegrationTest {
         CompetitionRound entity = competitionRoundRepository.findByName(TEST_COMP_ROUND).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
         Long id = entity.getId();
         webClient.get()
-                .uri("/rounds/"+id+"/matchdays")
+                .uri("/rounds/" + id + "/matchdays")
                 .exchange()
                 .expectStatus()
                 .isOk()
                 .expectBodyList(SpieltagDto.class).hasSize(1);
 
     }
+
     @Test
     @Order(2)
     void givenPreloadedData_whenGetAllMatchdays_thenResponseIsOK() {
 
-    webClient.get()
+        webClient.get()
                 .uri("/matchdays")
                 .exchange()
                 .expectStatus()

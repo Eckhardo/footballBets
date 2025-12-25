@@ -16,26 +16,22 @@ import java.util.TreeSet;
 @Entity
 public class Spieltag {
     private static final Logger log = LoggerFactory.getLogger(Spieltag.class);
+    @OneToMany(mappedBy = "spieltag", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private final SortedSet<Spiel> spiele = new TreeSet<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private int spieltagNumber;
-
     @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
     // Specifies the format for JSON serialization (when the entity is returned as a response)
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
-    private LocalDateTime  startDate;
-
+    private LocalDateTime startDate;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_comp_round_id")
     @NotNull
     private CompetitionRound competitionRound;
 
-    @OneToMany(mappedBy = "spieltag",  cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private final SortedSet<Spiel> spiele=new TreeSet<>();
-
-     public Spieltag() {
+    public Spieltag() {
 
     }
 
@@ -44,7 +40,7 @@ public class Spieltag {
         this.startDate = startDate;
         this.competitionRound = competitionRound;
         // guarantee ref integrity
-       // competitionRound.addSpieltag(this);
+        // competitionRound.addSpieltag(this);
     }
 
 
@@ -59,16 +55,17 @@ public class Spieltag {
     public SortedSet<Spiel> getSpiele() {
         return spiele;
     }
+
     public void addSpiel(Spiel spiel) {
         spiele.add(spiel);
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public int getSpieltagNumber() {
@@ -83,13 +80,12 @@ public class Spieltag {
         return startDate;
     }
 
-    public String getFormattedStartDate() {
-        return DateUtil.formatDate(this.startDate);
-    }
-
-
     public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
+    }
+
+    public String getFormattedStartDate() {
+        return DateUtil.formatDate(this.startDate);
     }
 
     @Override

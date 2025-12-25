@@ -41,7 +41,7 @@ public class CompFamilyApiUnitTest {
 
     @BeforeEach
     void setup() {
-       compFamilyRepository.deleteAll();
+        compFamilyRepository.deleteAll();
     }
 
     @Test
@@ -74,7 +74,7 @@ public class CompFamilyApiUnitTest {
         List<CompetitionFamily> listOfCompetitionFamilys = new ArrayList<>();
         listOfCompetitionFamilys.add(new CompetitionFamily("Testliga", "Deutsche Testliga", true, true));
         listOfCompetitionFamilys.add(new CompetitionFamily("3. Bundesliga", "3. Deutsche Fussball Bundesliga", true, true));
-    List<CompetitionFamily> fams=   compFamilyRepository.saveAll(listOfCompetitionFamilys);
+        List<CompetitionFamily> fams = compFamilyRepository.saveAll(listOfCompetitionFamilys);
         // when -  action or the behaviour that we are going test
         ResultActions response = mockMvc.perform(get("/families"));
 
@@ -107,7 +107,6 @@ public class CompFamilyApiUnitTest {
                 .andExpect(jsonPath("$.hasClubs", is(family.isHasClubs())));
 
     }
-
 
 
     // JUnit test for update family REST API - positive scenario
@@ -148,7 +147,7 @@ public class CompFamilyApiUnitTest {
 
 
         // when -  action or the behaviour that we are going test
-        ResultActions response = mockMvc.perform(put("/families/{id}",1000L)
+        ResultActions response = mockMvc.perform(put("/families/{id}", 1000L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updatedCompetitionFamily)));
 

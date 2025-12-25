@@ -31,21 +31,17 @@ import static org.hamcrest.CoreMatchers.equalTo;
 public class ContractComApiIntegrationTest {
 
     private static final Logger log = LoggerFactory.getLogger(ContractComApiIntegrationTest.class);
-
-    @Autowired
-    WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();
-
-    @Autowired
-    CompetitionFamilyRepository competitionFamilyRepository;
-
-    @Autowired
-    CompetitionRepository repository;
     private static final String TEST_COMP_FAM = "TestLiga";
     private static final String TEST_COMP = "TestLiga: Saison 2025";
     private static final String TEST_COMP_2 = "TestLiga: Saison 2026";
+    @Autowired
+    WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();
+    @Autowired
+    CompetitionFamilyRepository competitionFamilyRepository;
+    @Autowired
+    CompetitionRepository repository;
     CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, TEST_COMP_FAM, "Description of TestLiga", true, true);
     CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, null, TEST_COMP_FAM);
-
 
 
     @AfterEach
@@ -92,7 +88,7 @@ public class ContractComApiIntegrationTest {
 
     @Test
     @Order(1)
-    void createNewComp_withValidCompJsonInput_thenSuccess()  {
+    void createNewComp_withValidCompJsonInput_thenSuccess() {
         CompetitionFamily fam = competitionFamilyRepository.findByName(TEST_COMP_FAM).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_FAM));
         compDto.setFamilyId(fam.getId());
         compDto.setName(TEST_COMP_2);
@@ -143,7 +139,7 @@ public class ContractComApiIntegrationTest {
 
     @Test
     @Order(3)
-    void updateComp_withValidCompJsonInput_thenSuccess()  {
+    void updateComp_withValidCompJsonInput_thenSuccess() {
         log.info("updateComp_withValidCompJsonInput_thenSuccess");
 
         Competition entity = repository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP));
@@ -177,7 +173,7 @@ public class ContractComApiIntegrationTest {
         Competition entity = repository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_2));
         Long id = entity.getId();
         webClient.get()
-                .uri("/competitions/"+id +"/teams")
+                .uri("/competitions/" + id + "/teams")
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -190,7 +186,7 @@ public class ContractComApiIntegrationTest {
         Competition comp = repository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_FAM));
 
         webClient.get()
-                .uri("/competitions/" +comp.getId()+"/rounds")
+                .uri("/competitions/" + comp.getId() + "/rounds")
                 .exchange()
                 .expectStatus()
                 .isOk()

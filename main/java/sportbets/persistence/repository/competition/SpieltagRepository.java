@@ -7,6 +7,7 @@ import sportbets.persistence.entity.competition.Spieltag;
 
 import java.util.List;
 import java.util.Optional;
+
 @Repository
 public interface SpieltagRepository extends JpaRepository<Spieltag, Long> {
 
@@ -18,7 +19,7 @@ public interface SpieltagRepository extends JpaRepository<Spieltag, Long> {
 
     @Query("select  sp from Spieltag sp "
             + " where sp.spieltagNumber =:number")
-   Spieltag findByNumber(int number);
+    Spieltag findByNumber(int number);
 
 
     @Query("select  sp from Spieltag sp join fetch  sp.competitionRound cr"
@@ -35,8 +36,6 @@ public interface SpieltagRepository extends JpaRepository<Spieltag, Long> {
             + " and c.competitionFamily.id=cf.id "
             + " and sp.id=:spieltagId")
     Optional<Spieltag> findByIdWithParents(Long spieltagId);
-
-
 
 
 }

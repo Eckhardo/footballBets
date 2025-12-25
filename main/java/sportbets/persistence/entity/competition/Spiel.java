@@ -36,14 +36,14 @@ public class Spiel implements Comparable<Spiel> {
     @JoinColumn(name = "fk_gast_team_id")
     private Team gastTeam;
 
-    @ManyToOne (fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_spieltag_id")
     private Spieltag spieltag;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private CompetitionGroup competitionGroup;
 
-     public Spiel() {
+    public Spiel() {
 
     }
 
@@ -60,18 +60,19 @@ public class Spiel implements Comparable<Spiel> {
         this.gastTeam = gastTeam;
 
         // Guarantee referential integrity
-      //  spieltag.addSpiel(this);
+        //  spieltag.addSpiel(this);
 
     }
+
     /**
      * Simple properties only constructor for group spiele.
      */
     public Spiel(Spieltag spieltag, int spielNumber, LocalDateTime startDate,
-                 Team heimTeam, Team gastTeam,CompetitionGroup group) {
-        this(spieltag, spielNumber, startDate,heimTeam,gastTeam);
-        this.competitionGroup=group;
+                 Team heimTeam, Team gastTeam, CompetitionGroup group) {
+        this(spieltag, spielNumber, startDate, heimTeam, gastTeam);
+        this.competitionGroup = group;
         // Guarantee referential integrity
-     //   group.addSpiel(this);
+        //   group.addSpiel(this);
     }
 
     /**
@@ -86,13 +87,14 @@ public class Spiel implements Comparable<Spiel> {
         this.gastTore = gastTore;
 
     }
+
     /**
      * Full constructor group spiele
      */
     public Spiel(Spieltag spieltag, int spielNumber, LocalDateTime startDate,
-                 Team heimTeam, Team gastTeam,CompetitionGroup group, Integer heimTore, Integer gastTore,
+                 Team heimTeam, Team gastTeam, CompetitionGroup group, Integer heimTore, Integer gastTore,
                  Boolean stattgefunden) {
-        this(spieltag, spielNumber, startDate, heimTeam, gastTeam,group);
+        this(spieltag, spielNumber, startDate, heimTeam, gastTeam, group);
         this.stattgefunden = stattgefunden;
         this.heimTore = heimTore;
         this.gastTore = gastTore;
@@ -144,12 +146,12 @@ public class Spiel implements Comparable<Spiel> {
         return anpfiffdate;
     }
 
-    public String getFormattedAnpfiffDate() {
-        return DateUtil.formatDate(this.anpfiffdate);
-    }
-
     public void setAnpfiffdate(LocalDateTime anpfiffdate) {
         this.anpfiffdate = anpfiffdate;
+    }
+
+    public String getFormattedAnpfiffDate() {
+        return DateUtil.formatDate(this.anpfiffdate);
     }
 
     public Team getHeimTeam() {
@@ -176,12 +178,12 @@ public class Spiel implements Comparable<Spiel> {
         this.spieltag = spieltag;
     }
 
-    public void setCompetitionGroup(CompetitionGroup competitionGroup) {
-        this.competitionGroup = competitionGroup;
-    }
-
     public CompetitionGroup getCompetitionGroup() {
         return competitionGroup;
+    }
+
+    public void setCompetitionGroup(CompetitionGroup competitionGroup) {
+        this.competitionGroup = competitionGroup;
     }
 
     @Override
@@ -205,7 +207,7 @@ public class Spiel implements Comparable<Spiel> {
                 ", gastTore=" + gastTore +
                 ", stattgefunden=" + stattgefunden +
                 ", anpfiffdate=" + anpfiffdate +
-                ", heimTeam id=" + heimTeam.getId()+
+                ", heimTeam id=" + heimTeam.getId() +
                 ", gastTeam id=" + gastTeam.getId() +
                 ", heimTeam=" + heimTeam.getAcronym() +
                 ", gastTeam=" + gastTeam.getAcronym() +
@@ -216,6 +218,6 @@ public class Spiel implements Comparable<Spiel> {
 
     @Override
     public int compareTo(Spiel o) {
-        return o.getSpielNumber()-this.getSpielNumber();
+        return o.getSpielNumber() - this.getSpielNumber();
     }
 }

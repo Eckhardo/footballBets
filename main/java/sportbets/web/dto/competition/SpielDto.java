@@ -17,7 +17,7 @@ public class SpielDto implements Serializable, Comparable<SpielDto> {
     private int heimTore;
     @NotNull(message = " gastTore cannot be null")
     private int gastTore;
-    
+
     private boolean stattgefunden;
 
     @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")

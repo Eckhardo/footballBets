@@ -24,17 +24,16 @@ import static org.junit.jupiter.api.Assertions.*;
 class ModelMapperEntityDtoTest {
 
 
-    private static final Logger log = LoggerFactory.getLogger(ModelMapperEntityDtoTest.class);
     public static final String TEST_FAM = "TestFam";
     public static final String TEST_FAM_DESCR = "Test Fussball Bundesliga";
     public static final String TEST_COMP = "Saison 2025/26";
     public static final String TEST_COMP_DESCR = "TEST  Fussball Bundesliga Saison 2025/26";
     public static final String COMP_ROUND = "Hinrunde";
-    private static final String TEAM_NAME = "Eintracht Braunschweig";
-    private static final String TEAM_NAME_2 = "Holstein Kiel";
     public static final String TEAM_ACR_1 = "Kiel";
     public static final String TEAM_ACR_2 = "Braunschweig";
-
+    private static final Logger log = LoggerFactory.getLogger(ModelMapperEntityDtoTest.class);
+    private static final String TEAM_NAME = "Eintracht Braunschweig";
+    private static final String TEAM_NAME_2 = "Holstein Kiel";
     ModelMapper modelMapper = new ModelMapper();
 
     @Test

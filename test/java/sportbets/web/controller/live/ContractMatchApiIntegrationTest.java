@@ -35,14 +35,14 @@ public class ContractMatchApiIntegrationTest {
 
 
     private static final int TEST_MATCH_DAY = 1000;
+    private static final String TEAM_NAME = "Eintracht Braunschweig";
+    private static final String TEAM_NAME_2 = "Holstein Kiel";
     @Autowired
     WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();
     @Autowired
     CompetitionFamilyRepository competitionFamilyRepository;
-
     @Autowired
     CompetitionRepository competitionRepository;
-
     @Autowired
     CompetitionRoundRepository competitionRoundRepository;
     @Autowired
@@ -51,14 +51,10 @@ public class ContractMatchApiIntegrationTest {
     TeamRepository teamRepository;
     @Autowired
     SpielRepository spielRepository;
-
     CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, TEST_COMP_FAM, "Description of TestLiga", true, true);
     CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, null, TEST_COMP_FAM);
     CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, TEST_COMP_ROUND, false);
     SpieltagDto matchDayDto = new SpieltagDto(null, TEST_MATCH_DAY, LocalDateTime.now());
-
-    private static final String TEAM_NAME = "Eintracht Braunschweig";
-    private static final String TEAM_NAME_2 = "Holstein Kiel";
     TeamDto teamDto = new TeamDto(null, TEAM_NAME, "Braunschweig");
     TeamDto teamDto1 = new TeamDto(null, TEAM_NAME_2, "Kiel");
     SpielDto testSpiel1 = new SpielDto(null, 1, 3, 1, false, LocalDateTime.now(), matchDayDto.getId(), matchDayDto.getSpieltagNumber(), teamDto.getId(), teamDto.getAcronym(), teamDto1.getId(), teamDto1.getAcronym());
@@ -130,7 +126,7 @@ public class ContractMatchApiIntegrationTest {
 
         CompetitionRound round = competitionRoundRepository.findByName(TEST_COMP_ROUND).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
         matchDayDto.setCompRoundId(round.getId());
-matchDayDto.setCompRoundName(round.getName());
+        matchDayDto.setCompRoundName(round.getName());
         webClient.post()
                 .uri("/matchdays")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -195,8 +191,6 @@ matchDayDto.setCompRoundName(round.getName());
     }
 
 
-
-
     @Test
     @Order(1)
     void whenMatchdayIdProvided_ThenFetchMatches() {
@@ -229,7 +223,7 @@ matchDayDto.setCompRoundName(round.getName());
         assertNotNull(spiele);
         Spiel spiel = spiele.stream().findFirst().orElseThrow(() -> new EntityNotFoundException(String.valueOf(spieltag.getId())));
         Team team = teamRepository.findByName(TEAM_NAME).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
-  //change heimTore and set both teams to the same value (TeamA vs TeamA)
+        //change heimTore and set both teams to the same value (TeamA vs TeamA)
         testSpiel1.setId(spiel.getId());
         testSpiel1.setHeimTore(5);
         testSpiel1.setHeimTeamId(team.getId());

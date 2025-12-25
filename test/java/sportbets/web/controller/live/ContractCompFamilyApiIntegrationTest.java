@@ -50,8 +50,9 @@ public class ContractCompFamilyApiIntegrationTest {
 
 
     }
+
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         webClient.post()
                 .uri("/families")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -89,11 +90,11 @@ public class ContractCompFamilyApiIntegrationTest {
 
     @Test
     @Order(2)
-    void updateFamily_withValidFamilyJsonInput_thenSuccess()  {
+    void updateFamily_withValidFamilyJsonInput_thenSuccess() {
         log.info("updateFamily_withValidFamilyJsonInput_thenSuccess");
 
         CompetitionFamily fam = competitionFamilyRepository.findByName(COMP_FAM).orElseThrow(() -> new EntityNotFoundException(COMP_FAM));
-       compFamilyDto.setDescription("Changed Description");
+        compFamilyDto.setDescription("Changed Description");
         Long id = fam.getId();
         log.info("updateFamily with id::" + id);
         webClient.put()
@@ -116,7 +117,6 @@ public class ContractCompFamilyApiIntegrationTest {
                 .isEqualTo(true);
 
     }
-
 
 
 }

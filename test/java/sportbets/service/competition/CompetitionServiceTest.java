@@ -19,14 +19,14 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @ActiveProfiles("test")
 public class CompetitionServiceTest {
 
-    @Autowired
-    private CompFamilyService familyService; // Real service being tested
-    @Autowired
-    private CompService compService; // Real service being tested
     private static final String TEST_COMP_FAM = "TestLiga";
     private static final String TEST_COMP = "TestLiga: Saison 2025";
     CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, TEST_COMP_FAM, "Description of TestLiga", true, true);
     CompetitionFamilyDto savedFam = null;
+    @Autowired
+    private CompFamilyService familyService; // Real service being tested
+    @Autowired
+    private CompService compService; // Real service being tested
     @Autowired
     private CompFamilyService compFamilyService;
 

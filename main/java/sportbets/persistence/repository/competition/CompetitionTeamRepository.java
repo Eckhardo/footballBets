@@ -6,8 +6,9 @@ import org.springframework.stereotype.Repository;
 import sportbets.persistence.entity.competition.CompetitionTeam;
 
 import java.util.List;
+
 @Repository
-public interface CompetitionTeamRepository  extends JpaRepository<CompetitionTeam, Long> {
+public interface CompetitionTeamRepository extends JpaRepository<CompetitionTeam, Long> {
 
 
     @Query("select  ct from CompetitionTeam ct join fetch  ct.competition c"

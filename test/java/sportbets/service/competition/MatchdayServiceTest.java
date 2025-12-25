@@ -23,16 +23,15 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 public class MatchdayServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(MatchdayServiceTest.class);
-    @Autowired
-    private CompFamilyService familyService; // Real service being tested
-    @Autowired
-    private CompService compService; // Real service being tested
     private static final String TEST_COMP_FAM = "TestLiga";
     private static final String TEST_COMP = "TestLiga: Saison 2025";
     private static final String TEST_COMP_ROUND = "Saison 2025: Hinrunde";
     private static final int TEST_MATCH_DAY = 1;
-
     CompetitionRoundDto savedCompRound = null;
+    @Autowired
+    private CompFamilyService familyService; // Real service being tested
+    @Autowired
+    private CompService compService; // Real service being tested
     @Autowired
     private CompRoundService compRoundService;
 
@@ -97,7 +96,7 @@ public class MatchdayServiceTest {
         SpieltagDto matchDayDto = new SpieltagDto(null, TEST_MATCH_DAY, LocalDateTime.now(), savedCompRound.getId(), savedCompRound.getName());
         SpieltagDto savedMatchday = spieltagService.save(matchDayDto).orElseThrow();
 
-        List<SpieltagDto> matchdays= spieltagService.getAllForRound(savedCompRound.getId());
+        List<SpieltagDto> matchdays = spieltagService.getAllForRound(savedCompRound.getId());
         assertThat(matchdays.size()).isEqualTo(1);
         for (SpieltagDto matchday : matchdays) {
             assertThat(matchday.getId()).isNotNull();

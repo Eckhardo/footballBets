@@ -79,12 +79,13 @@ public class CompetitionFamilyDAOImpl implements CompetitionFamilyDAO {
         // delete the student
         entityManager.remove(theCompetitionFamily);
     }
+
     @Override
     @Transactional
     public void deleteByName(String theName) {
         // set query parameters
         entityManager.createQuery("delete CompetitionFamily cf where cf.name = :name")
-                .setParameter("name",theName).executeUpdate();
+                .setParameter("name", theName).executeUpdate();
 
     }
 

@@ -10,10 +10,13 @@ import sportbets.persistence.rowObject.CompRecord;
 
 import java.util.List;
 import java.util.Optional;
+
 @Repository
 public interface CompetitionRepository extends JpaRepository<Competition, Long> {
     Optional<Competition> findByName(String name);
+
     void deleteByName(String name);
+
     @Query("select  c from Competition c join fetch  c.competitionFamily cf"
             + " where c.name =:name"
             + " and cf.id=:id"

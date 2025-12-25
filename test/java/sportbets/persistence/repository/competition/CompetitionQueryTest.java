@@ -75,7 +75,7 @@ public class CompetitionQueryTest {
         System.out.println("Found competition name: " + comp.getName());
         comp.getCompetitionRounds().forEach(compRound -> {
 
-          log.info("Found competitionRound name: " + compRound.getName());
+            log.info("Found competitionRound name: " + compRound.getName());
         });
     }
 
@@ -101,7 +101,7 @@ public class CompetitionQueryTest {
         List<Team> teams = compRepo.findTeamsForComp(testComp.getId());
         assertNotNull(teams);
         teams.forEach(team -> {
-          log.info("Found team name: " + team);
+            log.info("Found team name: " + team);
         });
     }
 }

@@ -62,26 +62,25 @@ public class CompetitionFamilyDto implements Serializable {
         return hasLigaModus;
     }
 
-    public void setHasLigaModus(boolean hasLigaModus) {
-        this.hasLigaModus = hasLigaModus;
-    }
-
     public boolean getHasClubs() {
         return hasClubs;
-    }
-
-    public void setHasClubs(boolean hasClubs) {
-        this.hasClubs = hasClubs;
     }
 
     public boolean isHasLigaModus() {
         return hasLigaModus;
     }
 
+    public void setHasLigaModus(boolean hasLigaModus) {
+        this.hasLigaModus = hasLigaModus;
+    }
+
     public boolean isHasClubs() {
         return hasClubs;
     }
 
+    public void setHasClubs(boolean hasClubs) {
+        this.hasClubs = hasClubs;
+    }
 
     @Override
     public boolean equals(Object o) {

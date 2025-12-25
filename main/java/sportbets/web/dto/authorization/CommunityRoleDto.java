@@ -19,6 +19,7 @@ public class CommunityRoleDto implements Serializable {
 
     @NotNull
     private String communityName;
+
     public CommunityRoleDto() {
     }
 

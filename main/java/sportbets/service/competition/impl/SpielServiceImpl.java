@@ -48,6 +48,7 @@ public class SpielServiceImpl implements SpielService {
         }
         return spielDtos;
     }
+
     @Override
     public Optional<SpielDto> findById(Long id) {
         Optional<Spiel> model = spielRepo.findById(id);

@@ -46,7 +46,6 @@ class CompTeamController {
         log.info("New compTeam  day {}", dto);
 
         CompetitionTeamDto createdModel = compTeamService.save(dto).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
-        ;
         log.info("Created comp team {}", createdModel);
         return createdModel;
     }
@@ -57,7 +56,6 @@ class CompTeamController {
         log.info("New dtos{}", dtos.size());
 
         List<CompetitionTeamDto> createdDtos = compTeamService.saveAll(dtos);
-        ;
         log.info("Created compTeam dtos size: {}", createdDtos.size());
         return createdDtos;
     }

@@ -44,19 +44,18 @@ public class CompFamilyServiceTest {
         family = new CompetitionFamily("2. Bundesliga", "2. Deutsche Fussball Bundesliga", true, true);
 
 
-
     }
 
     // JUnit test for saveCompFamily method
     @DisplayName("JUnit test for saveCompFamily method")
-   // @Test
+    // @Test
     public void givenCompFamilyObject_whenSaveCompFamily_thenReturnCompFamilyObject() {
         // given - precondition or setup
         ModelMapper mapper = new ModelMapper();
         CompetitionFamilyDto famDto = mapper.map(family, CompetitionFamilyDto.class);
         given(familyRepository.findById(family.getId())).willReturn(Optional.of(family));
-        given(compFamilyService.getModelMapperForFamily().map(famDto,CompetitionFamily.class)).willReturn(family);
-        given(compFamilyService.getModelMapperForFamily().map(family,CompetitionFamilyDto.class)).willReturn(famDto);
+        given(compFamilyService.getModelMapperForFamily().map(famDto, CompetitionFamily.class)).willReturn(family);
+        given(compFamilyService.getModelMapperForFamily().map(family, CompetitionFamilyDto.class)).willReturn(famDto);
         given(compFamilyService.save(famDto)).willReturn(Optional.of(famDto));
 
 
@@ -127,7 +126,7 @@ public class CompFamilyServiceTest {
 
     // JUnit test for getCompFamilyById method
     @DisplayName("JUnit test for getCompFamilyById method")
-  //  @Test
+    //  @Test
     public void givenCompFamilyId_whenGetCompFamilyById_thenReturnCompFamilyObject() {
         // given
         given(familyRepository.findById(1L)).willReturn(Optional.of(family));

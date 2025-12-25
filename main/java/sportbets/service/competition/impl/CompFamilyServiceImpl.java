@@ -24,7 +24,6 @@ public class CompFamilyServiceImpl implements CompFamilyService {
     private static final Logger log = LoggerFactory.getLogger(CompFamilyServiceImpl.class);
     private final CompetitionFamilyRepository compFamilyRepository;
     private final ModelMapper modelMapper;
-    ;
 
     public CompFamilyServiceImpl(CompetitionFamilyRepository compFamilyRepository, ModelMapper modelMapper) {
         this.compFamilyRepository = compFamilyRepository;
@@ -51,7 +50,7 @@ public class CompFamilyServiceImpl implements CompFamilyService {
     public Optional<CompetitionFamily> findByIdTest(Long familyId) {
         Optional<CompetitionFamily> model = compFamilyRepository.findById(familyId);
         if (model.isPresent()) {
-            Set<Competition> comps= model.get().getCompetitions();
+            Set<Competition> comps = model.get().getCompetitions();
             assert !comps.isEmpty();
             for (Competition comp : comps) {
                 log.info("Competition of current family found with {}", comp);
@@ -84,7 +83,7 @@ public class CompFamilyServiceImpl implements CompFamilyService {
     @Override
     @Transactional
     public Optional<CompetitionFamilyDto> updateFamily(Long id, CompetitionFamilyDto compFam) {
-        log.info("updateFamily:: {}",compFam);
+        log.info("updateFamily:: {}", compFam);
         Optional<CompetitionFamily> updateModel = compFamilyRepository.findById(id);
 
         if (updateModel.isPresent()) {

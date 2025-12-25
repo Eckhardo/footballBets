@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import sportbets.persistence.entity.competition.CompetitionRound;
 
 import java.util.Optional;
+
 @Repository
 public interface CompetitionRoundRepository extends JpaRepository<CompetitionRound, Long> {
     Optional<CompetitionRound> findByName(String name);
@@ -17,6 +18,7 @@ public interface CompetitionRoundRepository extends JpaRepository<CompetitionRou
             + " and c.competitionFamily.id=cf.id "
             + " and cr.id=:roundId")
     Optional<CompetitionRound> findByIdWithParents(Long roundId);
+
     void deleteByName(String name);
 
 }

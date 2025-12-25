@@ -12,39 +12,31 @@ import java.util.Set;
 
 @Entity
 public class Competition {
+    @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private final Set<CompetitionRound> competitionRounds = new HashSet<>();
+    @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private final Set<CompetitionTeam> competitionTeams = new HashSet<>();
+    @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    Set<CompetitionRole> competitionRoles = new HashSet<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-
     @Column(nullable = false)
     private String name;
-
     private String description;
-
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_comp_family_id")
     @NotNull
     private CompetitionFamily competitionFamily;
+    private int winMultiplicator = 3;
 
-    @OneToMany(mappedBy = "competition", cascade =CascadeType.ALL, fetch = FetchType.LAZY)
-    private final Set<CompetitionRound> competitionRounds = new HashSet<>();
-
-    @OneToMany(mappedBy = "competition",  cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private final Set<CompetitionTeam> competitionTeams= new HashSet<>();
-
-    @OneToMany(mappedBy = "competition", cascade =CascadeType.ALL,   orphanRemoval = true, fetch = FetchType.LAZY)
-      Set<CompetitionRole> competitionRoles = new HashSet<>();
-    private int winMultiplicator =3;
-
-    private int remisMultiplicator=1;
+    private int remisMultiplicator = 1;
 
 
     @Column(nullable = false)
-    private LocalDateTime createdOn=LocalDateTime.now();
+    private LocalDateTime createdOn = LocalDateTime.now();
 
-     /**
+    /**
      * No-arg constructor for JavaBean tools.
      */
     public Competition() {
@@ -53,12 +45,12 @@ public class Competition {
     /**
      * Full constructor
      */
-    public Competition(String name, String description,int winMultiplicator,int remisMultiplicator, @NotNull CompetitionFamily competitionFamily) {
+    public Competition(String name, String description, int winMultiplicator, int remisMultiplicator, @NotNull CompetitionFamily competitionFamily) {
         this.name = name;
         this.description = description;
         this.competitionFamily = competitionFamily;
         //guarantee ref integrity
-     //   competitionFamily.addCompetition(this);
+        //   competitionFamily.addCompetition(this);
         this.winMultiplicator = winMultiplicator;
         this.remisMultiplicator = remisMultiplicator;
 
@@ -87,6 +79,7 @@ public class Competition {
             throw new IllegalArgumentException("Can't add a null round.");
         this.getCompetitionRounds().add(round);
     }
+
     public String getName() {
         return name;
     }
@@ -114,6 +107,7 @@ public class Competition {
     public Set<CompetitionTeam> getCompetitionTeams() {
         return competitionTeams;
     }
+
     public void addCompetitionTeam(CompetitionTeam competitionTeam) {
         if (competitionTeam == null)
             throw new IllegalArgumentException("Can't add a null competitionTeam.");
@@ -132,6 +126,7 @@ public class Competition {
         }
         this.getCompetitionRoles().add(role);
     }
+
     public int getWinMultiplicator() {
         return winMultiplicator;
     }
@@ -172,7 +167,7 @@ public class Competition {
                 ", winMultiplicator=" + winMultiplicator +
                 ", remisMultiplicator=" + remisMultiplicator +
                 ", createdOn=" + createdOn +
-                ", familyId=" + (competitionFamily.getId() == null ? null: competitionFamily.getId().toString()) +
+                ", familyId=" + (competitionFamily.getId() == null ? null : competitionFamily.getId().toString()) +
                 '}';
     }
 }

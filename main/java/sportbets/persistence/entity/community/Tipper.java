@@ -15,14 +15,14 @@ import java.util.Set;
 @Table(name = "tipper")
 public class Tipper {
     private static final Logger log = LoggerFactory.getLogger(Tipper.class);
+    @OneToMany(mappedBy = "tipper", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    Set<TipperRole> tipperRoles = new HashSet<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-
     @NotNull
     private String firstname;
-
     @NotNull
     private String lastname;
     @Column(unique = true, nullable = false)
@@ -30,15 +30,9 @@ public class Tipper {
     @NotNull
     private String passwort;
     private String passwortHint;
-
-
     @Email
     private String email;
-
     private Long defaultCompetitionId;
-
-    @OneToMany(mappedBy = "tipper", cascade =CascadeType.ALL,   orphanRemoval = true, fetch = FetchType.LAZY)
-    Set<TipperRole> tipperRoles= new HashSet<>();
 
     public Tipper() {
     }
@@ -120,12 +114,14 @@ public class Tipper {
     public Set<TipperRole> getTipperRoles() {
         return tipperRoles;
     }
+
     public void addTipperRole(TipperRole role) {
         if (role == null) {
             throw new IllegalArgumentException("Can't add a null tipper role.");
         }
         this.getTipperRoles().add(role);
     }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;

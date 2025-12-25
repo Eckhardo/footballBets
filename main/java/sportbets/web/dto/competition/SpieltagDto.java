@@ -97,7 +97,7 @@ public class SpieltagDto implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, spieltagNumber, startDate,compRoundId);
+        return Objects.hash(id, spieltagNumber, startDate, compRoundId);
     }
 
     @Override

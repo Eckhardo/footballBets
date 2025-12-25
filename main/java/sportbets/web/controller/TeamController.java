@@ -24,11 +24,12 @@ public class TeamController {
     @GetMapping("/teams/{id}")
     public TeamDto findOne(@PathVariable Long id) {
         log.info("TeamDto:findOne::" + id);
-        TeamDto teamDto = teamService.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        TeamDto teamDto = teamService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         log.info("TeamDto found with {}", teamDto);
         return teamDto;
     }
+
     @GetMapping("/teams")
     public List<TeamDto> findAllTeams() {
 
@@ -42,7 +43,7 @@ public class TeamController {
     public TeamDto post(@RequestBody TeamDto teamDto) {
         log.info("New team {}", teamDto);
 
-        TeamDto createdModel = this.teamService.save(teamDto).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));;
+        TeamDto createdModel = this.teamService.save(teamDto).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
         log.info("Created team {}", createdModel);
         return createdModel;
     }

@@ -8,6 +8,8 @@ import java.util.Set;
 
 @Entity
 public class Team {
+    @OneToMany(mappedBy = "team", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    private final Set<CompetitionTeam> competitionTeams = new HashSet();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -16,8 +18,6 @@ public class Team {
     @Column(unique = true, nullable = false)
     private String acronym;
 
-    @OneToMany(mappedBy = "team", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    private final Set<CompetitionTeam> competitionTeams= new HashSet();
     public Team() {
 
     }
@@ -54,12 +54,14 @@ public class Team {
     public Set<CompetitionTeam> getCompetitionTeams() {
         return competitionTeams;
     }
+
     public void addCompetitionTeam(CompetitionTeam competitionTeam) {
         if (competitionTeam == null)
             throw new IllegalArgumentException("Can't add a null competitionTeam.");
         this.getCompetitionTeams().add(competitionTeam);
 
     }
+
     @Override
     public String toString() {
         return "Team{" +

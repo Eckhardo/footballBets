@@ -56,8 +56,7 @@ public class CompetitionRoleServiceImpl implements CompetitionRoleService {
             CompetitionRoleDto compDto = modelMapper.map(model, CompetitionRoleDto.class);
             throw new RuntimeException("Gheört hier nicht hn: eigene Mehtode für CompRole UND CommRole");
 
-        }
-        else {
+        } else {
             return Optional.empty();
         }
     }

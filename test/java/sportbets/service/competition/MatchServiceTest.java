@@ -20,20 +20,19 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 public class MatchServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(MatchServiceTest.class);
-    @Autowired
-    private CompFamilyService familyService; // Real service being tested
-    @Autowired
-    private CompService compService; // Real service being tested
     private static final String TEST_COMP_FAM = "TestLiga";
     private static final String TEST_COMP = "TestLiga: Saison 2025";
     private static final String TEST_COMP_ROUND = "Saison 2025: Hinrunde";
     private static final int TEST_MATCH_DAY = 17;
-
     private static final String TEAM_NAME = "Eintracht Braunschweig";
     private static final String TEAM_NAME_2 = "Holstein Kiel";
     TeamDto savedTeam1 = null;
     TeamDto savedTeam2 = null;
     SpieltagDto savedMatchday = null;
+    @Autowired
+    private CompFamilyService familyService; // Real service being tested
+    @Autowired
+    private CompService compService; // Real service being tested
     @Autowired
     private CompRoundService compRoundService;
     @Autowired
@@ -139,16 +138,16 @@ public class MatchServiceTest {
         for (SpielDto spielDto : spielDtos) {
             assertThat(spielDto.getId()).isNotNull();
             assertThat(spielDto.getAnpfiffdate()).isNotNull();
-            assertThat(spielDto.getSpielNumber()).isIn(savedMatch.getSpielNumber(),savedMatch2.getSpielNumber());
-            assertThat(spielDto.getHeimTore()).isIn(savedMatch.getHeimTore(),savedMatch2.getHeimTore());
-            assertThat(spielDto.getGastTore()).isIn(savedMatch.getGastTore(),savedMatch2.getGastTore());
+            assertThat(spielDto.getSpielNumber()).isIn(savedMatch.getSpielNumber(), savedMatch2.getSpielNumber());
+            assertThat(spielDto.getHeimTore()).isIn(savedMatch.getHeimTore(), savedMatch2.getHeimTore());
+            assertThat(spielDto.getGastTore()).isIn(savedMatch.getGastTore(), savedMatch2.getGastTore());
 
             assertThat(spielDto.getSpieltagNumber()).isIn(savedMatchday.getSpieltagNumber());
             assertThat(spielDto.getSpieltagId()).isIn(savedMatchday.getId());
-            assertThat(spielDto.getHeimTeamId()).isIn(savedTeam1.getId(),savedTeam2.getId());
-            assertThat(spielDto.getHeimTeamAcronym()).isIn(savedTeam1.getAcronym(),savedTeam2.getAcronym());
-            assertThat(spielDto.getGastTeamId()).isIn(savedTeam2.getId(),savedTeam1.getId());
-            assertThat(spielDto.getGastTeamAcronym()).isIn(savedTeam2.getAcronym(),savedTeam1.getAcronym());
+            assertThat(spielDto.getHeimTeamId()).isIn(savedTeam1.getId(), savedTeam2.getId());
+            assertThat(spielDto.getHeimTeamAcronym()).isIn(savedTeam1.getAcronym(), savedTeam2.getAcronym());
+            assertThat(spielDto.getGastTeamId()).isIn(savedTeam2.getId(), savedTeam1.getId());
+            assertThat(spielDto.getGastTeamAcronym()).isIn(savedTeam2.getAcronym(), savedTeam1.getAcronym());
 
             matchService.deleteById(spielDto.getId());
         }

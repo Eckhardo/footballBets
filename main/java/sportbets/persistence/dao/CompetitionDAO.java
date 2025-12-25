@@ -15,6 +15,7 @@ public interface CompetitionDAO {
     List<Competition> findByName(String theName);
 
     void update(Competition theComp);
+
     void delete(Long id);
 
     int deleteAll();

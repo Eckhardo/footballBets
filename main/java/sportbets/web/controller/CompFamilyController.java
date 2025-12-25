@@ -67,6 +67,7 @@ public class CompFamilyController {
         }
 
     }
+
     @GetMapping("/families")
     public List<CompetitionFamilyDto> findAll() {
 

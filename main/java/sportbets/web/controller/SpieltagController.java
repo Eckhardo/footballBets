@@ -25,17 +25,19 @@ public class SpieltagController {
         this.spieltagService = spieltagService;
         this.spielService = spielService;
     }
+
     @GetMapping("/matchdays")
     public List<SpieltagDto> findAll() {
         log.info(" SpieltagDto:findAll::");
-        List< SpieltagDto> matchdays = spieltagService.getAll();
+        List<SpieltagDto> matchdays = spieltagService.getAll();
         log.info("SpieltagDto found with {}", matchdays);
         return matchdays;
     }
+
     @GetMapping("/matchdays/{matchdayId}/matches")
     public List<SpielDto> findAllForMatchday(@PathVariable Long matchdayId) {
         log.info(" SpielDto:findAll::");
-        List< SpielDto> matchdays = spielService.getAllForMatchday(matchdayId);
+        List<SpielDto> matchdays = spielService.getAllForMatchday(matchdayId);
         log.info("SpielDto found with {}", matchdays);
         return matchdays;
     }
@@ -43,7 +45,7 @@ public class SpieltagController {
     @GetMapping("/matchdays/{id}")
     public SpieltagDto findOne(@PathVariable Long id) {
         log.info("SpieltagDto:findOne::" + id);
-        SpieltagDto spieltagDto = spieltagService.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        SpieltagDto spieltagDto = spieltagService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         log.info("SpieltagDto found with {}", spieltagDto);
         return spieltagDto;

@@ -9,8 +9,9 @@ import javax.sql.DataSource;
 public class TestProfileUnitTest {
 
     /**
-     *  First create the testDB with name "bulitippertest" with application.properties
-     * @return  data source.
+     * First create the testDB with name "bulitippertest" with application.properties
+     *
+     * @return data source.
      */
     @Bean
     @Profile("dev")

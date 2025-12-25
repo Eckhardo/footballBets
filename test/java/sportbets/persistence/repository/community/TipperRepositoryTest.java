@@ -31,23 +31,21 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class TipperRepositoryTest {
 
     private static final Logger log = LoggerFactory.getLogger(TipperRepositoryTest.class);
-    private CompetitionFamily testFamily;
-    private Competition testComp;
-
-    private Tipper testTipper;
-    private CompetitionRole testRole;
     TipperRole testTipperRole;
-    @Autowired
-    private TipperRepository tipperRepo;
-
-    @Autowired
-    private CompetitionFamilyRepository familyRepo;
-    @Autowired
-    private CompetitionRepository compRepo;
     @Autowired
     TipperRoleRepository tRoleRepo;
     @Autowired
     RoleRepository roleRepo;
+    private CompetitionFamily testFamily;
+    private Competition testComp;
+    private Tipper testTipper;
+    private CompetitionRole testRole;
+    @Autowired
+    private TipperRepository tipperRepo;
+    @Autowired
+    private CompetitionFamilyRepository familyRepo;
+    @Autowired
+    private CompetitionRepository compRepo;
 
     @Before
     public void setUp() {

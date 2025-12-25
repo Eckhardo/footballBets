@@ -28,17 +28,15 @@ import java.util.*;
 public class ReadJSONTest {
 
     private static final Logger log = LoggerFactory.getLogger(ReadJSONTest.class);
+    String filePath = "src/test/java/sportbets/testdata/bl.json";
     @Autowired
     private TeamService teamService;
-
     @Autowired
 
 
     private SpielRepository spielRepo;
-
     @Autowired
     private SpieltagRepository spieltagRepo;
-    String filePath = "src/test/java/sportbets/testdata/bl.json";
 
     @BeforeEach
     public void setup() {
@@ -110,7 +108,7 @@ public class ReadJSONTest {
             JsonArray msg = (JsonArray) jsonObject.get("matches");
 
             int i = 1;
-            int k =1;
+            int k = 1;
             String lastSpieltag = null;
             for (Object o : msg) {
                 JsonObject nestedObj = (JsonObject) o;
@@ -141,20 +139,16 @@ public class ReadJSONTest {
                             gastTor = (BigDecimal) ft;
                             j = 1;
                         }
-                        ;
 
                     }
                 }
 
-            //    System.out.println(dt + " - " + heim + "-  " + auswärts + " " + (heimTor != null ? heimTor.intValue() : null) + " " + (gastTor != null ? gastTor.intValue() : null));
-                boolean stattgefunden = true;
-                if (heimTor == null || gastTor == null) {
-                    stattgefunden = false;
-                }
+                //    System.out.println(dt + " - " + heim + "-  " + auswärts + " " + (heimTor != null ? heimTor.intValue() : null) + " " + (gastTor != null ? gastTor.intValue() : null));
+                boolean stattgefunden = heimTor != null && gastTor != null;
                 Integer homeGoals = heimTor != null ? heimTor.intValue() : 0;
                 Integer guestGoals = gastTor != null ? gastTor.intValue() : 0;
 
-                Spieltag spieltag= spieltagRepo.findByNumber(k);
+                Spieltag spieltag = spieltagRepo.findByNumber(k);
 
                 Team heimTeam = teamService.findByName(heim).orElseThrow();
                 Team gastTeam = teamService.findByName(auswärts).orElseThrow();
@@ -163,12 +157,12 @@ public class ReadJSONTest {
 
                 if (i % 9 == 0) {
 
-                    log.info(""+ k);
+                    log.info("" + k);
                     k++;
                 }
                 i++;
             }
-             spielRepo.saveAll(spiele);
+            spielRepo.saveAll(spiele);
 
         } catch (IOException | JsonException e) {
             System.out.println("##" + e.getMessage());
@@ -236,14 +230,14 @@ public class ReadJSONTest {
         for (Map.Entry<Integer, LocalDateTime> entry : spieltags.entrySet()) {
             System.out.println(entry.getKey() + " => " + entry.getValue());
         }
-        List<LocalDateTime> hinDates= new ArrayList<>();
-        List<LocalDateTime> rueckDates= new ArrayList<>();
+        List<LocalDateTime> hinDates = new ArrayList<>();
+        List<LocalDateTime> rueckDates = new ArrayList<>();
 
         for (Map.Entry<Integer, LocalDateTime> entry : spieltags.entrySet()) {
 
-            if(entry.getKey()<=17){
+            if (entry.getKey() <= 17) {
                 hinDates.add(entry.getValue());
-            }else{
+            } else {
                 rueckDates.add(entry.getValue());
             }
         }

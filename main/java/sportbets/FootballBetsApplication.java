@@ -25,6 +25,18 @@ import java.util.*;
 public class FootballBetsApplication {
 
     private static final Logger log = LoggerFactory.getLogger(FootballBetsApplication.class);
+    @Autowired
+    private CompetitionFamilyRepository familyRepo;
+    @Autowired
+    private CompetitionTeamRepository compTeamRepo;
+    @Autowired
+    private CompetitionRepository compRepo;
+    @Autowired
+    private CompetitionRoundRepository compRoundRepo;
+    @Autowired
+    private SpieltagRepository spieltagRepo;
+    @Autowired
+    private SpielRepository spielRepo;
 
     public static void main(String[] args) {
 
@@ -35,22 +47,6 @@ public class FootballBetsApplication {
     public ModelMapper getModelMapper() {
         return new ModelMapper();
     }
-
-    @Autowired
-    private CompetitionFamilyRepository familyRepo;
-    @Autowired
-    private CompetitionTeamRepository compTeamRepo;
-    @Autowired
-    private CompetitionRepository compRepo;
-    @Autowired
-    private CompetitionRoundRepository compRoundRepo;
-
-    @Autowired
-    private SpieltagRepository spieltagRepo;
-    @Autowired
-    private SpielRepository spielRepo;
-
-
 
     @Bean
     public CommandLineRunner run() {

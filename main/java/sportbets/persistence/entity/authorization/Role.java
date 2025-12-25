@@ -10,13 +10,12 @@ import java.util.Objects;
 @DiscriminatorColumn(name = "role_types", discriminatorType = DiscriminatorType.STRING)
 
 public abstract class Role {
+    private final LocalDateTime createdOn = LocalDateTime.now();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String description;
-
-    private final LocalDateTime createdOn = LocalDateTime.now();
 
     public Role() {
     }

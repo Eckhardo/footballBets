@@ -19,7 +19,7 @@ public class CompetitionRound {
     @Column(nullable = false)
     private String name;
 
-    private boolean hasGroups=false;
+    private boolean hasGroups = false;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -29,32 +29,33 @@ public class CompetitionRound {
 
 
     @OneToMany(mappedBy = "competitionRound", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private  Set<CompetitionGroup> competitionGroups = new HashSet<>();
+    private final Set<CompetitionGroup> competitionGroups = new HashSet<>();
 
     @OneToMany(mappedBy = "competitionRound", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Spieltag> spieltage=new HashSet<>();
+    private final Set<Spieltag> spieltage = new HashSet<>();
 
 
     @Column(nullable = false)
-    private LocalDateTime createdOn=LocalDateTime.now();
+    private LocalDateTime createdOn = LocalDateTime.now();
 
     public CompetitionRound() {
 
     }
 
 //-------------- Constructor----------------------
+
     /**
      * Simple properties constructor.
      */
 
-    public CompetitionRound(int roundNumber,String name, Competition competition,boolean hasGroups) {
-        this.roundNumber=roundNumber;
+    public CompetitionRound(int roundNumber, String name, Competition competition, boolean hasGroups) {
+        this.roundNumber = roundNumber;
         this.name = name;
-        this.competition=competition;
-        this.hasGroups=hasGroups;
+        this.competition = competition;
+        this.hasGroups = hasGroups;
 
         // guarantee ref integrity
-    //    ;
+        //    ;
     }
 //-------- Getter & Setter-------------------
 
@@ -95,6 +96,7 @@ public class CompetitionRound {
     public Set<Spieltag> getSpieltage() {
         return spieltage;
     }
+
     public void addSpieltag(Spieltag spieltag) {
         if (spieltage == null)
             throw new IllegalArgumentException("Can't add a null spielt.");

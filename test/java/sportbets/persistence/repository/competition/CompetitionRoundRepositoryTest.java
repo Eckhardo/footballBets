@@ -61,7 +61,7 @@ public class CompetitionRoundRepositoryTest {
 
     @Test
     public void givenFamily_whenFindByNameCalled_thenCompsAndRoundsAreFound() {
-       Competition foundComp = compRepo.findByName(testComp.getName()).orElse(null);
+        Competition foundComp = compRepo.findByName(testComp.getName()).orElse(null);
 
         assertNotNull(foundComp);
         assertEquals(testComp.getName(), foundComp.getName());

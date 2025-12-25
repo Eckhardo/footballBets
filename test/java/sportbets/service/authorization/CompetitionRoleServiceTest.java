@@ -27,20 +27,16 @@ public class CompetitionRoleServiceTest {
 
 
     private static final Logger log = LoggerFactory.getLogger(CompetitionRoleServiceTest.class);
+    private static final String TEST_COMP_FAM = "TestLiga";
+    private static final String TEST_COMP = "TestLiga: Saison 2025";
+    private static final String TEST_USERNAME = "TEST_USER";
+    CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, TEST_COMP_FAM, "Description of TestLiga", true, true);
+    CompetitionDto savedComp = null;
+    TipperDto savedTipper = null;
     @Autowired
     private CompFamilyService familyService; // Real service being tested
     @Autowired
     private CompService compService; // Real service being tested
-    private static final String TEST_COMP_FAM = "TestLiga";
-    private static final String TEST_COMP = "TestLiga: Saison 2025";
-    private static final String TEST_USERNAME = "TEST_USER";
-
-    CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, TEST_COMP_FAM, "Description of TestLiga", true, true);
-
-    CompetitionDto savedComp = null;
-
-    TipperDto savedTipper = null;
-
     @Autowired
     private CompetitionRoleService competitionRoleService;
 
@@ -67,32 +63,33 @@ public class CompetitionRoleServiceTest {
         tipperService.deleteByUserName(TEST_USERNAME);
 
     }
+
     @Test
-    public void saveCompRole(){
+    public void saveCompRole() {
         log.info("saveTipperRole");
-        CompetitionRoleDto compRole = new CompetitionRoleDto(null, TEST_COMP, "", savedComp.getId(),savedComp.getName());
-        CompetitionRoleDto savedRole=  competitionRoleService.save(compRole);
+        CompetitionRoleDto compRole = new CompetitionRoleDto(null, TEST_COMP, "", savedComp.getId(), savedComp.getName());
+        CompetitionRoleDto savedRole = competitionRoleService.save(compRole);
         assertNotNull(savedRole);
         assertNotNull(savedRole.getId());
         assertEquals(savedComp.getName(), compRole.getName());
         assertEquals(savedComp.getId(), compRole.getCompetitionId());
         assertEquals(savedComp.getName(), compRole.getCompetitionName());
-      Competition myComp= compService.findByIdTest(savedComp.getId()).orElseThrow();
+        Competition myComp = compService.findByIdTest(savedComp.getId()).orElseThrow();
         assertThat(myComp.getCompetitionRoles()).isNotNull();
     }
 
 
     @Test
-    public void findAllCompRoles(){
+    public void findAllCompRoles() {
         log.info("saveTipperRole");
-        CompetitionRoleDto compRole = new CompetitionRoleDto(null, TEST_COMP, "", savedComp.getId(),savedComp.getName());
-        CompetitionRoleDto savedRole=  competitionRoleService.save(compRole);
+        CompetitionRoleDto compRole = new CompetitionRoleDto(null, TEST_COMP, "", savedComp.getId(), savedComp.getName());
+        CompetitionRoleDto savedRole = competitionRoleService.save(compRole);
         assertNotNull(savedRole);
         assertNotNull(savedRole.getId());
         assertEquals(savedComp.getName(), compRole.getName());
         assertEquals(savedComp.getId(), compRole.getCompetitionId());
         assertEquals(savedComp.getName(), compRole.getCompetitionName());
-        List<CompetitionRoleDto> roles= competitionRoleService.getAllCompRoles();
+        List<CompetitionRoleDto> roles = competitionRoleService.getAllCompRoles();
         assertThat(roles).isNotNull();
         assertThat(roles.size()).isEqualTo(1);
         assertEquals(savedComp.getId(), roles.get(0).getCompetitionId());

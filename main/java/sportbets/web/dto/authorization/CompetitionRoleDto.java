@@ -19,6 +19,7 @@ public class CompetitionRoleDto implements Serializable {
 
     @NotNull
     private String competitionName;
+
     public CompetitionRoleDto() {
     }
 

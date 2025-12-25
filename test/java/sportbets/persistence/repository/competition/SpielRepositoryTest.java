@@ -48,7 +48,7 @@ public class SpielRepositoryTest {
 
     @Before
     public void setUp() {
-      CompetitionFamily testFamily=  getCompFamily();
+        CompetitionFamily testFamily = getCompFamily();
         familyRepo.save(testFamily);
         //  competitionDAO.save(testComp);
     }
@@ -62,13 +62,13 @@ public class SpielRepositoryTest {
         testComp.addCompetitionRound(testRound);
         testGroup = new CompetitionGroup("Gruppe A", 1, testRound);
         testRound.addCompetitionGroup(testGroup);
-        testSpieltag = new Spieltag(1,LocalDateTime.now(), testRound);
+        testSpieltag = new Spieltag(1, LocalDateTime.now(), testRound);
         testRound.addSpieltag(testSpieltag);
         Team team1 = new Team("Test1", "1");
         Team team2 = new Team("Test2", "2");
         Team team3 = new Team("Test3", "3");
         Team team4 = new Team("Test4", "4");
-      
+
         CompetitionTeam ct1 = new CompetitionTeam(team1, testComp);
         team1.addCompetitionTeam(ct1);
         CompetitionTeam ct2 = new CompetitionTeam(team2, testComp);
@@ -87,7 +87,7 @@ public class SpielRepositoryTest {
         testSpiel2 = new Spiel(testSpieltag, 2, LocalDateTime.now(), team3, team4, 2, 2, false);
         testSpieltag.addSpiel(testSpiel1);
         testSpieltag.addSpiel(testSpiel2);
-       return  testFamily;
+        return testFamily;
     }
 
     @After
@@ -126,14 +126,14 @@ public class SpielRepositoryTest {
         assertNotNull(foundComp);
         for (CompetitionRound round : foundComp.getCompetitionRounds()) {
             Set<Spieltag> spieltage = round.getSpieltage();
-            for(Spieltag sp : spieltage) {
+            for (Spieltag sp : spieltage) {
 
-                Set<Spiel> found= sp.getSpiele();
-                   assertNotNull(found);
-                   assertTrue(found.stream().anyMatch(p1));
-                   assertTrue(found.stream().anyMatch(p2));
-                   assertTrue(found.stream().noneMatch(p3));
-               }
+                Set<Spiel> found = sp.getSpiele();
+                assertNotNull(found);
+                assertTrue(found.stream().anyMatch(p1));
+                assertTrue(found.stream().anyMatch(p2));
+                assertTrue(found.stream().noneMatch(p3));
+            }
 
 
         }

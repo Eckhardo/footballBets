@@ -17,7 +17,8 @@ public interface CompetitionFamilyDAO {
     void update(CompetitionFamily theComp);
 
     void delete(Long id);
-    void deleteByName(String name );
+
+    void deleteByName(String name);
 
     int deleteAll();
 }

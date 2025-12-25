@@ -93,7 +93,7 @@ public class SpieltagRepositoryTest {
 
         List<Spieltag> sp = spieltagRepo.findAllByRoundId(foundRound.getId());
         assertNotNull(sp);
-        assertEquals(2,sp.size());
+        assertEquals(2, sp.size());
 
 
         // then
