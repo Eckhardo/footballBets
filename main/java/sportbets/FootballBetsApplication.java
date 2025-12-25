@@ -14,9 +14,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import sportbets.common.DateUtil;
 import sportbets.persistence.builder.*;
+import sportbets.persistence.entity.community.Tipper;
 import sportbets.persistence.entity.competition.*;
 import sportbets.persistence.repository.competition.*;
-import sportbets.service.TeamService;
+import sportbets.service.competition.TeamService;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -39,23 +40,23 @@ public class FootballBetsApplication {
         return new ModelMapper();
     }
 
-//    @Autowired
-//    private CompetitionFamilyRepository familyRepo;
-//    @Autowired
-//    private CompetitionTeamRepository compTeamRepo;
-//    @Autowired
-//    private CompetitionRepository compRepo;
-//    @Autowired
-//    private CompetitionRoundRepository compRoundRepo;
-//
-//    @Autowired
-//    private SpieltagRepository spieltagRepo;
-//    @Autowired
-//    private SpielRepository spielRepo;
-//
-//    @Autowired
-//    private TeamService teamService;
-//
+    @Autowired
+    private CompetitionFamilyRepository familyRepo;
+    @Autowired
+    private CompetitionTeamRepository compTeamRepo;
+    @Autowired
+    private CompetitionRepository compRepo;
+    @Autowired
+    private CompetitionRoundRepository compRoundRepo;
+
+    @Autowired
+    private SpieltagRepository spieltagRepo;
+    @Autowired
+    private SpielRepository spielRepo;
+
+    @Autowired
+    private TeamService teamService;
+
 
     @Bean
     public CommandLineRunner run() {
@@ -176,7 +177,14 @@ public class FootballBetsApplication {
 //               log.info(" spiele:: {} {}", spiel.getSpielNumber(), spiel.getSpieltag().getSpieltagNumber());
 //
 //            }
-
+//
+//
+//            ///     List<Spiel> spieleHin = spielRepo.saveAll(SpielConstants.getSpieleHinrunde(spieltagHin, pauli, hsv));
+//
+//
+//
+//       //     List<Spiel> spieleRueck = spielRepo.saveAll(SpielConstants.getSpieleRückrunde(spieltagRueck, werder, bay));
+//
 
             System.out.println("Save all cascade");
         };
@@ -289,8 +297,7 @@ public class FootballBetsApplication {
 //                    }
 //                }
 //
-//            //    System.out.println(dt + " - " + heim + "-  " + auswärts + " " + (heimTor != null ? heimTor.intValue() : null) + " " + (gastTor != null ? gastTor.intValue() : null));
-//                boolean stattgefunden = true;
+//                 boolean stattgefunden = true;
 //                if (heimTor == null || gastTor == null) {
 //                    stattgefunden = false;
 //                }
@@ -303,9 +310,6 @@ public class FootballBetsApplication {
 //                Team gastTeam = teamService.findByName(auswärts).orElseThrow();
 //                Long ID = (long) i;
 //                spiele.add(new Spiel(spieltag, i, dt, heimTeam, gastTeam, homeGoals, guestGoals, stattgefunden));
-////                (Spieltag spieltag, int spielNumber, LocalDateTime startDate,
-////                        Team heimTeam, Team gastTeam, Integer heimTore, Integer gastTore,
-////                        Boolean stattgefunden
 //
 //                if (i % 9 == 0) {
 //
