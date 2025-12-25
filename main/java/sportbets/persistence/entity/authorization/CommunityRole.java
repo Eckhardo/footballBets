@@ -6,10 +6,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
 import sportbets.persistence.entity.community.Community;
-import sportbets.persistence.entity.competition.Competition;
 
 import java.util.Objects;
-import java.util.Optional;
 
 @Entity
 public class CommunityRole extends Role {

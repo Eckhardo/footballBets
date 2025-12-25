@@ -1,10 +1,6 @@
 package sportbets.persistence.repository.competition;
 
 
-import com.github.cliftonlabs.json_simple.JsonArray;
-import com.github.cliftonlabs.json_simple.JsonException;
-import com.github.cliftonlabs.json_simple.JsonObject;
-import com.github.cliftonlabs.json_simple.Jsoner;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,9 +11,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import sportbets.persistence.entity.competition.Team;
-
-import java.io.FileReader;
-import java.io.IOException;
 
 import static org.junit.Assert.assertNotNull;
 

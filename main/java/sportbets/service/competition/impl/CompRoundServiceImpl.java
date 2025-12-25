@@ -11,8 +11,8 @@ import sportbets.persistence.entity.competition.CompetitionRound;
 import sportbets.persistence.repository.competition.CompetitionRepository;
 import sportbets.persistence.repository.competition.CompetitionRoundRepository;
 import sportbets.service.competition.CompRoundService;
-import sportbets.web.dto.competition.CompetitionRoundDto;
 import sportbets.web.dto.MapperUtil;
+import sportbets.web.dto.competition.CompetitionRoundDto;
 
 import java.util.ArrayList;
 import java.util.List;

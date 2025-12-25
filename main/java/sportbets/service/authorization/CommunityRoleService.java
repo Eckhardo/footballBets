@@ -1,7 +1,5 @@
 package sportbets.service.authorization;
 
-import sportbets.persistence.entity.authorization.CommunityRole;
-import sportbets.persistence.entity.authorization.CompetitionRole;
 import sportbets.web.dto.authorization.CommunityRoleDto;
 
 import java.util.List;

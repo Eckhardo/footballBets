@@ -16,7 +16,6 @@ import sportbets.persistence.repository.competition.CompetitionRepository;
 import sportbets.service.authorization.CompetitionRoleService;
 import sportbets.web.dto.MapperUtil;
 import sportbets.web.dto.authorization.CompetitionRoleDto;
-import sportbets.web.dto.competition.CompetitionDto;
 
 import java.util.ArrayList;
 import java.util.List;

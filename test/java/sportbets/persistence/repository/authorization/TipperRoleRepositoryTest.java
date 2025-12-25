@@ -19,7 +19,6 @@ import sportbets.persistence.entity.community.Community;
 import sportbets.persistence.entity.community.Tipper;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
-import sportbets.persistence.entity.competition.Spiel;
 import sportbets.persistence.repository.community.CommunityRepository;
 import sportbets.persistence.repository.community.TipperRepository;
 import sportbets.persistence.repository.community.TipperRepositoryTest;

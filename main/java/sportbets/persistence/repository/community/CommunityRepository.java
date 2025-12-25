@@ -2,7 +2,6 @@ package sportbets.persistence.repository.community;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import sportbets.persistence.entity.community.Community;
-import sportbets.persistence.entity.competition.Competition;
 
 import java.util.Optional;
 

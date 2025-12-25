@@ -5,7 +5,6 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import sportbets.persistence.entity.authorization.CompetitionRole;
 import sportbets.persistence.entity.authorization.Role;
 import sportbets.persistence.entity.authorization.TipperRole;
 import sportbets.persistence.entity.community.Tipper;

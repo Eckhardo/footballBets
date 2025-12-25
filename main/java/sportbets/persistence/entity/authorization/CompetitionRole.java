@@ -2,11 +2,9 @@ package sportbets.persistence.entity.authorization;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import sportbets.persistence.entity.community.Community;
 import sportbets.persistence.entity.competition.Competition;
 
 import java.util.Objects;
-import java.util.Optional;
 
 @Entity
 @DiscriminatorValue("COMP")

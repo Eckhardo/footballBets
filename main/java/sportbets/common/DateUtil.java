@@ -3,7 +3,6 @@ package sportbets.common;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 
 public class DateUtil {
     private static String datePattern = "dd/MM/yyyy HH:mm";

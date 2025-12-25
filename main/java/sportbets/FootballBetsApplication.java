@@ -13,15 +13,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import sportbets.common.DateUtil;
-import sportbets.persistence.builder.*;
-import sportbets.persistence.entity.community.Tipper;
-import sportbets.persistence.entity.competition.*;
+import sportbets.persistence.entity.competition.Spiel;
 import sportbets.persistence.repository.competition.*;
-
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 
