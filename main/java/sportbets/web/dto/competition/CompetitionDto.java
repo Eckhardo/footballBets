@@ -15,14 +15,14 @@ import java.util.Objects;
 public class CompetitionDto implements Serializable {
     private Long id;
     @NotBlank(message = "name must not be empty")
-    private  String name;
+    private String name;
     @Size(min = 10, max = 50,
             message = "description must be between 10 and 50 characters long")
-    private  String description;
-    @Range(min = 1, max =9,message = "Win Multiplicator  must be single-digit number")
-    private  int winMultiplicator;
+    private String description;
+    @Range(min = 1, max = 9, message = "Win Multiplicator  must be single-digit number")
+    private int winMultiplicator;
     @Range(min = 1, max = 9, message = "Remis Multiplicator  must be single-digit number")
-    private  int remisMultiplicator;
+    private int remisMultiplicator;
 
     @NotNull(message = " family id cannot be null")
     private Long familyId;
@@ -38,7 +38,7 @@ public class CompetitionDto implements Serializable {
         this.winMultiplicator = winMultiplicator;
         this.remisMultiplicator = remisMultiplicator;
         this.familyId = familyId;
-        this.familyName= familyName;
+        this.familyName = familyName;
 
 
     }
@@ -47,38 +47,36 @@ public class CompetitionDto implements Serializable {
         return id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public int getWinMultiplicator() {
-        return winMultiplicator;
-    }
-
-    public int getRemisMultiplicator() {
-        return remisMultiplicator;
-    }
-
-
-
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     public void setDescription(String description) {
         this.description = description;
     }
 
+    public int getWinMultiplicator() {
+        return winMultiplicator;
+    }
+
     public void setWinMultiplicator(int winMultiplicator) {
         this.winMultiplicator = winMultiplicator;
+    }
+
+    public int getRemisMultiplicator() {
+        return remisMultiplicator;
     }
 
     public void setRemisMultiplicator(int remisMultiplicator) {
@@ -109,7 +107,7 @@ public class CompetitionDto implements Serializable {
         return Objects.equals(this.id, entity.id) &&
                 Objects.equals(this.name, entity.name) &&
                 Objects.equals(this.description, entity.description) &&
-                Objects.equals(this.winMultiplicator, entity.winMultiplicator) ;
+                Objects.equals(this.winMultiplicator, entity.winMultiplicator);
     }
 
     @Override
@@ -126,6 +124,6 @@ public class CompetitionDto implements Serializable {
                 "familyId = " + familyId + ", " +
                 "familyName = " + familyName + ", " +
                 "winMultiplicator = " + winMultiplicator + ", " +
-                "remisMultiplicator = " + remisMultiplicator +")";
+                "remisMultiplicator = " + remisMultiplicator + ")";
     }
 }

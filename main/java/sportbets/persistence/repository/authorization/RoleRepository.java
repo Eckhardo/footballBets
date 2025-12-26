@@ -14,8 +14,9 @@ import java.util.Optional;
 public interface RoleRepository extends JpaRepository<Role, Long> {
 
     @Query("select  r from Role r where  TYPE(r) = CompetitionRole ")
-    Optional<Role>findByName (String name);
-    void  deleteByName(String name);
+    Optional<Role> findByName(String name);
+
+    void deleteByName(String name);
 
     @Query("select  r from Role r where  TYPE(r) = CompetitionRole ")
     List<CompetitionRole> getAllCompRoles();
@@ -26,7 +27,7 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
 
 
     @Query("select tr.role "
-            +" from TipperRole tr"
+            + " from TipperRole tr"
             + " where tr.tipper.id=:tipperId")
     List<Role> findRolesByTipperId(Long tipperId);
 

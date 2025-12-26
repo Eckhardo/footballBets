@@ -9,22 +9,18 @@ import java.util.Set;
 
 @Entity
 public class CompetitionFamily {
+    @OneToMany(mappedBy = "competitionFamily", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private final Set<Competition> competitions = new HashSet<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(nullable = false, unique = true)
     private String name;
-
-
-    @OneToMany(mappedBy = "competitionFamily",cascade =CascadeType.ALL, fetch = FetchType.LAZY)
-    private final Set<Competition> competitions = new HashSet<>();
-
     private String description;
 
 
     @Column(nullable = false)
-    private LocalDateTime createdOn=LocalDateTime.now();
+    private LocalDateTime createdOn = LocalDateTime.now();
 
     private boolean hasLigaModus;
     /**
@@ -52,7 +48,7 @@ public class CompetitionFamily {
         this.description = description;
         this.hasLigaModus = ligaModus;
         this.hasClubs = hasClubs;
-        this.createdOn=LocalDateTime.now();
+        this.createdOn = LocalDateTime.now();
 
     }
 

@@ -89,7 +89,6 @@ public class CompRoundServiceImpl implements CompRoundService {
     }
 
 
-
     @Override
     @Transactional
     public List<CompetitionRoundDto> getAll() {

@@ -26,7 +26,7 @@ class TipperServiceImpl implements TipperService {
     }
 
     /**
-     * @param id 
+     * @param id
      * @return
      */
     @Override
@@ -35,7 +35,7 @@ class TipperServiceImpl implements TipperService {
     }
 
     /**
-     * @param dto 
+     * @param dto
      * @return
      */
     @Override
@@ -56,7 +56,7 @@ class TipperServiceImpl implements TipperService {
     }
 
     /**
-     * @param dtos 
+     * @param dtos
      * @return
      */
     @Override
@@ -66,7 +66,7 @@ class TipperServiceImpl implements TipperService {
     }
 
     /**
-     * @param id 
+     * @param id
      * @param dto
      * @return
      */
@@ -77,7 +77,7 @@ class TipperServiceImpl implements TipperService {
     }
 
     /**
-     * @param ids 
+     * @param ids
      */
     @Override
     public void deleteAll(List<Long> ids) {
@@ -85,7 +85,7 @@ class TipperServiceImpl implements TipperService {
     }
 
     /**
-     * @param id 
+     * @param id
      */
     @Override
     public void deleteById(Long id) {
@@ -102,7 +102,7 @@ class TipperServiceImpl implements TipperService {
     }
 
     /**
-     * @param compId 
+     * @param compId
      * @return
      */
     @Override

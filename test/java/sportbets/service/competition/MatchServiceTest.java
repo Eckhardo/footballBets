@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.web.dto.competition.*;
 
 import java.time.LocalDateTime;
@@ -46,8 +47,9 @@ public class MatchServiceTest {
 
     @BeforeEach
     public void setup() {
-        CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, TEST_COMP_FAM, "Description of TestLiga", true, true);
-        CompetitionFamilyDto savedFam = familyService.save(compFamilyDto).orElseThrow();
+        CompetitionFamily competitionFamily = new CompetitionFamily(TEST_COMP_FAM, "2. Deutsche Fussball TestLiga", true, true);
+
+        CompetitionFamily savedFam = familyService.save(competitionFamily).orElseThrow();
         CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, savedFam.getId(), TEST_COMP_FAM);
 
         CompetitionDto savedComp = compService.save(compDto).orElseThrow();

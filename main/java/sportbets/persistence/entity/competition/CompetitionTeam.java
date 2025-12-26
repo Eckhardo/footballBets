@@ -15,7 +15,7 @@ public class CompetitionTeam {
 
 
     @Column(nullable = false)
-    private LocalDateTime createdOn=LocalDateTime.now();
+    private LocalDateTime createdOn = LocalDateTime.now();
 
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_team_id")
@@ -26,11 +26,12 @@ public class CompetitionTeam {
     @JoinColumn(name = "fk_comp_id")
     @NotNull
     private Competition competition;
-     public CompetitionTeam(Team team, Competition competition) {
+
+    public CompetitionTeam(Team team, Competition competition) {
         this.team = team;
-     //   this.team.addCompetitionTeam(this);
+        //   this.team.addCompetitionTeam(this);
         this.competition = competition;
-    //    this.competition.addCompetitionTeam(this);
+        //    this.competition.addCompetitionTeam(this);
     }
 
     public CompetitionTeam() {

@@ -76,7 +76,7 @@ class TipperRoleServiceImpl implements TipperRoleService {
      */
     @Override
     public void deleteAll() {
-         tipperRoleRepo.deleteAll();
+        tipperRoleRepo.deleteAll();
     }
 
     /**

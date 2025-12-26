@@ -39,6 +39,7 @@ public class TipperRole {
     public void setId(Long id) {
         this.id = id;
     }
+
     public Role getRolle() {
         return role;
     }

@@ -3,28 +3,23 @@ package sportbets.service.competition;
 import org.modelmapper.ModelMapper;
 import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.entity.competition.Team;
-import sportbets.web.dto.competition.CompetitionFamilyDto;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface CompFamilyService {
 
-    ModelMapper getModelMapperForFamily();
 
-    Optional<CompetitionFamilyDto> findById(Long id);
+    Optional<CompetitionFamily> findById(Long id);
 
-    Optional<CompetitionFamilyDto> save(CompetitionFamilyDto compFam);
+    Optional<CompetitionFamily> save(CompetitionFamily compFam);
 
-    Optional<CompetitionFamilyDto> updateFamily(Long id, CompetitionFamilyDto compFam);
-
-    List<Team> findTeams(Long id);
-
-    void deleteByName(String name);
+    Optional<CompetitionFamily> updateFamily(Long id, CompetitionFamily compFam);
+  void deleteByName(String name);
 
     void deleteById(Long id);
 
-    List<CompetitionFamilyDto> getAll();
+    List<CompetitionFamily> getAll();
 
     Optional<CompetitionFamily> findByIdTest(Long familyId);
 }

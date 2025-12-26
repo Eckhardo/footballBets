@@ -108,7 +108,6 @@ public class CompTeamServiceImpl implements CompTeamService {
         ModelMapper myModelMapper = MapperUtil.getModelMapperForCompTeam();
         Team team = teamRepo.findById(dto.getTeamId()).orElseThrow(() -> new EntityNotFoundException("Team not found"));
         Competition comp = compRepo.findById(dto.getCompId()).orElseThrow(() -> new EntityNotFoundException("Comp not found"));
-        ;
 
         log.info("update Match dto:: {}", dto);
         Optional<CompetitionTeam> updateModel = compTeamRepo.findById(id);

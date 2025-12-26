@@ -8,12 +8,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
-import sportbets.persistence.entity.competition.Team;
 import sportbets.persistence.repository.competition.CompetitionFamilyRepository;
 import sportbets.service.competition.CompFamilyService;
 import sportbets.web.dto.competition.CompetitionFamilyDto;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -31,14 +29,10 @@ public class CompFamilyServiceImpl implements CompFamilyService {
     }
 
     @Override
-    public List<CompetitionFamilyDto> getAll() {
+    public List<CompetitionFamily> getAll() {
 
-        List<CompetitionFamily> fams = compFamilyRepository.findAll();
-        List<CompetitionFamilyDto> famDtos = new ArrayList<>();
-        fams.forEach(fam -> {
-            famDtos.add(modelMapper.map(fam, CompetitionFamilyDto.class));
-        });
-        return famDtos;
+        return compFamilyRepository.findAll();
+
     }
 
     /**
@@ -61,49 +55,39 @@ public class CompFamilyServiceImpl implements CompFamilyService {
     }
 
     @Override
-    public Optional<CompetitionFamilyDto> findById(Long id) {
-        Optional<CompetitionFamily> model = compFamilyRepository.findById(id);
-        CompetitionFamilyDto famDto = modelMapper.map(model, CompetitionFamilyDto.class);
-        return Optional.of(famDto);
+    public Optional<CompetitionFamily> findById(Long id) {
+       return compFamilyRepository.findById(id);
+
     }
 
     @Override
     @Transactional
-    public Optional<CompetitionFamilyDto> save(CompetitionFamilyDto compFam) {
+    public Optional<CompetitionFamily> save(CompetitionFamily compFam) {
         Optional<CompetitionFamily> savedCompFamily = compFamilyRepository.findByName(compFam.getName());
         if (savedCompFamily.isPresent()) {
             throw new EntityExistsException("CompFamily already exist with given name:" + compFam.getName());
         }
-        CompetitionFamily model = modelMapper.map(compFam, CompetitionFamily.class);
-        CompetitionFamily createdModel = compFamilyRepository.save(model);
-        CompetitionFamilyDto famDto = modelMapper.map(createdModel, CompetitionFamilyDto.class);
-        return Optional.of(famDto);
+        return Optional.of(compFamilyRepository.save(compFam));
+
     }
 
     @Override
     @Transactional
-    public Optional<CompetitionFamilyDto> updateFamily(Long id, CompetitionFamilyDto compFam) {
+    public Optional<CompetitionFamily> updateFamily(Long id, CompetitionFamily compFam) {
         log.info("updateFamily:: {}", compFam);
         Optional<CompetitionFamily> updateModel = compFamilyRepository.findById(id);
 
         if (updateModel.isPresent()) {
-            Optional<CompetitionFamily> updated = updateModel.map(base -> updateFields(base, compFam))
+            return updateModel.map(base -> updateFields(base, compFam))
                     .map(compFamilyRepository::save);
-            CompetitionFamilyDto famDto = modelMapper.map(updated, CompetitionFamilyDto.class);
-            return Optional.of(famDto);
         } else {
             return Optional.empty();
         }
 
     }
 
-    @Override
-    public List<Team> findTeams(Long id) {
-        return compFamilyRepository.findTeamsForCompFamily(id);
-    }
 
-
-    private CompetitionFamily updateFields(CompetitionFamily base, CompetitionFamilyDto updatedFam) {
+    private CompetitionFamily updateFields(CompetitionFamily base, CompetitionFamily updatedFam) {
         base.setName(updatedFam.getName());
         base.setDescription(updatedFam.getDescription());
         base.setHasClubs(updatedFam.isHasClubs());
@@ -123,8 +107,4 @@ public class CompFamilyServiceImpl implements CompFamilyService {
         compFamilyRepository.deleteById(id);
     }
 
-    @Override
-    public ModelMapper getModelMapperForFamily() {
-        return modelMapper;
-    }
 }

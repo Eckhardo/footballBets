@@ -28,7 +28,7 @@ public class TipperRoleDto implements Serializable {
     public TipperRoleDto() {
     }
 
-    public TipperRoleDto(Long id, Long tipperId, String tipperUserName, Long roleId,String roleName) {
+    public TipperRoleDto(Long id, Long tipperId, String tipperUserName, Long roleId, String roleName) {
         this.id = id;
         this.tipperId = tipperId;
         this.tipperUserName = tipperUserName;

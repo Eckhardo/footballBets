@@ -20,6 +20,7 @@ public class CompetitionRoundDto implements Serializable {
     @NotNull(message = " competition id cannot be null")
     private Long compId;
     private String compName;
+
     public CompetitionRoundDto() {
     }
 
@@ -32,7 +33,7 @@ public class CompetitionRoundDto implements Serializable {
     }
 
     public CompetitionRoundDto(Long id, int roundNumber, String name, boolean hasGroups, Long compId, String compName) {
-       this(id,roundNumber,name,hasGroups);
+        this(id, roundNumber, name, hasGroups);
         this.compId = compId;
         this.compName = compName;
     }
@@ -65,10 +66,6 @@ public class CompetitionRoundDto implements Serializable {
         return hasGroups;
     }
 
-    public void setHasGroups(boolean hasGroups) {
-        this.hasGroups = hasGroups;
-    }
-
     public Long getCompId() {
         return compId;
     }
@@ -89,6 +86,10 @@ public class CompetitionRoundDto implements Serializable {
         return hasGroups;
     }
 
+    public void setHasGroups(boolean hasGroups) {
+        this.hasGroups = hasGroups;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -98,7 +99,7 @@ public class CompetitionRoundDto implements Serializable {
                 Objects.equals(this.roundNumber, dto.roundNumber) &&
                 Objects.equals(this.name, dto.name) &&
                 Objects.equals(this.hasGroups, dto.hasGroups) &&
-                Objects.equals(this.compId, dto.compId) ;
+                Objects.equals(this.compId, dto.compId);
     }
 
     @Override
@@ -114,6 +115,6 @@ public class CompetitionRoundDto implements Serializable {
                 "name = " + name + ", " +
                 "hasGroups = " + hasGroups + ", " +
                 "compName = " + compName + ", " +
-                "compId = " + compId +")" ;
+                "compId = " + compId + ")";
     }
 }

@@ -1,7 +1,6 @@
 package sportbets.service.community;
 
 
-
 import sportbets.web.dto.community.TipperDto;
 
 import java.util.List;
@@ -20,6 +19,7 @@ public interface TipperService {
     void deleteAll(List<Long> ids);
 
     void deleteById(Long id);
+
     void deleteByUserName(String userName);
 
     List<TipperDto> getAllFormComp(Long compId);

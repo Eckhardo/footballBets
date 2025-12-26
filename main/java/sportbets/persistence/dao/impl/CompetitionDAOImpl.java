@@ -12,7 +12,6 @@ import sportbets.persistence.entity.competition.Competition;
 import java.util.List;
 
 
-
 /**
  * An alternative to DAOs  specified by  {{@link org.springframework.data.jpa.repository.JpaRepository}}
  * Here we use real DAOs that use the Hibernate Entity Manager directly

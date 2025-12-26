@@ -20,8 +20,9 @@ public class CompRoundController {
 
     private static final Logger log = LoggerFactory.getLogger(CompRoundController.class);
     private final CompRoundService roundService;
-    private final SpieltagService    spieltagService;
-    public CompRoundController(CompRoundService roundService,SpieltagService spieltagService) {
+    private final SpieltagService spieltagService;
+
+    public CompRoundController(CompRoundService roundService, SpieltagService spieltagService) {
         this.roundService = roundService;
         this.spieltagService = spieltagService;
     }
@@ -29,7 +30,7 @@ public class CompRoundController {
     @GetMapping("/rounds/{id}")
     public CompetitionRoundDto findOne(@PathVariable Long id) {
         log.info("CompetitionRoundDto:findOne::" + id);
-        CompetitionRoundDto compDto = roundService.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        CompetitionRoundDto compDto = roundService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         log.info("CompetitionRoundDto found with {}", compDto);
         return compDto;
@@ -44,6 +45,7 @@ public class CompRoundController {
         log.info("Created round {}", createdModel);
         return createdModel;
     }
+
     @GetMapping("/rounds/{roundId}/matchdays")
     public List<SpieltagDto> findAll(@PathVariable Long roundId) {
         log.info("SpieltagDto:findAll::" + roundId);
@@ -55,7 +57,7 @@ public class CompRoundController {
     @GetMapping("/rounds")
     public List<CompetitionRoundDto> findAll() {
         log.info(" CompetitionRoundDto:findAll::");
-        List< CompetitionRoundDto> compRounds = roundService.getAll();
+        List<CompetitionRoundDto> compRounds = roundService.getAll();
         log.info("CompetitionRoundDto found with {}", compRounds);
         return compRounds;
     }

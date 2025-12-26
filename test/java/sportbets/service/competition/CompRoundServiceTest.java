@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import sportbets.persistence.entity.competition.Competition;
+import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.web.dto.competition.CompetitionDto;
 import sportbets.web.dto.competition.CompetitionFamilyDto;
 import sportbets.web.dto.competition.CompetitionRoundDto;
@@ -25,7 +26,7 @@ public class CompRoundServiceTest {
     private static final String TEST_COMP_FAM = "TestLiga";
     private static final String TEST_COMP = "TestLiga: Saison 2025";
     private static final String TEST_COMP_ROUND = "Saison 2025: Hinrunde";
-    CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, TEST_COMP_FAM, "Description of TestLiga", true, true);
+    CompetitionFamily competitionFamily = new CompetitionFamily(TEST_COMP_FAM, "description of testliga", true, true);
     CompetitionDto savedComp = null;
     @Autowired
     private CompFamilyService familyService; // Real service being tested
@@ -37,7 +38,7 @@ public class CompRoundServiceTest {
     @BeforeEach
     public void setup() {
 
-        CompetitionFamilyDto savedFam = familyService.save(compFamilyDto).orElseThrow();
+        CompetitionFamily savedFam = familyService.save(competitionFamily).orElseThrow();
         CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, savedFam.getId(), TEST_COMP_FAM);
 
         savedComp = compService.save(compDto).orElseThrow();

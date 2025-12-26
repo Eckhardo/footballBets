@@ -46,26 +46,6 @@ public class CompFamilyServiceTest {
 
     }
 
-    // JUnit test for saveCompFamily method
-    @DisplayName("JUnit test for saveCompFamily method")
-    // @Test
-    public void givenCompFamilyObject_whenSaveCompFamily_thenReturnCompFamilyObject() {
-        // given - precondition or setup
-        ModelMapper mapper = new ModelMapper();
-        CompetitionFamilyDto famDto = mapper.map(family, CompetitionFamilyDto.class);
-        given(familyRepository.findById(family.getId())).willReturn(Optional.of(family));
-        given(compFamilyService.getModelMapperForFamily().map(famDto, CompetitionFamily.class)).willReturn(family);
-        given(compFamilyService.getModelMapperForFamily().map(family, CompetitionFamilyDto.class)).willReturn(famDto);
-        given(compFamilyService.save(famDto)).willReturn(Optional.of(famDto));
-
-
-        // when -  action or the behaviour that we are going test
-        Optional<CompetitionFamilyDto> savedCompFamily = compFamilyService.save(famDto);
-
-        System.out.println(savedCompFamily);
-        // then - verify the output
-        assertTrue(savedCompFamily.isPresent());
-    }
 
     // JUnit test for saveCompFamily method
     @DisplayName("JUnit test for saveCompFamily method which throws exception")
@@ -75,12 +55,11 @@ public class CompFamilyServiceTest {
         given(familyRepository.findByName(family.getName()))
                 .willReturn(Optional.of(family));
         ModelMapper mapper = new ModelMapper();
-        CompetitionFamilyDto famDto = mapper.map(family, CompetitionFamilyDto.class);
 
 
         // when -  action or the behaviour that we are going test
         org.junit.jupiter.api.Assertions.assertThrows(EntityExistsException.class, () -> {
-            compFamilyService.save(famDto);
+            compFamilyService.save(family);
         });
 
         // then
@@ -98,7 +77,7 @@ public class CompFamilyServiceTest {
         given(familyRepository.findAll()).willReturn(List.of(family, employee1));
 
         // when -  action or the behaviour that we are going test
-        List<CompetitionFamilyDto> employeeList = compFamilyService.getAll();
+        List<CompetitionFamily> employeeList = compFamilyService.getAll();
 
         // then - verify the output
         assertThat(employeeList).isNotNull();
@@ -117,7 +96,7 @@ public class CompFamilyServiceTest {
         given(familyRepository.findAll()).willReturn(Collections.emptyList());
 
         // when -  action or the behaviour that we are going test
-        List<CompetitionFamilyDto> compFamilyList = compFamilyService.getAll();
+        List<CompetitionFamily> compFamilyList = compFamilyService.getAll();
 
         // then - verify the output
         assertThat(compFamilyList).isEmpty();
@@ -132,7 +111,7 @@ public class CompFamilyServiceTest {
         given(familyRepository.findById(1L)).willReturn(Optional.of(family));
 
         // when
-        Optional<CompetitionFamilyDto> savedCompFamily = compFamilyService.findById(family.getId());
+        Optional<CompetitionFamily> savedCompFamily = compFamilyService.findById(family.getId());
         assertTrue(savedCompFamily.isPresent());
 
         // then
@@ -150,8 +129,8 @@ public class CompFamilyServiceTest {
         family.setDescription("Description of PL");
         // when -  action or the behaviour that we are going test
         ModelMapper mapper = new ModelMapper();
-        CompetitionFamilyDto famDto = mapper.map(family, CompetitionFamilyDto.class);
-        Optional<CompetitionFamilyDto> updatedCompFamily = compFamilyService.updateFamily(family.getId(), famDto);
+
+        Optional<CompetitionFamily> updatedCompFamily = compFamilyService.updateFamily(family.getId(), family);
         // then - verify the output
         updatedCompFamily.ifPresent(compFamily -> {
             assertThat(compFamily.getName()).isEqualTo(family.getName());

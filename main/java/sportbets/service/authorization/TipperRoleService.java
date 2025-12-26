@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface TipperRoleService {
     List<TipperRoleDto> getAllForTipper(Long tipperId);
-;
+
     Optional<TipperRoleDto> save(TipperRoleDto dto);
 
 

@@ -14,7 +14,9 @@ public interface TeamService {
     Optional<TeamDto> updateTeam(Long id, TeamDto compFam);
 
     void deleteById(Long id);
-    void deleteByName(String name );
+
+    void deleteByName(String name);
+
     List<TeamDto> getAll();
 
     Optional<Team> findByName(String name);
