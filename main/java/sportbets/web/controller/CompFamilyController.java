@@ -42,9 +42,9 @@ public class CompFamilyController {
     @PostMapping("/families")
     @ResponseStatus(HttpStatus.CREATED)
     public CompetitionFamilyDto post(@RequestBody @Valid CompetitionFamilyDto newFam) {
-        log.info("CompFamilyController.create::" + newFam.toString());
+        log.info("CompFamilyController.create::" + newFam);
         CompetitionFamily model = modelMapper.map(newFam, CompetitionFamily.class);
-        CompetitionFamily createdModel = compFamilyService.save(model).orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
+        CompetitionFamily createdModel = compFamilyService.save(model).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         CompetitionFamilyDto famDto = modelMapper.map(createdModel, CompetitionFamilyDto.class);
         log.info("return save::" + famDto);
         return famDto;

@@ -1,5 +1,6 @@
 package sportbets.service.competition.impl;
 
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -8,13 +9,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.authorization.CompetitionRole;
 import sportbets.persistence.entity.competition.Competition;
+import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.entity.competition.CompetitionRound;
 import sportbets.persistence.entity.competition.Team;
 import sportbets.persistence.repository.competition.CompetitionFamilyRepository;
 import sportbets.persistence.repository.competition.CompetitionRepository;
 import sportbets.service.competition.CompService;
 import sportbets.web.dto.MapperUtil;
-import sportbets.web.dto.competition.CompetitionDto;
 import sportbets.web.dto.competition.CompetitionRoundDto;
 import sportbets.web.dto.competition.TeamDto;
 
@@ -41,49 +42,38 @@ public class CompServiceImpl implements CompService {
 
     @Override
     @Transactional
-    public Optional<CompetitionDto> findById(Long id) {
-        Optional<Competition> model = compRepository.findById(id);
-        ModelMapper modelMapper = MapperUtil.getModelMapperForFamily();
-        log.info("Competition found with {}", model);
-        CompetitionDto compDto = modelMapper.map(model, CompetitionDto.class);
-        return Optional.of(compDto);
+    public Optional<Competition> findById(Long id) {
+        return  compRepository.findById(id);
+
     }
 
     @Override
     @Transactional
-    public Optional<CompetitionDto> save(CompetitionDto comp) {
-        ModelMapper myModelMapper = MapperUtil.getModelMapperForFamily();
-        Competition model = myModelMapper.map(comp, Competition.class);
+    public Competition save(Competition comp) {
 
+        Optional<Competition> competition = compRepository.findByName(comp.getName());
+        if (competition.isPresent()) {
+            throw new EntityExistsException("Comp  already exist with given name:" + comp.getName());
+        }
+        return compRepository.save(comp);
 
-        log.info("Competition saved with {}", model);
-        Competition createdModel = compRepository.save(model);
-
-
-        CompetitionDto compDto = modelMapper.map(createdModel, CompetitionDto.class);
-        log.info("Competition RETURN do {}", compDto);
-        return Optional.of(compDto);
     }
 
     @Override
     @Transactional
-    public Optional<CompetitionDto> updateComp(Long id, CompetitionDto updatedCompDto) {
-        ModelMapper myModelMapper = MapperUtil.getModelMapperForFamily();
+    public Competition updateComp(Long id, Competition comp) {
 
 
-        log.info("updateComp  with {}", updatedCompDto);
+        log.info("updateComp  with {}", comp);
         Optional<Competition> updateModel = compRepository.findById(id);
-
-        if (updateModel.isPresent()) {
-            Optional<Competition> updated = updateModel.map(base -> updateFields(base, updatedCompDto))
-                    .map(compRepository::save);
-            CompetitionDto compDto = modelMapper.map(updated, CompetitionDto.class);
-            log.info("Competition updated  RETURN dto {}", compDto);
-            return Optional.ofNullable(compDto);
-
+        if (updateModel.isEmpty()) {
+            throw new EntityExistsException("Comp  already exist with given name:" + comp.getName());
         }
 
-        return Optional.empty();
+        Competition updatedComp = updateFields(updateModel.get(), comp);
+        log.info("updated Comp  with {}", updatedComp);
+        return compRepository.save(updatedComp);
+
     }
 
 
@@ -94,16 +84,10 @@ public class CompServiceImpl implements CompService {
     }
 
     @Override
-    @Transactional
-    public List<CompetitionDto> getAll() {
+    public List<Competition> getAll() {
 
-        List<Competition> comps = compRepository.findAll();
-        List<CompetitionDto> competitionDtos = new ArrayList<>();
-        ModelMapper myMapper = MapperUtil.getModelMapperForFamily();
-        comps.forEach(comp -> {
-            competitionDtos.add(myMapper.map(comp, CompetitionDto.class));
-        });
-        return competitionDtos;
+       return compRepository.findAll();
+
     }
 
     @Override
@@ -142,7 +126,7 @@ public class CompServiceImpl implements CompService {
         return roundDtos;
     }
 
-    private Competition updateFields(Competition base, CompetitionDto updatedComp) {
+    private Competition updateFields(Competition base, Competition updatedComp) {
         base.setName(updatedComp.getName());
         base.setDescription(updatedComp.getDescription());
         base.setWinMultiplicator(updatedComp.getWinMultiplicator());

@@ -33,7 +33,7 @@ class TipperRoleServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(TipperRoleServiceTest.class);
     CompetitionFamily competitionFamily =  new CompetitionFamily(TEST_COMP_FAM, "description of testliga", true, true);
-    CompetitionDto savedComp = null;
+    Competition savedComp = null;
     TipperDto savedTipper;
     @Autowired
     private CompFamilyService familyService;
@@ -52,8 +52,8 @@ class TipperRoleServiceTest {
     public void setup() {
 
         CompetitionFamily savedFam = familyService.save(competitionFamily).orElseThrow();
-        CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, savedFam.getId(), TEST_COMP_FAM);
-        savedComp = compService.save(compDto).orElseThrow();
+        Competition competition = new Competition( TEST_COMP, "Description of Competition", 3, 1, savedFam);
+        savedComp = compService.save(competition);
         assertNotNull(savedComp);
 
 

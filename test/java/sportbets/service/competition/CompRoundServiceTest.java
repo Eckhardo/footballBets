@@ -27,7 +27,7 @@ public class CompRoundServiceTest {
     private static final String TEST_COMP = "TestLiga: Saison 2025";
     private static final String TEST_COMP_ROUND = "Saison 2025: Hinrunde";
     CompetitionFamily competitionFamily = new CompetitionFamily(TEST_COMP_FAM, "description of testliga", true, true);
-    CompetitionDto savedComp = null;
+    Competition savedComp = null;
     @Autowired
     private CompFamilyService familyService; // Real service being tested
     @Autowired
@@ -39,9 +39,9 @@ public class CompRoundServiceTest {
     public void setup() {
 
         CompetitionFamily savedFam = familyService.save(competitionFamily).orElseThrow();
-        CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, savedFam.getId(), TEST_COMP_FAM);
+        Competition competition = new Competition( TEST_COMP, "Description of Competition", 3, 1, savedFam);
 
-        savedComp = compService.save(compDto).orElseThrow();
+        savedComp = compService.save(competition);
     }
 
     @AfterEach

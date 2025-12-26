@@ -32,7 +32,7 @@ public class CompetitionRoleServiceTest {
     private static final String TEST_COMP = "TestLiga: Saison 2025";
     private static final String TEST_USERNAME = "TEST_USER";
     CompetitionFamily competitionFamily = new CompetitionFamily(TEST_COMP_FAM, "description of testliga", true, true);
-    CompetitionDto savedComp = null;
+    Competition savedComp = null;
     TipperDto savedTipper = null;
     @Autowired
     private CompFamilyService familyService; // Real service being tested
@@ -48,8 +48,8 @@ public class CompetitionRoleServiceTest {
     public void setup() {
 
         CompetitionFamily savedFam = familyService.save(competitionFamily).orElseThrow();
-        CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, savedFam.getId(), TEST_COMP_FAM);
-        savedComp = compService.save(compDto).orElseThrow();
+        Competition competition =new Competition( TEST_COMP, "Description of Competition", 3, 1, savedFam);
+        savedComp = compService.save(competition);
         assertNotNull(savedComp);
         TipperDto testTipper = new TipperDto(null, "Eckhard", "Kirschning", TEST_USERNAME, "root", "hint", "eki@gmx.de", savedComp.getId());
         savedTipper = tipperService.save(testTipper).orElseThrow();

@@ -1,17 +1,24 @@
 package sportbets.web.controller;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import sportbets.persistence.entity.competition.Competition;
+import sportbets.persistence.entity.competition.CompetitionFamily;
+import sportbets.service.competition.CompFamilyService;
 import sportbets.service.competition.CompService;
+import sportbets.web.dto.MapperUtil;
 import sportbets.web.dto.competition.CompetitionDto;
 import sportbets.web.dto.competition.CompetitionRoundDto;
 import sportbets.web.dto.competition.TeamDto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -19,26 +26,38 @@ public class CompController {
 
     private static final Logger log = LoggerFactory.getLogger(CompController.class);
     private final CompService compService;
+    private final ModelMapper modelMapper;
+    private final CompFamilyService compFamilyService;
 
-
-    public CompController(CompService compService) {
+    public CompController(CompService compService, ModelMapper modelMapper, CompFamilyService compFamilyService) {
         this.compService = compService;
 
+        this.modelMapper = modelMapper;
+        this.compFamilyService = compFamilyService;
     }
 
     @GetMapping("/competitions")
     public List<CompetitionDto> findAll() {
 
-        return compService.getAll();
+        List<Competition> competitions = compService.getAll();
+        List<CompetitionDto> competitionDtos = new ArrayList<>();
+        ModelMapper myMapper = MapperUtil.getModelMapperForFamily();
+        competitions.forEach(comp -> {
+            competitionDtos.add(myMapper.map(comp, CompetitionDto.class));
+        });
+        return competitionDtos;
     }
 
     @GetMapping("/competitions/{id}")
     public CompetitionDto findOne(@PathVariable Long id) {
         log.info("CompController:findOne::" + id);
-        CompetitionDto compDto = compService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Competition model = compService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        CompetitionFamily fam = compFamilyService.findById(model.getCompetitionFamily().getId()).orElseThrow(() -> new EntityNotFoundException("compFam not found "));
+        model.setCompetitionFamily(fam);
+        ModelMapper modelMapper = MapperUtil.getModelMapperForFamily();
+        log.info("Competition found with {}", model);
+        return modelMapper.map(model, CompetitionDto.class);
 
-        log.info("CompetitionDto found with {}", compDto);
-        return compDto;
     }
 
     @GetMapping("/competitions/{id}/teams")
@@ -61,19 +80,30 @@ public class CompController {
     @ResponseStatus(HttpStatus.CREATED)
     public CompetitionDto post(@RequestBody @Valid CompetitionDto newComp) {
         log.info("New competition {}", newComp);
+        Competition model = modelMapper.map(newComp, Competition.class);
+        log.info("Competition saved with {}", model);
+        Competition createdModel = compService.save(model);
 
-        CompetitionDto createdModel = this.compService.save(newComp).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
-        log.info("Created competition {}", createdModel);
-        return createdModel;
+        ModelMapper myModelMapper = MapperUtil.getModelMapperForFamily();
+        CompetitionDto createdDto = myModelMapper.map(createdModel, CompetitionDto.class);
+        log.info("Competition RETURN do {}", createdDto);
+        return createdDto;
     }
 
     @PutMapping(value = "/competitions/{id}")
     public CompetitionDto update(@PathVariable Long id, @RequestBody CompetitionDto compDto) {
+        Competition model = modelMapper.map(compDto, Competition.class);
+        CompetitionFamily fam = compFamilyService.findById(compDto.getFamilyId()).orElseThrow(() -> new EntityNotFoundException("compFam not found "));
+        Competition updatedComp = this.compService.updateComp(id, model);
+        updatedComp.setCompetitionFamily(fam);
+        log.info("Updated competition {}", updatedComp);
 
-        CompetitionDto createdModel = this.compService.updateComp(id, compDto)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        log.info("Updated competition {}", createdModel);
-        return createdModel;
+        ModelMapper myModelMapper = MapperUtil.getModelMapperForFamily();
+        CompetitionDto updatedDto = myModelMapper.map(updatedComp, CompetitionDto.class);
+        log.info("Competition RETURN do {}", updatedDto);
+        return updatedDto;
+
+
     }
 
     @DeleteMapping(value = "/competitions/{id}")

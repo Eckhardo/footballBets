@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.repository.competition.CompetitionRepository;
 import sportbets.web.dto.competition.CompetitionDto;
@@ -35,7 +36,7 @@ public class CompTeamServiceTest {
 
     TeamDto teamDto = new TeamDto(null, TEAM_NAME, "Braunschweig");
     TeamDto teamDto1 = new TeamDto(null, TEAM_NAME_2, "Kiel");
-    CompetitionDto savedComp = null;
+    Competition savedComp = null;
     TeamDto savedTeam1 = null;
     TeamDto savedTeam2 = null;
     @Autowired
@@ -52,8 +53,8 @@ public class CompTeamServiceTest {
         log.info("\n");
         log.info("Delete All Test data");
         CompetitionFamily savedFam = familyService.save(competitionFamily).orElseThrow();
-        CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, savedFam.getId(), TEST_COMP_FAM);
-        savedComp = compService.save(compDto).orElseThrow();
+        Competition compDto =new Competition( TEST_COMP, "Description of Competition", 3, 1, savedFam);
+        savedComp = compService.save(compDto);
         savedTeam1 = teamService.save(teamDto).orElseThrow();
         savedTeam2 = teamService.save(teamDto1).orElseThrow();
     }

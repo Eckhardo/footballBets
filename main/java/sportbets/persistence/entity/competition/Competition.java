@@ -167,7 +167,7 @@ public class Competition {
                 ", winMultiplicator=" + winMultiplicator +
                 ", remisMultiplicator=" + remisMultiplicator +
                 ", createdOn=" + createdOn +
-                ", familyId=" + (competitionFamily.getId() == null ? null : competitionFamily.getId().toString()) +
-                '}';
+                ", family [=" + (competitionFamily == null ? null : competitionFamily) +
+                "]}";
     }
 }

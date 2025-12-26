@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
+import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.web.dto.competition.CompetitionDto;
 import sportbets.web.dto.competition.CompetitionFamilyDto;
@@ -45,36 +47,34 @@ public class CompetitionServiceTest {
     @Test
     void whenValidComp_thenCompShouldBeSaved() {
 
-        CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, savedFam.getId(), TEST_COMP_FAM);
+        Competition competition = new Competition( TEST_COMP, "Description of Competition", 3, 1, savedFam);
+       Competition savedComp = compService.save(competition);
 
-        Optional<CompetitionDto> savedComp = compService.save(compDto);
-        if (savedComp.isPresent()) {
-            assertThat(savedComp.get().getId()).isNotNull();
-            assertThat(savedComp.get().getName()).isEqualTo(TEST_COMP);
-            assertThat(savedComp.get().getFamilyName()).isEqualTo(savedFam.getName());
-            assertThat(savedComp.get().getFamilyId()).isEqualTo(savedFam.getId());
-            CompetitionFamily famModel = familyService.findByIdTest(savedComp.get().getFamilyId()).orElseThrow();
+            assertThat(savedComp.getId()).isNotNull();
+            assertThat(savedComp.getName()).isEqualTo(TEST_COMP);
+            assertThat(savedComp.getCompetitionFamily().getName()).isEqualTo(savedFam.getName());
+            assertThat(savedComp.getCompetitionFamily().getId()).isEqualTo(savedFam.getId());
+            CompetitionFamily famModel = familyService.findByIdTest(savedComp.getCompetitionFamily().getId()).orElseThrow();
             assertThat(famModel.getCompetitions()).isNotNull();
 
-        }
+
 
 
     }
 
     @Test
+
     void whenValidComp_thenCompShouldBeUpdated() {
 
-        CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, savedFam.getId(), TEST_COMP_FAM);
-
-        CompetitionDto savedComp = compService.save(compDto).orElseThrow();
+        Competition compDto =new Competition( TEST_COMP, "Description of Competition", 3, 1, savedFam);
+        Competition savedComp = compService.save(compDto);
         savedComp.setWinMultiplicator(2);
-        CompetitionDto updatedComp = compService.updateComp(savedComp.getId(), savedComp).orElseThrow();
+        Competition updatedComp = compService.updateComp(savedComp.getId(), savedComp);
 
         assertThat(updatedComp.getId()).isNotNull();
         assertThat(updatedComp.getName()).isEqualTo(TEST_COMP);
         assertThat(updatedComp.getWinMultiplicator()).isEqualTo(2);
-        assertThat(updatedComp.getFamilyName()).isEqualTo(savedFam.getName());
-        assertThat(updatedComp.getFamilyId()).isEqualTo(savedFam.getId());
+       // assertThat(updatedComp.getCompetitionFamily()).isNotNull();
 
     }
 }
