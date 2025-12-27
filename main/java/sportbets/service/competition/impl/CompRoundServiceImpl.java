@@ -22,12 +22,9 @@ public class CompRoundServiceImpl implements CompRoundService {
     private final CompetitionRoundRepository roundRepository;
     private final CompetitionRepository compRepository;
 
-    private final ModelMapper modelMapper;
-
     public CompRoundServiceImpl(CompetitionRoundRepository roundRepository, CompetitionRepository compRepository, ModelMapper modelMapper) {
         this.roundRepository = roundRepository;
         this.compRepository = compRepository;
-        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -39,8 +36,7 @@ public class CompRoundServiceImpl implements CompRoundService {
     @Override
     @Transactional
     public CompetitionRound save(CompetitionRound compRound) {
-        log.info("save compRound  with {}", compRound);
-        Optional<CompetitionRound> competition = roundRepository.findByName(compRound.getName());
+         Optional<CompetitionRound> competition = roundRepository.findByName(compRound.getName());
         if (competition.isPresent()) {
             throw new EntityExistsException("Comp Round already exist with given name:" + compRound.getName());
         }
@@ -63,7 +59,7 @@ public class CompRoundServiceImpl implements CompRoundService {
         log.info("updateCompRound  with {}", compRound);
         Optional<CompetitionRound> updateModel = roundRepository.findById(id);
         if (updateModel.isEmpty()) {
-            throw new EntityExistsException("Comp  already exist with given name:" + compRound.getName());
+            throw new EntityExistsException("Round does not exist with given id:" + compRound.getId());
         }
 
         CompetitionRound updatedCompRound = updateFields(updateModel.get(), compRound);

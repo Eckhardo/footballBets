@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
+import sportbets.persistence.entity.competition.CompetitionRound;
 import sportbets.service.competition.CompFamilyService;
 import sportbets.service.competition.CompService;
 import sportbets.web.dto.MapperUtil;
@@ -71,9 +72,13 @@ public class CompController {
     @GetMapping("/competitions/{id}/rounds")
     public List<CompetitionRoundDto> findAllRounds(@PathVariable Long id) {
         log.info(" CompetitionRoundDto:findAll for comp::");
-        List<CompetitionRoundDto> compRounds = compService.getAllFormComp(id);
-        log.info("CompetitionRoundDto found with {}", compRounds);
-        return compRounds;
+        List<CompetitionRound> compRounds = compService.getAllFormComp(id);
+        List<CompetitionRoundDto> roundDtos = new ArrayList<>();
+        ModelMapper myMapper = MapperUtil.getModelMapperForCompetition();
+        compRounds.forEach(comp -> {
+            roundDtos.add(myMapper.map(comp, CompetitionRoundDto.class));
+        });
+        return roundDtos;
     }
 
     @PostMapping("/competitions")
@@ -84,6 +89,7 @@ public class CompController {
 
         Competition model = modelMapper.map(newComp, Competition.class);
         model.setCompetitionFamily(fam);
+
         log.info("Competition saved with {}", model);
         Competition createdModel = compService.save(model);
 

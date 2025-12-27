@@ -1,7 +1,7 @@
 package sportbets.service.competition;
 
 import sportbets.persistence.entity.competition.Competition;
-import sportbets.web.dto.competition.CompetitionRoundDto;
+import sportbets.persistence.entity.competition.CompetitionRound;
 import sportbets.web.dto.competition.TeamDto;
 
 import java.util.List;
@@ -29,7 +29,7 @@ public interface CompService {
 
     Competition findByIdJoinFetchRounds(Long id);
 
-    List<CompetitionRoundDto> getAllFormComp(Long compId);
+    List<CompetitionRound> getAllFormComp(Long compId);
 
     Optional<Competition> findByIdTest(Long id);
 }

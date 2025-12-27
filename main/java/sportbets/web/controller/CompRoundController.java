@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionRound;
+import sportbets.persistence.entity.competition.Spieltag;
 import sportbets.service.competition.CompRoundService;
 import sportbets.service.competition.CompService;
 import sportbets.service.competition.SpieltagService;
@@ -57,6 +58,7 @@ public class CompRoundController {
 
         CompetitionRound model = modelMapper.map(roundDto, CompetitionRound.class);
         model.setCompetition(comp);
+
         CompetitionRound createdModel = roundService.save(model);
         ModelMapper myModelMapper = MapperUtil.getModelMapperForCompetition();
         CompetitionRoundDto createdDto = myModelMapper.map(createdModel, CompetitionRoundDto.class);
@@ -67,9 +69,13 @@ public class CompRoundController {
     @GetMapping("/rounds/{roundId}/matchdays")
     public List<SpieltagDto> findAll(@PathVariable Long roundId) {
         log.info("SpieltagDto:findAll::" + roundId);
-        List<SpieltagDto> spieltagDto = spieltagService.getAllForRound(roundId);
-        log.info("SpieltagDto found with {}", spieltagDto);
-        return spieltagDto;
+        List<Spieltag> spieltags = spieltagService.getAllForRound(roundId);
+        List<SpieltagDto> spieltagDtos = new ArrayList<>();
+        ModelMapper myMapper = MapperUtil.getModelMapperForCompetitionRound();
+        spieltags.forEach(comp -> {
+            spieltagDtos.add(myMapper.map(comp, SpieltagDto.class));
+        });
+        return spieltagDtos;
     }
 
     @GetMapping("/rounds")

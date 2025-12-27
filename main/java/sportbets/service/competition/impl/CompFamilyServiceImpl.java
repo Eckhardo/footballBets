@@ -1,7 +1,6 @@
 package sportbets.service.competition.impl;
 
 import jakarta.persistence.EntityExistsException;
-import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -10,7 +9,6 @@ import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.repository.competition.CompetitionFamilyRepository;
 import sportbets.service.competition.CompFamilyService;
-import sportbets.web.dto.competition.CompetitionFamilyDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,11 +19,10 @@ public class CompFamilyServiceImpl implements CompFamilyService {
 
     private static final Logger log = LoggerFactory.getLogger(CompFamilyServiceImpl.class);
     private final CompetitionFamilyRepository compFamilyRepository;
-    private final ModelMapper modelMapper;
 
-    public CompFamilyServiceImpl(CompetitionFamilyRepository compFamilyRepository, ModelMapper modelMapper) {
+    public CompFamilyServiceImpl(CompetitionFamilyRepository compFamilyRepository) {
         this.compFamilyRepository = compFamilyRepository;
-        this.modelMapper = modelMapper;
+
     }
 
     @Override

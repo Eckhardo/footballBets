@@ -1,7 +1,6 @@
 package sportbets.service.competition.impl;
 
 import jakarta.persistence.EntityExistsException;
-import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,14 +8,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.authorization.CompetitionRole;
 import sportbets.persistence.entity.competition.Competition;
-import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.entity.competition.CompetitionRound;
 import sportbets.persistence.entity.competition.Team;
-import sportbets.persistence.repository.competition.CompetitionFamilyRepository;
 import sportbets.persistence.repository.competition.CompetitionRepository;
 import sportbets.service.competition.CompService;
 import sportbets.web.dto.MapperUtil;
-import sportbets.web.dto.competition.CompetitionRoundDto;
 import sportbets.web.dto.competition.TeamDto;
 
 import java.util.ArrayList;
@@ -29,15 +25,12 @@ public class CompServiceImpl implements CompService {
 
     private static final Logger log = LoggerFactory.getLogger(CompServiceImpl.class);
     private final CompetitionRepository compRepository;
-    private final CompetitionFamilyRepository famRepository;
 
 
-    private final ModelMapper modelMapper;
 
-    public CompServiceImpl(CompetitionRepository compRepository, CompetitionFamilyRepository famRepository, ModelMapper modelMapper) {
+    public CompServiceImpl(CompetitionRepository compRepository) {
         this.compRepository = compRepository;
-        this.famRepository = famRepository;
-        this.modelMapper = modelMapper;
+
     }
 
     @Override
@@ -124,15 +117,9 @@ public class CompServiceImpl implements CompService {
 
     @Override
     @Transactional
-    public List<CompetitionRoundDto> getAllFormComp(Long compId) {
-        Competition comp = compRepository.findById(compId).orElseThrow(() -> new EntityNotFoundException("Comp not found"));
-        List<CompetitionRound> rounds = compRepository.findAllForComp(compId);
-        List<CompetitionRoundDto> roundDtos = new ArrayList<>();
-        ModelMapper myMapper = MapperUtil.getModelMapperForCompetition();
-        rounds.forEach(round -> {
-            roundDtos.add(myMapper.map(round, CompetitionRoundDto.class));
-        });
-        return roundDtos;
+    public List<CompetitionRound> getAllFormComp(Long compId) {
+       return  compRepository.findAllForComp(compId);
+
     }
 
     private Competition updateFields(Competition base, Competition updatedComp) {

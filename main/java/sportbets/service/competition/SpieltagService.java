@@ -1,22 +1,22 @@
 package sportbets.service.competition;
 
-import sportbets.web.dto.competition.SpieltagDto;
+import sportbets.persistence.entity.competition.Spieltag;
 
 import java.util.List;
 import java.util.Optional;
 
 
 public interface SpieltagService {
-    Optional<SpieltagDto> findById(Long id);
+    Optional<Spieltag> findById(Long id);
 
-    Optional<SpieltagDto> save(SpieltagDto spieltag);
+    Spieltag save(Spieltag spieltag);
 
-    Optional<SpieltagDto> updateMatchDay(Long id, SpieltagDto spieltag);
+    Optional<Spieltag> updateMatchDay(Long id, Spieltag spieltag);
 
     void deleteById(Long id);
 
-    List<SpieltagDto> getAllForRound(Long id);
+    List<Spieltag> getAllForRound(Long id);
 
-    List<SpieltagDto> getAll();
+    List<Spieltag> getAll();
 
 }

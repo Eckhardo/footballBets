@@ -11,6 +11,7 @@ import org.springframework.test.context.ActiveProfiles;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.entity.competition.CompetitionRound;
+import sportbets.persistence.entity.competition.Spieltag;
 import sportbets.web.dto.competition.*;
 
 import java.time.LocalDateTime;
@@ -31,7 +32,7 @@ public class MatchServiceTest {
     private static final String TEAM_NAME_2 = "Holstein Kiel";
     TeamDto savedTeam1 = null;
     TeamDto savedTeam2 = null;
-    SpieltagDto savedMatchday = null;
+    Spieltag savedMatchday = null;
     @Autowired
     private CompFamilyService familyService; // Real service being tested
     @Autowired
@@ -57,8 +58,8 @@ public class MatchServiceTest {
         Competition savedComp = compService.save(competition);
         CompetitionRound compRound =  new CompetitionRound(1, TEST_COMP_ROUND, savedComp, false);
         CompetitionRound savedCompRound = compRoundService.save(compRound);
-        SpieltagDto matchDayDto = new SpieltagDto(null, TEST_MATCH_DAY, LocalDateTime.now(), savedCompRound.getId(), savedCompRound.getName());
-        savedMatchday = spieltagService.save(matchDayDto).orElseThrow();
+        Spieltag matchDayDto =  new Spieltag(1, LocalDateTime.now(), savedCompRound);
+        savedMatchday = spieltagService.save(matchDayDto);
         TeamDto teamDto = new TeamDto(null, TEAM_NAME, "Braunschweig");
         TeamDto teamDto1 = new TeamDto(null, TEAM_NAME_2, "Kiel");
         savedTeam1 = teamService.save(teamDto).orElseThrow();
