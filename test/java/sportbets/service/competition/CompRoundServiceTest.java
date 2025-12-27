@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
+import sportbets.persistence.entity.competition.CompetitionRound;
 import sportbets.web.dto.competition.CompetitionDto;
 import sportbets.web.dto.competition.CompetitionFamilyDto;
 import sportbets.web.dto.competition.CompetitionRoundDto;
@@ -56,33 +57,33 @@ public class CompRoundServiceTest {
     @Test
     void whenValidCompRound_thenCompRoundShouldBeSaved() {
 
-        CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, TEST_COMP_ROUND, false, savedComp.getId(), savedComp.getName());
-        Optional<CompetitionRoundDto> savedCompRound = compRoundService.save(compRoundDto);
-        if (savedCompRound.isPresent()) {
-            assertThat(savedCompRound.get().getId()).isNotNull();
-            assertThat(savedCompRound.get().getName()).isEqualTo(TEST_COMP_ROUND);
-            assertThat(savedCompRound.get().getCompName()).isEqualTo(savedComp.getName());
-            assertThat(savedCompRound.get().getCompId()).isEqualTo(savedComp.getId());
+        CompetitionRound compRound =new CompetitionRound(1, TEST_COMP_ROUND, savedComp, false);
+        CompetitionRound savedCompRound = compRoundService.save(compRound);
+
+            assertThat(savedCompRound.getId()).isNotNull();
+            assertThat(savedCompRound.getName()).isEqualTo(TEST_COMP_ROUND);
+            assertThat(savedCompRound.getCompetition().getName()).isEqualTo(savedComp.getName());
+            assertThat(savedCompRound.getCompetition().getId()).isEqualTo(savedComp.getId());
             // check for ref inegrity
-            Competition compModel = compService.findByIdTest(savedCompRound.get().getCompId()).orElseThrow();
+            Competition compModel = compService.findByIdTest(savedCompRound.getCompetition().getId()).orElseThrow();
             assertThat(compModel.getCompetitionRounds()).isNotNull();
 
-        }
+
     }
 
     @Test
     void whenValidCompRound_thenCompRoundShouldBeUpdated() {
 
-        CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, TEST_COMP_ROUND, false, savedComp.getId(), savedComp.getName());
-        CompetitionRoundDto savedRound = compRoundService.save(compRoundDto).orElseThrow();
+        CompetitionRound compRound = new CompetitionRound(1, TEST_COMP_ROUND, savedComp, false);
+        CompetitionRound savedRound = compRoundService.save(compRound);
         savedRound.setRoundNumber(2);
-        CompetitionRoundDto updatedCompRound = compRoundService.updateRound(savedRound.getId(), savedRound).orElseThrow();
+        CompetitionRound updatedCompRound = compRoundService.updateRound(savedRound.getId(), savedRound).orElseThrow();
 
         assertThat(updatedCompRound.getId()).isNotNull();
         assertThat(updatedCompRound.getName()).isEqualTo(TEST_COMP_ROUND);
         assertThat(updatedCompRound.getRoundNumber()).isEqualTo(2);
-        assertThat(updatedCompRound.getCompName()).isEqualTo(savedComp.getName());
-        assertThat(updatedCompRound.getCompId()).isEqualTo(savedComp.getId());
+        assertThat(updatedCompRound.getCompetition().getName()).isEqualTo(savedComp.getName());
+        assertThat(updatedCompRound.getCompetition().getId()).isEqualTo(savedComp.getId());
 
     }
 

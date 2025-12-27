@@ -80,7 +80,10 @@ public class CompController {
     @ResponseStatus(HttpStatus.CREATED)
     public CompetitionDto post(@RequestBody @Valid CompetitionDto newComp) {
         log.info("New competition {}", newComp);
+        CompetitionFamily fam = compFamilyService.findById(newComp.getFamilyId()).orElseThrow(() -> new EntityNotFoundException("compFam not found "));
+
         Competition model = modelMapper.map(newComp, Competition.class);
+        model.setCompetitionFamily(fam);
         log.info("Competition saved with {}", model);
         Competition createdModel = compService.save(model);
 
@@ -94,6 +97,7 @@ public class CompController {
     public CompetitionDto update(@PathVariable Long id, @RequestBody CompetitionDto compDto) {
         Competition model = modelMapper.map(compDto, Competition.class);
         CompetitionFamily fam = compFamilyService.findById(compDto.getFamilyId()).orElseThrow(() -> new EntityNotFoundException("compFam not found "));
+        model.setCompetitionFamily(fam);
         Competition updatedComp = this.compService.updateComp(id, model);
         updatedComp.setCompetitionFamily(fam);
         log.info("Updated competition {}", updatedComp);

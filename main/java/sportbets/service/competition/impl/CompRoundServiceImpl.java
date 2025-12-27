@@ -1,6 +1,6 @@
 package sportbets.service.competition.impl;
 
-import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.EntityExistsException;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,10 +11,7 @@ import sportbets.persistence.entity.competition.CompetitionRound;
 import sportbets.persistence.repository.competition.CompetitionRepository;
 import sportbets.persistence.repository.competition.CompetitionRoundRepository;
 import sportbets.service.competition.CompRoundService;
-import sportbets.web.dto.MapperUtil;
-import sportbets.web.dto.competition.CompetitionRoundDto;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,45 +32,43 @@ public class CompRoundServiceImpl implements CompRoundService {
 
     @Override
     @Transactional
-    public Optional<CompetitionRoundDto> findById(Long id) {
-        Optional<CompetitionRound> model = roundRepository.findById(id);
-        ModelMapper modelMapper = MapperUtil.getModelMapperForCompetition();
-        CompetitionRoundDto compRoundDto = modelMapper.map(model, CompetitionRoundDto.class);
-        return Optional.of(compRoundDto);
+    public Optional<CompetitionRound> findById(Long id) {
+        return roundRepository.findById(id);
     }
 
     @Override
     @Transactional
-    public Optional<CompetitionRoundDto> save(CompetitionRoundDto compRoundDto) {
-        Competition comp = compRepository.findById(compRoundDto.getCompId()).orElseThrow(() -> new EntityNotFoundException("Comp not found"));
-
-
-        CompetitionRound model = modelMapper.map(compRoundDto, CompetitionRound.class);
-        model.setCompetition(comp);
-        CompetitionRound createdModel = roundRepository.save(model);
-        ModelMapper myModelMapper = MapperUtil.getModelMapperForCompetition();
-        CompetitionRoundDto createdDto = myModelMapper.map(createdModel, CompetitionRoundDto.class);
-        return Optional.of(createdDto);
-
-    }
-
-    @Override
-    @Transactional
-    public Optional<CompetitionRoundDto> updateRound(Long id, CompetitionRoundDto dto) {
-        ModelMapper myModelMapper = MapperUtil.getModelMapperForCompetition();
-
-
-        log.info("updateRound:: {}", dto);
-        Optional<CompetitionRound> updateModel = roundRepository.findById(id);
-        if (updateModel.isPresent()) {
-            Optional<CompetitionRound> updated = updateModel.map(base -> updateFields(base, dto))
-                    .map(roundRepository::save);
-            log.info("CompetitionRound updated entity {}", updated.get());
-            CompetitionRoundDto compRoundDto = myModelMapper.map(updated, CompetitionRoundDto.class);
-            log.info("CompetitionRound updated  RETURN dto {}", compRoundDto);
-            return Optional.ofNullable(compRoundDto);
+    public CompetitionRound save(CompetitionRound compRound) {
+        log.info("save compRound  with {}", compRound);
+        Optional<CompetitionRound> competition = roundRepository.findByName(compRound.getName());
+        if (competition.isPresent()) {
+            throw new EntityExistsException("Comp Round already exist with given name:" + compRound.getName());
         }
-        return Optional.empty();
+        Competition comp= compRepository.save(compRound.getCompetition());
+        log.info("save2 compRound  with {}", compRound);
+     //   compRound.setCompetition(comp);
+        log.info("save3 compRound  with {}", compRound);
+        comp.addCompetitionRound(compRound);
+        log.info("save4 compRound  with {}", compRound);
+        CompetitionRound round = roundRepository.save(compRound);
+        log.info("save5 compRound  with {}", compRound);
+        return round;
+    }
+
+    @Override
+    @Transactional
+    public Optional<CompetitionRound> updateRound(Long id, CompetitionRound compRound) {
+
+
+        log.info("updateCompRound  with {}", compRound);
+        Optional<CompetitionRound> updateModel = roundRepository.findById(id);
+        if (updateModel.isEmpty()) {
+            throw new EntityExistsException("Comp  already exist with given name:" + compRound.getName());
+        }
+
+        CompetitionRound updatedCompRound = updateFields(updateModel.get(), compRound);
+        log.info("updated Comp  with {}", updatedCompRound);
+        return Optional.of(roundRepository.save(updatedCompRound));
     }
 
     @Override
@@ -91,19 +86,16 @@ public class CompRoundServiceImpl implements CompRoundService {
 
     @Override
     @Transactional
-    public List<CompetitionRoundDto> getAll() {
-        List<CompetitionRound> rounds = roundRepository.findAll();
-        List<CompetitionRoundDto> roundDtos = new ArrayList<>();
-        ModelMapper myMapper = MapperUtil.getModelMapperForCompetition();
-        rounds.forEach(round -> roundDtos.add(myMapper.map(round, CompetitionRoundDto.class)));
-        return roundDtos;
+    public List<CompetitionRound> getAll() {
+        return roundRepository.findAll();
+
     }
 
 
-    private CompetitionRound updateFields(CompetitionRound base, CompetitionRoundDto updatedRound) {
+    private CompetitionRound updateFields(CompetitionRound base, CompetitionRound updatedRound) {
         base.setName(updatedRound.getName());
         base.setRoundNumber(updatedRound.getRoundNumber());
-        base.setHasGroups(updatedRound.getHasGroups());
+        base.setHasGroups(updatedRound.isHasGroups());
 
         return base;
     }

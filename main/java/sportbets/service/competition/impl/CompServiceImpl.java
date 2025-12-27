@@ -47,6 +47,15 @@ public class CompServiceImpl implements CompService {
 
     }
 
+    /**
+     * @param name
+     * @return
+     */
+    @Override
+    public Optional<Competition> findByName(String name) {
+        return  compRepository.findByName(name);
+    }
+
     @Override
     @Transactional
     public Competition save(Competition comp) {

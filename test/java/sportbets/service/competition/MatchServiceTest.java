@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
+import sportbets.persistence.entity.competition.CompetitionRound;
 import sportbets.web.dto.competition.*;
 
 import java.time.LocalDateTime;
@@ -54,8 +55,8 @@ public class MatchServiceTest {
         Competition competition = new Competition( TEST_COMP, "Description of Competition", 3, 1, savedFam);
 
         Competition savedComp = compService.save(competition);
-        CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, TEST_COMP_ROUND, false, savedComp.getId(), savedComp.getName());
-        CompetitionRoundDto savedCompRound = compRoundService.save(compRoundDto).orElseThrow();
+        CompetitionRound compRound =  new CompetitionRound(1, TEST_COMP_ROUND, savedComp, false);
+        CompetitionRound savedCompRound = compRoundService.save(compRound);
         SpieltagDto matchDayDto = new SpieltagDto(null, TEST_MATCH_DAY, LocalDateTime.now(), savedCompRound.getId(), savedCompRound.getName());
         savedMatchday = spieltagService.save(matchDayDto).orElseThrow();
         TeamDto teamDto = new TeamDto(null, TEAM_NAME, "Braunschweig");

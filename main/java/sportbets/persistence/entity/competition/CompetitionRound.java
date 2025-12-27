@@ -22,7 +22,7 @@ public class CompetitionRound {
     private boolean hasGroups = false;
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fk_comp_id")
     @NotNull
     private Competition competition;

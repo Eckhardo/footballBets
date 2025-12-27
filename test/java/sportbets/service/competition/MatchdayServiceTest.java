@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
+import sportbets.persistence.entity.competition.CompetitionRound;
 import sportbets.web.dto.competition.CompetitionDto;
 import sportbets.web.dto.competition.CompetitionFamilyDto;
 import sportbets.web.dto.competition.CompetitionRoundDto;
@@ -29,7 +30,8 @@ public class MatchdayServiceTest {
     private static final String TEST_COMP = "TestLiga: Saison 2025";
     private static final String TEST_COMP_ROUND = "Saison 2025: Hinrunde";
     private static final int TEST_MATCH_DAY = 1;
-    CompetitionRoundDto savedCompRound = null;
+    
+    CompetitionRound savedCompRound = null;
     @Autowired
     private CompFamilyService familyService; // Real service being tested
     @Autowired
@@ -47,8 +49,8 @@ public class MatchdayServiceTest {
         Competition competition = new Competition( TEST_COMP, "Description of Competition", 3, 1, savedFam);
 
         Competition savedComp = compService.save(competition);
-        CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, TEST_COMP_ROUND, false, savedComp.getId(), savedComp.getName());
-        savedCompRound = compRoundService.save(compRoundDto).orElseThrow();
+        CompetitionRound compRound =  new CompetitionRound(1, TEST_COMP_ROUND, savedComp, false);
+        savedCompRound = compRoundService.save(compRound);
 
     }
 

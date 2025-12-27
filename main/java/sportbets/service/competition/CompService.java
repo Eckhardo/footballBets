@@ -11,6 +11,8 @@ public interface CompService {
 
     Optional<Competition> findById(Long id);
 
+    Optional<Competition> findByName(String  name);
+
     Competition save(Competition comp);
 
     Competition updateComp(Long id, Competition comp);

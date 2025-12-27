@@ -24,7 +24,7 @@ public class Competition {
     @Column(nullable = false)
     private String name;
     private String description;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fk_comp_family_id")
     @NotNull
     private CompetitionFamily competitionFamily;

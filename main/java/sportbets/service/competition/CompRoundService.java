@@ -1,20 +1,20 @@
 package sportbets.service.competition;
 
-import sportbets.web.dto.competition.CompetitionRoundDto;
+import sportbets.persistence.entity.competition.CompetitionRound;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface CompRoundService {
-    Optional<CompetitionRoundDto> findById(Long id);
+    Optional<CompetitionRound> findById(Long id);
 
-    Optional<CompetitionRoundDto> save(CompetitionRoundDto compFam);
+    CompetitionRound save(CompetitionRound compRound);
 
-    Optional<CompetitionRoundDto> updateRound(Long id, CompetitionRoundDto compFam);
+    Optional<CompetitionRound> updateRound(Long id, CompetitionRound compRound);
 
     void deleteById(Long id);
 
     void deleteByName(String name);
 
-    List<CompetitionRoundDto> getAll();
+    List<CompetitionRound> getAll();
 }
