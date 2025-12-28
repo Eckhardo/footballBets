@@ -28,15 +28,15 @@ public class Spiel implements Comparable<Spiel> {
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
     private LocalDateTime anpfiffdate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fk_heim_team_id")
     private Team heimTeam;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fk_gast_team_id")
     private Team gastTeam;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fk_spieltag_id")
     private Spieltag spieltag;
 
@@ -211,8 +211,8 @@ public class Spiel implements Comparable<Spiel> {
                 ", gastTeam id=" + gastTeam.getId() +
                 ", heimTeam=" + heimTeam.getAcronym() +
                 ", gastTeam=" + gastTeam.getAcronym() +
-                ", spieltagNr=" + spieltag.getSpieltagNumber() +
-                ", competitionGroup=" + competitionGroup +
+                ", spieltag ID=" + spieltag.getId()+
+                ", spieltagNr=" + spieltag.getSpieltagNumber()+
                 '}';
     }
 

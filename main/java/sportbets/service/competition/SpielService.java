@@ -1,20 +1,20 @@
 package sportbets.service.competition;
 
-import sportbets.web.dto.competition.SpielDto;
+import sportbets.persistence.entity.competition.Spiel;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface SpielService {
-    Optional<SpielDto> findById(Long id);
+    Optional<Spiel> findById(Long id);
 
-    Optional<SpielDto> save(SpielDto spiel);
+    Spiel save(Spiel spiel);
 
-    Optional<SpielDto> updateSpiel(Long id, SpielDto spiel);
+    Optional<Spiel> updateSpiel(Long id, Spiel spiel);
 
     void deleteById(Long id);
 
-    List<SpielDto> getAllForMatchday(Long id);
+    List<Spiel> getAllForMatchday(Long id);
 
-    List<SpielDto> getAll();
+    List<Spiel> getAll();
 }

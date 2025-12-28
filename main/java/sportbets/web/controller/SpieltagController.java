@@ -10,10 +10,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import sportbets.persistence.entity.competition.CompetitionRound;
+import sportbets.persistence.entity.competition.Spiel;
 import sportbets.persistence.entity.competition.Spieltag;
+import sportbets.persistence.entity.competition.Team;
 import sportbets.service.competition.CompRoundService;
 import sportbets.service.competition.SpielService;
 import sportbets.service.competition.SpieltagService;
+import sportbets.service.competition.TeamService;
 import sportbets.web.dto.MapperUtil;
 import sportbets.web.dto.competition.SpielDto;
 import sportbets.web.dto.competition.SpieltagDto;
@@ -35,6 +38,7 @@ public class SpieltagController {
         this.spielService = spielService;
         this.roundService = roundService;
         this.modelMapper = modelMapper;
+
     }
 
     @GetMapping("/matchdays")
@@ -42,13 +46,7 @@ public class SpieltagController {
         log.info(" SpieltagDto:findAll::");
 
         List<Spieltag> matchdays = spieltagService.getAll();
-        if (!matchdays.isEmpty()) {
-            CompetitionRound competitionRound = roundService.findById(matchdays.get(0).getCompetitionRound().getId()).orElseThrow(() -> new EntityNotFoundException("spieltag not found "));
 
-            for (Spieltag spieltag : matchdays) {
-                spieltag.setCompetitionRound(competitionRound);
-            }
-        }
 
         List<SpieltagDto> spieltagDtos = new ArrayList<>();
         ModelMapper myMapper = MapperUtil.getModelMapperForCompetitionRound();
@@ -62,9 +60,16 @@ public class SpieltagController {
     @GetMapping("/matchdays/{matchdayId}/matches")
     public List<SpielDto> findAllForMatchday(@PathVariable Long matchdayId) {
         log.info(" SpielDto:findAll::");
-        List<SpielDto> matchdays = spielService.getAllForMatchday(matchdayId);
-        log.info("SpielDto found with {}", matchdays);
-        return matchdays;
+        List<Spiel> matches = spielService.getAllForMatchday(matchdayId);
+
+
+        List<SpielDto> spielDtos = new ArrayList<>();
+        ModelMapper myMapper = MapperUtil.getModelMapperForSpiel();
+        matches.forEach(match -> {
+
+            spielDtos.add(myMapper.map(match, SpielDto.class));
+        });
+        return spielDtos;
     }
 
     @GetMapping("/matchdays/{id}")

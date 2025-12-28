@@ -8,10 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import sportbets.persistence.entity.competition.Competition;
-import sportbets.persistence.entity.competition.CompetitionFamily;
-import sportbets.persistence.entity.competition.CompetitionRound;
-import sportbets.persistence.entity.competition.Spieltag;
+import sportbets.persistence.entity.competition.*;
 import sportbets.web.dto.competition.*;
 
 import java.time.LocalDateTime;
@@ -30,8 +27,8 @@ public class MatchServiceTest {
     private static final int TEST_MATCH_DAY = 17;
     private static final String TEAM_NAME = "Eintracht Braunschweig";
     private static final String TEAM_NAME_2 = "Holstein Kiel";
-    TeamDto savedTeam1 = null;
-    TeamDto savedTeam2 = null;
+    Team savedTeam1 = null;
+    Team savedTeam2 = null;
     Spieltag savedMatchday = null;
     @Autowired
     private CompFamilyService familyService; // Real service being tested
@@ -47,6 +44,8 @@ public class MatchServiceTest {
 
     @Autowired
     private SpielService matchService;
+    @Autowired
+    private SpielService spielService;
 
     @BeforeEach
     public void setup() {
@@ -60,10 +59,10 @@ public class MatchServiceTest {
         CompetitionRound savedCompRound = compRoundService.save(compRound);
         Spieltag matchDayDto =  new Spieltag(1, LocalDateTime.now(), savedCompRound);
         savedMatchday = spieltagService.save(matchDayDto);
-        TeamDto teamDto = new TeamDto(null, TEAM_NAME, "Braunschweig");
-        TeamDto teamDto1 = new TeamDto(null, TEAM_NAME_2, "Kiel");
-        savedTeam1 = teamService.save(teamDto).orElseThrow();
-        savedTeam2 = teamService.save(teamDto1).orElseThrow();
+        Team team = new Team(TEAM_NAME, "Braunschweig");
+        Team team1 = new Team(TEAM_NAME_2, "Kiel");
+        savedTeam1 = teamService.save(team);
+        savedTeam2 = teamService.save(team1);
 
     }
 
@@ -81,38 +80,37 @@ public class MatchServiceTest {
 
     }
 
-    @Test
+   @Test
     void whenValidMatch_thenMatchShouldBeSaved() {
+       Spiel testSpiel1 = new Spiel(savedMatchday, 1, LocalDateTime.now(), savedTeam1, savedTeam2, 3, 1, false);
 
-        SpielDto testSpiel1 = new SpielDto(null, 1, 3, 1, false, LocalDateTime.now(), savedMatchday.getId(), savedMatchday.getSpieltagNumber(), savedTeam1.getId(), savedTeam1.getAcronym(), savedTeam2.getId(), savedTeam2.getAcronym());
-        SpielDto savedMatch = matchService.save(testSpiel1).orElseThrow();
+        Spiel savedMatch = matchService.save(testSpiel1);
         assertThat(savedMatch.getId()).isNotNull();
         assertThat(savedMatch.getAnpfiffdate()).isEqualTo(testSpiel1.getAnpfiffdate());
         assertThat(savedMatch.getSpielNumber()).isEqualTo(testSpiel1.getSpielNumber());
         assertThat(savedMatch.getHeimTore()).isEqualTo(testSpiel1.getHeimTore());
         assertThat(savedMatch.getGastTore()).isEqualTo(testSpiel1.getGastTore());
 
-        assertThat(savedMatch.getSpieltagNumber()).isEqualTo(savedMatchday.getSpieltagNumber());
-        assertThat(savedMatch.getSpieltagId()).isEqualTo(savedMatchday.getId());
-        assertThat(savedMatch.getHeimTeamId()).isEqualTo(savedTeam1.getId());
-        assertThat(savedMatch.getHeimTeamAcronym()).isEqualTo(savedTeam1.getAcronym());
-        assertThat(savedMatch.getGastTeamId()).isEqualTo(savedTeam2.getId());
-        assertThat(savedMatch.getGastTeamAcronym()).isEqualTo(savedTeam2.getAcronym());
+        assertThat(savedMatch.getSpieltag().getSpieltagNumber()).isEqualTo(savedMatchday.getSpieltagNumber());
+        assertThat(savedMatch.getSpieltag().getId()).isEqualTo(savedMatchday.getId());
+        assertThat(savedMatch.getHeimTeam().getId()).isEqualTo(savedTeam1.getId());
+        assertThat(savedMatch.getHeimTeam().getAcronym()).isEqualTo(savedTeam1.getAcronym());
+        assertThat(savedMatch.getGastTeam().getId()).isEqualTo(savedTeam2.getId());
+        assertThat(savedMatch.getGastTeam().getAcronym()).isEqualTo(savedTeam2.getAcronym());
 
         matchService.deleteById(savedMatch.getId());
     }
 
     @Test
     void whenValidMatch_thenMatchShouldBeUpdated() {
-        SpielDto testSpiel1 = new SpielDto(null, 1, 3, 1, false, LocalDateTime.now(), savedMatchday.getId(), savedMatchday.getSpieltagNumber(), savedTeam1.getId(), savedTeam1.getAcronym(), savedTeam2.getId(), savedTeam2.getAcronym());
-        SpielDto testSpiel2 = new SpielDto(null, 2, 3, 3, false, LocalDateTime.now(), savedMatchday.getId(), savedMatchday.getSpieltagNumber(), savedTeam2.getId(), savedTeam2.getAcronym(), savedTeam1.getId(), savedTeam1.getAcronym());
-        SpielDto savedMatch = matchService.save(testSpiel1).orElseThrow();
-        SpielDto savedMatch2 = matchService.save(testSpiel2).orElseThrow();
+        Spiel testSpiel1 =  new Spiel(savedMatchday, 1, LocalDateTime.now(), savedTeam1, savedTeam2, 3, 1, false);
+        Spiel testSpiel2 =  new Spiel(savedMatchday, 2, LocalDateTime.now(), savedTeam2, savedTeam1, 3, 1, false);
+        Spiel savedMatch = matchService.save(testSpiel1);
+        Spiel savedMatch2 = matchService.save(testSpiel2);
         // set gast team to same value as heimteam
-        savedMatch.setGastTeamId(savedMatch2.getGastTeamId());
-        savedMatch.setGastTeamAcronym(savedMatch2.getGastTeamAcronym());
-        savedMatch.setGastTore(4);
-        SpielDto updatedMatch = matchService.updateSpiel(savedMatch.getId(), savedMatch).orElseThrow();
+        savedMatch.setGastTeam(savedMatch2.getGastTeam());
+         savedMatch.setGastTore(4);
+        Spiel updatedMatch = matchService.updateSpiel(savedMatch.getId(), savedMatch).orElseThrow();
 
         assertThat(updatedMatch.getId()).isNotNull();
         assertThat(updatedMatch.getAnpfiffdate()).isEqualTo(testSpiel1.getAnpfiffdate());
@@ -120,12 +118,12 @@ public class MatchServiceTest {
         assertThat(updatedMatch.getHeimTore()).isEqualTo(testSpiel1.getHeimTore());
         assertThat(updatedMatch.getGastTore()).isEqualTo(4);
 
-        assertThat(updatedMatch.getHeimTeamId()).isEqualTo(savedTeam1.getId());
-        assertThat(updatedMatch.getHeimTeamAcronym()).isEqualTo(savedTeam1.getAcronym());
-        assertThat(updatedMatch.getGastTeamId()).isEqualTo(savedTeam1.getId());
-        assertThat(updatedMatch.getGastTeamAcronym()).isEqualTo(savedTeam1.getAcronym());
-        assertThat(updatedMatch.getSpieltagNumber()).isEqualTo(savedMatchday.getSpieltagNumber());
-        assertThat(updatedMatch.getSpieltagId()).isEqualTo(savedMatchday.getId());
+        assertThat(updatedMatch.getHeimTeam().getId()).isEqualTo(savedTeam1.getId());
+        assertThat(updatedMatch.getHeimTeam().getAcronym()).isEqualTo(savedTeam1.getAcronym());
+        assertThat(updatedMatch.getGastTeam().getId()).isEqualTo(savedTeam1.getId());
+        assertThat(updatedMatch.getGastTeam().getAcronym()).isEqualTo(savedTeam1.getAcronym());
+        assertThat(updatedMatch.getSpieltag().getSpieltagNumber()).isEqualTo(savedMatchday.getSpieltagNumber());
+        assertThat(updatedMatch.getSpieltag().getId()).isEqualTo(savedMatchday.getId());
 
         matchService.deleteById(savedMatch.getId());
         matchService.deleteById(savedMatch2.getId());
@@ -134,27 +132,30 @@ public class MatchServiceTest {
     @Test
     void whenValidMatchDay_thenMatchesShouldBeRetrieved() {
 
-        SpielDto testSpiel1 = new SpielDto(null, 1, 3, 1, false, LocalDateTime.now(), savedMatchday.getId(), savedMatchday.getSpieltagNumber(), savedTeam1.getId(), savedTeam1.getAcronym(), savedTeam2.getId(), savedTeam2.getAcronym());
-        SpielDto testSpiel2 = new SpielDto(null, 2, 3, 3, false, LocalDateTime.now(), savedMatchday.getId(), savedMatchday.getSpieltagNumber(), savedTeam2.getId(), savedTeam2.getAcronym(), savedTeam1.getId(), savedTeam1.getAcronym());
-        SpielDto savedMatch = matchService.save(testSpiel1).orElseThrow();
-        SpielDto savedMatch2 = matchService.save(testSpiel2).orElseThrow();
-        List<SpielDto> spielDtos = matchService.getAllForMatchday(savedMatchday.getId());
-        assertThat(spielDtos.size()).isEqualTo(2);
-        for (SpielDto spielDto : spielDtos) {
-            assertThat(spielDto.getId()).isNotNull();
-            assertThat(spielDto.getAnpfiffdate()).isNotNull();
-            assertThat(spielDto.getSpielNumber()).isIn(savedMatch.getSpielNumber(), savedMatch2.getSpielNumber());
-            assertThat(spielDto.getHeimTore()).isIn(savedMatch.getHeimTore(), savedMatch2.getHeimTore());
-            assertThat(spielDto.getGastTore()).isIn(savedMatch.getGastTore(), savedMatch2.getGastTore());
+        Spiel testSpiel1 =  new Spiel(savedMatchday, 1, LocalDateTime.now(), savedTeam1, savedTeam2, 3, 1, false);
+        Spiel testSpiel2 =  new Spiel(savedMatchday, 2, LocalDateTime.now(), savedTeam2, savedTeam1, 3, 1, false);
+        Spiel savedMatch = matchService.save(testSpiel1);
+        Spiel savedMatch2 = matchService.save(testSpiel2);
+        List<Spiel> spiels = matchService.getAllForMatchday(savedMatchday.getId());
+        assertThat(spiels.size()).isEqualTo(2);
+        for (Spiel entity : spiels) {
+            assertThat(entity.getId()).isNotNull();
+            assertThat(entity.getAnpfiffdate()).isNotNull();
+            assertThat(entity.getSpielNumber()).isIn(savedMatch.getSpielNumber(), savedMatch2.getSpielNumber());
+            assertThat(entity.getHeimTore()).isIn(savedMatch.getHeimTore(), savedMatch2.getHeimTore());
+            assertThat(entity.getGastTore()).isIn(savedMatch.getGastTore(), savedMatch2.getGastTore());
 
-            assertThat(spielDto.getSpieltagNumber()).isIn(savedMatchday.getSpieltagNumber());
-            assertThat(spielDto.getSpieltagId()).isIn(savedMatchday.getId());
-            assertThat(spielDto.getHeimTeamId()).isIn(savedTeam1.getId(), savedTeam2.getId());
-            assertThat(spielDto.getHeimTeamAcronym()).isIn(savedTeam1.getAcronym(), savedTeam2.getAcronym());
-            assertThat(spielDto.getGastTeamId()).isIn(savedTeam2.getId(), savedTeam1.getId());
-            assertThat(spielDto.getGastTeamAcronym()).isIn(savedTeam2.getAcronym(), savedTeam1.getAcronym());
+            assertThat(entity.getSpieltag().getSpieltagNumber()).isIn(savedMatchday.getSpieltagNumber());
+            assertThat(entity.getSpieltag().getId()).isIn(savedMatchday.getId());
+            assertThat(entity.getHeimTeam().getId()).isIn(savedTeam1.getId(), savedTeam2.getId());
+            assertThat(entity.getHeimTeam().getAcronym()).isIn(savedTeam1.getAcronym(), savedTeam2.getAcronym());
+            assertThat(entity.getGastTeam().getId()).isIn(savedTeam2.getId(), savedTeam1.getId());
+            assertThat(entity.getGastTeam().getAcronym()).isIn(savedTeam2.getAcronym(), savedTeam1.getAcronym());
+            assertThat(savedMatch.getHeimTeam().getId()).isEqualTo(savedTeam1.getId());
 
-            matchService.deleteById(spielDto.getId());
+
+
+            matchService.deleteById(entity.getId());
         }
     }
 

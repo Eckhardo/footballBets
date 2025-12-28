@@ -1,7 +1,6 @@
 package sportbets.service.competition.impl;
 
 import jakarta.persistence.EntityExistsException;
-import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,10 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.competition.Team;
 import sportbets.persistence.repository.competition.TeamRepository;
 import sportbets.service.competition.TeamService;
-import sportbets.web.dto.MapperUtil;
-import sportbets.web.dto.competition.TeamDto;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,17 +21,14 @@ public class TeamServiceImpl implements TeamService {
 
     private final TeamRepository teamRepository;
 
-    private final ModelMapper modelMapper;
-
-    public TeamServiceImpl(TeamRepository teamRepository, ModelMapper modelMapper) {
+    public TeamServiceImpl(TeamRepository teamRepository) {
         this.teamRepository = teamRepository;
-        this.modelMapper = modelMapper;
     }
 
     @Override
-    public Optional<TeamDto> findById(Long id) {
-        Team team = teamRepository.findById(id).orElse(null);
-        return Optional.ofNullable(modelMapper.map(team, TeamDto.class));
+    public Optional<Team> findById(Long id) {
+        return teamRepository.findById(id);
+
     }
 
     /**
@@ -50,38 +43,33 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     @Transactional
-    public Optional<TeamDto> save(TeamDto teamDto) {
-        Optional<Team> savedTeam = teamRepository.findByName(teamDto.getName());
+    public Team save(Team team) {
+        Optional<Team> savedTeam = teamRepository.findByName(team.getName());
         if (savedTeam.isPresent()) {
-            throw new EntityExistsException("Team already exist with given name:" + teamDto.getName());
+            throw new EntityExistsException("Team already exist with given name:" + team.getName());
         }
 
-        Team model = modelMapper.map(teamDto, Team.class);
-        log.info("model be save:: {}", model);
-        Team createdModel = teamRepository.save(model);
-        log.info("saved entity:: {}", createdModel);
-        TeamDto createdDto = modelMapper.map(createdModel, TeamDto.class);
-        log.info("dto to return:: {}", createdDto);
-        return Optional.of(createdDto);
+        return teamRepository.save(team);
     }
 
     @Override
     @Transactional
-    public Optional<TeamDto> updateTeam(Long id, TeamDto teamDto) {
-        log.info("updateDto:: {}", teamDto);
+    public Optional<Team> updateTeam(Long id, Team team) {
+        log.info("updateDto:: {}", team);
         Optional<Team> updateModel = teamRepository.findById(id);
 
+
         if (updateModel.isEmpty()) {
-            throw new EntityNotFoundException("Team  with given name not found:" + teamDto.getName());
+            throw new EntityExistsException("Team  already exist with given name:" + team.getName());
         }
-        Optional<Team> updated = updateModel.map(base -> updateFields(base, teamDto))
-                .map(teamRepository::save);
-        TeamDto famDto = modelMapper.map(updated, TeamDto.class);
-        return Optional.of(famDto);
+
+        Team updated = updateFields(updateModel.get(), team);
+        log.info("updated Team  with {}", updated);
+        return Optional.of(teamRepository.save(updated));
 
     }
 
-    private Team updateFields(Team base, TeamDto updatedTeam) {
+    private Team updateFields(Team base, Team updatedTeam) {
         base.setName(updatedTeam.getName());
         base.setAcronym(updatedTeam.getAcronym());
         return base;
@@ -100,14 +88,9 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public List<TeamDto> getAll() {
+    public List<Team> getAll() {
 
-        List<Team> comps = teamRepository.findAll();
-        List<TeamDto> teamDtos = new ArrayList<>();
-        ModelMapper myMapper = MapperUtil.getModelMapperForFamily();
-        comps.forEach(team -> {
-            teamDtos.add(myMapper.map(team, TeamDto.class));
-        });
-        return teamDtos;
+        return teamRepository.findAll();
+
     }
 }

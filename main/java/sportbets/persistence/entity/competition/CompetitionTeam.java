@@ -17,12 +17,12 @@ public class CompetitionTeam {
     @Column(nullable = false)
     private LocalDateTime createdOn = LocalDateTime.now();
 
-    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     @JoinColumn(name = "fk_team_id")
     @NotNull
     private Team team;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fk_comp_id")
     @NotNull
     private Competition competition;

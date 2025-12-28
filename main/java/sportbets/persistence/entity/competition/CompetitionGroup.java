@@ -21,7 +21,7 @@ public class CompetitionGroup {
     @Column(nullable = false)
     private LocalDateTime createdOn = LocalDateTime.now();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fk_comp_round_id")
     @NotNull
     private CompetitionRound competitionRound;

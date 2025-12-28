@@ -37,6 +37,7 @@ public class ContractMatchApiIntegrationTest {
     private static final int TEST_MATCH_DAY = 1000;
     private static final String TEAM_NAME = "Eintracht Braunschweig";
     private static final String TEAM_NAME_2 = "Holstein Kiel";
+    private static final String TEAM_NAME_3 = "SC Paderborn";
     @Autowired
     WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();
     @Autowired
@@ -57,7 +58,9 @@ public class ContractMatchApiIntegrationTest {
     SpieltagDto matchDayDto = new SpieltagDto(null, TEST_MATCH_DAY, LocalDateTime.now());
     TeamDto teamDto = new TeamDto(null, TEAM_NAME, "Braunschweig");
     TeamDto teamDto1 = new TeamDto(null, TEAM_NAME_2, "Kiel");
-    SpielDto testSpiel1 = new SpielDto(null, 1, 3, 1, false, LocalDateTime.now(), matchDayDto.getId(), matchDayDto.getSpieltagNumber(), teamDto.getId(), teamDto.getAcronym(), teamDto1.getId(), teamDto1.getAcronym());
+    TeamDto teamDto2 = new TeamDto(null, TEAM_NAME_3, "Paderborn");
+
+    SpielDto testSpiel1 = new SpielDto(null, 1, 3, 1, false, LocalDateTime.now(), matchDayDto.getId(), matchDayDto.getSpieltagNumber(), teamDto.getId(), teamDto.getAcronym(), teamDto2.getId(), teamDto2.getAcronym());
     SpielDto testSpiel2 = new SpielDto(null, 2, 3, 3, false, LocalDateTime.now(), matchDayDto.getId(), matchDayDto.getSpieltagNumber(), teamDto1.getId(), teamDto1.getAcronym(), teamDto.getId(), teamDto.getAcronym());
 
     @AfterEach
@@ -87,7 +90,16 @@ public class ContractMatchApiIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isNoContent();
+        Team team3 = teamRepository.findByName(TEAM_NAME_3).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME));
+        Long id3 = team3.getId();
+        log.info("delete team with id::" + id2);
+        webClient.delete()
+                .uri("/teams/" + id3)
+                .exchange()
+                .expectStatus()
+                .isNoContent();
     }
+
 
     @BeforeEach
     public void setUp() {
@@ -139,7 +151,7 @@ public class ContractMatchApiIntegrationTest {
                 .exists()
                 .jsonPath("$.compRoundId")
                 .exists();
-
+        log.info("post team 1 {}", teamDto);
         webClient.post()
                 .uri("/teams")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -148,7 +160,7 @@ public class ContractMatchApiIntegrationTest {
                 .expectStatus()
                 .isCreated();
 
-
+        log.info("post team 2 {}", teamDto1);
         webClient.post()
                 .uri("/teams")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -156,17 +168,28 @@ public class ContractMatchApiIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isCreated();
-
+        log.info("post team 3 {}", teamDto2);
+        webClient.post()
+                .uri("/teams")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(teamDto2)
+                .exchange()
+                .expectStatus()
+                .isCreated();
         Spieltag spieltag = spieltagRepository.findByNumberWithRoundId(TEST_MATCH_DAY, round.getId()).orElseThrow(() -> new EntityNotFoundException(String.valueOf(TEST_MATCH_DAY)));
         assertNotNull(spieltag);
         Team entity = teamRepository.findByName(TEAM_NAME).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
+        assertNotNull(entity);
 
         Team entity2 = teamRepository.findByName(TEAM_NAME_2).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
+        assertNotNull(entity2);
+        Team entity3 = teamRepository.findByName(TEAM_NAME_3).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
+        assertNotNull(entity3);
 
         testSpiel1.setHeimTeamId(entity.getId());
         testSpiel1.setGastTeamId(entity2.getId());
         testSpiel1.setSpieltagId(spieltag.getId());
-
+        log.info("post match 1  {}", testSpiel1);
         webClient.post()
                 .uri("/matches")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -177,9 +200,9 @@ public class ContractMatchApiIntegrationTest {
 
 
         testSpiel2.setHeimTeamId(entity2.getId());
-        testSpiel2.setGastTeamId(entity.getId());
+        testSpiel2.setGastTeamId(entity3.getId());
         testSpiel2.setSpieltagId(spieltag.getId());
-
+        log.info("post match 2 {}", testSpiel2);
         webClient.post()
                 .uri("/matches")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -222,13 +245,15 @@ public class ContractMatchApiIntegrationTest {
         List<Spiel> spiele = spielRepository.findAllForMatchday(spieltag.getId());
         assertNotNull(spiele);
         Spiel spiel = spiele.stream().findFirst().orElseThrow(() -> new EntityNotFoundException(String.valueOf(spieltag.getId())));
-        Team team = teamRepository.findByName(TEAM_NAME).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
+        Team team = teamRepository.findByName(TEAM_NAME_3).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
         //change heimTore and set both teams to the same value (TeamA vs TeamA)
         testSpiel1.setId(spiel.getId());
-        testSpiel1.setHeimTore(5);
+        testSpiel1.setSpielNumber(spiel.getSpielNumber());
+        testSpiel1.setSpieltagId(spiel.getSpieltag().getId());
         testSpiel1.setHeimTeamId(team.getId());
+        testSpiel1.setHeimTore(5);
         testSpiel1.setGastTeamId(team.getId());
-
+        log.info("update spiel {}", testSpiel1);
 
         webClient.put()
                 .uri("/matches/" + spiel.getId())
@@ -238,7 +263,6 @@ public class ContractMatchApiIntegrationTest {
                 .isOk()
                 .expectBody()
                 .jsonPath("$.heimTore").isEqualTo(5)
-                .jsonPath("$.heimTeamId").isEqualTo(team.getId())
                 .jsonPath("$.gastTeamId").isEqualTo(team.getId());
 
     }

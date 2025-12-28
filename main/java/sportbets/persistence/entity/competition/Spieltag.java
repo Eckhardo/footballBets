@@ -26,7 +26,7 @@ public class Spieltag {
     // Specifies the format for JSON serialization (when the entity is returned as a response)
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
     private LocalDateTime startDate;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fk_comp_round_id")
     @NotNull
     private CompetitionRound competitionRound;

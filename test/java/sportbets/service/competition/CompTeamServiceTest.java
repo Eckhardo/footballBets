@@ -10,11 +10,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
+import sportbets.persistence.entity.competition.Team;
 import sportbets.persistence.repository.competition.CompetitionRepository;
 import sportbets.web.dto.competition.CompetitionDto;
 import sportbets.web.dto.competition.CompetitionFamilyDto;
 import sportbets.web.dto.competition.CompetitionTeamDto;
-import sportbets.web.dto.competition.TeamDto;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -34,11 +35,11 @@ public class CompTeamServiceTest {
     CompetitionRepository compRepo;
     CompetitionFamily competitionFamily = new CompetitionFamily(TEST_COMP_FAM, "description of testliga", true, true);
 
-    TeamDto teamDto = new TeamDto(null, TEAM_NAME, "Braunschweig");
-    TeamDto teamDto1 = new TeamDto(null, TEAM_NAME_2, "Kiel");
+    Team teamDto = new Team(TEAM_NAME, "Braunschweig");
+    Team teamDto1 = new Team( TEAM_NAME_2, "Kiel");
     Competition savedComp = null;
-    TeamDto savedTeam1 = null;
-    TeamDto savedTeam2 = null;
+    Team savedTeam1 = null;
+    Team savedTeam2 = null;
     @Autowired
     private CompFamilyService familyService; // Real service being tested
     @Autowired
@@ -53,10 +54,10 @@ public class CompTeamServiceTest {
         log.info("\n");
         log.info("Delete All Test data");
         CompetitionFamily savedFam = familyService.save(competitionFamily).orElseThrow();
-        Competition compDto =new Competition( TEST_COMP, "Description of Competition", 3, 1, savedFam);
-        savedComp = compService.save(compDto);
-        savedTeam1 = teamService.save(teamDto).orElseThrow();
-        savedTeam2 = teamService.save(teamDto1).orElseThrow();
+        Competition competition =new Competition( TEST_COMP, "Description of Competition", 3, 1, savedFam);
+        savedComp = compService.save(competition);
+        savedTeam1 = teamService.save(teamDto);
+        savedTeam2 = teamService.save(teamDto1);
     }
 
     @AfterEach
