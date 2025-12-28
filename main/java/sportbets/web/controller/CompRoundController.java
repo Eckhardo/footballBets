@@ -27,17 +27,13 @@ public class CompRoundController {
 
 
     private static final Logger log = LoggerFactory.getLogger(CompRoundController.class);
-    private final CompService compService;
     private final CompRoundService roundService;
     private final SpieltagService spieltagService;
-    private final ModelMapper modelMapper;
 
-    public CompRoundController(CompService compService, CompRoundService roundService, SpieltagService spieltagService, ModelMapper modelMapper) {
-        this.compService = compService;
+    public CompRoundController( CompRoundService roundService, SpieltagService spieltagService) {
         this.roundService = roundService;
         this.spieltagService = spieltagService;
-        this.modelMapper = modelMapper;
-    }
+       }
 
     @GetMapping("/rounds/{id}")
     public CompetitionRoundDto findOne(@PathVariable Long id) {
@@ -52,12 +48,8 @@ public class CompRoundController {
     @ResponseStatus(HttpStatus.CREATED)
     public CompetitionRoundDto post(@RequestBody @Valid CompetitionRoundDto roundDto) {
         log.info("post: {}", roundDto);
-        Competition comp = compService.findByName(roundDto.getCompName()).orElseThrow(() -> new EntityNotFoundException("comp not found "));
 
-        CompetitionRound model = modelMapper.map(roundDto, CompetitionRound.class);
-        model.setCompetition(comp);
-
-        CompetitionRound createdModel = roundService.save(model);
+        CompetitionRound createdModel = roundService.save(roundDto);
         ModelMapper myModelMapper = MapperUtil.getModelMapperForCompetition();
         CompetitionRoundDto createdDto = myModelMapper.map(createdModel, CompetitionRoundDto.class);
         log.info("CompetitionRound RETURN do {}", createdDto);
@@ -65,7 +57,7 @@ public class CompRoundController {
     }
 
     @GetMapping("/rounds/{roundId}/matchdays")
-    public List<SpieltagDto> findAll(@PathVariable Long roundId) {
+    public List<SpieltagDto> findAllForComp(@PathVariable Long roundId) {
         log.info("SpieltagDto:findAll::{}", roundId);
         List<Spieltag> spieltags = spieltagService.getAllForRound(roundId);
         List<SpieltagDto> spieltagDtos = new ArrayList<>();
@@ -76,27 +68,12 @@ public class CompRoundController {
         return spieltagDtos;
     }
 
-    @GetMapping("/rounds")
-    public List<CompetitionRoundDto> findAll() {
-        log.info(" CompetitionRoundDto:findAll::");
-        List<CompetitionRound> compRounds = roundService.getAll();
-        List<CompetitionRoundDto> roundDtos = new ArrayList<>();
-        ModelMapper myMapper = MapperUtil.getModelMapperForCompetition();
-        compRounds.forEach(comp -> {
-            roundDtos.add(myMapper.map(comp, CompetitionRoundDto.class));
-        });
-        return roundDtos;
-    }
 
     @PutMapping(value = "/rounds/{id}")
     public CompetitionRoundDto update(@PathVariable Long id, @RequestBody CompetitionRoundDto roundDto) {
         log.info("Update round {}", roundDto);
-        Competition comp = compService.findById(roundDto.getCompId()).orElseThrow(() -> new EntityNotFoundException("comp not found "));
 
-        CompetitionRound model = modelMapper.map(roundDto, CompetitionRound.class);
-        model.setCompetition(comp);
-
-        CompetitionRound updatedModel = this.roundService.updateRound(id, model)
+        CompetitionRound updatedModel = this.roundService.updateRound(id, roundDto)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         ModelMapper myModelMapper = MapperUtil.getModelMapperForCompetition();
         CompetitionRoundDto updatedDto = myModelMapper.map(updatedModel, CompetitionRoundDto.class);

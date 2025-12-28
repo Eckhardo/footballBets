@@ -13,6 +13,7 @@ import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.entity.competition.CompetitionRound;
 import sportbets.web.dto.competition.CompetitionDto;
 import sportbets.web.dto.competition.CompetitionFamilyDto;
+import sportbets.web.dto.competition.CompetitionRoundDto;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -26,6 +27,8 @@ public class CompRoundServiceTest {
     private static final String TEST_COMP_ROUND = "Saison 2025: Hinrunde";
     final CompetitionFamilyDto competitionFamily = new CompetitionFamilyDto(null, TEST_COMP_FAM, "description of testliga", true, true);
     Competition savedComp = null;
+
+    CompetitionRound savedCompRound = null;
     @Autowired
     private CompFamilyService familyService; // Real service being tested
     @Autowired
@@ -54,8 +57,8 @@ public class CompRoundServiceTest {
     @Test
     void whenValidCompRound_thenCompRoundShouldBeSaved() {
 
-        CompetitionRound compRound = new CompetitionRound(1, TEST_COMP_ROUND, savedComp, false);
-        CompetitionRound savedCompRound = compRoundService.save(compRound);
+        CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, TEST_COMP_ROUND, false,savedComp.getId(), savedComp.getName());
+        CompetitionRound savedCompRound = compRoundService.save(compRoundDto);
 
         assertThat(savedCompRound.getId()).isNotNull();
         assertThat(savedCompRound.getName()).isEqualTo(TEST_COMP_ROUND);
@@ -71,10 +74,11 @@ public class CompRoundServiceTest {
     @Test
     void whenValidCompRound_thenCompRoundShouldBeUpdated() {
 
-        CompetitionRound compRound = new CompetitionRound(1, TEST_COMP_ROUND, savedComp, false);
-        CompetitionRound savedRound = compRoundService.save(compRound);
-        savedRound.setRoundNumber(2);
-        CompetitionRound updatedCompRound = compRoundService.updateRound(savedRound.getId(), savedRound).orElseThrow();
+        CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, TEST_COMP_ROUND, false,savedComp.getId(), savedComp.getName());
+       savedCompRound = compRoundService.save(compRoundDto);
+        compRoundDto.setRoundNumber(2);
+        compRoundDto.setId(savedCompRound.getId());
+        CompetitionRound updatedCompRound = compRoundService.updateRound(compRoundDto.getId(), compRoundDto).orElseThrow();
 
         assertThat(updatedCompRound.getId()).isNotNull();
         assertThat(updatedCompRound.getName()).isEqualTo(TEST_COMP_ROUND);

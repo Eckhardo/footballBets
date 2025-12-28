@@ -208,17 +208,6 @@ public class ContractCompRoundApiIntegrationTest {
                 .expectBodyList(SpieltagDto.class).hasSize(1);
     }
 
-    @Test
-    @Order(4)
-    void whenFindAll_ThenFetchAll() {
-
-        webClient.get()
-                .uri("/rounds")
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .expectBodyList(CompetitionRoundDto.class).hasSize(3);
-    }
 
     @Test
     @Order(4)
