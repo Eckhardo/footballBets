@@ -54,7 +54,7 @@ public class SpielServiceImpl implements SpielService {
         log.info("save Spiel :: {}", spielDto);
         Optional<Spiel> optionalSpiel = spielRepo.findByNumberWithSpieltagId(spielDto.getSpielNumber(), spielDto.getSpieltagId());
         if (optionalSpiel.isPresent()) {
-            throw new EntityExistsException("Spiel  already exist with given id:" + spielDto.getId());
+            throw new EntityExistsException("Spiel  already exist with given spiel number:" + spielDto.getSpielNumber());
         }
         Spieltag spieltag = spieltagRepo.findById(spielDto.getSpieltagId()).orElseThrow(() -> new EntityNotFoundException("Matchday not found"));
         Team heimTeam = teamRepo.findById(spielDto.getHeimTeamId()).orElseThrow(() -> new EntityNotFoundException("Team heim not found"));
@@ -75,7 +75,7 @@ public class SpielServiceImpl implements SpielService {
         log.info("update Match dto:: {}", spielDto);
         Optional<Spiel> updateModel = spielRepo.findById(id);
         if (updateModel.isEmpty()) {
-            throw new EntityExistsException("spiel  already exist with given id:" + spielDto.getId());
+            throw new EntityNotFoundException("spiel  does not exits given id:" + spielDto.getId());
         }
         Spieltag spieltag = spieltagRepo.findById(spielDto.getSpieltagId()).orElseThrow(() -> new EntityNotFoundException("Matchday not found"));
         Team heimTeam = teamRepo.findById(spielDto.getHeimTeamId()).orElseThrow(() -> new EntityNotFoundException("Team heim not found"));

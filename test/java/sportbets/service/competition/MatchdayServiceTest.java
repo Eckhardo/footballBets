@@ -12,6 +12,8 @@ import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.entity.competition.CompetitionRound;
 import sportbets.persistence.entity.competition.Spieltag;
+import sportbets.web.dto.competition.CompetitionDto;
+import sportbets.web.dto.competition.CompetitionFamilyDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -41,11 +43,11 @@ public class MatchdayServiceTest {
 
     @BeforeEach
     public void setup() {
-        CompetitionFamily competitionFamily = new CompetitionFamily(TEST_COMP_FAM, "Description of test liga", true, true);
+        final CompetitionFamilyDto competitionFamily = new CompetitionFamilyDto(null, TEST_COMP_FAM, "description of testliga", true, true);
         CompetitionFamily savedFam = familyService.save(competitionFamily).orElseThrow();
-        Competition competition = new Competition(TEST_COMP, "Description of Competition", 3, 1, savedFam);
+        CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, savedFam.getId(), TEST_COMP_FAM);
 
-        Competition savedComp = compService.save(competition);
+        Competition savedComp = compService.save(compDto);
         CompetitionRound compRound = new CompetitionRound(1, TEST_COMP_ROUND, savedComp, false);
         savedCompRound = compRoundService.save(compRound);
 

@@ -1,6 +1,7 @@
 package sportbets.service.competition.impl;
 
 import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -49,7 +50,7 @@ public class CompRoundServiceImpl implements CompRoundService {
         log.info("updateCompRound  with {}", compRound);
         Optional<CompetitionRound> updateModel = roundRepository.findById(id);
         if (updateModel.isEmpty()) {
-            throw new EntityExistsException("Round does not exist with given id:" + compRound.getId());
+            throw new EntityNotFoundException("spiel  does not exits given id:" + compRound.getId());
         }
 
         CompetitionRound updatedCompRound = updateFields(updateModel.get(), compRound);

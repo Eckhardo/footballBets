@@ -53,8 +53,6 @@ public class CompController {
     public CompetitionDto findOne(@PathVariable Long id) {
         log.info("CompController:findOne::{}", id);
         Competition model = compService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        CompetitionFamily fam = compFamilyService.findById(model.getCompetitionFamily().getId()).orElseThrow(() -> new EntityNotFoundException("compFam not found "));
-        model.setCompetitionFamily(fam);
         ModelMapper modelMapper = MapperUtil.getModelMapperForFamily();
         log.info("Competition found with {}", model);
         return modelMapper.map(model, CompetitionDto.class);
@@ -85,13 +83,8 @@ public class CompController {
     @ResponseStatus(HttpStatus.CREATED)
     public CompetitionDto post(@RequestBody @Valid CompetitionDto newComp) {
         log.info("New competition {}", newComp);
-        CompetitionFamily fam = compFamilyService.findById(newComp.getFamilyId()).orElseThrow(() -> new EntityNotFoundException("compFam not found "));
 
-        Competition model = modelMapper.map(newComp, Competition.class);
-        model.setCompetitionFamily(fam);
-
-        log.info("Competition saved with {}", model);
-        Competition createdModel = compService.save(model);
+        Competition createdModel = compService.save(newComp);
 
         ModelMapper myModelMapper = MapperUtil.getModelMapperForFamily();
         CompetitionDto createdDto = myModelMapper.map(createdModel, CompetitionDto.class);
@@ -101,11 +94,9 @@ public class CompController {
 
     @PutMapping(value = "/competitions/{id}")
     public CompetitionDto update(@PathVariable Long id, @RequestBody CompetitionDto compDto) {
-        Competition model = modelMapper.map(compDto, Competition.class);
-        CompetitionFamily fam = compFamilyService.findById(compDto.getFamilyId()).orElseThrow(() -> new EntityNotFoundException("compFam not found "));
-        model.setCompetitionFamily(fam);
-        Competition updatedComp = this.compService.updateComp(id, model);
-        updatedComp.setCompetitionFamily(fam);
+
+        Competition updatedComp = this.compService.updateComp(id, compDto);
+
         log.info("Updated competition {}", updatedComp);
 
         ModelMapper myModelMapper = MapperUtil.getModelMapperForFamily();

@@ -2,6 +2,7 @@ package sportbets.service.competition;
 
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionRound;
+import sportbets.web.dto.competition.CompetitionDto;
 import sportbets.web.dto.competition.TeamDto;
 
 import java.util.List;
@@ -13,9 +14,9 @@ public interface CompService {
 
     Optional<Competition> findByName(String name);
 
-    Competition save(Competition comp);
+    Competition save(CompetitionDto compDto);
 
-    Competition updateComp(Long id, Competition comp);
+    Competition updateComp(Long id, CompetitionDto compDto);
 
     void deleteById(Long id);
 

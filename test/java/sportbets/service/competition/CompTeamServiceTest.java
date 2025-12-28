@@ -13,6 +13,8 @@ import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.entity.competition.CompetitionTeam;
 import sportbets.persistence.entity.competition.Team;
 import sportbets.persistence.repository.competition.CompetitionRepository;
+import sportbets.web.dto.competition.CompetitionDto;
+import sportbets.web.dto.competition.CompetitionFamilyDto;
 import sportbets.web.dto.competition.CompetitionTeamDto;
 
 import java.util.List;
@@ -28,7 +30,7 @@ public class CompTeamServiceTest {
     private static final String TEST_COMP = "TestLiga: Saison 2025";
     private static final String TEAM_NAME = "Eintracht Braunschweig";
     private static final String TEAM_NAME_2 = "Holstein Kiel";
-    final CompetitionFamily competitionFamily = new CompetitionFamily(TEST_COMP_FAM, "description of testliga", true, true);
+    final CompetitionFamilyDto competitionFamily = new CompetitionFamilyDto(null, TEST_COMP_FAM, "description of testliga", true, true);
     final Team team = new Team(TEAM_NAME, "Braunschweig");
     final Team team1 = new Team(TEAM_NAME_2, "Kiel");
     @Autowired
@@ -50,8 +52,8 @@ public class CompTeamServiceTest {
         log.info("\n");
         log.info("Delete All Test data");
         CompetitionFamily savedFam = familyService.save(competitionFamily).orElseThrow();
-        Competition competition = new Competition(TEST_COMP, "Description of Competition", 3, 1, savedFam);
-        savedComp = compService.save(competition);
+        CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, savedFam.getId(), TEST_COMP_FAM);
+        savedComp = compService.save(compDto);
         savedTeam1 = teamService.save(team);
         savedTeam2 = teamService.save(team1);
     }

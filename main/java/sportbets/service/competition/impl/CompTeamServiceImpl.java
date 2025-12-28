@@ -1,6 +1,7 @@
 package sportbets.service.competition.impl;
 
 import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -114,7 +115,7 @@ public class CompTeamServiceImpl implements CompTeamService {
         log.info("update Match dto:: {}", competitionTeamDto);
         Optional<CompetitionTeam> updateModel = compTeamRepo.findById(id);
         if (updateModel.isEmpty()) {
-            throw new EntityExistsException("CompTeam does not exist with given id:" + competitionTeamDto.getId());
+            throw new EntityNotFoundException("spiel  does not exits given id:" + competitionTeamDto.getId());
         }
         CompetitionTeam model = modelMapper.map(competitionTeamDto, CompetitionTeam.class);
         Competition comp = compRepo.findByName(competitionTeamDto.getCompName()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));

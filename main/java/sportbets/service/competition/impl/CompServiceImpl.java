@@ -1,6 +1,7 @@
 package sportbets.service.competition.impl;
 
 import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,11 +9,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.authorization.CompetitionRole;
 import sportbets.persistence.entity.competition.Competition;
+import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.entity.competition.CompetitionRound;
 import sportbets.persistence.entity.competition.Team;
+import sportbets.persistence.repository.competition.CompetitionFamilyRepository;
 import sportbets.persistence.repository.competition.CompetitionRepository;
 import sportbets.service.competition.CompService;
 import sportbets.web.dto.MapperUtil;
+import sportbets.web.dto.competition.CompetitionDto;
 import sportbets.web.dto.competition.TeamDto;
 
 import java.util.ArrayList;
@@ -25,11 +29,15 @@ public class CompServiceImpl implements CompService {
 
     private static final Logger log = LoggerFactory.getLogger(CompServiceImpl.class);
     private final CompetitionRepository compRepository;
+    private final CompetitionFamilyRepository compFamilyRepo;
+    final ModelMapper modelMapper;
 
 
-    public CompServiceImpl(CompetitionRepository compRepository) {
+    public CompServiceImpl(CompetitionRepository compRepository, CompetitionFamilyRepository compFamilyRepo, ModelMapper modelMapper) {
         this.compRepository = compRepository;
+        this.compFamilyRepo = compFamilyRepo;
 
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -50,28 +58,33 @@ public class CompServiceImpl implements CompService {
 
     @Override
     @Transactional
-    public Competition save(Competition comp) {
+    public Competition save(CompetitionDto compDto) {
 
-        Optional<Competition> competition = compRepository.findByName(comp.getName());
+        Optional<Competition> competition = compRepository.findByName(compDto.getName());
         if (competition.isPresent()) {
-            throw new EntityExistsException("Comp  already exist with given name:" + comp.getName());
+            throw new EntityExistsException("Comp  already exist with given name:" + compDto.getName());
         }
-        return compRepository.save(comp);
+        Competition model = modelMapper.map(compDto, Competition.class);
+        CompetitionFamily fam = compFamilyRepo.findById(compDto.getFamilyId()).orElseThrow(() -> new EntityNotFoundException("compFam not found "));
+        model.setCompetitionFamily(fam);
+        return compRepository.save(model);
 
     }
 
     @Override
     @Transactional
-    public Competition updateComp(Long id, Competition comp) {
+    public Competition updateComp(Long id, CompetitionDto compDto) {
 
 
-        log.info("updateComp  with {}", comp);
+        log.info("updateComp  with {}", compDto);
         Optional<Competition> updateModel = compRepository.findById(id);
         if (updateModel.isEmpty()) {
-            throw new EntityExistsException("Comp  already exist with given name:" + comp.getName());
+            throw new EntityNotFoundException("spiel  does not exits given name:" + compDto.getName());
         }
-
-        Competition updatedComp = updateFields(updateModel.get(), comp);
+        Competition model = modelMapper.map(compDto, Competition.class);
+        CompetitionFamily fam = compFamilyRepo.findById(compDto.getFamilyId()).orElseThrow(() -> new EntityNotFoundException("compFam not found "));
+        model.setCompetitionFamily(fam);
+        Competition updatedComp = updateFields(updateModel.get(), model);
         log.info("updated Comp  with {}", updatedComp);
         return compRepository.save(updatedComp);
 

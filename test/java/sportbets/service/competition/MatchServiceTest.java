@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import sportbets.persistence.entity.competition.*;
+import sportbets.web.dto.competition.CompetitionDto;
+import sportbets.web.dto.competition.CompetitionFamilyDto;
 import sportbets.web.dto.competition.SpielDto;
 
 import java.time.LocalDateTime;
@@ -46,12 +48,12 @@ public class MatchServiceTest {
 
     @BeforeEach
     public void setup() {
-        CompetitionFamily competitionFamily = new CompetitionFamily(TEST_COMP_FAM, "2. Deutsche Fussball TestLiga", true, true);
+       CompetitionFamilyDto competitionFamily = new CompetitionFamilyDto(null, TEST_COMP_FAM, "description of testliga", true, true);
 
         CompetitionFamily savedFam = familyService.save(competitionFamily).orElseThrow();
-        Competition competition = new Competition(TEST_COMP, "Description of Competition", 3, 1, savedFam);
+        CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, savedFam.getId(), TEST_COMP_FAM);
 
-        Competition savedComp = compService.save(competition);
+        Competition savedComp = compService.save(compDto);
         CompetitionRound compRound = new CompetitionRound(1, TEST_COMP_ROUND, savedComp, false);
         CompetitionRound savedCompRound = compRoundService.save(compRound);
         Spieltag matchDayDto = new Spieltag(1, LocalDateTime.now(), savedCompRound);

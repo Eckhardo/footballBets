@@ -1,6 +1,7 @@
 package sportbets.service.competition.impl;
 
 import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -59,7 +60,7 @@ public class TeamServiceImpl implements TeamService {
 
 
         if (updateModel.isEmpty()) {
-            throw new EntityExistsException("Team  already exist with given name:" + team.getName());
+            throw new EntityNotFoundException("spiel  does not exits given name:" + team.getName());
         }
 
         Team updated = updateFields(updateModel.get(), team);

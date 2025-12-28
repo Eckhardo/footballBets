@@ -1,6 +1,7 @@
 package sportbets.service.competition;
 
 import sportbets.persistence.entity.competition.CompetitionFamily;
+import sportbets.web.dto.competition.CompetitionFamilyDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,9 +11,9 @@ public interface CompFamilyService {
 
     Optional<CompetitionFamily> findById(Long id);
 
-    Optional<CompetitionFamily> save(CompetitionFamily compFam);
+    Optional<CompetitionFamily> save(CompetitionFamilyDto compFamDto);
 
-    Optional<CompetitionFamily> updateFamily(Long id, CompetitionFamily compFam);
+    Optional<CompetitionFamily> updateFamily(Long id, CompetitionFamilyDto compFamDto);
 
     void deleteByName(String name);
 

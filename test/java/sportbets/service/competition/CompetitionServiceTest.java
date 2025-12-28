@@ -3,11 +3,15 @@ package sportbets.service.competition;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
+import sportbets.web.dto.competition.CompetitionDto;
+import sportbets.web.dto.competition.CompetitionFamilyDto;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -15,10 +19,12 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @SpringBootTest
 @ActiveProfiles("test")
 public class CompetitionServiceTest {
+    private static final Logger log = LoggerFactory.getLogger(CompetitionServiceTest.class);
 
     private static final String TEST_COMP_FAM = "TestLiga";
     private static final String TEST_COMP = "TestLiga: Saison 2025";
-    final CompetitionFamily competitionFamily = new CompetitionFamily(TEST_COMP_FAM, "description of testliga", true, true);
+
+    final CompetitionFamilyDto competitionFamily = new CompetitionFamilyDto(null, TEST_COMP_FAM, "description of testliga", true, true);
     CompetitionFamily savedFam = null;
     @Autowired
     private CompFamilyService familyService; // Real service being tested
@@ -29,8 +35,9 @@ public class CompetitionServiceTest {
 
     @BeforeEach
     public void setup() {
-
+        log.info("setup");
         savedFam = familyService.save(competitionFamily).orElseThrow();
+        log.info("saved family: {}", savedFam);
     }
 
     @AfterEach
@@ -42,8 +49,8 @@ public class CompetitionServiceTest {
     @Test
     void whenValidComp_thenCompShouldBeSaved() {
 
-        Competition competition = new Competition(TEST_COMP, "Description of Competition", 3, 1, savedFam);
-        Competition savedComp = compService.save(competition);
+        CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, savedFam.getId(), TEST_COMP_FAM);
+        Competition savedComp = compService.save(compDto);
 
         assertThat(savedComp.getId()).isNotNull();
         assertThat(savedComp.getName()).isEqualTo(TEST_COMP);
@@ -58,10 +65,11 @@ public class CompetitionServiceTest {
     @Test
     void whenValidComp_thenCompShouldBeUpdated() {
 
-        Competition compDto = new Competition(TEST_COMP, "Description of Competition", 3, 1, savedFam);
+        CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, savedFam.getId(), TEST_COMP_FAM);
         Competition savedComp = compService.save(compDto);
-        savedComp.setWinMultiplicator(2);
-        Competition updatedComp = compService.updateComp(savedComp.getId(), savedComp);
+        compDto.setWinMultiplicator(2);
+        compDto.setId(savedComp.getId());
+        Competition updatedComp = compService.updateComp(savedComp.getId(), compDto);
 
         assertThat(updatedComp.getId()).isNotNull();
         assertThat(updatedComp.getName()).isEqualTo(TEST_COMP);

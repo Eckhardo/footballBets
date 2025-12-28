@@ -1,14 +1,18 @@
 package sportbets.service.competition.impl;
 
 import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
+import sportbets.persistence.entity.competition.Spiel;
 import sportbets.persistence.repository.competition.CompetitionFamilyRepository;
 import sportbets.service.competition.CompFamilyService;
+import sportbets.web.dto.competition.CompetitionFamilyDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,10 +23,11 @@ public class CompFamilyServiceImpl implements CompFamilyService {
 
     private static final Logger log = LoggerFactory.getLogger(CompFamilyServiceImpl.class);
     private final CompetitionFamilyRepository compFamilyRepository;
-
-    public CompFamilyServiceImpl(CompetitionFamilyRepository compFamilyRepository) {
+    private final ModelMapper modelMapper;
+    public CompFamilyServiceImpl(CompetitionFamilyRepository compFamilyRepository, ModelMapper modelMapper) {
         this.compFamilyRepository = compFamilyRepository;
 
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -59,28 +64,30 @@ public class CompFamilyServiceImpl implements CompFamilyService {
 
     @Override
     @Transactional
-    public Optional<CompetitionFamily> save(CompetitionFamily compFam) {
-        Optional<CompetitionFamily> savedCompFamily = compFamilyRepository.findByName(compFam.getName());
+    public Optional<CompetitionFamily> save(CompetitionFamilyDto compFamDto) {
+        Optional<CompetitionFamily> savedCompFamily = compFamilyRepository.findByName(compFamDto.getName());
         if (savedCompFamily.isPresent()) {
-            throw new EntityExistsException("CompFamily already exist with given name:" + compFam.getName());
+            throw new EntityExistsException("CompFamily already exist with given name:" + compFamDto.getName());
         }
-        return Optional.of(compFamilyRepository.save(compFam));
+        CompetitionFamily model = modelMapper.map(compFamDto, CompetitionFamily.class);
+
+        return Optional.of(compFamilyRepository.save(model));
 
     }
 
     @Override
     @Transactional
-    public Optional<CompetitionFamily> updateFamily(Long id, CompetitionFamily compFam) {
-        log.info("updateFamily:: {}", compFam);
+    public Optional<CompetitionFamily> updateFamily(Long id, CompetitionFamilyDto compFamDto) {
+        log.info("updateFamily:: {}", compFamDto);
         Optional<CompetitionFamily> updateModel = compFamilyRepository.findById(id);
-
-        if (updateModel.isPresent()) {
-            return updateModel.map(base -> updateFields(base, compFam))
-                    .map(compFamilyRepository::save);
-        } else {
-            return Optional.empty();
+        if (updateModel.isEmpty()) {
+            throw new EntityNotFoundException("family  DOES NOT exist with given id:" + id);
         }
+        CompetitionFamily model = modelMapper.map(compFamDto, CompetitionFamily.class);
 
+        CompetitionFamily updated = updateFields(updateModel.get(), model);
+        log.info("updated Comp  with {}", updated);
+        return Optional.of(compFamilyRepository.save(updated));
     }
 
 

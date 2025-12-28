@@ -14,6 +14,7 @@ import sportbets.FootballBetsApplication;
 import sportbets.config.TestProfileUnitTest;
 import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.repository.competition.CompetitionFamilyRepository;
+import sportbets.web.dto.competition.CompetitionFamilyDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -143,16 +144,16 @@ public class CompFamilyApiUnitTest {
 
         compFamilyRepository.save(family);
 
-        CompetitionFamily updatedCompetitionFamily = new CompetitionFamily("Testliga", "Deutsche Testliga", true, true);
+        final CompetitionFamilyDto competitionFamily = new CompetitionFamilyDto(1L, "Testliga", "description of testliga", true, true);
 
 
         // when -  action or the behaviour that we are going test
         ResultActions response = mockMvc.perform(put("/families/{id}", 1000L)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(updatedCompetitionFamily)));
+                .content(objectMapper.writeValueAsString(competitionFamily)));
 
         // then - verify the output
-        response.andExpect(status().isNotFound())
+        response.andExpect(status().is4xxClientError())
                 .andDo(print());
     }
 

@@ -1,6 +1,7 @@
 package sportbets.service.competition.impl;
 
 import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -59,7 +60,7 @@ public class SpieltagServiceImpl implements SpieltagService {
         log.info("updateMatchday:: {}", spieltag);
         Optional<Spieltag> updateModel = spieltagRepository.findById(id);
         if (updateModel.isEmpty()) {
-            throw new EntityExistsException("Spieltag  does not exist with given id:" + spieltag.getId());
+            throw new EntityNotFoundException("spiel  does not exits given id:" + spieltag.getId());
         }
 
 
