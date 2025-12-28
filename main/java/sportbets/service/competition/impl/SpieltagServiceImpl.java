@@ -44,11 +44,9 @@ public class SpieltagServiceImpl implements SpieltagService {
     public Spieltag save(Spieltag spieltag) {
         log.info("save :: {}", spieltag);
         Optional<Spieltag> optionalSpieltag = spieltagRepository.findByNumberWithRoundId(spieltag.getSpieltagNumber(), spieltag.getCompetitionRound().getId());
-        log.info("ispresent :: {}", optionalSpieltag.isPresent());
         if (optionalSpieltag.isPresent()) {
             throw new EntityExistsException("Spieltag  already exist with given id:" + spieltag.getId());
         }
-        log.info("save now :: {}", spieltag);
         return spieltagRepository.save(spieltag);
 
 

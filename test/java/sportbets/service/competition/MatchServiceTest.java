@@ -24,8 +24,7 @@ public class MatchServiceTest {
     private static final String TEST_COMP_FAM = "TestLiga";
     private static final String TEST_COMP = "TestLiga: Saison 2025";
     private static final String TEST_COMP_ROUND = "Saison 2025: Hinrunde";
-    private static final int TEST_MATCH_DAY = 17;
-    private static final String TEAM_NAME = "Eintracht Braunschweig";
+     private static final String TEAM_NAME = "Eintracht Braunschweig";
     private static final String TEAM_NAME_2 = "Holstein Kiel";
     Team savedTeam1 = null;
     Team savedTeam2 = null;
@@ -44,8 +43,6 @@ public class MatchServiceTest {
 
     @Autowired
     private SpielService matchService;
-    @Autowired
-    private SpielService spielService;
 
     @BeforeEach
     public void setup() {

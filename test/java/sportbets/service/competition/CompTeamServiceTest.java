@@ -10,15 +10,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
+import sportbets.persistence.entity.competition.CompetitionTeam;
 import sportbets.persistence.entity.competition.Team;
 import sportbets.persistence.repository.competition.CompetitionRepository;
-import sportbets.web.dto.competition.CompetitionDto;
-import sportbets.web.dto.competition.CompetitionFamilyDto;
 import sportbets.web.dto.competition.CompetitionTeamDto;
 
-
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -35,8 +32,8 @@ public class CompTeamServiceTest {
     CompetitionRepository compRepo;
     CompetitionFamily competitionFamily = new CompetitionFamily(TEST_COMP_FAM, "description of testliga", true, true);
 
-    Team teamDto = new Team(TEAM_NAME, "Braunschweig");
-    Team teamDto1 = new Team( TEAM_NAME_2, "Kiel");
+    Team team = new Team(TEAM_NAME, "Braunschweig");
+    Team team1 = new Team(TEAM_NAME_2, "Kiel");
     Competition savedComp = null;
     Team savedTeam1 = null;
     Team savedTeam2 = null;
@@ -54,10 +51,10 @@ public class CompTeamServiceTest {
         log.info("\n");
         log.info("Delete All Test data");
         CompetitionFamily savedFam = familyService.save(competitionFamily).orElseThrow();
-        Competition competition =new Competition( TEST_COMP, "Description of Competition", 3, 1, savedFam);
+        Competition competition = new Competition(TEST_COMP, "Description of Competition", 3, 1, savedFam);
         savedComp = compService.save(competition);
-        savedTeam1 = teamService.save(teamDto);
-        savedTeam2 = teamService.save(teamDto1);
+        savedTeam1 = teamService.save(team);
+        savedTeam2 = teamService.save(team1);
     }
 
     @AfterEach
@@ -72,50 +69,48 @@ public class CompTeamServiceTest {
     void whenValidCompTeam_thenCompTeamShouldBeSaved() {
 
         CompetitionTeamDto compTeamDto = new CompetitionTeamDto(null, savedComp.getId(), savedComp.getName(), savedTeam1.getId(), savedTeam1.getAcronym());
-        Optional<CompetitionTeamDto> savedCompTeam = compTeamService.save(compTeamDto);
-        if (savedCompTeam.isPresent()) {
-            assertThat(savedCompTeam.get().getId()).isNotNull();
-            assertThat(savedCompTeam.get().getCompId()).isEqualTo(savedComp.getId());
-            assertThat(savedCompTeam.get().getCompName()).isEqualTo(savedComp.getName());
-            assertThat(savedCompTeam.get().getTeamId()).isEqualTo(savedTeam1.getId());
-            assertThat(savedCompTeam.get().getTeamAcronym()).isEqualTo(savedTeam1.getAcronym());
-            compTeamService.deleteById(savedCompTeam.get().getId());
-        }
+        CompetitionTeam savedCompTeam = compTeamService.save(compTeamDto);
+
+        assertThat(savedCompTeam.getId()).isNotNull();
+        assertThat(savedCompTeam.getCompetition().getId()).isEqualTo(savedComp.getId());
+        assertThat(savedCompTeam.getTeam().getId()).isEqualTo(savedTeam1.getId());
+
 
     }
 
     @Test
     void whenValidCompTeam_thenCompTeamShouldBeUpdated() {
-
         CompetitionTeamDto compTeamDto = new CompetitionTeamDto(null, savedComp.getId(), savedComp.getName(), savedTeam1.getId(), savedTeam1.getAcronym());
-        CompetitionTeamDto savedCompTeam = compTeamService.save(compTeamDto).orElseThrow();
-        savedCompTeam.setTeamId(savedTeam2.getId());
-        savedCompTeam.setTeamAcronym(savedTeam2.getAcronym());
-        CompetitionTeamDto updatedCompTeam = compTeamService.update(savedCompTeam.getId(), savedCompTeam).orElseThrow();
+        CompetitionTeam savedCompTeam = compTeamService.save(compTeamDto);
+
+
+        compTeamDto.setTeamId(savedTeam2.getId());
+        compTeamDto.setTeamAcronym(savedTeam2.getAcronym());
+        CompetitionTeam updatedCompTeam = compTeamService.update(savedCompTeam.getId(), compTeamDto).orElseThrow();
 
         assertThat(updatedCompTeam.getId()).isNotNull();
-        assertThat(updatedCompTeam.getTeamAcronym()).isEqualTo(savedTeam2.getAcronym());
-        assertThat(updatedCompTeam.getTeamId()).isEqualTo(savedTeam2.getId());
-        assertThat(updatedCompTeam.getCompId()).isEqualTo(savedComp.getId());
-        assertThat(updatedCompTeam.getCompName()).isEqualTo(savedComp.getName());
+        assertThat(updatedCompTeam.getCompetition().getId()).isEqualTo(savedComp.getId());
+        assertThat(updatedCompTeam.getTeam().getId()).isEqualTo(savedTeam2.getId());
+
         compTeamService.deleteById(updatedCompTeam.getId());
 
     }
 
     @Test
     void whenValidCompTeams_thenCompTeamsShouldBeSavedInBatch() {
-
         CompetitionTeamDto compTeamDto = new CompetitionTeamDto(null, savedComp.getId(), savedComp.getName(), savedTeam1.getId(), savedTeam1.getAcronym());
+
         CompetitionTeamDto compTeamDto2 = new CompetitionTeamDto(null, savedComp.getId(), savedComp.getName(), savedTeam2.getId(), savedTeam2.getAcronym());
 
-        List<CompetitionTeamDto> savedCompTeams = compTeamService.saveAll(List.of(compTeamDto, compTeamDto2));
+
+        List<CompetitionTeam> savedCompTeams = compTeamService.saveAll(List.of(compTeamDto, compTeamDto2));
         if (!savedCompTeams.isEmpty()) {
-            for (CompetitionTeamDto compTeam : savedCompTeams) {
+            for (CompetitionTeam compTeam : savedCompTeams) {
                 assertThat(compTeam.getId()).isNotNull();
-                assertThat(compTeam.getCompId()).isEqualTo(savedComp.getId());
-                assertThat(compTeam.getCompName()).isEqualTo(savedComp.getName());
-                assertThat(compTeam.getTeamAcronym()).isIn(compTeamDto.getTeamAcronym(), compTeamDto2.getTeamAcronym());
-                assertThat(compTeam.getTeamId()).isNotNull();
+                assertThat(compTeam.getCompetition().getId()).isEqualTo(savedComp.getId());
+                assertThat(compTeam.getCompetition().getName()).isEqualTo(savedComp.getName());
+                assertThat(compTeam.getTeam().getAcronym()).isIn(savedTeam1.getAcronym(), savedTeam2.getAcronym());
+                assertThat(compTeam.getTeam().getId()).isIn(savedTeam1.getId(), savedTeam2.getId());
                 compTeamService.deleteById(compTeam.getId());
             }
         }
@@ -123,35 +118,35 @@ public class CompTeamServiceTest {
 
     @Test
     void whenValidCompTeams_thenCompTeamsShouldBeDeletedInBatch() {
-
         CompetitionTeamDto compTeamDto = new CompetitionTeamDto(null, savedComp.getId(), savedComp.getName(), savedTeam1.getId(), savedTeam1.getAcronym());
+
         CompetitionTeamDto compTeamDto2 = new CompetitionTeamDto(null, savedComp.getId(), savedComp.getName(), savedTeam2.getId(), savedTeam2.getAcronym());
 
-        List<CompetitionTeamDto> savedCompTeams = compTeamService.saveAll(List.of(compTeamDto, compTeamDto2));
-        List<Long> ids = savedCompTeams.stream().map(CompetitionTeamDto::getId).toList();
+        List<CompetitionTeam> savedCompTeams = compTeamService.saveAll(List.of(compTeamDto, compTeamDto2));
+
+        List<Long> ids = savedCompTeams.stream().map(CompetitionTeam::getId).toList();
         compTeamService.deleteAll(ids);
 
     }
 
     @Test
     void whenValidComp_thenAllCompTeamsShouldBeRetrieved() {
-
         CompetitionTeamDto compTeamDto = new CompetitionTeamDto(null, savedComp.getId(), savedComp.getName(), savedTeam1.getId(), savedTeam1.getAcronym());
-        CompetitionTeamDto savedCompTeam = compTeamService.save(compTeamDto).orElseThrow();
 
         CompetitionTeamDto compTeamDto2 = new CompetitionTeamDto(null, savedComp.getId(), savedComp.getName(), savedTeam2.getId(), savedTeam2.getAcronym());
-        CompetitionTeamDto savedCompTeam2 = compTeamService.save(compTeamDto2).orElseThrow();
 
-        List<CompetitionTeamDto> competitionTeamDtos = compTeamService.getAllFormComp(savedComp.getId());
-        assertThat(competitionTeamDtos.size()).isEqualTo(2);
+        List<CompetitionTeam> savedCompTeams = compTeamService.saveAll(List.of(compTeamDto, compTeamDto2));
 
-        for (CompetitionTeamDto competitionTeam : competitionTeamDtos) {
-            assertThat(competitionTeam.getId()).isNotNull();
-            assertThat(competitionTeam.getCompId()).isEqualTo(savedComp.getId());
-            assertThat(competitionTeam.getCompName()).isEqualTo(savedComp.getName());
-            assertThat(competitionTeam.getTeamAcronym()).isIn(compTeamDto.getTeamAcronym(), compTeamDto2.getTeamAcronym());
-            assertThat(competitionTeam.getTeamId()).isIn(savedCompTeam.getTeamId(), savedCompTeam2.getTeamId());
+        List<CompetitionTeam> compTeams = compTeamService.getAllFormComp(savedComp.getId());
+        assertThat(compTeams.size()).isEqualTo(savedCompTeams.size());
 
+        for (CompetitionTeam compTeam : compTeams) {
+            assertThat(compTeam.getId()).isNotNull();
+            assertThat(compTeam.getCompetition().getId()).isEqualTo(savedComp.getId());
+            assertThat(compTeam.getCompetition().getName()).isEqualTo(savedComp.getName());
+            assertThat(compTeam.getTeam().getAcronym()).isIn(savedTeam1.getAcronym(), savedTeam2.getAcronym());
+            assertThat(compTeam.getTeam().getId()).isIn(savedTeam1.getId(), savedTeam2.getId());
+            compTeamService.deleteById(compTeam.getId());
         }
 
 

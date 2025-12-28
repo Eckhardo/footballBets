@@ -1,15 +1,24 @@
 package sportbets.web.controller;
 
 import jakarta.validation.Valid;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import sportbets.persistence.entity.competition.Competition;
+import sportbets.persistence.entity.competition.CompetitionTeam;
+import sportbets.persistence.entity.competition.Team;
+import sportbets.service.competition.CompService;
 import sportbets.service.competition.CompTeamService;
+import sportbets.service.competition.TeamService;
+import sportbets.web.dto.MapperUtil;
 import sportbets.web.dto.competition.CompetitionTeamDto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -17,45 +26,72 @@ class CompTeamController {
 
     private static final Logger log = LoggerFactory.getLogger(CompTeamController.class);
     private final CompTeamService compTeamService;
+    private final TeamService teamService;
+    private final CompService compService;
+    private final ModelMapper modelMapper;
 
-    public CompTeamController(CompTeamService compTeamService) {
+    public CompTeamController(CompTeamService compTeamService, TeamService teamService, CompService compService, ModelMapper modelMapper) {
         this.compTeamService = compTeamService;
+        this.teamService = teamService;
+        this.compService = compService;
+        this.modelMapper = modelMapper;
     }
 
     @GetMapping("/compTeam/{id}")
     public CompetitionTeamDto findOne(@PathVariable Long id) {
 
-        CompetitionTeamDto dto = compTeamService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        CompetitionTeam model = compTeamService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        ModelMapper modelMapper = MapperUtil.getModelMapperForCompTeam();
+        log.info("CompetitionRound found with {}", model);
+        return modelMapper.map(model, CompetitionTeamDto.class);
 
-        log.info("CompetitionTeamDto found with {}", dto);
-        return dto;
     }
 
     @GetMapping("/compTeams/{compId}")
     public List<CompetitionTeamDto> findAllFormComp(@PathVariable Long compId) {
 
-        List<CompetitionTeamDto> dtos = compTeamService.getAllFormComp(compId);
+        List<CompetitionTeam> models = compTeamService.getAllFormComp(compId);
 
-        log.info("# of CompetitionTeamDtos found with {}", dtos.size());
-        return dtos;
+
+        List<CompetitionTeamDto> competitionTeamDtos = new ArrayList<>();
+        ModelMapper myMapper = MapperUtil.getModelMapperForCompTeam();
+        models.forEach(comp -> {
+            competitionTeamDtos.add(myMapper.map(comp, CompetitionTeamDto.class));
+        });
+        return competitionTeamDtos;
     }
 
     @PostMapping("/compTeam")
     @ResponseStatus(HttpStatus.CREATED)
     public CompetitionTeamDto post(@RequestBody @Valid CompetitionTeamDto dto) {
-        log.info("New compTeam  day {}", dto);
+        log.info("post compTeam {}", dto);
 
-        CompetitionTeamDto createdModel = compTeamService.save(dto).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
-        log.info("Created comp team {}", createdModel);
-        return createdModel;
+
+        CompetitionTeam createdModel = compTeamService.save(dto);
+        ModelMapper myMapper = MapperUtil.getModelMapperForCompTeam();
+        CompetitionTeamDto createdDto = myMapper.map(createdModel, CompetitionTeamDto.class);
+        log.info("Created comp team {}", createdDto);
+        return createdDto;
     }
 
     @PostMapping("/compTeams")
     @ResponseStatus(HttpStatus.CREATED)
     public List<CompetitionTeamDto> post(@RequestBody @Valid List<CompetitionTeamDto> dtos) {
         log.info("New dtos{}", dtos.size());
+        if (dtos.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Competition teams must not be empty");
+        }
 
-        List<CompetitionTeamDto> createdDtos = compTeamService.saveAll(dtos);
+        List<CompetitionTeamDto> createdDtos = new ArrayList<>();
+        for (CompetitionTeamDto dto : dtos) {
+
+            CompetitionTeam createdModel = compTeamService.save(dto);
+            ModelMapper myMapper = MapperUtil.getModelMapperForCompTeam();
+            CompetitionTeamDto createdDto = myMapper.map(createdModel, CompetitionTeamDto.class);
+
+            createdDtos.add(createdDto);
+
+        }
         log.info("Created compTeam dtos size: {}", createdDtos.size());
         return createdDtos;
     }
@@ -64,10 +100,13 @@ class CompTeamController {
     public CompetitionTeamDto update(@PathVariable Long id, @RequestBody CompetitionTeamDto dto) {
         log.info("UpdatecompTeam {}", dto);
 
-        CompetitionTeamDto createdModel = compTeamService.update(id, dto)
+
+        CompetitionTeam updatedModel = compTeamService.update(id, dto)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        log.info("Updated compTeam {}", createdModel);
-        return createdModel;
+        log.info("Updated compTeam {}", updatedModel);
+        ModelMapper myMapper = MapperUtil.getModelMapperForCompTeam();
+        return myMapper.map(updatedModel, CompetitionTeamDto.class);
+
     }
 
     @DeleteMapping(value = "/compTeam/{id}")

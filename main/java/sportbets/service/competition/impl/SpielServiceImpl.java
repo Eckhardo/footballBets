@@ -54,11 +54,9 @@ public class SpielServiceImpl implements SpielService {
     public Spiel save(Spiel spiel) {
         log.info("save Spiel :: {}", spiel);
         Optional<Spiel> optionalSpiel = spielRepo.findByNumberWithSpieltagId(spiel.getSpielNumber(), spiel.getSpieltag().getId());
-        log.info("ispresent :: {}", optionalSpiel.isPresent());
         if (optionalSpiel.isPresent()) {
             throw new EntityExistsException("Spiel  already exist with given id:" + spiel.getId());
         }
-        log.info("save now :: {}", spiel);
         return spielRepo.save(spiel);
 
 

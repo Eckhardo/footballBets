@@ -106,8 +106,6 @@ public class ContractCompTeamApiIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isCreated();
-        Competition comp = competitionRepository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP));
-
         // save new team 1
         webClient.post()
                 .uri("/teams")
@@ -125,13 +123,16 @@ public class ContractCompTeamApiIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isCreated();
+        Competition comp = competitionRepository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP));
 
         Team entity = teamRepository.findByName(TEAM_NAME).orElseThrow(() -> new EntityNotFoundException("Team not found"));
         teamDto.setId(entity.getId());
         CompetitionTeamDto compTeamDto = new CompetitionTeamDto(null, comp.getId(), comp.getName(), teamDto.getId(), teamDto.getAcronym());
+
         Team entity2 = teamRepository.findByName(TEAM_NAME_2).orElseThrow(() -> new EntityNotFoundException("Team not found"));
         teamDto1.setId(entity2.getId());
         CompetitionTeamDto compTeamDto2 = new CompetitionTeamDto(null, comp.getId(), comp.getName(), teamDto1.getId(), teamDto1.getAcronym());
+        log.info("Post competition team 1{}", compTeamDto);
         // save newcompTeam dto 1
         webClient.post()
                 .uri("/compTeam")
@@ -140,6 +141,7 @@ public class ContractCompTeamApiIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isCreated();
+        log.info("post compTeam 2{}", compTeamDto2);
         // save newcompTeam dto 2
         webClient.post()
                 .uri("/compTeam")
@@ -153,7 +155,7 @@ public class ContractCompTeamApiIntegrationTest {
     @Test
     @Order(1)
     void givenPreloadedData_whenGetSingleTeam_thenResponseContainsFields() {
-
+        log.info("givenPreloadedData_whenGetSingleTeam_thenResponseContainsFields");
 
         Team team = teamRepository.findByName(TEAM_NAME).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME));
         Long id = team.getId();

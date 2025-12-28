@@ -93,7 +93,6 @@ public class CompetitionTeamRepositoryTest {
         testComp.addCompetitionTeam(ct4);
 
         compTeamRepo.saveAll(List.of(ct1, ct2, ct3, ct4));
-        System.out.println("Save all cascade");
 
         //  competitionDAO.save(testComp);
     }

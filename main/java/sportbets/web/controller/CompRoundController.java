@@ -42,8 +42,6 @@ public class CompRoundController {
     @GetMapping("/rounds/{id}")
     public CompetitionRoundDto findOne(@PathVariable Long id) {
         CompetitionRound model = roundService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        Competition comp = compService.findById(model.getCompetition().getId()).orElseThrow(() -> new EntityNotFoundException("comp not found "));
-        model.setCompetition(comp);
         ModelMapper modelMapper = MapperUtil.getModelMapperForCompetition();
         log.info("CompetitionRound found with {}", model);
         return modelMapper.map(model, CompetitionRoundDto.class);

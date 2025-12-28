@@ -40,15 +40,8 @@ public class CompRoundServiceImpl implements CompRoundService {
         if (competition.isPresent()) {
             throw new EntityExistsException("Comp Round already exist with given name:" + compRound.getName());
         }
-        Competition comp= compRepository.save(compRound.getCompetition());
-        log.info("save2 compRound  with {}", compRound);
-     //   compRound.setCompetition(comp);
-        log.info("save3 compRound  with {}", compRound);
-        comp.addCompetitionRound(compRound);
-        log.info("save4 compRound  with {}", compRound);
-        CompetitionRound round = roundRepository.save(compRound);
-        log.info("save5 compRound  with {}", compRound);
-        return round;
+
+        return roundRepository.save(compRound);
     }
 
     @Override

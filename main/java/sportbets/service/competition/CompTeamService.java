@@ -1,23 +1,24 @@
 package sportbets.service.competition;
 
+import sportbets.persistence.entity.competition.CompetitionTeam;
 import sportbets.web.dto.competition.CompetitionTeamDto;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface CompTeamService {
-    Optional<CompetitionTeamDto> findById(Long id);
+    Optional<CompetitionTeam> findById(Long id);
 
-    Optional<CompetitionTeamDto> save(CompetitionTeamDto dto);
+    CompetitionTeam save(CompetitionTeamDto compTeamDto);
 
-    List<CompetitionTeamDto> saveAll(List<CompetitionTeamDto> dtos);
+    List<CompetitionTeam> saveAll(List<CompetitionTeamDto> compTeamDtos);
 
-    Optional<CompetitionTeamDto> update(Long id, CompetitionTeamDto dto);
+    Optional<CompetitionTeam> update(Long id, CompetitionTeamDto competitionTeamDto);
 
     void deleteAll(List<Long> ids);
 
     void deleteById(Long id);
 
-    List<CompetitionTeamDto> getAllFormComp(Long compId);
+    List<CompetitionTeam> getAllFormComp(Long compId);
 
 }
