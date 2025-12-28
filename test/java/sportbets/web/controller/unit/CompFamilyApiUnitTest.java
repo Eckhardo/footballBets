@@ -74,7 +74,7 @@ public class CompFamilyApiUnitTest {
         List<CompetitionFamily> listOfCompetitionFamilys = new ArrayList<>();
         listOfCompetitionFamilys.add(new CompetitionFamily("Testliga", "Deutsche Testliga", true, true));
         listOfCompetitionFamilys.add(new CompetitionFamily("3. Bundesliga", "3. Deutsche Fussball Bundesliga", true, true));
-        List<CompetitionFamily> fams = compFamilyRepository.saveAll(listOfCompetitionFamilys);
+        compFamilyRepository.saveAll(listOfCompetitionFamilys);
         // when -  action or the behaviour that we are going test
         ResultActions response = mockMvc.perform(get("/families"));
 

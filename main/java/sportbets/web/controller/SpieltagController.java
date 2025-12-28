@@ -12,11 +12,9 @@ import org.springframework.web.server.ResponseStatusException;
 import sportbets.persistence.entity.competition.CompetitionRound;
 import sportbets.persistence.entity.competition.Spiel;
 import sportbets.persistence.entity.competition.Spieltag;
-import sportbets.persistence.entity.competition.Team;
 import sportbets.service.competition.CompRoundService;
 import sportbets.service.competition.SpielService;
 import sportbets.service.competition.SpieltagService;
-import sportbets.service.competition.TeamService;
 import sportbets.web.dto.MapperUtil;
 import sportbets.web.dto.competition.SpielDto;
 import sportbets.web.dto.competition.SpieltagDto;
@@ -74,7 +72,7 @@ public class SpieltagController {
 
     @GetMapping("/matchdays/{id}")
     public SpieltagDto findOne(@PathVariable Long id) {
-        log.info("SpieltagDto:findOne::" + id);
+        log.info("SpieltagDto:findOne::{}", id);
         Spieltag model = spieltagService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         ModelMapper modelMapper = MapperUtil.getModelMapperForCompetitionRound();

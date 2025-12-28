@@ -14,7 +14,6 @@ import sportbets.web.dto.competition.CompetitionFamilyDto;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 
 @RestController
@@ -35,36 +34,36 @@ public class CompFamilyController {
         CompetitionFamily model = compFamilyService.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-       return modelMapper.map(model, CompetitionFamilyDto.class);
+        return modelMapper.map(model, CompetitionFamilyDto.class);
 
     }
 
     @PostMapping("/families")
     @ResponseStatus(HttpStatus.CREATED)
     public CompetitionFamilyDto post(@RequestBody @Valid CompetitionFamilyDto newFam) {
-        log.info("CompFamilyController.create::" + newFam);
+        log.info("CompFamilyController.create::{}", newFam);
         CompetitionFamily model = modelMapper.map(newFam, CompetitionFamily.class);
         CompetitionFamily createdModel = compFamilyService.save(model).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         CompetitionFamilyDto famDto = modelMapper.map(createdModel, CompetitionFamilyDto.class);
-        log.info("return save::" + famDto);
+        log.info("return save::{}", famDto);
         return famDto;
     }
 
     @PutMapping(value = "/families/{id}")
     public CompetitionFamilyDto update(@PathVariable Long id, @RequestBody @Valid CompetitionFamilyDto familyDto) {
         // CompetitionFamily model = compFamilyService.findById(id) .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));;
-        log.info("CompFamilyController.update::" + familyDto.toString());
+        log.info("CompFamilyController.update::{}", familyDto.toString());
         CompetitionFamily model = modelMapper.map(familyDto, CompetitionFamily.class);
-        CompetitionFamily updatedModel = compFamilyService.updateFamily(id,model).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        CompetitionFamily updatedModel = compFamilyService.updateFamily(id, model).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         CompetitionFamilyDto famDto = modelMapper.map(updatedModel, CompetitionFamilyDto.class);
-        log.info("return save::" + famDto);
+        log.info("return save::{}", famDto);
         return famDto;
     }
 
     @DeleteMapping(value = "/families/{id}")
     public ResponseEntity<HttpStatus> delete(@PathVariable Long id) {
         // CompetitionFamily model = compFamilyService.findById(id) .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));;
-        log.info("CompFamilyController.delete::" + id);
+        log.info("CompFamilyController.delete::{}", id);
         try {
             compFamilyService.deleteById(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

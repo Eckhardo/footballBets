@@ -6,15 +6,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionTeam;
-import sportbets.persistence.entity.competition.Team;
-import sportbets.service.competition.CompService;
 import sportbets.service.competition.CompTeamService;
-import sportbets.service.competition.TeamService;
 import sportbets.web.dto.MapperUtil;
 import sportbets.web.dto.competition.CompetitionTeamDto;
 
@@ -26,15 +21,10 @@ class CompTeamController {
 
     private static final Logger log = LoggerFactory.getLogger(CompTeamController.class);
     private final CompTeamService compTeamService;
-    private final TeamService teamService;
-    private final CompService compService;
-    private final ModelMapper modelMapper;
 
-    public CompTeamController(CompTeamService compTeamService, TeamService teamService, CompService compService, ModelMapper modelMapper) {
+    public CompTeamController(CompTeamService compTeamService) {
         this.compTeamService = compTeamService;
-        this.teamService = teamService;
-        this.compService = compService;
-        this.modelMapper = modelMapper;
+
     }
 
     @GetMapping("/compTeam/{id}")

@@ -36,11 +36,15 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ContractCompTeamApiIntegrationTest {
-    private static final Logger log = LoggerFactory.getLogger(ContractCompRoundApiIntegrationTest.class);
+    private static final Logger log = LoggerFactory.getLogger(ContractCompTeamApiIntegrationTest.class);
     private static final String TEST_COMP_FAM = "TestLiga";
     private static final String TEST_COMP = "TestLiga: Saison 2025";
     private static final String TEAM_NAME = "Eintracht Braunschweig";
     private static final String TEAM_NAME_2 = "Holstein Kiel";
+    final CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, TEST_COMP_FAM, "Description of TestLiga", true, true);
+    final CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, null, TEST_COMP_FAM);
+    final TeamDto teamDto = new TeamDto(null, TEAM_NAME, "Braunschweig");
+    final TeamDto teamDto1 = new TeamDto(null, TEAM_NAME_2, "Kiel");
     @Autowired
     WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();
     @Autowired
@@ -51,10 +55,6 @@ public class ContractCompTeamApiIntegrationTest {
     CompetitionTeamRepository compTeamRepo;
     @Autowired
     TeamRepository teamRepository;
-    CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, TEST_COMP_FAM, "Description of TestLiga", true, true);
-    CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, null, TEST_COMP_FAM);
-    TeamDto teamDto = new TeamDto(null, TEAM_NAME, "Braunschweig");
-    TeamDto teamDto1 = new TeamDto(null, TEAM_NAME_2, "Kiel");
 
     @AfterEach
     public void cleanup() {
@@ -69,7 +69,7 @@ public class ContractCompTeamApiIntegrationTest {
                 .isNoContent();
         Team team = teamRepository.findByName(TEAM_NAME).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME));
         Long id = team.getId();
-        log.info("delete team with id::" + id);
+        log.info("delete team with id::{}", id);
         webClient.delete()
                 .uri("/teams/" + id)
                 .exchange()
@@ -77,7 +77,7 @@ public class ContractCompTeamApiIntegrationTest {
                 .isNoContent();
         Team team2 = teamRepository.findByName(TEAM_NAME_2).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME));
         Long id2 = team2.getId();
-        log.info("delete team with id::" + id2);
+        log.info("delete team with id::{}", id2);
         webClient.delete()
                 .uri("/teams/" + id2)
                 .exchange()

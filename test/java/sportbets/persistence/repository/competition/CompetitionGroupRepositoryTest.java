@@ -28,11 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class CompetitionGroupRepositoryTest {
-    private CompetitionFamily testFamily;
-    private Competition testComp;
 
-
-    private CompetitionRound testRound;
 
     private CompetitionGroup testGroup;
 
@@ -44,10 +40,10 @@ public class CompetitionGroupRepositoryTest {
     @Before
     public void setUp() {
         // Initialize test data before test methods
-        testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true);
-        testComp = new Competition("Saison 2025/26", "1. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
+        CompetitionFamily testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true);
+        Competition testComp = new Competition("Saison 2025/26", "1. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
         testFamily.addCompetition(testComp);
-        testRound = new CompetitionRound(1, "Vorrunde", testComp, false);
+        CompetitionRound testRound = new CompetitionRound(1, "Vorrunde", testComp, false);
         testComp.addCompetitionRound(testRound);
         testGroup = new CompetitionGroup("Gruppe A", 1, testRound);
         testRound.addCompetitionGroup(testGroup);

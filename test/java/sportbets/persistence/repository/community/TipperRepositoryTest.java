@@ -36,10 +36,7 @@ public class TipperRepositoryTest {
     TipperRoleRepository tRoleRepo;
     @Autowired
     RoleRepository roleRepo;
-    private CompetitionFamily testFamily;
-    private Competition testComp;
     private Tipper testTipper;
-    private CompetitionRole testRole;
     @Autowired
     private TipperRepository tipperRepo;
     @Autowired
@@ -49,15 +46,15 @@ public class TipperRepositoryTest {
 
     @Before
     public void setUp() {
-        testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true);
-        testComp = new Competition("TestLiga: Saison 2025/26", "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
+        CompetitionFamily testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true);
+        Competition testComp = new Competition("TestLiga: Saison 2025/26", "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
         testFamily.addCompetition(testComp);
         familyRepo.save(testFamily);
         Competition savedComp = compRepo.findByName(testComp.getName()).orElseThrow();
 
         testTipper = new Tipper("Eckhard", "Kirschning", "TestTipper", "root", "hint", "eki@gmx.de", savedComp.getId());
         testTipper = tipperRepo.save(testTipper);
-        testRole = new CompetitionRole("1. Bundesliga Saison 2025/26", "Meine Test Rolle", savedComp);
+        CompetitionRole testRole = new CompetitionRole("1. Bundesliga Saison 2025/26", "Meine Test Rolle", savedComp);
         testTipperRole = new TipperRole(testRole, testTipper);
         roleRepo.save(testRole);
         tRoleRepo.save(testTipperRole);

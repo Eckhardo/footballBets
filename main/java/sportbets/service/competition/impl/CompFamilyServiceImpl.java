@@ -53,7 +53,7 @@ public class CompFamilyServiceImpl implements CompFamilyService {
 
     @Override
     public Optional<CompetitionFamily> findById(Long id) {
-       return compFamilyRepository.findById(id);
+        return compFamilyRepository.findById(id);
 
     }
 

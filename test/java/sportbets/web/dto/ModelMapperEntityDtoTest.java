@@ -34,7 +34,7 @@ class ModelMapperEntityDtoTest {
     private static final Logger log = LoggerFactory.getLogger(ModelMapperEntityDtoTest.class);
     private static final String TEAM_NAME = "Eintracht Braunschweig";
     private static final String TEAM_NAME_2 = "Holstein Kiel";
-    ModelMapper modelMapper = new ModelMapper();
+    final ModelMapper modelMapper = new ModelMapper();
 
     @Test
     void checkModelMapper() {
@@ -45,12 +45,12 @@ class ModelMapperEntityDtoTest {
 
 
         CompetitionRoundDto compRoundDto = modelMapper.map(testRound, CompetitionRoundDto.class);
-        log.info("Round:: " + compRoundDto.toString());
+        log.info("Round:: {}", compRoundDto.toString());
         CompetitionDto compDto = modelMapper.map(testComp, CompetitionDto.class);
-        log.info("Comp:: " + compDto.toString());
+        log.info("Comp:: {}", compDto.toString());
 
         CompetitionFamilyDto famDto = modelMapper.map(testFamily, CompetitionFamilyDto.class);
-        log.info("Family:: " + famDto.toString());
+        log.info("Family:: {}", famDto.toString());
 
 
     }
@@ -77,7 +77,7 @@ class ModelMapperEntityDtoTest {
         testComp.setId(5L);
         CompetitionDto compDto = modelMapper.map(testComp, CompetitionDto.class);
 
-        log.info("Comp:: " + compDto.toString());
+        log.info("Comp:: {}", compDto.toString());
     }
 
     @Test
@@ -90,7 +90,7 @@ class ModelMapperEntityDtoTest {
         testComp.setId(5L);
         CompetitionRound testRound = new CompetitionRound(1, COMP_ROUND, testComp, false);
         CompetitionRoundDto compRoundDto = modelMapper.map(testRound, CompetitionRoundDto.class);
-        log.info("Round:: " + compRoundDto.toString());
+        log.info("Round:: {}", compRoundDto.toString());
 
     }
 
@@ -112,7 +112,7 @@ class ModelMapperEntityDtoTest {
         final ModelMapper myMapper = MapperUtil.getModelMapperForCompetitionRound();
         spieltage.forEach(spieltag -> {
             SpieltagDto spieltagDto = myMapper.map(spieltag, SpieltagDto.class);
-            log.info("Spieltag:: " + spieltagDto.toString());
+            log.info("Spieltag:: {}", spieltagDto.toString());
         });
     }
 

@@ -34,7 +34,6 @@ public class CompetitionQueryTest {
 
     private CompetitionFamily testFamily;
     private Competition testComp;
-    private CompetitionRound testRound;
 
     @Autowired
     private CompetitionRepository compRepo;
@@ -50,7 +49,7 @@ public class CompetitionQueryTest {
         testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true);
         testComp = new Competition("TestLiga: Saison 2025/26", "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
         testFamily.addCompetition(testComp);
-        testRound = new CompetitionRound(1, "Hinrunde", testComp, false);
+        CompetitionRound testRound = new CompetitionRound(1, "Hinrunde", testComp, false);
         testComp.addCompetitionRound(testRound);
         System.out.println("Save all cascade");
         familyRepo.save(testFamily);
@@ -75,7 +74,7 @@ public class CompetitionQueryTest {
         System.out.println("Found competition name: " + comp.getName());
         comp.getCompetitionRounds().forEach(compRound -> {
 
-            log.info("Found competitionRound name: " + compRound.getName());
+            log.info("Found competitionRound name: {}", compRound.getName());
         });
     }
 
@@ -88,7 +87,7 @@ public class CompetitionQueryTest {
 
         comp.getCompetitionRounds().forEach(compRound -> {
 
-            log.info("Found competitionRound name: " + compRound.getName());
+            log.info("Found competitionRound name: {}", compRound.getName());
             compRound.getSpieltage().forEach(spieltag -> System.out.println("Found spieltag name: " + spieltag.getSpieltagNumber()));
         });
     }
@@ -101,7 +100,7 @@ public class CompetitionQueryTest {
         List<Team> teams = compRepo.findTeamsForComp(testComp.getId());
         assertNotNull(teams);
         teams.forEach(team -> {
-            log.info("Found team name: " + team);
+            log.info("Found team name: {}", team);
         });
     }
 }

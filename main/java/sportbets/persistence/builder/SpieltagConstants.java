@@ -9,7 +9,7 @@ import java.util.List;
 
 
 public class SpieltagConstants {
-    public static List<Spieltag> SPIELTAGE = new ArrayList<>();
+    public static final List<Spieltag> SPIELTAGE = new ArrayList<>();
 
     public static List<Spieltag> getSpieltageHinrunde(CompetitionRound round, List<LocalDateTime> hinDates) {
         SPIELTAGE.clear();

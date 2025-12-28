@@ -16,6 +16,7 @@ import java.util.Set;
 public class Tipper {
     private static final Logger log = LoggerFactory.getLogger(Tipper.class);
     @OneToMany(mappedBy = "tipper", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    final
     Set<TipperRole> tipperRoles = new HashSet<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

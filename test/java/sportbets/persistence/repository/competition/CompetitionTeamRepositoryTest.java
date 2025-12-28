@@ -28,13 +28,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class CompetitionTeamRepositoryTest {
 
-    private CompetitionFamily testFamily;
     private Competition testComp;
 
-
-    private CompetitionRound testRound;
-    private Spieltag testSpieltag;
-    private Spieltag testSpieltag2;
 
     @Autowired
     private CompetitionFamilyRepository familyRepo;
@@ -42,13 +37,6 @@ public class CompetitionTeamRepositoryTest {
     private CompetitionRepository compRepo;
     @Autowired
     private CompetitionTeamRepository compTeamRepo;
-    @Autowired
-    private CompetitionRoundRepository compRoundRepo;
-
-    @Autowired
-    private SpieltagRepository spieltagRepo;
-    @Autowired
-    private SpielRepository spielRepo;
 
     @Autowired
     private TeamRepository teamRepo;
@@ -57,13 +45,13 @@ public class CompetitionTeamRepositoryTest {
     public void setUp() {
         // Initialize test data before test methods
 
-        testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true);
+        CompetitionFamily testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true);
         testComp = new Competition("Saison 2025/26", "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
         testFamily.addCompetition(testComp);
-        testRound = new CompetitionRound(1, "Vorrunde", testComp, false);
+        CompetitionRound testRound = new CompetitionRound(1, "Vorrunde", testComp, false);
         testComp.addCompetitionRound(testRound);
-        testSpieltag = new Spieltag(1, LocalDateTime.now(), testRound);
-        testSpieltag2 = new Spieltag(2, LocalDateTime.now(), testRound);
+        Spieltag testSpieltag = new Spieltag(1, LocalDateTime.now(), testRound);
+        Spieltag testSpieltag2 = new Spieltag(2, LocalDateTime.now(), testRound);
         testRound.addSpieltag(testSpieltag);
         testRound.addSpieltag(testSpieltag2);
         System.out.println("Save all cascade");

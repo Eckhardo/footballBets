@@ -66,7 +66,7 @@ public class CompRoundController {
 
     @GetMapping("/rounds/{roundId}/matchdays")
     public List<SpieltagDto> findAll(@PathVariable Long roundId) {
-        log.info("SpieltagDto:findAll::" + roundId);
+        log.info("SpieltagDto:findAll::{}", roundId);
         List<Spieltag> spieltags = spieltagService.getAllForRound(roundId);
         List<SpieltagDto> spieltagDtos = new ArrayList<>();
         ModelMapper myMapper = MapperUtil.getModelMapperForCompetitionRound();

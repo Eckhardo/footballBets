@@ -17,8 +17,6 @@ import sportbets.service.competition.CompService;
 import sportbets.web.dto.authorization.CompetitionRoleDto;
 import sportbets.web.dto.authorization.TipperRoleDto;
 import sportbets.web.dto.community.TipperDto;
-import sportbets.web.dto.competition.CompetitionDto;
-import sportbets.web.dto.competition.CompetitionFamilyDto;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,7 +30,7 @@ class TipperRoleServiceTest {
     private static final String TEST_USERNAME = "TEST_USER";
 
     private static final Logger log = LoggerFactory.getLogger(TipperRoleServiceTest.class);
-    CompetitionFamily competitionFamily =  new CompetitionFamily(TEST_COMP_FAM, "description of testliga", true, true);
+    final CompetitionFamily competitionFamily = new CompetitionFamily(TEST_COMP_FAM, "description of testliga", true, true);
     Competition savedComp = null;
     TipperDto savedTipper;
     @Autowired
@@ -52,7 +50,7 @@ class TipperRoleServiceTest {
     public void setup() {
 
         CompetitionFamily savedFam = familyService.save(competitionFamily).orElseThrow();
-        Competition competition = new Competition( TEST_COMP, "Description of Competition", 3, 1, savedFam);
+        Competition competition = new Competition(TEST_COMP, "Description of Competition", 3, 1, savedFam);
         savedComp = compService.save(competition);
         assertNotNull(savedComp);
 

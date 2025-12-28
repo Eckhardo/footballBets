@@ -21,7 +21,6 @@ import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.repository.community.CommunityRepository;
 import sportbets.persistence.repository.community.TipperRepository;
-import sportbets.persistence.repository.community.TipperRepositoryTest;
 import sportbets.persistence.repository.competition.CompetitionFamilyRepository;
 import sportbets.persistence.repository.competition.CompetitionRepository;
 import sportbets.persistence.repository.competition.SpielRepository;
@@ -36,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class TipperRoleRepositoryTest {
     public static final String TESTUSER = "Testuser";
-    private static final Logger log = LoggerFactory.getLogger(TipperRepositoryTest.class);
+    private static final Logger log = LoggerFactory.getLogger(TipperRoleRepositoryTest.class);
     private static final String COMP_NAME = "TEST Saison 2025/26";
     private static final String COMM_NAME = "TEST_COMM";
     TipperRole compTipperRole;

@@ -27,13 +27,12 @@ public class ContractTeamApiIntegrationTest {
     private static final Logger log = LoggerFactory.getLogger(ContractTeamApiIntegrationTest.class);
     private static final String TEAM_NAME = "Eintracht Braunschweig";
     private static final String TEAM_NAME_2 = "Holstein Kiel";
+    final TeamDto teamDto = new TeamDto(null, TEAM_NAME, "Braunschweig");
+    final TeamDto teamDto1 = new TeamDto(null, TEAM_NAME_2, "Kiel");
     @Autowired
     WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();
     @Autowired
     TeamRepository teamRepository;
-    TeamDto teamDto = new TeamDto(null, TEAM_NAME, "Braunschweig");
-    TeamDto teamDto1 = new TeamDto(null, TEAM_NAME_2, "Kiel");
-
 
     @BeforeEach
     public void setUp() {
@@ -61,7 +60,7 @@ public class ContractTeamApiIntegrationTest {
         log.info("cleanup");
         Team team = teamRepository.findByName(TEAM_NAME).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME));
         Long id = team.getId();
-        log.info("delete team with id::" + id);
+        log.info("delete team with id::{}", id);
         webClient.delete()
                 .uri("/teams/" + id)
                 .exchange()
@@ -70,7 +69,7 @@ public class ContractTeamApiIntegrationTest {
 
         Team team2 = teamRepository.findByName(TEAM_NAME_2).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME));
         Long id2 = team2.getId();
-        log.info("delete team with id::" + id2);
+        log.info("delete team with id::{}", id2);
         webClient.delete()
                 .uri("/teams/" + id2)
                 .exchange()

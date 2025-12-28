@@ -18,8 +18,6 @@ import sportbets.service.competition.SpieltagService;
 import sportbets.service.competition.TeamService;
 import sportbets.web.dto.MapperUtil;
 import sportbets.web.dto.competition.SpielDto;
-import sportbets.web.dto.competition.SpieltagDto;
-import sportbets.web.dto.competition.TeamDto;
 
 @RestController
 public class MatchController {
@@ -40,7 +38,7 @@ public class MatchController {
 
     @GetMapping("/matches/{id}")
     public SpielDto findOne(@PathVariable Long id) {
-        log.info("SpielDto:findOne::" + id);
+        log.info("SpielDto:findOne::{}", id);
 
         Spiel model = spielService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
@@ -63,7 +61,7 @@ public class MatchController {
         model.setHeimTeam(heimTeam);
         model.setGastTeam(gastTeam);
 
-        Spiel createdModel = spielService.save( model);
+        Spiel createdModel = spielService.save(model);
         ModelMapper myModelMapper = MapperUtil.getModelMapperForSpiel();
         SpielDto updatedDto = myModelMapper.map(createdModel, SpielDto.class);
         log.info("Spiel RETURN do {}", updatedDto);

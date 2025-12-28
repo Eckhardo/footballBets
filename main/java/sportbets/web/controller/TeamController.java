@@ -7,10 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.entity.competition.Team;
 import sportbets.service.competition.TeamService;
-import sportbets.web.dto.competition.CompetitionFamilyDto;
 import sportbets.web.dto.competition.TeamDto;
 
 import java.util.ArrayList;
@@ -30,7 +28,7 @@ public class TeamController {
 
     @GetMapping("/teams/{id}")
     public TeamDto findOne(@PathVariable Long id) {
-        log.info("TeamDto:findOne::" + id);
+        log.info("TeamDto:findOne::{}", id);
         Team model = teamService.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
@@ -55,7 +53,7 @@ public class TeamController {
         Team model = modelMapper.map(teamDto, Team.class);
         Team createdModel = teamService.save(model);
         TeamDto saved = modelMapper.map(createdModel, TeamDto.class);
-        log.info("return save::" + saved);
+        log.info("return save::{}", saved);
         return saved;
     }
 
@@ -64,9 +62,9 @@ public class TeamController {
         log.info("Update team  {}", teamDto);
 
         Team model = modelMapper.map(teamDto, Team.class);
-        Team updatedModel = teamService.updateTeam(id,model).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Team updatedModel = teamService.updateTeam(id, model).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         TeamDto updated = modelMapper.map(updatedModel, TeamDto.class);
-        log.info("return save::" + updated);
+        log.info("return save::{}", updated);
         return updated;
     }
 

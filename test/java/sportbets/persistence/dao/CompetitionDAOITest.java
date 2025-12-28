@@ -48,8 +48,6 @@ public class CompetitionDAOITest {
     @AfterEach
     public void tearDown() {
 
-        //    competitionDAO.deleteAll();
-        //    familyDAO.deleteAll();
     }
 
 

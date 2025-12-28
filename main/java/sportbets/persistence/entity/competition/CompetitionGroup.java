@@ -10,24 +10,20 @@ import java.util.Set;
 
 @Entity
 public class CompetitionGroup {
+    @Column(nullable = false)
+    private final LocalDateTime createdOn = LocalDateTime.now();
+    @OneToMany(mappedBy = "competitionGroup", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    private final Set<Spiel> spiele = new HashSet<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
     private String name;
     private int groupNumber;
-
-
-    @Column(nullable = false)
-    private LocalDateTime createdOn = LocalDateTime.now();
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fk_comp_round_id")
     @NotNull
     private CompetitionRound competitionRound;
-
-    @OneToMany(mappedBy = "competitionGroup", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    private final Set<Spiel> spiele = new HashSet<>();
 
 
     //	********************** Constructors ********************** //
@@ -100,7 +96,7 @@ public class CompetitionGroup {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         CompetitionGroup that = (CompetitionGroup) o;
-        return id == that.id && groupNumber == that.groupNumber && Objects.equals(name, that.name) && Objects.equals(createdOn, that.createdOn) && Objects.equals(competitionRound, that.competitionRound);
+        return Objects.equals(id, that.id) && groupNumber == that.groupNumber && Objects.equals(name, that.name) && Objects.equals(createdOn, that.createdOn) && Objects.equals(competitionRound, that.competitionRound);
     }
 
     @Override

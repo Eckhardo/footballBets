@@ -10,33 +10,23 @@ import java.util.Set;
 
 @Entity
 public class CompetitionRound {
+    @OneToMany(mappedBy = "competitionRound", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private final Set<CompetitionGroup> competitionGroups = new HashSet<>();
+    @OneToMany(mappedBy = "competitionRound", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private final Set<Spieltag> spieltage = new HashSet<>();
+    @Column(nullable = false)
+    private final LocalDateTime createdOn = LocalDateTime.now();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private int roundNumber;
-
     @Column(nullable = false)
     private String name;
-
     private boolean hasGroups = false;
-
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fk_comp_id")
     @NotNull
     private Competition competition;
-
-
-    @OneToMany(mappedBy = "competitionRound", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private final Set<CompetitionGroup> competitionGroups = new HashSet<>();
-
-    @OneToMany(mappedBy = "competitionRound", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private final Set<Spieltag> spieltage = new HashSet<>();
-
-
-    @Column(nullable = false)
-    private LocalDateTime createdOn = LocalDateTime.now();
 
     public CompetitionRound() {
 
@@ -98,8 +88,6 @@ public class CompetitionRound {
     }
 
     public void addSpieltag(Spieltag spieltag) {
-        if (spieltage == null)
-            throw new IllegalArgumentException("Can't add a null spielt.");
         this.getSpieltage().add(spieltag);
     }
 
@@ -110,10 +98,6 @@ public class CompetitionRound {
 
     public void setHasGroups(boolean hasGroups) {
         this.hasGroups = hasGroups;
-    }
-
-    public LocalDateTime getCreatedOn() {
-        return createdOn;
     }
 
     public int getRoundNumber() {
@@ -128,7 +112,7 @@ public class CompetitionRound {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         CompetitionRound that = (CompetitionRound) o;
-        return id == that.id && hasGroups == that.hasGroups && roundNumber == that.roundNumber && Objects.equals(name, that.name) && Objects.equals(createdOn, that.createdOn);
+        return Objects.equals(id, that.id) && hasGroups == that.hasGroups && roundNumber == that.roundNumber && Objects.equals(name, that.name) && Objects.equals(createdOn, that.createdOn);
     }
 
     @Override

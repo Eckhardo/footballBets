@@ -27,7 +27,7 @@ public class ContractCompFamilyApiIntegrationTest {
 
     private static final Logger log = LoggerFactory.getLogger(ContractCompFamilyApiIntegrationTest.class);
     private static final String COMP_FAM = "Premier League";
-    CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, COMP_FAM, "Description of TestLiga", true, true);
+    final CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, COMP_FAM, "Description of TestLiga", true, true);
 
     @Autowired
     WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();
@@ -41,7 +41,7 @@ public class ContractCompFamilyApiIntegrationTest {
         log.info("cleanup");
         CompetitionFamily fam = competitionFamilyRepository.findByName(COMP_FAM).orElseThrow(() -> new EntityNotFoundException(COMP_FAM));
         Long id = fam.getId();
-        log.info("deleteFamily with id::" + id);
+        log.info("deleteFamily with id::{}", id);
         webClient.delete()
                 .uri("/families/" + id)
                 .exchange()
@@ -96,7 +96,7 @@ public class ContractCompFamilyApiIntegrationTest {
         CompetitionFamily fam = competitionFamilyRepository.findByName(COMP_FAM).orElseThrow(() -> new EntityNotFoundException(COMP_FAM));
         compFamilyDto.setDescription("Changed Description");
         Long id = fam.getId();
-        log.info("updateFamily with id::" + id);
+        log.info("updateFamily with id::{}", id);
         webClient.put()
                 .uri("/families/" + id)
                 .contentType(MediaType.APPLICATION_JSON)

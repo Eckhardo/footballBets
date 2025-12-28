@@ -85,8 +85,6 @@ public class CompetitionDAOImpl implements CompetitionDAO {
     @Transactional
     public int deleteAll() {
 
-        int numRowsDeleted = entityManager.createQuery("DELETE FROM Competition").executeUpdate();
-
-        return numRowsDeleted;
+        return entityManager.createQuery("DELETE FROM Competition").executeUpdate();
     }
 }

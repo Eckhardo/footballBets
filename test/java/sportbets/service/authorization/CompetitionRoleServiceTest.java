@@ -14,8 +14,6 @@ import sportbets.service.competition.CompFamilyService;
 import sportbets.service.competition.CompService;
 import sportbets.web.dto.authorization.CompetitionRoleDto;
 import sportbets.web.dto.community.TipperDto;
-import sportbets.web.dto.competition.CompetitionDto;
-import sportbets.web.dto.competition.CompetitionFamilyDto;
 
 import java.util.List;
 
@@ -31,7 +29,7 @@ public class CompetitionRoleServiceTest {
     private static final String TEST_COMP_FAM = "TestLiga";
     private static final String TEST_COMP = "TestLiga: Saison 2025";
     private static final String TEST_USERNAME = "TEST_USER";
-    CompetitionFamily competitionFamily = new CompetitionFamily(TEST_COMP_FAM, "description of testliga", true, true);
+    final CompetitionFamily competitionFamily = new CompetitionFamily(TEST_COMP_FAM, "description of testliga", true, true);
     Competition savedComp = null;
     TipperDto savedTipper = null;
     @Autowired
@@ -48,7 +46,7 @@ public class CompetitionRoleServiceTest {
     public void setup() {
 
         CompetitionFamily savedFam = familyService.save(competitionFamily).orElseThrow();
-        Competition competition =new Competition( TEST_COMP, "Description of Competition", 3, 1, savedFam);
+        Competition competition = new Competition(TEST_COMP, "Description of Competition", 3, 1, savedFam);
         savedComp = compService.save(competition);
         assertNotNull(savedComp);
         TipperDto testTipper = new TipperDto(null, "Eckhard", "Kirschning", TEST_USERNAME, "root", "hint", "eki@gmx.de", savedComp.getId());

@@ -4,7 +4,7 @@ import sportbets.persistence.entity.competition.Team;
 
 public class NewTeamConstans {
 
-    static Team[] teams = {
+    static final Team[] teams = {
 
             new Team("FC Bayern München", "Bayern"),
             new Team("Hamburger SV", "HSV"),

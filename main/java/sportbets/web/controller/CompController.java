@@ -51,7 +51,7 @@ public class CompController {
 
     @GetMapping("/competitions/{id}")
     public CompetitionDto findOne(@PathVariable Long id) {
-        log.info("CompController:findOne::" + id);
+        log.info("CompController:findOne::{}", id);
         Competition model = compService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         CompetitionFamily fam = compFamilyService.findById(model.getCompetitionFamily().getId()).orElseThrow(() -> new EntityNotFoundException("compFam not found "));
         model.setCompetitionFamily(fam);
@@ -118,7 +118,7 @@ public class CompController {
 
     @DeleteMapping(value = "/competitions/{id}")
     public ResponseEntity<HttpStatus> delete(@PathVariable Long id) {
-        log.info("CompController.delete::" + id);
+        log.info("CompController.delete::{}", id);
         try {
             compService.deleteById(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

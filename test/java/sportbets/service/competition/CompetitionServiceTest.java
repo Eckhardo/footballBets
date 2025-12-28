@@ -6,13 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
-import sportbets.web.dto.competition.CompetitionDto;
-import sportbets.web.dto.competition.CompetitionFamilyDto;
-
-import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -23,7 +18,7 @@ public class CompetitionServiceTest {
 
     private static final String TEST_COMP_FAM = "TestLiga";
     private static final String TEST_COMP = "TestLiga: Saison 2025";
-    CompetitionFamily competitionFamily = new CompetitionFamily(TEST_COMP_FAM, "description of testliga", true, true);
+    final CompetitionFamily competitionFamily = new CompetitionFamily(TEST_COMP_FAM, "description of testliga", true, true);
     CompetitionFamily savedFam = null;
     @Autowired
     private CompFamilyService familyService; // Real service being tested
@@ -47,26 +42,23 @@ public class CompetitionServiceTest {
     @Test
     void whenValidComp_thenCompShouldBeSaved() {
 
-        Competition competition = new Competition( TEST_COMP, "Description of Competition", 3, 1, savedFam);
-       Competition savedComp = compService.save(competition);
+        Competition competition = new Competition(TEST_COMP, "Description of Competition", 3, 1, savedFam);
+        Competition savedComp = compService.save(competition);
 
-            assertThat(savedComp.getId()).isNotNull();
-            assertThat(savedComp.getName()).isEqualTo(TEST_COMP);
-            assertThat(savedComp.getCompetitionFamily().getName()).isEqualTo(savedFam.getName());
-            assertThat(savedComp.getCompetitionFamily().getId()).isEqualTo(savedFam.getId());
-            CompetitionFamily famModel = familyService.findByIdTest(savedComp.getCompetitionFamily().getId()).orElseThrow();
-            assertThat(famModel.getCompetitions()).isNotNull();
-
-
+        assertThat(savedComp.getId()).isNotNull();
+        assertThat(savedComp.getName()).isEqualTo(TEST_COMP);
+        assertThat(savedComp.getCompetitionFamily().getName()).isEqualTo(savedFam.getName());
+        assertThat(savedComp.getCompetitionFamily().getId()).isEqualTo(savedFam.getId());
+        CompetitionFamily famModel = familyService.findByIdTest(savedComp.getCompetitionFamily().getId()).orElseThrow();
+        assertThat(famModel.getCompetitions()).isNotNull();
 
 
     }
 
     @Test
-
     void whenValidComp_thenCompShouldBeUpdated() {
 
-        Competition compDto =new Competition( TEST_COMP, "Description of Competition", 3, 1, savedFam);
+        Competition compDto = new Competition(TEST_COMP, "Description of Competition", 3, 1, savedFam);
         Competition savedComp = compService.save(compDto);
         savedComp.setWinMultiplicator(2);
         Competition updatedComp = compService.updateComp(savedComp.getId(), savedComp);
@@ -74,7 +66,7 @@ public class CompetitionServiceTest {
         assertThat(updatedComp.getId()).isNotNull();
         assertThat(updatedComp.getName()).isEqualTo(TEST_COMP);
         assertThat(updatedComp.getWinMultiplicator()).isEqualTo(2);
-       // assertThat(updatedComp.getCompetitionFamily()).isNotNull();
+        // assertThat(updatedComp.getCompetitionFamily()).isNotNull();
 
     }
 }

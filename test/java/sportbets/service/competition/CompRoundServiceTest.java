@@ -11,11 +11,6 @@ import org.springframework.test.context.ActiveProfiles;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.entity.competition.CompetitionRound;
-import sportbets.web.dto.competition.CompetitionDto;
-import sportbets.web.dto.competition.CompetitionFamilyDto;
-import sportbets.web.dto.competition.CompetitionRoundDto;
-
-import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -27,7 +22,7 @@ public class CompRoundServiceTest {
     private static final String TEST_COMP_FAM = "TestLiga";
     private static final String TEST_COMP = "TestLiga: Saison 2025";
     private static final String TEST_COMP_ROUND = "Saison 2025: Hinrunde";
-    CompetitionFamily competitionFamily = new CompetitionFamily(TEST_COMP_FAM, "description of testliga", true, true);
+    final CompetitionFamily competitionFamily = new CompetitionFamily(TEST_COMP_FAM, "description of testliga", true, true);
     Competition savedComp = null;
     @Autowired
     private CompFamilyService familyService; // Real service being tested
@@ -40,7 +35,7 @@ public class CompRoundServiceTest {
     public void setup() {
 
         CompetitionFamily savedFam = familyService.save(competitionFamily).orElseThrow();
-        Competition competition = new Competition( TEST_COMP, "Description of Competition", 3, 1, savedFam);
+        Competition competition = new Competition(TEST_COMP, "Description of Competition", 3, 1, savedFam);
 
         savedComp = compService.save(competition);
     }
@@ -57,16 +52,16 @@ public class CompRoundServiceTest {
     @Test
     void whenValidCompRound_thenCompRoundShouldBeSaved() {
 
-        CompetitionRound compRound =new CompetitionRound(1, TEST_COMP_ROUND, savedComp, false);
+        CompetitionRound compRound = new CompetitionRound(1, TEST_COMP_ROUND, savedComp, false);
         CompetitionRound savedCompRound = compRoundService.save(compRound);
 
-            assertThat(savedCompRound.getId()).isNotNull();
-            assertThat(savedCompRound.getName()).isEqualTo(TEST_COMP_ROUND);
-            assertThat(savedCompRound.getCompetition().getName()).isEqualTo(savedComp.getName());
-            assertThat(savedCompRound.getCompetition().getId()).isEqualTo(savedComp.getId());
-            // check for ref inegrity
-            Competition compModel = compService.findByIdTest(savedCompRound.getCompetition().getId()).orElseThrow();
-            assertThat(compModel.getCompetitionRounds()).isNotNull();
+        assertThat(savedCompRound.getId()).isNotNull();
+        assertThat(savedCompRound.getName()).isEqualTo(TEST_COMP_ROUND);
+        assertThat(savedCompRound.getCompetition().getName()).isEqualTo(savedComp.getName());
+        assertThat(savedCompRound.getCompetition().getId()).isEqualTo(savedComp.getId());
+        // check for ref inegrity
+        Competition compModel = compService.findByIdTest(savedCompRound.getCompetition().getId()).orElseThrow();
+        assertThat(compModel.getCompetitionRounds()).isNotNull();
 
 
     }

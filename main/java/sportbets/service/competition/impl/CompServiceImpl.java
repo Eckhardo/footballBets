@@ -27,7 +27,6 @@ public class CompServiceImpl implements CompService {
     private final CompetitionRepository compRepository;
 
 
-
     public CompServiceImpl(CompetitionRepository compRepository) {
         this.compRepository = compRepository;
 
@@ -36,7 +35,7 @@ public class CompServiceImpl implements CompService {
     @Override
     @Transactional
     public Optional<Competition> findById(Long id) {
-        return  compRepository.findById(id);
+        return compRepository.findById(id);
 
     }
 
@@ -46,7 +45,7 @@ public class CompServiceImpl implements CompService {
      */
     @Override
     public Optional<Competition> findByName(String name) {
-        return  compRepository.findByName(name);
+        return compRepository.findByName(name);
     }
 
     @Override
@@ -88,13 +87,13 @@ public class CompServiceImpl implements CompService {
     @Override
     public List<Competition> getAll() {
 
-       return compRepository.findAll();
+        return compRepository.findAll();
 
     }
 
     @Override
     public Optional<Competition> findByNameJoinFetchRounds(String name) {
-        log.info("CompService:findByNameJoinFetchRounds::" + name);
+        log.info("CompService:findByNameJoinFetchRounds::{}", name);
         return compRepository.findByNameJoinFetchRounds(name);
     }
 
@@ -111,14 +110,14 @@ public class CompServiceImpl implements CompService {
 
     @Override
     public Competition findByIdJoinFetchRounds(Long id) {
-        log.info("CompService:findById::" + id);
+        log.info("CompService:findById::{}", id);
         return compRepository.findByIdJoinFetchRounds(id);
     }
 
     @Override
     @Transactional
     public List<CompetitionRound> getAllFormComp(Long compId) {
-       return  compRepository.findAllForComp(compId);
+        return compRepository.findAllForComp(compId);
 
     }
 
@@ -153,6 +152,7 @@ public class CompServiceImpl implements CompService {
                 }
             }
         }
+
         Set<CompetitionRole> roles = model.get().getCompetitionRoles();
         if (!roles.isEmpty()) {
             for (CompetitionRole role : roles) {

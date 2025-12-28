@@ -9,7 +9,7 @@ import java.util.Set;
 @Entity
 public class Team {
     @OneToMany(mappedBy = "team", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    private final Set<CompetitionTeam> competitionTeams = new HashSet();
+    private final Set<CompetitionTeam> competitionTeams = new HashSet<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -75,7 +75,7 @@ public class Team {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Team team = (Team) o;
-        return id == team.id && Objects.equals(name, team.name) && Objects.equals(acronym, team.acronym);
+        return Objects.equals(id, team.id) && Objects.equals(name, team.name) && Objects.equals(acronym, team.acronym);
     }
 
     @Override

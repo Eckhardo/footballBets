@@ -12,10 +12,6 @@ import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.entity.competition.CompetitionRound;
 import sportbets.persistence.entity.competition.Spieltag;
-import sportbets.web.dto.competition.CompetitionDto;
-import sportbets.web.dto.competition.CompetitionFamilyDto;
-import sportbets.web.dto.competition.CompetitionRoundDto;
-import sportbets.web.dto.competition.SpieltagDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,7 +27,7 @@ public class MatchdayServiceTest {
     private static final String TEST_COMP = "TestLiga: Saison 2025";
     private static final String TEST_COMP_ROUND = "Saison 2025: Hinrunde";
     private static final int TEST_MATCH_DAY = 1;
-    
+
     CompetitionRound savedCompRound = null;
     @Autowired
     private CompFamilyService familyService; // Real service being tested
@@ -45,12 +41,12 @@ public class MatchdayServiceTest {
 
     @BeforeEach
     public void setup() {
-        CompetitionFamily competitionFamily =  new CompetitionFamily(TEST_COMP_FAM, "Description of test liga", true, true);
+        CompetitionFamily competitionFamily = new CompetitionFamily(TEST_COMP_FAM, "Description of test liga", true, true);
         CompetitionFamily savedFam = familyService.save(competitionFamily).orElseThrow();
-        Competition competition = new Competition( TEST_COMP, "Description of Competition", 3, 1, savedFam);
+        Competition competition = new Competition(TEST_COMP, "Description of Competition", 3, 1, savedFam);
 
         Competition savedComp = compService.save(competition);
-        CompetitionRound compRound =  new CompetitionRound(1, TEST_COMP_ROUND, savedComp, false);
+        CompetitionRound compRound = new CompetitionRound(1, TEST_COMP_ROUND, savedComp, false);
         savedCompRound = compRoundService.save(compRound);
 
     }
@@ -68,7 +64,7 @@ public class MatchdayServiceTest {
     @Test
     void whenValidMatchday_thenMatchdayShouldBeSaved() {
 
-        Spieltag matchDay =  new Spieltag(1, LocalDateTime.now(), savedCompRound);
+        Spieltag matchDay = new Spieltag(1, LocalDateTime.now(), savedCompRound);
         Spieltag savedMatchday = spieltagService.save(matchDay);
 
         assertThat(savedMatchday.getId()).isNotNull();
@@ -98,7 +94,7 @@ public class MatchdayServiceTest {
     @Test
     void whenValidRound_thenAllMatchdaysShouldRetrieved() {
 
-        Spieltag matchDay =  new Spieltag(1, LocalDateTime.now(), savedCompRound);
+        Spieltag matchDay = new Spieltag(1, LocalDateTime.now(), savedCompRound);
         Spieltag savedMatchday = spieltagService.save(matchDay);
 
         List<Spieltag> matchdays = spieltagService.getAllForRound(savedCompRound.getId());

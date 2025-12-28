@@ -93,8 +93,6 @@ public class CompetitionFamilyDAOImpl implements CompetitionFamilyDAO {
     @Transactional
     public int deleteAll() {
 
-        int numRowsDeleted = entityManager.createQuery("DELETE FROM CompetitionFamily").executeUpdate();
-
-        return numRowsDeleted;
+        return entityManager.createQuery("DELETE FROM CompetitionFamily").executeUpdate();
     }
 }

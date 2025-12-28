@@ -12,12 +12,15 @@ import java.util.Set;
 
 @Entity
 public class Competition {
+    @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    final
+    Set<CompetitionRole> competitionRoles = new HashSet<>();
     @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private final Set<CompetitionRound> competitionRounds = new HashSet<>();
     @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private final Set<CompetitionTeam> competitionTeams = new HashSet<>();
-    @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    Set<CompetitionRole> competitionRoles = new HashSet<>();
+    @Column(nullable = false)
+    private final LocalDateTime createdOn = LocalDateTime.now();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,12 +32,7 @@ public class Competition {
     @NotNull
     private CompetitionFamily competitionFamily;
     private int winMultiplicator = 3;
-
     private int remisMultiplicator = 1;
-
-
-    @Column(nullable = false)
-    private LocalDateTime createdOn = LocalDateTime.now();
 
     /**
      * No-arg constructor for JavaBean tools.
@@ -143,15 +141,11 @@ public class Competition {
         this.remisMultiplicator = remisMultiplicator;
     }
 
-    public LocalDateTime getCreatedOn() {
-        return createdOn;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Competition that = (Competition) o;
-        return id == that.id && Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(createdOn, that.createdOn);
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(createdOn, that.createdOn);
     }
 
     @Override

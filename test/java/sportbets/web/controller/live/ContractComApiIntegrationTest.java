@@ -34,15 +34,14 @@ public class ContractComApiIntegrationTest {
     private static final String TEST_COMP_FAM = "TestLiga";
     private static final String TEST_COMP = "TestLiga: Saison 2025";
     private static final String TEST_COMP_2 = "TestLiga: Saison 2026";
+    final CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, TEST_COMP_FAM, "Description of TestLiga", true, true);
+    final CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, null, TEST_COMP_FAM);
     @Autowired
     WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();
     @Autowired
     CompetitionFamilyRepository competitionFamilyRepository;
     @Autowired
     CompetitionRepository repository;
-    CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, TEST_COMP_FAM, "Description of TestLiga", true, true);
-    CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, null, TEST_COMP_FAM);
-
 
     @AfterEach
     public void cleanup() {
@@ -145,7 +144,7 @@ public class ContractComApiIntegrationTest {
         Competition entity = repository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP));
         Long id = entity.getId();
         compDto.setDescription("changed description");
-        log.info("updateComp with id::" + id);
+        log.info("updateComp with id::{}", id);
         webClient.put()
                 .uri("/competitions/" + id)
                 .contentType(MediaType.APPLICATION_JSON)

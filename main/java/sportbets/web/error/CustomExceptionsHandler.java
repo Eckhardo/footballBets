@@ -41,7 +41,7 @@ public class CustomExceptionsHandler extends ResponseEntityExceptionHandler {
     }
 
     @Override
-    protected ResponseEntity<Object> handleExceptionInternal(Exception ex, @Nullable Object body, HttpHeaders headers, HttpStatusCode statusCode, WebRequest request) {
+    protected ResponseEntity<Object> handleExceptionInternal(@SuppressWarnings("NullableProblems") Exception ex, @Nullable Object body, @SuppressWarnings("NullableProblems") HttpHeaders headers, @SuppressWarnings("NullableProblems") HttpStatusCode statusCode, @SuppressWarnings("NullableProblems") WebRequest request) {
         ResponseEntity<Object> response = super.handleExceptionInternal(ex, body, headers, statusCode, request);
 
         if (response.getBody() instanceof ProblemDetail problemDetailBody) {

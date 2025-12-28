@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SpielConstants {
-    public static List<Spiel> SPIELE = new ArrayList<>();
+    public static final List<Spiel> SPIELE = new ArrayList<>();
 
     public static List<Spiel> getSpieleHinrunde(List<Spieltag> spieltage, Team heim, Team gast) {
         SPIELE.clear();

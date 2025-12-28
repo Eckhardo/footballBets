@@ -28,7 +28,7 @@ import java.util.*;
 public class ReadJSONTest {
 
     private static final Logger log = LoggerFactory.getLogger(ReadJSONTest.class);
-    String filePath = "src/test/java/sportbets/testdata/bl.json";
+    final String filePath = "src/test/java/sportbets/testdata/bl.json";
     @Autowired
     private TeamService teamService;
     @Autowired
@@ -89,7 +89,7 @@ public class ReadJSONTest {
         }
 
 
-        log.info("size::" + teams.size());
+        log.info("size::{}", teams.size());
         // return teams;
     }
 
@@ -157,7 +157,7 @@ public class ReadJSONTest {
 
                 if (i % 9 == 0) {
 
-                    log.info("" + k);
+                    log.info("{}", k);
                     k++;
                 }
                 i++;
@@ -241,8 +241,8 @@ public class ReadJSONTest {
                 rueckDates.add(entry.getValue());
             }
         }
-        log.info("hin ::" + hinDates.size());
-        log.info("rueck ::" + rueckDates.size());
+        log.info("hin ::{}", hinDates.size());
+        log.info("rueck ::{}", rueckDates.size());
         // return teams;
     }
 }

@@ -9,14 +9,11 @@ import java.util.Objects;
 @Entity
 public class CompetitionTeam {
 
+    @Column(nullable = false)
+    private final LocalDateTime createdOn = LocalDateTime.now();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-
-    @Column(nullable = false)
-    private LocalDateTime createdOn = LocalDateTime.now();
-
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     @JoinColumn(name = "fk_team_id")
     @NotNull
@@ -46,9 +43,6 @@ public class CompetitionTeam {
         this.id = id;
     }
 
-    public LocalDateTime getCreatedOn() {
-        return createdOn;
-    }
 
     public Team getTeam() {
         return team;
@@ -70,7 +64,7 @@ public class CompetitionTeam {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         CompetitionTeam that = (CompetitionTeam) o;
-        return id == that.id && Objects.equals(createdOn, that.createdOn) && Objects.equals(team, that.team) && Objects.equals(competition, that.competition);
+        return Objects.equals(id, that.id) && Objects.equals(createdOn, that.createdOn) && Objects.equals(team, that.team) && Objects.equals(competition, that.competition);
     }
 
     @Override

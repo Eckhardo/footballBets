@@ -27,7 +27,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class CompetitionRoundRepositoryTest {
 
-    private CompetitionFamily testFamily;
     private Competition testComp;
 
 
@@ -42,7 +41,7 @@ public class CompetitionRoundRepositoryTest {
     @Before
     public void setUp() {
         // Initialize test data before test methods
-        testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true);
+        CompetitionFamily testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true);
         testComp = new Competition("TestLiga: Saison 2025/26", "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
         testFamily.addCompetition(testComp);
         testRound = new CompetitionRound(1, "Hinrunde", testComp, false);

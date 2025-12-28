@@ -190,7 +190,7 @@ public class Spiel implements Comparable<Spiel> {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Spiel spiel = (Spiel) o;
-        return id == spiel.id && spielNumber == spiel.spielNumber && stattgefunden == spiel.stattgefunden && Objects.equals(anpfiffdate, spiel.anpfiffdate) && Objects.equals(heimTeam, spiel.heimTeam) && Objects.equals(gastTeam, spiel.gastTeam);
+        return Objects.equals(id, spiel.id) && spielNumber == spiel.spielNumber && stattgefunden == spiel.stattgefunden && Objects.equals(anpfiffdate, spiel.anpfiffdate) && Objects.equals(heimTeam, spiel.heimTeam) && Objects.equals(gastTeam, spiel.gastTeam);
     }
 
     @Override
@@ -211,8 +211,8 @@ public class Spiel implements Comparable<Spiel> {
                 ", gastTeam id=" + gastTeam.getId() +
                 ", heimTeam=" + heimTeam.getAcronym() +
                 ", gastTeam=" + gastTeam.getAcronym() +
-                ", spieltag ID=" + spieltag.getId()+
-                ", spieltagNr=" + spieltag.getSpieltagNumber()+
+                ", spieltag ID=" + spieltag.getId() +
+                ", spieltagNr=" + spieltag.getSpieltagNumber() +
                 '}';
     }
 

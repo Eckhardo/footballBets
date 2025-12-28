@@ -24,14 +24,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @RunWith(SpringRunner.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class SpielRepositoryTest {
-    private CompetitionFamily testFamily;
     private Competition testComp;
 
-
-    private CompetitionRound testRound;
-
-    private CompetitionGroup testGroup;
-    private Spieltag testSpieltag;
 
     private Spiel testSpiel1;
     private Spiel testSpiel2;
@@ -55,14 +49,14 @@ public class SpielRepositoryTest {
 
     private CompetitionFamily getCompFamily() {
         // Initialize test data before test methods
-        testFamily = new CompetitionFamily("TestLiga", "2. Deutsche Fussball Bundesliga", true, true);
+        CompetitionFamily testFamily = new CompetitionFamily("TestLiga", "2. Deutsche Fussball Bundesliga", true, true);
         testComp = new Competition("TestLiga: Saison 2025/26", "1. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
         testFamily.addCompetition(testComp);
-        testRound = new CompetitionRound(1, "Hinrunde", testComp, false);
+        CompetitionRound testRound = new CompetitionRound(1, "Hinrunde", testComp, false);
         testComp.addCompetitionRound(testRound);
-        testGroup = new CompetitionGroup("Gruppe A", 1, testRound);
+        CompetitionGroup testGroup = new CompetitionGroup("Gruppe A", 1, testRound);
         testRound.addCompetitionGroup(testGroup);
-        testSpieltag = new Spieltag(1, LocalDateTime.now(), testRound);
+        Spieltag testSpieltag = new Spieltag(1, LocalDateTime.now(), testRound);
         testRound.addSpieltag(testSpieltag);
         Team team1 = new Team("Test1", "1");
         Team team2 = new Team("Test2", "2");

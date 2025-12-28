@@ -28,14 +28,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class SpieltagRepositoryTest {
 
     private static final Logger log = LoggerFactory.getLogger(SpieltagRepositoryTest.class);
-    private CompetitionFamily testFamily;
-    private Competition testComp;
 
     private CompetitionRound testRound;
 
     private CompetitionGroup testGroup;
-    private Spieltag testSpieltag;
-    private Spieltag testSpieltag2;
 
     @Autowired
     private CompetitionFamilyRepository familyRepo;
@@ -48,13 +44,13 @@ public class SpieltagRepositoryTest {
     @Before
     public void setUp() {
         // Initialize test data before test methods
-        testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true);
-        testComp = new Competition("Saison 2025/26", "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
+        CompetitionFamily testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true);
+        Competition testComp = new Competition("Saison 2025/26", "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
         testFamily.addCompetition(testComp);
         testRound = new CompetitionRound(1, "Vorrunde", testComp, false);
         testComp.addCompetitionRound(testRound);
-        testSpieltag = new Spieltag(1, LocalDateTime.now(), testRound);
-        testSpieltag2 = new Spieltag(2, LocalDateTime.now(), testRound);
+        Spieltag testSpieltag = new Spieltag(1, LocalDateTime.now(), testRound);
+        Spieltag testSpieltag2 = new Spieltag(2, LocalDateTime.now(), testRound);
         testRound.addSpieltag(testSpieltag);
         testRound.addSpieltag(testSpieltag2);
         System.out.println("Save all cascade");

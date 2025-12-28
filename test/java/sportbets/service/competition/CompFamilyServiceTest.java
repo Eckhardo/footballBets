@@ -13,7 +13,6 @@ import org.modelmapper.ModelMapper;
 import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.repository.competition.CompetitionFamilyRepository;
 import sportbets.service.competition.impl.CompFamilyServiceImpl;
-import sportbets.web.dto.competition.CompetitionFamilyDto;
 
 import java.util.Collections;
 import java.util.List;
@@ -21,7 +20,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -128,7 +126,6 @@ public class CompFamilyServiceTest {
         family.setName("Premier League");
         family.setDescription("Description of PL");
         // when -  action or the behaviour that we are going test
-        ModelMapper mapper = new ModelMapper();
 
         Optional<CompetitionFamily> updatedCompFamily = compFamilyService.updateFamily(family.getId(), family);
         // then - verify the output

@@ -24,13 +24,12 @@ class TipperRoleServiceImpl implements TipperRoleService {
 
     private static final Logger log = LoggerFactory.getLogger(TipperRoleServiceImpl.class);
     private final TipperRoleRepository tipperRoleRepo;
-    private final ModelMapper modelMapper;
+
     private final TipperRepository tipperRepository;
     private final RoleRepository roleRepository;
 
-    public TipperRoleServiceImpl(TipperRoleRepository tipperRoleRepo, ModelMapper modelMapper, TipperRepository tipperRepository, RoleRepository roleRepository) {
+    public TipperRoleServiceImpl(TipperRoleRepository tipperRoleRepo, TipperRepository tipperRepository, RoleRepository roleRepository) {
         this.tipperRoleRepo = tipperRoleRepo;
-        this.modelMapper = modelMapper;
         this.tipperRepository = tipperRepository;
         this.roleRepository = roleRepository;
     }
