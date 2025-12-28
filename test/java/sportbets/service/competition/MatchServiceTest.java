@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import sportbets.persistence.entity.competition.*;
+import sportbets.web.dto.competition.SpielDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -78,7 +79,7 @@ public class MatchServiceTest {
 
     @Test
     void whenValidMatch_thenMatchShouldBeSaved() {
-        Spiel testSpiel1 = new Spiel(savedMatchday, 1, LocalDateTime.now(), savedTeam1, savedTeam2, 3, 1, false);
+        SpielDto testSpiel1 = new SpielDto(null, 1, 3, 1, false, LocalDateTime.now(), savedMatchday.getId(), savedMatchday.getSpieltagNumber(), savedTeam1.getId(), savedTeam1.getAcronym(), savedTeam2.getId(), savedTeam2.getAcronym());
 
         Spiel savedMatch = matchService.save(testSpiel1);
         assertThat(savedMatch.getId()).isNotNull();
@@ -99,14 +100,14 @@ public class MatchServiceTest {
 
     @Test
     void whenValidMatch_thenMatchShouldBeUpdated() {
-        Spiel testSpiel1 = new Spiel(savedMatchday, 1, LocalDateTime.now(), savedTeam1, savedTeam2, 3, 1, false);
-        Spiel testSpiel2 = new Spiel(savedMatchday, 2, LocalDateTime.now(), savedTeam2, savedTeam1, 3, 1, false);
+        SpielDto testSpiel1 = new SpielDto(null, 1, 3, 1, false, LocalDateTime.now(), savedMatchday.getId(), savedMatchday.getSpieltagNumber(), savedTeam1.getId(), savedTeam1.getAcronym(), savedTeam2.getId(), savedTeam2.getAcronym());
+        SpielDto testSpiel2 = new SpielDto(null, 2, 3, 1, false, LocalDateTime.now(), savedMatchday.getId(), savedMatchday.getSpieltagNumber(), savedTeam2.getId(), savedTeam2.getAcronym(), savedTeam1.getId(), savedTeam1.getAcronym());
         Spiel savedMatch = matchService.save(testSpiel1);
         Spiel savedMatch2 = matchService.save(testSpiel2);
         // set gast team to same value as heimteam
-        savedMatch.setGastTeam(savedMatch2.getGastTeam());
-        savedMatch.setGastTore(4);
-        Spiel updatedMatch = matchService.updateSpiel(savedMatch.getId(), savedMatch).orElseThrow();
+         testSpiel1.setId(savedMatch.getId());
+         testSpiel1.setGastTore(4);
+        Spiel updatedMatch = matchService.updateSpiel(testSpiel1.getId(), testSpiel1).orElseThrow();
 
         assertThat(updatedMatch.getId()).isNotNull();
         assertThat(updatedMatch.getAnpfiffdate()).isEqualTo(testSpiel1.getAnpfiffdate());
@@ -116,8 +117,8 @@ public class MatchServiceTest {
 
         assertThat(updatedMatch.getHeimTeam().getId()).isEqualTo(savedTeam1.getId());
         assertThat(updatedMatch.getHeimTeam().getAcronym()).isEqualTo(savedTeam1.getAcronym());
-        assertThat(updatedMatch.getGastTeam().getId()).isEqualTo(savedTeam1.getId());
-        assertThat(updatedMatch.getGastTeam().getAcronym()).isEqualTo(savedTeam1.getAcronym());
+        assertThat(updatedMatch.getGastTeam().getId()).isEqualTo(savedTeam2.getId());
+        assertThat(updatedMatch.getGastTeam().getAcronym()).isEqualTo(savedTeam2.getAcronym());
         assertThat(updatedMatch.getSpieltag().getSpieltagNumber()).isEqualTo(savedMatchday.getSpieltagNumber());
         assertThat(updatedMatch.getSpieltag().getId()).isEqualTo(savedMatchday.getId());
 
@@ -128,8 +129,8 @@ public class MatchServiceTest {
     @Test
     void whenValidMatchDay_thenMatchesShouldBeRetrieved() {
 
-        Spiel testSpiel1 = new Spiel(savedMatchday, 1, LocalDateTime.now(), savedTeam1, savedTeam2, 3, 1, false);
-        Spiel testSpiel2 = new Spiel(savedMatchday, 2, LocalDateTime.now(), savedTeam2, savedTeam1, 3, 1, false);
+        SpielDto testSpiel1 = new SpielDto(null, 1, 3, 1, false, LocalDateTime.now(), savedMatchday.getId(), savedMatchday.getSpieltagNumber(), savedTeam1.getId(), savedTeam1.getAcronym(), savedTeam2.getId(), savedTeam2.getAcronym());
+        SpielDto testSpiel2 = new SpielDto(null, 2, 3, 1, false, LocalDateTime.now(), savedMatchday.getId(), savedMatchday.getSpieltagNumber(), savedTeam2.getId(), savedTeam2.getAcronym(), savedTeam1.getId(), savedTeam1.getAcronym());
         Spiel savedMatch = matchService.save(testSpiel1);
         Spiel savedMatch2 = matchService.save(testSpiel2);
         List<Spiel> spiels = matchService.getAllForMatchday(savedMatchday.getId());

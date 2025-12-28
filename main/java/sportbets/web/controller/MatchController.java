@@ -25,15 +25,10 @@ public class MatchController {
     private static final Logger log = LoggerFactory.getLogger(MatchController.class);
 
     private final SpielService spielService;
-    private final SpieltagService spieltagService;
-    private final TeamService teamService;
-    private final ModelMapper modelMapper;
 
-    public MatchController(SpielService spielService, SpieltagService spieltagService, TeamService teamService, ModelMapper modelMapper) {
+    public MatchController(SpielService spielService) {
         this.spielService = spielService;
-        this.spieltagService = spieltagService;
-        this.teamService = teamService;
-        this.modelMapper = modelMapper;
+     ;
     }
 
     @GetMapping("/matches/{id}")
@@ -53,15 +48,8 @@ public class MatchController {
     @ResponseStatus(HttpStatus.CREATED)
     public SpielDto post(@RequestBody @Valid SpielDto spielDto) {
         log.info("New match day {}", spielDto);
-        Spieltag spieltag = spieltagService.findById(spielDto.getSpieltagId()).orElseThrow(() -> new EntityNotFoundException("Matchday not found"));
-        Team heimTeam = teamService.findById(spielDto.getHeimTeamId()).orElseThrow(() -> new EntityNotFoundException("Team heim not found"));
-        Team gastTeam = teamService.findById(spielDto.getGastTeamId()).orElseThrow(() -> new EntityNotFoundException("Team gast not found"));
-        Spiel model = modelMapper.map(spielDto, Spiel.class);
-        model.setSpieltag(spieltag);
-        model.setHeimTeam(heimTeam);
-        model.setGastTeam(gastTeam);
 
-        Spiel createdModel = spielService.save(model);
+        Spiel createdModel = spielService.save(spielDto);
         ModelMapper myModelMapper = MapperUtil.getModelMapperForSpiel();
         SpielDto updatedDto = myModelMapper.map(createdModel, SpielDto.class);
         log.info("Spiel RETURN do {}", updatedDto);
@@ -71,15 +59,9 @@ public class MatchController {
     @PutMapping(value = "/matches/{id}")
     public SpielDto update(@PathVariable Long id, @RequestBody SpielDto spielDto) {
         log.info("Update match day {}", spielDto);
-        Spieltag spieltag = spieltagService.findById(spielDto.getSpieltagId()).orElseThrow(() -> new EntityNotFoundException("Matchday not found"));
-        Team heimTeam = teamService.findById(spielDto.getHeimTeamId()).orElseThrow(() -> new EntityNotFoundException("Team heim not found"));
-        Team gastTeam = teamService.findById(spielDto.getGastTeamId()).orElseThrow(() -> new EntityNotFoundException("Team gast not found"));
-        Spiel model = modelMapper.map(spielDto, Spiel.class);
-        model.setSpieltag(spieltag);
-        model.setHeimTeam(heimTeam);
-        model.setGastTeam(gastTeam);
 
-        Spiel updatedModel = spielService.updateSpiel(id, model)
+
+        Spiel updatedModel = spielService.updateSpiel(id, spielDto)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         ModelMapper myModelMapper = MapperUtil.getModelMapperForSpiel();
         SpielDto updatedDto = myModelMapper.map(updatedModel, SpielDto.class);
