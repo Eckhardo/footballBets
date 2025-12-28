@@ -14,6 +14,7 @@ import sportbets.persistence.entity.competition.CompetitionRound;
 import sportbets.persistence.entity.competition.Spieltag;
 import sportbets.web.dto.competition.CompetitionDto;
 import sportbets.web.dto.competition.CompetitionFamilyDto;
+import sportbets.web.dto.competition.SpieltagDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -66,28 +67,30 @@ public class MatchdayServiceTest {
     @Test
     void whenValidMatchday_thenMatchdayShouldBeSaved() {
 
-        Spieltag matchDay = new Spieltag(1, LocalDateTime.now(), savedCompRound);
-        Spieltag savedMatchday = spieltagService.save(matchDay);
+        SpieltagDto matchDayDto = new SpieltagDto(null, TEST_MATCH_DAY, LocalDateTime.now(),savedCompRound.getId(),savedCompRound.getName());
+        Spieltag savedMatchday = spieltagService.save(matchDayDto);
 
         assertThat(savedMatchday.getId()).isNotNull();
         assertThat(savedMatchday.getSpieltagNumber()).isEqualTo(TEST_MATCH_DAY);
         assertThat(savedMatchday.getCompetitionRound().getName()).isEqualTo(savedCompRound.getName());
         assertThat(savedMatchday.getCompetitionRound().getId()).isEqualTo(savedCompRound.getId());
-        assertThat(savedMatchday.getStartDate()).isEqualTo(matchDay.getStartDate());
+        assertThat(savedMatchday.getStartDate()).isEqualTo(matchDayDto.getStartDate());
         spieltagService.deleteById(savedMatchday.getId());
     }
 
     @Test
     void whenValidMatchday_thenMatchdayShouldBeUpdated() {
 
-        Spieltag matchDay = new Spieltag(1, LocalDateTime.now(), savedCompRound);
-        Spieltag savedMatchday = spieltagService.save(matchDay);
-        savedMatchday.setSpieltagNumber(5);
-        Spieltag updatedMatchday = spieltagService.updateMatchDay(savedMatchday.getId(), savedMatchday).orElseThrow();
+
+        SpieltagDto matchDayDto = new SpieltagDto(null, TEST_MATCH_DAY, LocalDateTime.now(),savedCompRound.getId(),savedCompRound.getName());
+        Spieltag savedMatchday = spieltagService.save(matchDayDto);
+        matchDayDto.setId(savedMatchday.getId());
+        matchDayDto.setSpieltagNumber(5);
+        Spieltag updatedMatchday = spieltagService.updateMatchDay(savedMatchday.getId(), matchDayDto).orElseThrow();
 
         assertThat(updatedMatchday.getId()).isNotNull();
         assertThat(updatedMatchday.getSpieltagNumber()).isEqualTo(5);
-        assertThat(updatedMatchday.getStartDate()).isEqualTo(matchDay.getStartDate());
+        assertThat(updatedMatchday.getStartDate()).isEqualTo(matchDayDto.getStartDate());
         assertThat(updatedMatchday.getCompetitionRound().getName()).isEqualTo(savedCompRound.getName());
         assertThat(updatedMatchday.getCompetitionRound().getId()).isEqualTo(savedCompRound.getId());
         spieltagService.deleteById(savedMatchday.getId());
@@ -95,9 +98,8 @@ public class MatchdayServiceTest {
 
     @Test
     void whenValidRound_thenAllMatchdaysShouldRetrieved() {
-
-        Spieltag matchDay = new Spieltag(1, LocalDateTime.now(), savedCompRound);
-        Spieltag savedMatchday = spieltagService.save(matchDay);
+        SpieltagDto matchDayDto = new SpieltagDto(null, TEST_MATCH_DAY, LocalDateTime.now(),savedCompRound.getId(),savedCompRound.getName());
+        Spieltag savedMatchday = spieltagService.save(matchDayDto);
 
         List<Spieltag> matchdays = spieltagService.getAllForRound(savedCompRound.getId());
         assertThat(matchdays.size()).isEqualTo(1);

@@ -28,14 +28,11 @@ public class SpieltagController {
     private static final Logger log = LoggerFactory.getLogger(SpieltagController.class);
     private final SpieltagService spieltagService;
     private final SpielService spielService;
-    private final CompRoundService roundService;
-    private final ModelMapper modelMapper;
 
-    public SpieltagController(SpieltagService spieltagService, SpielService spielService, CompRoundService roundService, ModelMapper modelMapper) {
+
+    public SpieltagController(SpieltagService spieltagService, SpielService spielService) {
         this.spieltagService = spieltagService;
         this.spielService = spielService;
-        this.roundService = roundService;
-        this.modelMapper = modelMapper;
 
     }
 
@@ -87,11 +84,8 @@ public class SpieltagController {
     public SpieltagDto post(@RequestBody @Valid SpieltagDto spieltagDto) {
         log.info("New match day {}", spieltagDto);
 
-        CompetitionRound competitionRound = roundService.findById(spieltagDto.getCompRoundId()).orElseThrow(() -> new EntityNotFoundException("spieltag not found "));
-        Spieltag model = modelMapper.map(spieltagDto, Spieltag.class);
-        model.setCompetitionRound(competitionRound);
 
-        Spieltag createdModel = spieltagService.save(model);
+        Spieltag createdModel = spieltagService.save(spieltagDto);
         ModelMapper myModelMapper = MapperUtil.getModelMapperForCompetitionRound();
         SpieltagDto createdDto = myModelMapper.map(createdModel, SpieltagDto.class);
         log.info("SpieltagDto RETURN do {}", createdDto);
@@ -101,11 +95,7 @@ public class SpieltagController {
     @PutMapping(value = "/matchdays/{id}")
     public SpieltagDto update(@PathVariable Long id, @RequestBody SpieltagDto spieltagDto) {
         log.info("Update match day {}", spieltagDto);
-        CompetitionRound competitionRound = roundService.findById(spieltagDto.getCompRoundId()).orElseThrow(() -> new EntityNotFoundException("spieltag not found "));
-        Spieltag model = modelMapper.map(spieltagDto, Spieltag.class);
-        model.setCompetitionRound(competitionRound);
-
-        Spieltag updatedModel = spieltagService.updateMatchDay(id, model)
+        Spieltag updatedModel = spieltagService.updateMatchDay(id, spieltagDto)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         ModelMapper myModelMapper = MapperUtil.getModelMapperForCompetitionRound();
         SpieltagDto updatedDto = myModelMapper.map(updatedModel, SpieltagDto.class);

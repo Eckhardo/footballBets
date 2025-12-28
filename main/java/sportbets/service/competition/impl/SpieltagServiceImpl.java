@@ -2,13 +2,17 @@ package sportbets.service.competition.impl;
 
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sportbets.persistence.entity.competition.CompetitionRound;
 import sportbets.persistence.entity.competition.Spieltag;
+import sportbets.persistence.repository.competition.CompetitionRoundRepository;
 import sportbets.persistence.repository.competition.SpieltagRepository;
 import sportbets.service.competition.SpieltagService;
+import sportbets.web.dto.competition.SpieltagDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,11 +22,14 @@ public class SpieltagServiceImpl implements SpieltagService {
 
     private static final Logger log = LoggerFactory.getLogger(SpieltagServiceImpl.class);
     private final SpieltagRepository spieltagRepository;
-
-    public SpieltagServiceImpl(SpieltagRepository spieltagRepository) {
+    private final CompetitionRoundRepository compRoundRepo;
+    private final ModelMapper modelMapper;
+    public SpieltagServiceImpl(SpieltagRepository spieltagRepository, CompetitionRoundRepository compRoundRepo, ModelMapper modelMapper) {
 
         this.spieltagRepository = spieltagRepository;
 
+        this.compRoundRepo = compRoundRepo;
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -41,32 +48,39 @@ public class SpieltagServiceImpl implements SpieltagService {
 
     @Override
     @Transactional
-    public Spieltag save(Spieltag spieltag) {
-        log.info("save :: {}", spieltag);
-        Optional<Spieltag> optionalSpieltag = spieltagRepository.findByNumberWithRoundId(spieltag.getSpieltagNumber(), spieltag.getCompetitionRound().getId());
+    public Spieltag save(SpieltagDto spieltagDto) {
+        log.info("save :: {}", spieltagDto);
+        Optional<Spieltag> optionalSpieltag = spieltagRepository.findByNumberWithRoundId(spieltagDto.getSpieltagNumber(), spieltagDto.getCompRoundId());
         if (optionalSpieltag.isPresent()) {
-            throw new EntityExistsException("Spieltag  already exist with given id:" + spieltag.getId());
+            throw new EntityExistsException("Spieltag  already exist with given id:" + spieltagDto.getId());
         }
-        return spieltagRepository.save(spieltag);
+        CompetitionRound competitionRound = compRoundRepo.findById(spieltagDto.getCompRoundId()).orElseThrow(() -> new EntityNotFoundException("spieltag not found "));
+        Spieltag model = modelMapper.map(spieltagDto, Spieltag.class);
+        model.setCompetitionRound(competitionRound);
+
+        return spieltagRepository.save(model);
 
 
     }
 
     @Override
     @Transactional
-    public Optional<Spieltag> updateMatchDay(Long id, Spieltag spieltag) {
+    public Optional<Spieltag> updateMatchDay(Long id, SpieltagDto spieltagDto) {
+        log.info("updateMatchday:: {}", spieltagDto);
+        CompetitionRound competitionRound = compRoundRepo.findById(spieltagDto.getCompRoundId()).orElseThrow(() -> new EntityNotFoundException("spieltag not found "));
+        Spieltag model = modelMapper.map(spieltagDto, Spieltag.class);
+        model.setCompetitionRound(competitionRound);
 
 
-        log.info("updateMatchday:: {}", spieltag);
         Optional<Spieltag> updateModel = spieltagRepository.findById(id);
         if (updateModel.isEmpty()) {
-            throw new EntityNotFoundException("spiel  does not exits given id:" + spieltag.getId());
+            throw new EntityNotFoundException("spiel  does not exits given id:" + spieltagDto.getId());
         }
 
 
-        Spieltag model = updateFields(updateModel.get(), spieltag);
+        Spieltag updatedModel = updateFields(updateModel.get(), model);
         log.info("updated Comp  with {}", model);
-        return Optional.of(spieltagRepository.save(model));
+        return Optional.of(spieltagRepository.save(updatedModel));
 
     }
 

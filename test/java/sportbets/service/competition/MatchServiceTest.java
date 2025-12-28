@@ -12,6 +12,7 @@ import sportbets.persistence.entity.competition.*;
 import sportbets.web.dto.competition.CompetitionDto;
 import sportbets.web.dto.competition.CompetitionFamilyDto;
 import sportbets.web.dto.competition.SpielDto;
+import sportbets.web.dto.competition.SpieltagDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -56,7 +57,7 @@ public class MatchServiceTest {
         Competition savedComp = compService.save(compDto);
         CompetitionRound compRound = new CompetitionRound(1, TEST_COMP_ROUND, savedComp, false);
         CompetitionRound savedCompRound = compRoundService.save(compRound);
-        Spieltag matchDayDto = new Spieltag(1, LocalDateTime.now(), savedCompRound);
+        SpieltagDto matchDayDto = new SpieltagDto(null, 5, LocalDateTime.now(),savedCompRound.getId(),savedCompRound.getName());
         savedMatchday = spieltagService.save(matchDayDto);
         Team team = new Team(TEAM_NAME, "Braunschweig");
         Team team1 = new Team(TEAM_NAME_2, "Kiel");

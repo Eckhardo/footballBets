@@ -1,6 +1,7 @@
 package sportbets.service.competition;
 
 import sportbets.persistence.entity.competition.Spieltag;
+import sportbets.web.dto.competition.SpieltagDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,9 +10,9 @@ import java.util.Optional;
 public interface SpieltagService {
     Optional<Spieltag> findById(Long id);
 
-    Spieltag save(Spieltag spieltag);
+    Spieltag save(SpieltagDto spieltagDto);
 
-    Optional<Spieltag> updateMatchDay(Long id, Spieltag spieltag);
+    Optional<Spieltag> updateMatchDay(Long id, SpieltagDto spieltagDto);
 
     void deleteById(Long id);
 
