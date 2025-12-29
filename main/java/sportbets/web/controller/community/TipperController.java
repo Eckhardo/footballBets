@@ -22,7 +22,7 @@ import sportbets.web.dto.competition.CompetitionFamilyDto;
 import java.util.ArrayList;
 import java.util.List;
 
-@Controller
+@RestController
 class TipperController {
 
     private static final Logger log = LoggerFactory.getLogger(TipperController.class);
@@ -33,7 +33,7 @@ class TipperController {
         this.modelMapper = modelMapper;
     }
 
-    @GetMapping("/tippers/{id}")
+    @GetMapping("/tipper/{id}")
     public TipperDto findOne(@PathVariable Long id) {
         log.info("TipperController:findOne::{}", id);
         Tipper model = tipperService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -42,7 +42,7 @@ class TipperController {
         return modelMapper.map(model, TipperDto.class);
 
     }
-    @PostMapping("/tippers")
+    @PostMapping("/tipper")
     @ResponseStatus(HttpStatus.CREATED)
     public TipperDto post(@RequestBody @Valid TipperDto newTipper) {
         log.info("TipperController.create::{}", newTipper);
@@ -53,7 +53,7 @@ class TipperController {
     }
 
 
-    @PutMapping(value = "/tippers/{id}")
+    @PutMapping(value = "/tipper/{id}")
     public TipperDto update(@PathVariable Long id, @RequestBody @Valid TipperDto tipperDto) {
         log.info("CompFamilyController.update::{}", tipperDto.toString());
         Tipper updatedModel = tipperService.update(id, tipperDto).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -63,7 +63,7 @@ class TipperController {
     }
 
 
-    @DeleteMapping(value = "/tippers/{id}")
+    @DeleteMapping(value = "/tipper/{id}")
     public ResponseEntity<HttpStatus> delete(@PathVariable Long id) {
         log.info("CompFamilyController.delete::{}", id);
         try {

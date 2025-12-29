@@ -2,6 +2,7 @@ package sportbets.web.dto.community;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.Length;
 import sportbets.persistence.entity.community.Tipper;
 
 import java.io.Serializable;
@@ -17,11 +18,12 @@ public class TipperDto implements Serializable {
     @NotNull
     private String username;
     @NotNull
+    @Length(min = 5, max = 10, message = " password must have at least 3 chars and up to 10 chars")
     private String passwort;
 
     private String passwortHint;
     @NotNull
-    @Email
+    @Email(message = " invalid email")
     private String email;
 
     private Long defaultCompetitionId;
