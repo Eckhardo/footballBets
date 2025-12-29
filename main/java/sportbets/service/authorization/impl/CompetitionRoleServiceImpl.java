@@ -35,32 +35,21 @@ public class CompetitionRoleServiceImpl implements CompetitionRoleService {
         this.modelMapper = modelMapper;
     }
 
-    /**
-     * @param id
-     * @return
-     */
+
     @Override
     public Optional<CompetitionRole> findById(Long id) {
-        log.info("\n");
         log.info("CompetitionRoleServiceImpl.findById");
-        Role model = roleRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Tipper not found"));
+        Role model = roleRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Role not found"));
         log.info("\n");
         if (model instanceof CompetitionRole) {
 
             return Optional.of((CompetitionRole) model);
-        } else if (model instanceof CommunityRole) {
-
-            throw new RuntimeException("Gheört hier nicht hn: eigene Mehtode für CompRole UND CommRole");
-
         } else {
             return Optional.empty();
         }
     }
 
-    /**
-     * @param dto
-     * @return
-     */
+
     @Override
     @Transactional
     public CompetitionRole save(CompetitionRoleDto dto) {
@@ -82,42 +71,27 @@ public class CompetitionRoleServiceImpl implements CompetitionRoleService {
     }
 
 
-    /**
-     * @return
-     */
     @Override
     @Transactional(readOnly = true)
     public List<CompetitionRole> getAllCompRoles() {
-        ModelMapper myMapper = MapperUtil.getModelMapperForCompetitionRole();
-        List<CompetitionRoleDto> competitionRoleDtos = new ArrayList<>();
-        log.info("\n");
-        List<CompetitionRole> compRoles = roleRepository.getAllCompRoles();
-        log.info("\n");
 
-        return compRoles;
+
+        return roleRepository.getAllCompRoles();
     }
 
-    /**
-     * @param name
-     * @return
-     */
+
     @Override
     public Optional<CompetitionRole> findByCompName(String name) {
       return roleRepository.findByCompName(name);
     }
 
-    /**
-     * @param id
-     */
     @Override
     @Transactional
     public void deleteById(Long id) {
         roleRepository.deleteById(id);
     }
 
-    /**
-     * @param name
-     */
+
     @Override
     @Transactional
     public void deleteByName(String name) {

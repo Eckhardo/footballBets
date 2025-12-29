@@ -1,5 +1,6 @@
 package sportbets.service.authorization;
 
+import sportbets.persistence.entity.authorization.CommunityRole;
 import sportbets.web.dto.authorization.CommunityRoleDto;
 
 import java.util.List;
@@ -7,14 +8,14 @@ import java.util.Optional;
 
 public interface CommunityRoleService {
 
-    Optional<CommunityRoleDto> findById(Long id);
+    Optional<CommunityRole> findById(Long id);
 
 
-    Optional<CommunityRoleDto> save(CommunityRoleDto dto);
+    CommunityRole save(CommunityRoleDto dto);
 
-    Optional<CommunityRoleDto> update(Long id, CommunityRoleDto dto);
 
-    List<CommunityRoleDto> getAllCommunityRoles();
+    Optional<CommunityRole> findByCommunityName(String name);
+    List<CommunityRole> getAllCommunityRoles();
 
     void deleteByName(String name);
 

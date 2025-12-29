@@ -15,12 +15,12 @@ public class CompetitionTeam {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
-    @JoinColumn(name = "fk_team_id")
+    @JoinColumn(name = "fk_team_id",foreignKey = @ForeignKey(name = "FK_COMP_TEAM_TO_TEAM"))
     @NotNull
     private Team team;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "fk_comp_id")
+    @JoinColumn(name = "fk_comp_id", foreignKey = @ForeignKey(name = "FK_COMP_TEAM_TO_COMP"))
     @NotNull
     private Competition competition;
 

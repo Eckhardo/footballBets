@@ -27,7 +27,7 @@ public class Spieltag {
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
     private LocalDateTime startDate;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "fk_comp_round_id")
+    @JoinColumn(name = "fk_comp_round_id",foreignKey = @ForeignKey(name = "FK_SPIELTAG_TO_ROUND"))
     @NotNull
     private CompetitionRound competitionRound;
 

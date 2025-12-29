@@ -14,16 +14,18 @@ import java.util.Set;
 @Table(name = "community")
 public class Community {
     private static final Logger log = LoggerFactory.getLogger(Community.class);
-    @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    final
-    Set<CommunityRole> communityRoles = new HashSet<>();
-    private final LocalDateTime createdOn = LocalDateTime.now();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long id;
     private String name;
     private String description;
+    private final LocalDateTime createdOn = LocalDateTime.now();
+
+    @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    Set<CommunityRole> communityRoles = new HashSet<>();
+
+    @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<CompetitionMembership> competitionMemberships = new HashSet<>();
 
     public Community() {
 
@@ -34,6 +36,12 @@ public class Community {
         this.description = description;
     }
 
+    public Community(String name, String description, Set<CommunityRole> communityRoles, Set<CompetitionMembership> competitionMemberships) {
+        this(name, description);
+        this.description = description;
+        this.communityRoles = communityRoles;
+        this.competitionMemberships = competitionMemberships;
+    }
 
     public Long getId() {
         return id;
@@ -70,6 +78,17 @@ public class Community {
         this.getCommunityRoles().add(role);
     }
 
+    public Set<CompetitionMembership> getCompetitionMemberships() {
+        return competitionMemberships;
+    }
+
+    public void addCompetitionMembership(CompetitionMembership compMemb) {
+        if (compMemb == null) {
+            throw new IllegalArgumentException("Can't add a null CompetitionMembership role.");
+        }
+        this.getCompetitionMemberships().add(compMemb);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
@@ -87,6 +106,7 @@ public class Community {
         return "Community{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", description='" + description +
                 '}';
     }
 }

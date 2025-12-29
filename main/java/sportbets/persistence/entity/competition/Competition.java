@@ -3,6 +3,7 @@ package sportbets.persistence.entity.competition;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import sportbets.persistence.entity.authorization.CompetitionRole;
+import sportbets.persistence.entity.community.CompetitionMembership;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -34,8 +35,12 @@ public class Competition {
     @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private final Set<CompetitionTeam> competitionTeams = new HashSet<>();
 
+
+    @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<CompetitionMembership> competitionMemberships = new HashSet<>();
+
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "fk_comp_family_id")
+    @JoinColumn(name = "competitionFamily_id",foreignKey = @ForeignKey(name = "FK_COMP_TO_FAM"))
     @NotNull
     private CompetitionFamily competitionFamily;
 
@@ -119,6 +124,16 @@ public class Competition {
 
     }
 
+    public Set<CompetitionMembership> getCompetitionMemberships() {
+        return competitionMemberships;
+    }
+
+    public void addCompetitionMembership(CompetitionMembership compMemb) {
+        if (compMemb == null) {
+            throw new IllegalArgumentException("Can't add a null CompetitionMembership role.");
+        }
+        this.getCompetitionMemberships().add(compMemb);
+    }
 
     public Set<CompetitionRole> getCompetitionRoles() {
         return competitionRoles;

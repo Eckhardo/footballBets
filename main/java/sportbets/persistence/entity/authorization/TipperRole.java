@@ -15,12 +15,12 @@ public class TipperRole {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "rolle_id")
+    @JoinColumn(name = "rolle_id",foreignKey = @ForeignKey(name = "FK_TIPPER_ROLE_TO_ROLE"))
     @NotNull
     private Role role;
 
     @ManyToOne
-    @JoinColumn(name = "tipper_id")
+    @JoinColumn(name = "tipper_id",foreignKey = @ForeignKey(name = "FK_TIPPER_ROLE_TO_TIPPER"))
     @NotNull
     private Tipper tipper;
 

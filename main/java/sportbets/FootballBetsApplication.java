@@ -13,11 +13,21 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import sportbets.common.DateUtil;
-import sportbets.persistence.entity.competition.Spiel;
+import sportbets.persistence.builder.*;
+import sportbets.persistence.entity.authorization.CompetitionRole;
+import sportbets.persistence.entity.authorization.Role;
+import sportbets.persistence.entity.authorization.TipperRole;
+import sportbets.persistence.entity.community.Tipper;
+import sportbets.persistence.entity.competition.*;
+import sportbets.persistence.repository.authorization.RoleRepository;
+import sportbets.persistence.repository.authorization.TipperRoleRepository;
+import sportbets.persistence.repository.community.TipperRepository;
 import sportbets.persistence.repository.competition.*;
+import sportbets.service.competition.TeamService;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -25,18 +35,6 @@ import java.util.*;
 public class FootballBetsApplication {
 
     private static final Logger log = LoggerFactory.getLogger(FootballBetsApplication.class);
-    @Autowired
-    private CompetitionFamilyRepository familyRepo;
-    @Autowired
-    private CompetitionTeamRepository compTeamRepo;
-    @Autowired
-    private CompetitionRepository compRepo;
-    @Autowired
-    private CompetitionRoundRepository compRoundRepo;
-    @Autowired
-    private SpieltagRepository spieltagRepo;
-    @Autowired
-    private SpielRepository spielRepo;
 
     public static void main(String[] args) {
 
@@ -48,18 +46,55 @@ public class FootballBetsApplication {
         return new ModelMapper();
     }
 
+    @Autowired
+    private CompetitionFamilyRepository familyRepo;
+    @Autowired
+    private CompetitionTeamRepository compTeamRepo;
+    @Autowired
+    private CompetitionRepository compRepo;
+    @Autowired
+    private CompetitionRoundRepository compRoundRepo;
+
+    @Autowired
+    private SpieltagRepository spieltagRepo;
+    @Autowired
+    private SpielRepository spielRepo;
+
+//    @Autowired
+//    private TeamService teamService;
+
+    @Autowired
+    private TipperRepository tipperRepo;
+    @Autowired
+    private TipperRoleRepository tipperRoleRepo;
+    @Autowired
+    private RoleRepository roleRepo;
+
+
     @Bean
     public CommandLineRunner run() {
         return runner -> {
 
 //            CompetitionFamily fam = familyRepo.save(CompFamilyConstants.BUNDESLIGA);
 //            Competition comp = compRepo.save(CompetitionConstants.getBundesliga2025(fam));
+//            CompetitionRole competitionRole = new CompetitionRole(comp.getName(), comp.getDescription(), comp);
 //            fam.addCompetition(comp);
+//            comp.addCompetitionRole(competitionRole);
+//            Role savedRole = roleRepo.save(competitionRole);
+//
+//
+//            Tipper ebi = TipperConstants.ECKHARD;
+//            ebi.setDefaultCompetitionId(comp.getId());
+//            tipperRepo.save(ebi);
+//            TipperRole tipperRole = new TipperRole(savedRole, ebi);
+//            ebi.addTipperRole(tipperRole);
+//            tipperRoleRepo.save(tipperRole);
 //
 //            CompetitionRound hinRunde = compRoundRepo.save(CompRoundConstants.getHinrunde(comp));
 //            CompetitionRound rueckRunde = compRoundRepo.save(CompRoundConstants.getRueckrunde(comp));
 //            comp.addCompetitionRound(hinRunde);
 //            comp.addCompetitionRound(rueckRunde);
+//
 //            Team bay = TeamConstants.BAY;
 //            Team hsv = TeamConstants.HSV;
 //            Team pauli = TeamConstants.PAULI;
@@ -164,7 +199,7 @@ public class FootballBetsApplication {
 //
 //            List<Spiel> spiele = retrieveSpiele();
 //            for (Spiel spiel : spiele) {
-//               log.info(" spiele:: {} {}", spiel.getSpielNumber(), spiel.getSpieltag().getSpieltagNumber());
+//                log.info(" spiele:: {} {}", spiel.getSpielNumber(), spiel.getSpieltag().getSpieltagNumber());
 //
 //            }
 //
@@ -172,9 +207,8 @@ public class FootballBetsApplication {
 //            ///     List<Spiel> spieleHin = spielRepo.saveAll(SpielConstants.getSpieleHinrunde(spieltagHin, pauli, hsv));
 //
 //
-//
-//       //     List<Spiel> spieleRueck = spielRepo.saveAll(SpielConstants.getSpieleRückrunde(spieltagRueck, werder, bay));
-//
+//            //     List<Spiel> spieleRueck = spielRepo.saveAll(SpielConstants.getSpieleRückrunde(spieltagRueck, werder, bay));
+
 
             System.out.println("Save all cascade");
         };
@@ -251,7 +285,7 @@ public class FootballBetsApplication {
 //            JsonArray msg = (JsonArray) jsonObject.get("matches");
 //
 //            int i = 1;
-//            int k =1;
+//            int k = 1;
 //            String lastSpieltag = null;
 //            for (Object o : msg) {
 //                JsonObject nestedObj = (JsonObject) o;
@@ -287,28 +321,32 @@ public class FootballBetsApplication {
 //                    }
 //                }
 //
-//                 boolean stattgefunden = true;
+//                //    System.out.println(dt + " - " + heim + "-  " + auswärts + " " + (heimTor != null ? heimTor.intValue() : null) + " " + (gastTor != null ? gastTor.intValue() : null));
+//                boolean stattgefunden = true;
 //                if (heimTor == null || gastTor == null) {
 //                    stattgefunden = false;
 //                }
 //                Integer homeGoals = heimTor != null ? heimTor.intValue() : 0;
 //                Integer guestGoals = gastTor != null ? gastTor.intValue() : 0;
 //
-//                Spieltag spieltag= spieltagRepo.findByNumber(k);
+//                Spieltag spieltag = spieltagRepo.findByNumber(k);
 //
 //                Team heimTeam = teamService.findByName(heim).orElseThrow();
 //                Team gastTeam = teamService.findByName(auswärts).orElseThrow();
 //                Long ID = (long) i;
 //                spiele.add(new Spiel(spieltag, i, dt, heimTeam, gastTeam, homeGoals, guestGoals, stattgefunden));
+////                (Spieltag spieltag, int spielNumber, LocalDateTime startDate,
+////                        Team heimTeam, Team gastTeam, Integer heimTore, Integer gastTore,
+////                        Boolean stattgefunden
 //
 //                if (i % 9 == 0) {
 //
-//                    log.info(""+ k);
+//                    log.info("" + k);
 //                    k++;
 //                }
 //                i++;
 //            }
-//             spielRepo.saveAll(spiele);
+//            spielRepo.saveAll(spiele);
 //
 //        } catch (IOException | JsonException e) {
 //            System.out.println("##" + e.getMessage());

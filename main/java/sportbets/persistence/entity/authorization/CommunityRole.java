@@ -1,9 +1,6 @@
 package sportbets.persistence.entity.authorization;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import sportbets.persistence.entity.community.Community;
 
@@ -14,7 +11,7 @@ public class CommunityRole extends Role {
 
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "fk_comm_id")
+    @JoinColumn(name = "fk_comm_id",foreignKey = @ForeignKey(name = "FK_COMM_ROLE_TO_COMM"))
     @NotNull
     public Community community;
 
@@ -30,6 +27,10 @@ public class CommunityRole extends Role {
 
     public Community getCommunity() {
         return this.community;
+    }
+
+    public void setCommunity(Community community) {
+        this.community = community;
     }
 
     @Override

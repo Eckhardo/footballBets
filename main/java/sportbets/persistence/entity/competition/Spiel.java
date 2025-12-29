@@ -29,15 +29,15 @@ public class Spiel implements Comparable<Spiel> {
     private LocalDateTime anpfiffdate;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "fk_heim_team_id")
+    @JoinColumn(name = "fk_heim_team_id",foreignKey = @ForeignKey(name = "FK_SPIEL_TO_HEIM_TEAM"))
     private Team heimTeam;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "fk_gast_team_id")
+    @JoinColumn(name = "fk_gast_team_id",foreignKey = @ForeignKey(name = "FK_SPIEL_TO_GAST_TEAM"))
     private Team gastTeam;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "fk_spieltag_id")
+    @JoinColumn(name = "fk_spieltag_id",foreignKey = @ForeignKey(name = "FK_SPIEL_TO_SPIELTAG"))
     private Spieltag spieltag;
 
     @ManyToOne(fetch = FetchType.LAZY)

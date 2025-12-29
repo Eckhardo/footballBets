@@ -10,23 +10,24 @@ import java.util.Set;
 
 @Entity
 public class CompetitionRound {
-    @OneToMany(mappedBy = "competitionRound", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private final Set<CompetitionGroup> competitionGroups = new HashSet<>();
-    @OneToMany(mappedBy = "competitionRound", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private final Set<Spieltag> spieltage = new HashSet<>();
-    @Column(nullable = false)
-    private final LocalDateTime createdOn = LocalDateTime.now();
-    @Id
+     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private int roundNumber;
     @Column(nullable = false)
     private String name;
     private boolean hasGroups = false;
+    @Column(nullable = false)
+    private final LocalDateTime createdOn = LocalDateTime.now();
+
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "fk_comp_id")
+    @JoinColumn(name = "fk_comp_id", foreignKey = @ForeignKey(name = "FK_ROUND_TO_COMP"))
     @NotNull
     private Competition competition;
+    @OneToMany(mappedBy = "competitionRound", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private final Set<CompetitionGroup> competitionGroups = new HashSet<>();
+    @OneToMany(mappedBy = "competitionRound", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private final Set<Spieltag> spieltage = new HashSet<>();
 
     public CompetitionRound() {
 
