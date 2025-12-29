@@ -39,7 +39,7 @@ class TipperRoleServiceImpl implements TipperRoleService {
      * @return
      */
     @Override
-    public Optional<TipperRoleDto> save(TipperRoleDto dto) {
+    public Optional<TipperRole> save(TipperRoleDto dto) {
         log.info("\n");
         log.info("TipperRoleServiceImpl.save {}", dto);
         Tipper tipper = tipperRepository.findById(dto.getTipperId()).orElseThrow(() -> new EntityNotFoundException("Tipper not found"));
@@ -48,12 +48,8 @@ class TipperRoleServiceImpl implements TipperRoleService {
         TipperRole tipperRole = new TipperRole(compRole, tipper);
         TipperRole model = tipperRoleRepo.save(tipperRole);
         log.info("model {}", model);
-        ModelMapper myMpaaer = MapperUtil.getModelMapperForTipperRole();
 
-        TipperRoleDto myDto = myMpaaer.map(model, TipperRoleDto.class);
-
-        log.info("myDto {}", myDto);
-        return Optional.of(myDto);
+        return Optional.of(model);
     }
 
     /**
@@ -61,13 +57,11 @@ class TipperRoleServiceImpl implements TipperRoleService {
      * @return
      */
     @Override
-    public List<TipperRoleDto> getAllForTipper(Long tipperId) {
+    public List<TipperRole> getAllForTipper(Long tipperId) {
         List<TipperRole> tipperRoles = tipperRoleRepo.getAllForTipper(tipperId);
-        ModelMapper myMapper = MapperUtil.getModelMapperForTipperRole();
-        List<TipperRoleDto> dtos = new ArrayList<>();
-        tipperRoles.forEach(spieltag -> dtos.add(myMapper.map(spieltag, TipperRoleDto.class)));
+
         log.info("return all tipperRole dtos::");
-        return dtos;
+        return tipperRoles;
     }
 
     /**

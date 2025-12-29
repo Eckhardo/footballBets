@@ -10,7 +10,7 @@ import java.util.Objects;
 @DiscriminatorValue("COMP")
 public class CompetitionRole extends Role {
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fk_comp_id")
     @NotNull
     public Competition competition;

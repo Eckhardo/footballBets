@@ -8,6 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import sportbets.persistence.entity.authorization.CompetitionRole;
+import sportbets.persistence.entity.authorization.TipperRole;
+import sportbets.persistence.entity.community.Tipper;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.repository.authorization.TipperRoleRepository;
@@ -34,7 +37,7 @@ class TipperRoleServiceTest {
     private static final Logger log = LoggerFactory.getLogger(TipperRoleServiceTest.class);
     final CompetitionFamilyDto competitionFamily = new CompetitionFamilyDto(null, TEST_COMP_FAM, "description of testliga", true, true);
     Competition savedComp = null;
-    TipperDto savedTipper;
+    Tipper savedTipper;
     @Autowired
     private CompFamilyService familyService;
     @Autowired
@@ -80,7 +83,7 @@ class TipperRoleServiceTest {
     public void saveTipperRole() {
         log.info("saveTipperRole");
         CompetitionRoleDto compRole = new CompetitionRoleDto(null, TEST_COMP, "", savedComp.getId(), savedComp.getName());
-        CompetitionRoleDto savedRole = competitionRoleService.save(compRole);
+        CompetitionRole savedRole = competitionRoleService.save(compRole);
         assertNotNull(savedRole);
         log.info("savedRole {}", savedRole);
         assertNotNull(savedRole.getId());
@@ -96,15 +99,15 @@ class TipperRoleServiceTest {
 
 
         log.info("\n");
-        TipperRoleDto savedTR = tipperRoleService.save(tipperRoleDto).orElseThrow(() -> new EntityNotFoundException("tipperRole not found"));
+        TipperRole savedTR = tipperRoleService.save(tipperRoleDto).orElseThrow(() -> new EntityNotFoundException("tipperRole not found"));
         assertNotNull(savedTR);
         log.info("savedTR {}", savedTR);
         assertNotNull(savedTR.getId());
-        assertEquals(savedRole.getId(), savedTR.getRoleId());
+        assertEquals(savedRole.getId(), savedTR.getRole().getId());
 
-        assertEquals(savedRole.getName(), savedTR.getRoleName());
-        assertEquals(savedTipper.getId(), savedTR.getTipperId());
-        assertEquals(savedTipper.getUsername(), savedTR.getTipperUserName());
+        assertEquals(savedRole.getName(), savedTR.getRole().getName());
+        assertEquals(savedTipper.getId(), savedTR.getTipper().getId());
+        assertEquals(savedTipper.getUsername(), savedTR.getTipper().getUsername());
         log.info("\n");
         tipperRoleService.deleteById(savedTR.getId());
 

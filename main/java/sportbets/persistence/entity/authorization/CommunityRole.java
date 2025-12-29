@@ -13,7 +13,7 @@ import java.util.Objects;
 public class CommunityRole extends Role {
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fk_comm_id")
     @NotNull
     public Community community;

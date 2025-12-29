@@ -40,20 +40,16 @@ public class CompetitionRoleServiceImpl implements CompetitionRoleService {
      * @return
      */
     @Override
-    public Optional<CompetitionRoleDto> findById(Long id) {
+    public Optional<CompetitionRole> findById(Long id) {
         log.info("\n");
         log.info("CompetitionRoleServiceImpl.findById");
         Role model = roleRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Tipper not found"));
         log.info("\n");
         if (model instanceof CompetitionRole) {
-            ModelMapper modelMapper = MapperUtil.getModelMapperForCompetitionRole();
-            log.info("CompetitionRole found with {}", model);
-            CompetitionRoleDto compDto = modelMapper.map(model, CompetitionRoleDto.class);
-            return Optional.of(compDto);
+
+            return Optional.of((CompetitionRole) model);
         } else if (model instanceof CommunityRole) {
-            ModelMapper modelMapper = MapperUtil.getModelMapperForCommunityRole();
-            log.info("CommunityRole found with {}", model);
-            CompetitionRoleDto compDto = modelMapper.map(model, CompetitionRoleDto.class);
+
             throw new RuntimeException("Gheört hier nicht hn: eigene Mehtode für CompRole UND CommRole");
 
         } else {
@@ -67,7 +63,7 @@ public class CompetitionRoleServiceImpl implements CompetitionRoleService {
      */
     @Override
     @Transactional
-    public CompetitionRoleDto save(CompetitionRoleDto dto) {
+    public CompetitionRole save(CompetitionRoleDto dto) {
         log.info("FmDto to be save:: {}", dto);
         Optional<Role> savedRole = roleRepository.findByName(dto.getName());
         if (savedRole.isPresent()) {
@@ -80,11 +76,8 @@ public class CompetitionRoleServiceImpl implements CompetitionRoleService {
         log.info("model be save:: {}", model);
         CompetitionRole createdModel = roleRepository.save(model);
         log.info("saved entity:: {}", createdModel);
-        ModelMapper myMapper = MapperUtil.getModelMapperForCompetitionRole();
 
-        CompetitionRoleDto roleDto = myMapper.map(createdModel, CompetitionRoleDto.class);
-        log.info("dto to return:: {}", roleDto);
-        return roleDto;
+        return createdModel;
 
     }
 
@@ -94,16 +87,14 @@ public class CompetitionRoleServiceImpl implements CompetitionRoleService {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<CompetitionRoleDto> getAllCompRoles() {
+    public List<CompetitionRole> getAllCompRoles() {
         ModelMapper myMapper = MapperUtil.getModelMapperForCompetitionRole();
         List<CompetitionRoleDto> competitionRoleDtos = new ArrayList<>();
         log.info("\n");
         List<CompetitionRole> compRoles = roleRepository.getAllCompRoles();
         log.info("\n");
-        for (CompetitionRole compRole : compRoles) {
-            competitionRoleDtos.add(myMapper.map(compRole, CompetitionRoleDto.class));
-        }
-        return competitionRoleDtos;
+
+        return compRoles;
     }
 
     /**

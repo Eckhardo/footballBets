@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import sportbets.persistence.entity.authorization.CompetitionRole;
+import sportbets.persistence.entity.community.Tipper;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.service.community.TipperService;
@@ -33,7 +35,7 @@ public class CompetitionRoleServiceTest {
     private static final String TEST_USERNAME = "TEST_USER";
     final CompetitionFamilyDto competitionFamily = new CompetitionFamilyDto(null, TEST_COMP_FAM, "description of testliga", true, true);
     Competition savedComp = null;
-    TipperDto savedTipper = null;
+    Tipper savedTipper = null;
     @Autowired
     private CompFamilyService familyService; // Real service being tested
     @Autowired
@@ -70,7 +72,7 @@ public class CompetitionRoleServiceTest {
     public void saveCompRole() {
         log.info("saveTipperRole");
         CompetitionRoleDto compRole = new CompetitionRoleDto(null, TEST_COMP, "", savedComp.getId(), savedComp.getName());
-        CompetitionRoleDto savedRole = competitionRoleService.save(compRole);
+        CompetitionRole savedRole = competitionRoleService.save(compRole);
         assertNotNull(savedRole);
         assertNotNull(savedRole.getId());
         assertEquals(savedComp.getName(), compRole.getName());
@@ -85,17 +87,17 @@ public class CompetitionRoleServiceTest {
     public void findAllCompRoles() {
         log.info("saveTipperRole");
         CompetitionRoleDto compRole = new CompetitionRoleDto(null, TEST_COMP, "", savedComp.getId(), savedComp.getName());
-        CompetitionRoleDto savedRole = competitionRoleService.save(compRole);
+        CompetitionRole savedRole = competitionRoleService.save(compRole);
         assertNotNull(savedRole);
         assertNotNull(savedRole.getId());
         assertEquals(savedComp.getName(), compRole.getName());
         assertEquals(savedComp.getId(), compRole.getCompetitionId());
         assertEquals(savedComp.getName(), compRole.getCompetitionName());
-        List<CompetitionRoleDto> roles = competitionRoleService.getAllCompRoles();
+        List<CompetitionRole> roles = competitionRoleService.getAllCompRoles();
         assertThat(roles).isNotNull();
         assertThat(roles.size()).isEqualTo(1);
-        assertEquals(savedComp.getId(), roles.get(0).getCompetitionId());
-        assertEquals(savedComp.getName(), roles.get(0).getCompetitionName());
+        assertEquals(savedComp.getId(), roles.get(0).getCompetition().getId());
+        assertEquals(savedComp.getName(), roles.get(0).getCompetition().getName());
     }
 
 

@@ -1,20 +1,21 @@
 package sportbets.service.community;
 
 
+import sportbets.persistence.entity.community.Tipper;
 import sportbets.web.dto.community.TipperDto;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface TipperService {
-    Optional<TipperDto> findById(Long id);
+    Optional<Tipper> findById(Long id);
 
 
-    Optional<TipperDto> save(TipperDto dto);
+    Optional<Tipper> save(TipperDto dto);
 
-    List<TipperDto> saveAll(List<TipperDto> dtos);
+    List<Tipper> saveAll(List<TipperDto> dtos);
 
-    Optional<TipperDto> update(Long id, TipperDto dto);
+    Optional<Tipper> update(Long id, TipperDto dto);
 
     void deleteAll(List<Long> ids);
 
@@ -22,6 +23,6 @@ public interface TipperService {
 
     void deleteByUserName(String userName);
 
-    List<TipperDto> getAllFormComp(Long compId);
+    List<Tipper> getAllFormComp(Long compId);
 
 }
