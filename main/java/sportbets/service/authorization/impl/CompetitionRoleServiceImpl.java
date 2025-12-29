@@ -65,7 +65,7 @@ public class CompetitionRoleServiceImpl implements CompetitionRoleService {
     @Transactional
     public CompetitionRole save(CompetitionRoleDto dto) {
         log.info("FmDto to be save:: {}", dto);
-        Optional<Role> savedRole = roleRepository.findByName(dto.getName());
+        Optional<CompetitionRole> savedRole = roleRepository.findByCompName(dto.getName());
         if (savedRole.isPresent()) {
             throw new EntityExistsException("CompetitionRole  already exist with given name:" + savedRole.get().getName());
         }
@@ -95,6 +95,15 @@ public class CompetitionRoleServiceImpl implements CompetitionRoleService {
         log.info("\n");
 
         return compRoles;
+    }
+
+    /**
+     * @param name
+     * @return
+     */
+    @Override
+    public Optional<CompetitionRole> findByCompName(String name) {
+      return roleRepository.findByCompName(name);
     }
 
     /**

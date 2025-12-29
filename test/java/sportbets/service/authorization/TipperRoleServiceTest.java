@@ -82,34 +82,28 @@ class TipperRoleServiceTest {
     @Test
     public void saveTipperRole() {
         log.info("saveTipperRole");
-        CompetitionRoleDto compRole = new CompetitionRoleDto(null, TEST_COMP, "", savedComp.getId(), savedComp.getName());
-        CompetitionRole savedRole = competitionRoleService.save(compRole);
-        assertNotNull(savedRole);
-        log.info("savedRole {}", savedRole);
-        assertNotNull(savedRole.getId());
-        assertEquals(savedComp.getName(), compRole.getName());
-        assertEquals(savedComp.getId(), compRole.getCompetitionId());
-        assertEquals(savedComp.getName(), compRole.getCompetitionName());
-        Competition myComp = compService.findByIdTest(savedComp.getId()).orElseThrow();
+        Competition myComp = compService.findById(savedComp.getId()).orElseThrow();
         assertThat(myComp.getCompetitionRoles()).isNotNull();
         TipperDto testTipper = new TipperDto(null, "Eckhard", "Kirschning", TEST_USERNAME, "root", "hint", "eki@gmx.de", savedComp.getId());
         savedTipper = tipperService.save(testTipper).orElseThrow();
+        CompetitionRole savedRole = competitionRoleService.findByCompName(savedComp.getName()).orElseThrow();
 
         TipperRoleDto tipperRoleDto = new TipperRoleDto(null, savedTipper.getId(), savedTipper.getUsername(), savedRole.getId(), savedRole.getName());
 
 
         log.info("\n");
-        TipperRole savedTR = tipperRoleService.save(tipperRoleDto).orElseThrow(() -> new EntityNotFoundException("tipperRole not found"));
-        assertNotNull(savedTR);
-        log.info("savedTR {}", savedTR);
-        assertNotNull(savedTR.getId());
-        assertEquals(savedRole.getId(), savedTR.getRole().getId());
+        TipperRole savedTipperRole = tipperRoleService.save(tipperRoleDto).orElseThrow(() -> new EntityNotFoundException("savedTipperRole not found"));
+        assertNotNull(savedTipperRole);
+        log.info("savedTipperRole {}", savedTipperRole);
+        assertNotNull(savedTipperRole.getId());
 
-        assertEquals(savedRole.getName(), savedTR.getRole().getName());
-        assertEquals(savedTipper.getId(), savedTR.getTipper().getId());
-        assertEquals(savedTipper.getUsername(), savedTR.getTipper().getUsername());
+        assertEquals(savedRole.getId(), savedTipperRole.getRole().getId());
+
+        assertEquals(savedRole.getName(), savedTipperRole.getRole().getName());
+        assertEquals(savedTipper.getId(), savedTipperRole.getTipper().getId());
+        assertEquals(savedTipper.getUsername(), savedTipperRole.getTipper().getUsername());
         log.info("\n");
-        tipperRoleService.deleteById(savedTR.getId());
+        tipperRoleService.deleteById(savedTipperRole.getId());
 
     }
 

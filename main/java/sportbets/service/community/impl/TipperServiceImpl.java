@@ -148,4 +148,12 @@ class TipperServiceImpl implements TipperService {
     public List<Tipper> getAllFormComp(Long compId) {
         return List.of();
     }
+
+    /**
+     * @return
+     */
+    @Override
+    public List<Tipper> getAll() {
+       return tipperRepo.findAll();
+    }
 }

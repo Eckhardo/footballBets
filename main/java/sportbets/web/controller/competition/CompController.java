@@ -1,6 +1,5 @@
-package sportbets.web.controller;
+package sportbets.web.controller.competition;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -10,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import sportbets.persistence.entity.competition.Competition;
-import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.entity.competition.CompetitionRound;
 import sportbets.service.competition.CompFamilyService;
 import sportbets.service.competition.CompService;
@@ -27,14 +25,9 @@ public class CompController {
 
     private static final Logger log = LoggerFactory.getLogger(CompController.class);
     private final CompService compService;
-    private final ModelMapper modelMapper;
-    private final CompFamilyService compFamilyService;
 
-    public CompController(CompService compService, ModelMapper modelMapper, CompFamilyService compFamilyService) {
+    public CompController(CompService compService) {
         this.compService = compService;
-
-        this.modelMapper = modelMapper;
-        this.compFamilyService = compFamilyService;
     }
 
     @GetMapping("/competitions")

@@ -67,6 +67,8 @@ public class CompServiceImpl implements CompService {
         Competition model = modelMapper.map(compDto, Competition.class);
         CompetitionFamily fam = compFamilyRepo.findById(compDto.getFamilyId()).orElseThrow(() -> new EntityNotFoundException("compFam not found "));
         model.setCompetitionFamily(fam);
+        CompetitionRole compRole= new CompetitionRole(model.getName(), model.getDescription() ,model);
+        model.addCompetitionRole(compRole);
         return compRepository.save(model);
 
     }

@@ -12,9 +12,12 @@ public interface CompetitionRoleService {
     CompetitionRole save(CompetitionRoleDto dto);
 
 
+
     List<CompetitionRole> getAllCompRoles();
 
     void deleteById(Long id);
 
     void deleteByName(String name);
+
+    Optional<CompetitionRole> findByCompName(String name);
 }

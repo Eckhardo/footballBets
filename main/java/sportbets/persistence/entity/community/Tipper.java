@@ -15,9 +15,6 @@ import java.util.Set;
 @Table(name = "tipper")
 public class Tipper {
     private static final Logger log = LoggerFactory.getLogger(Tipper.class);
-    @OneToMany(mappedBy = "tipper", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    final
-    Set<TipperRole> tipperRoles = new HashSet<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -34,6 +31,9 @@ public class Tipper {
     @Email
     private String email;
     private Long defaultCompetitionId;
+
+    @OneToMany(mappedBy = "tipper", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    final Set<TipperRole> tipperRoles = new HashSet<>();
 
     public Tipper() {
     }

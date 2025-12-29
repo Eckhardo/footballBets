@@ -25,4 +25,5 @@ public interface TipperService {
 
     List<Tipper> getAllFormComp(Long compId);
 
+    List<Tipper> getAll();
 }

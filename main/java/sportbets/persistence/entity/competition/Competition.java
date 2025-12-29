@@ -12,27 +12,33 @@ import java.util.Set;
 
 @Entity
 public class Competition {
-    @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    final
-    Set<CompetitionRole> competitionRoles = new HashSet<>();
-    @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private final Set<CompetitionRound> competitionRounds = new HashSet<>();
-    @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private final Set<CompetitionTeam> competitionTeams = new HashSet<>();
-    @Column(nullable = false)
-    private final LocalDateTime createdOn = LocalDateTime.now();
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
     private String name;
     private String description;
+    private int winMultiplicator = 3;
+    private int remisMultiplicator = 1;
+    @Column(nullable = false)
+    private final LocalDateTime createdOn = LocalDateTime.now();
+
+    @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    final Set<CompetitionRole> competitionRoles = new HashSet<>();
+
+    @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private final Set<CompetitionRound> competitionRounds = new HashSet<>();
+
+    @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private final Set<CompetitionTeam> competitionTeams = new HashSet<>();
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fk_comp_family_id")
     @NotNull
     private CompetitionFamily competitionFamily;
-    private int winMultiplicator = 3;
-    private int remisMultiplicator = 1;
+
 
     /**
      * No-arg constructor for JavaBean tools.

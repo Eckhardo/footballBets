@@ -70,14 +70,12 @@ public class CompetitionRoleServiceTest {
 
     @Test
     public void saveCompRole() {
-        log.info("saveTipperRole");
-        CompetitionRoleDto compRole = new CompetitionRoleDto(null, TEST_COMP, "", savedComp.getId(), savedComp.getName());
-        CompetitionRole savedRole = competitionRoleService.save(compRole);
-        assertNotNull(savedRole);
-        assertNotNull(savedRole.getId());
+        log.info("saveCompRole");
+        CompetitionRole compRole = competitionRoleService.findByCompName(savedComp.getName()).orElseThrow();
+
         assertEquals(savedComp.getName(), compRole.getName());
-        assertEquals(savedComp.getId(), compRole.getCompetitionId());
-        assertEquals(savedComp.getName(), compRole.getCompetitionName());
+        assertEquals(savedComp.getId(), compRole.getCompetition().getId());
+        assertEquals(savedComp.getName(), compRole.getCompetition().getName());
         Competition myComp = compService.findByIdTest(savedComp.getId()).orElseThrow();
         assertThat(myComp.getCompetitionRoles()).isNotNull();
     }
@@ -85,14 +83,8 @@ public class CompetitionRoleServiceTest {
 
     @Test
     public void findAllCompRoles() {
-        log.info("saveTipperRole");
-        CompetitionRoleDto compRole = new CompetitionRoleDto(null, TEST_COMP, "", savedComp.getId(), savedComp.getName());
-        CompetitionRole savedRole = competitionRoleService.save(compRole);
-        assertNotNull(savedRole);
-        assertNotNull(savedRole.getId());
-        assertEquals(savedComp.getName(), compRole.getName());
-        assertEquals(savedComp.getId(), compRole.getCompetitionId());
-        assertEquals(savedComp.getName(), compRole.getCompetitionName());
+        log.info("findCompRole");
+
         List<CompetitionRole> roles = competitionRoleService.getAllCompRoles();
         assertThat(roles).isNotNull();
         assertThat(roles.size()).isEqualTo(1);

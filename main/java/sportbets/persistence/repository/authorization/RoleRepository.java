@@ -13,8 +13,8 @@ import java.util.Optional;
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
 
-    @Query("select  r from Role r where  TYPE(r) = CompetitionRole ")
-    Optional<Role> findByName(String name);
+    @Query("select  r from Role r where  TYPE(r) = CompetitionRole  and r.name= :name")
+    Optional<CompetitionRole> findByCompName(String name);
 
     void deleteByName(String name);
 
