@@ -1,4 +1,4 @@
-package sportbets.web.controller;
+package sportbets.web.controller.competition;
 
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;

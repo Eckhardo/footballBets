@@ -1,4 +1,4 @@
-package sportbets.web.controller;
+package sportbets.web.controller.competition;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;

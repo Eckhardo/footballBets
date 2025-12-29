@@ -1,4 +1,4 @@
-package sportbets.web.controller.live;
+package sportbets.web.controller.competition.live;
 
 
 import jakarta.persistence.EntityNotFoundException;

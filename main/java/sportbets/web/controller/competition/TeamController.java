@@ -1,4 +1,4 @@
-package sportbets.web.controller;
+package sportbets.web.controller.competition;
 
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;

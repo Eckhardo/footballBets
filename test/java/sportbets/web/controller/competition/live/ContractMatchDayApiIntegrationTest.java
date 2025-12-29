@@ -1,5 +1,4 @@
-package sportbets.web.controller.live;
-
+package sportbets.web.controller.competition.live;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.*;
@@ -14,34 +13,42 @@ import sportbets.FootballBetsApplication;
 import sportbets.config.TestProfileLiveTest;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
+import sportbets.persistence.entity.competition.CompetitionRound;
 import sportbets.persistence.repository.competition.CompetitionFamilyRepository;
 import sportbets.persistence.repository.competition.CompetitionRepository;
+import sportbets.persistence.repository.competition.CompetitionRoundRepository;
 import sportbets.web.dto.competition.CompetitionDto;
 import sportbets.web.dto.competition.CompetitionFamilyDto;
 import sportbets.web.dto.competition.CompetitionRoundDto;
-import sportbets.web.dto.competition.TeamDto;
+import sportbets.web.dto.competition.SpieltagDto;
 
-import static org.hamcrest.CoreMatchers.equalTo;
+import java.time.LocalDateTime;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         classes = {FootballBetsApplication.class, TestProfileLiveTest.class})
 @ActiveProfiles("test")
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class ContractComApiIntegrationTest {
+public class ContractMatchDayApiIntegrationTest {
 
-    private static final Logger log = LoggerFactory.getLogger(ContractComApiIntegrationTest.class);
+    private static final Logger log = LoggerFactory.getLogger(ContractMatchDayApiIntegrationTest.class);
     private static final String TEST_COMP_FAM = "TestLiga";
     private static final String TEST_COMP = "TestLiga: Saison 2025";
-    private static final String TEST_COMP_2 = "TestLiga: Saison 2026";
+    private static final String TEST_COMP_ROUND = "Saison 2025: Hinrunde";
+
+    private static final int TEST_MATCH_DAY = 1;
     final CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, TEST_COMP_FAM, "Description of TestLiga", true, true);
     final CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, null, TEST_COMP_FAM);
+    final CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, TEST_COMP_ROUND, false);
+    final SpieltagDto matchDayDto = new SpieltagDto(null, TEST_MATCH_DAY, LocalDateTime.now());
     @Autowired
     WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();
     @Autowired
     CompetitionFamilyRepository competitionFamilyRepository;
     @Autowired
-    CompetitionRepository repository;
+    CompetitionRepository competitionRepository;
+    @Autowired
+    CompetitionRoundRepository competitionRoundRepository;
 
     @AfterEach
     public void cleanup() {
@@ -54,8 +61,6 @@ public class ContractComApiIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isNoContent();
-
-
     }
 
     @BeforeEach
@@ -78,118 +83,63 @@ public class ContractComApiIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isCreated();
-
-    }
-
-    // @Test
-    //  @Order(1)
-
-
-    @Test
-    @Order(1)
-    void createNewComp_withValidCompJsonInput_thenSuccess() {
-        CompetitionFamily fam = competitionFamilyRepository.findByName(TEST_COMP_FAM).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_FAM));
-        compDto.setFamilyId(fam.getId());
-        compDto.setName(TEST_COMP_2);
+        Competition comp = competitionRepository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP));
+        compRoundDto.setCompId(comp.getId());
+        compRoundDto.setCompName(comp.getName());
 
         webClient.post()
-                .uri("/competitions")
+                .uri("/rounds")
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(compDto)
+                .bodyValue(compRoundDto)
+                .exchange()
+                .expectStatus()
+                .isCreated().expectBody().jsonPath("$.compId")
+                .exists();
+
+
+        CompetitionRound round = competitionRoundRepository.findByName(TEST_COMP_ROUND).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
+        matchDayDto.setCompRoundId(round.getId());
+        matchDayDto.setCompRoundName(round.getName());
+        webClient.post()
+                .uri("/matchdays")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(matchDayDto)
                 .exchange()
                 .expectStatus()
                 .isCreated()
                 .expectBody()
-                .jsonPath("$.id")
+                .jsonPath("$.spieltagNumber")
                 .exists()
-                .jsonPath("$.name")
-                .isEqualTo(TEST_COMP_2)
-                .jsonPath("$.winMultiplicator")
-                .isEqualTo(3)
-                .jsonPath("$.remisMultiplicator")
+                .jsonPath("$.compRoundId")
                 .exists();
+    }
+
+
+    @Test
+    @Order(1)
+    void whenRoundIdProvided_ThenFetchAllMatchDays() {
+
+        CompetitionRound entity = competitionRoundRepository.findByName(TEST_COMP_ROUND).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
+        Long id = entity.getId();
+        webClient.get()
+                .uri("/rounds/" + id + "/matchdays")
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBodyList(SpieltagDto.class).hasSize(1);
 
     }
 
     @Test
     @Order(2)
-    void givenPreloadedData_whenGetSingleComp_thenResponseContainsFields() {
-        Competition entity = repository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_2));
-        Long id = entity.getId();
-        webClient.get()
-                .uri("/competitions/" + id)
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .expectBody()
-                .jsonPath("$.id")
-                .value(Long.class, equalTo(id))
-                .jsonPath("$.name")
-                .isEqualTo(TEST_COMP)
-                .jsonPath("$.winMultiplicator")
-                .exists()
-                .jsonPath("$.familyId")
-                .exists()
-                .jsonPath("$.familyName")
-                .exists();
-
-    }
-
-
-    @Test
-    @Order(3)
-    void updateComp_withValidCompJsonInput_thenSuccess() {
-        log.info("updateComp_withValidCompJsonInput_thenSuccess");
-
-        Competition entity = repository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP));
-        Long id = entity.getId();
-        compDto.setDescription("changed description");
-        log.info("updateComp with id::{}", id);
-        webClient.put()
-                .uri("/competitions/" + id)
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(compDto)
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .expectBody()
-                .jsonPath("$.id")
-                .exists()
-                .jsonPath("$.name")
-                .isEqualTo(TEST_COMP)
-                .jsonPath("$.description")
-                .isEqualTo("changed description")
-                .jsonPath("$.familyId")
-                .exists()
-                .jsonPath("$.familyName")
-                .exists();
-
-    }
-
-    @Test
-    @Order(4)
-    void whenCompIdProvided_ThenFetchAllTeams() {
-        Competition entity = repository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_2));
-        Long id = entity.getId();
-        webClient.get()
-                .uri("/competitions/" + id + "/teams")
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .expectBodyList(TeamDto.class).hasSize(0);
-    }
-
-    @Test
-    @Order(4)
-    void whenFindAllForComp_ThenFetchAll() {
-        Competition comp = repository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_FAM));
+    void givenPreloadedData_whenGetAllMatchdays_thenResponseIsOK() {
 
         webClient.get()
-                .uri("/competitions/" + comp.getId() + "/rounds")
+                .uri("/matchdays")
                 .exchange()
                 .expectStatus()
-                .isOk()
-                .expectBodyList(CompetitionRoundDto.class).hasSize(0);
+                .isOk();
+
     }
 
 }

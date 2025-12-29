@@ -1,6 +1,5 @@
-package sportbets.web.controller;
+package sportbets.web.controller.competition;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -9,10 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import sportbets.persistence.entity.competition.CompetitionRound;
 import sportbets.persistence.entity.competition.Spiel;
 import sportbets.persistence.entity.competition.Spieltag;
-import sportbets.service.competition.CompRoundService;
 import sportbets.service.competition.SpielService;
 import sportbets.service.competition.SpieltagService;
 import sportbets.web.dto.MapperUtil;
