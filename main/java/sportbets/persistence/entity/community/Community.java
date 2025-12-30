@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sportbets.persistence.entity.authorization.CommunityRole;
+import sportbets.persistence.entity.competition.CompetitionMembership;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;

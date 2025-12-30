@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.entity.competition.CompetitionRound;
@@ -19,6 +20,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
 @ActiveProfiles("test")
+@Transactional
 public class CompRoundServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(CompRoundServiceTest.class);
@@ -49,9 +51,7 @@ public class CompRoundServiceTest {
     public void tearDown() {
         log.info("\n");
         log.info("Delete All Test data");
-        familyService.deleteByName(TEST_COMP_FAM);
-        //compService.deleteByName(TEST_COMP);
-        //  compRoundService.deleteByName(TEST_COMP_ROUND);
+
     }
 
     @Test
@@ -67,8 +67,6 @@ public class CompRoundServiceTest {
         // check for ref inegrity
         Competition compModel = compService.findByIdTest(savedCompRound.getCompetition().getId()).orElseThrow();
         assertThat(compModel.getCompetitionRounds()).isNotNull();
-
-
     }
 
     @Test
@@ -87,6 +85,4 @@ public class CompRoundServiceTest {
         assertThat(updatedCompRound.getCompetition().getId()).isEqualTo(savedComp.getId());
 
     }
-
-
 }

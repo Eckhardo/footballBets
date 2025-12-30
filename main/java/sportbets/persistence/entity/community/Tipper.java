@@ -30,22 +30,31 @@ public class Tipper {
     private String passwortHint;
     @Email
     private String email;
+
+    private boolean isCommunityAdmin;
+    private boolean isCompetitionAdmin;
+
+    private Long defaultCommunityId;
     private Long defaultCompetitionId;
 
     @OneToMany(mappedBy = "tipper", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     final Set<TipperRole> tipperRoles = new HashSet<>();
 
+    @OneToMany(mappedBy = "tipper", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    final Set<CommunityMembership> communityMemberships = new HashSet<>();
+
+
     public Tipper() {
     }
 
-    public Tipper(String firstname, String lastname, String username, String passwort, String passwortHint, String email, Long defaultCompetitionId) {
+    public Tipper(String firstname, String lastname, String username, String passwort, String passwortHint, String email) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.username = username;
         this.passwort = passwort;
         this.passwortHint = passwortHint;
         this.email = email;
-        this.defaultCompetitionId = defaultCompetitionId;
+
     }
 
     public Long getId() {
@@ -112,6 +121,14 @@ public class Tipper {
         this.defaultCompetitionId = defaultCompetitionId;
     }
 
+    public Long getDefaultCommunityId() {
+        return defaultCommunityId;
+    }
+
+    public void setDefaultCommunityId(Long defaultCommunityId) {
+        this.defaultCommunityId = defaultCommunityId;
+    }
+
     public Set<TipperRole> getTipperRoles() {
         return tipperRoles;
     }
@@ -122,6 +139,18 @@ public class Tipper {
         }
         this.getTipperRoles().add(role);
     }
+
+    public Set<CommunityMembership> getCommunityMemberships() {
+        return communityMemberships;
+    }
+
+    public void addCommunityMembership(CommunityMembership communityMembership) {
+        if (communityMembership == null) {
+            throw new IllegalArgumentException("Can't add a null CommMemb role.");
+        }
+        this.getCommunityMemberships().add(communityMembership);
+    }
+
 
     @Override
     public boolean equals(Object o) {

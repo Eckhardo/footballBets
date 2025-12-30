@@ -6,10 +6,12 @@ import org.springframework.stereotype.Component;
 import sportbets.persistence.entity.authorization.CommunityRole;
 import sportbets.persistence.entity.authorization.CompetitionRole;
 import sportbets.persistence.entity.authorization.TipperRole;
+import sportbets.persistence.entity.community.CommunityMembership;
 import sportbets.persistence.entity.competition.*;
 import sportbets.web.dto.authorization.CommunityRoleDto;
 import sportbets.web.dto.authorization.CompetitionRoleDto;
 import sportbets.web.dto.authorization.TipperRoleDto;
+import sportbets.web.dto.community.CommunityMembershipDto;
 import sportbets.web.dto.competition.*;
 
 @Component
@@ -44,6 +46,24 @@ public class MapperUtil {
                 map(source.getCompetition().getId()).setCompId(null);
                 map(source.getCompetition().getName()).setCompName(null);
 
+            }
+        });
+
+        return modelMapper;
+    }
+    public static ModelMapper getModelMapperForCompetitionMembership() {
+        ModelMapper modelMapper = new ModelMapper();
+
+        // Define the custom mapping for ChildEntity -> ChildDTO
+        modelMapper.addMappings(new PropertyMap<CompetitionMembership, CompetitionMembershipDto>() {
+            @Override
+            protected void configure() {
+                // Map the 'id' of the 'parent' object in the source
+                // to the 'parentId' field in the destination
+                map(source.getCompetition().getId()).setCompId(null);
+                map(source.getCompetition().getName()).setCompName(null);
+                map(source.getCommunity().getId()).setCommId(null);
+                map(source.getCommunity().getName()).setCommName(null);
             }
         });
 
@@ -144,6 +164,27 @@ public class MapperUtil {
         return modelMapper;
 
 
+    }
+
+
+
+    public static ModelMapper getModelMapperForCommunityMembership() {
+        ModelMapper modelMapper = new ModelMapper();
+
+        // Define the custom mapping for ChildEntity -> ChildDTO
+        modelMapper.addMappings(new PropertyMap<CommunityMembership, CommunityMembershipDto>() {
+            @Override
+            protected void configure() {
+                // Map the 'id' of the 'parent' object in the source
+                // to the 'parentId' field in the destination
+                map(source.getTipper().getId()).setTipperId(null);
+                map(source.getTipper().getUsername()).setTipperName(null);
+                map(source.getCommunity().getId()).setCommId(null);
+                map(source.getCommunity().getName()).setCommName(null);
+            }
+        });
+
+        return modelMapper;
     }
 
     public static ModelMapper getModelMapperForCommunityRole() {

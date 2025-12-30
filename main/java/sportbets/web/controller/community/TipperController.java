@@ -46,7 +46,7 @@ class TipperController {
     @ResponseStatus(HttpStatus.CREATED)
     public TipperDto post(@RequestBody @Valid TipperDto newTipper) {
         log.info("TipperController.create::{}", newTipper);
-        Tipper createdModel = tipperService.save(newTipper).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Tipper createdModel = tipperService.save(newTipper);
         TipperDto tipperDto = modelMapper.map(createdModel, TipperDto.class);
         log.info("return save::{}", tipperDto);
         return tipperDto;

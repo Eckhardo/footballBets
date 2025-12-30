@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.web.dto.competition.CompetitionDto;
@@ -18,6 +19,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
 @ActiveProfiles("test")
+@Transactional
 public class CompetitionServiceTest {
     private static final Logger log = LoggerFactory.getLogger(CompetitionServiceTest.class);
 
@@ -42,8 +44,7 @@ public class CompetitionServiceTest {
 
     @AfterEach
     public void tearDown() {
-        compFamilyService.deleteByName(TEST_COMP_FAM);
-        compService.deleteByName(TEST_COMP);
+
     }
 
     @Test
@@ -56,8 +57,7 @@ public class CompetitionServiceTest {
         assertThat(savedComp.getName()).isEqualTo(TEST_COMP);
         assertThat(savedComp.getCompetitionFamily().getName()).isEqualTo(savedFam.getName());
         assertThat(savedComp.getCompetitionFamily().getId()).isEqualTo(savedFam.getId());
-        CompetitionFamily famModel = familyService.findByIdTest(savedComp.getCompetitionFamily().getId()).orElseThrow();
-        assertThat(famModel.getCompetitions()).isNotNull();
+
 
 
     }

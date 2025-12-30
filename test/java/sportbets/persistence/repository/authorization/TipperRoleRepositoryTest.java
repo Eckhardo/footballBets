@@ -74,7 +74,7 @@ public class TipperRoleRepositoryTest {
         Community savedCommunity = commRepo.save(testComm);
 
 
-        testTipper = new Tipper("Eckhard", "Kirschning", TESTUSER, "root", "hint", "eki@gmx.de", savedComp.getId());
+        testTipper = new Tipper("Eckhard", "Kirschning", TESTUSER, "root", "hint", "eki@gmx.de");
         Tipper savedTipper = tipperRepo.save(testTipper);
         compTipperRole = new TipperRole(competitionRole, savedTipper);
         communityTipperRole = new TipperRole(communityRole, savedTipper);
@@ -90,8 +90,7 @@ public class TipperRoleRepositoryTest {
     }
 
     @Test
-    public void getAllTipperRolesForTipper
-            () {
+    public void getAllTipperRolesForTipper() {
         log.info("findByUsername");
         Tipper tipper = tipperRepo.findByUsername(testTipper.getUsername()).orElseThrow();
         assertNotNull(tipper);

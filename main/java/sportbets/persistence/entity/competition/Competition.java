@@ -3,7 +3,6 @@ package sportbets.persistence.entity.competition;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import sportbets.persistence.entity.authorization.CompetitionRole;
-import sportbets.persistence.entity.community.CompetitionMembership;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;

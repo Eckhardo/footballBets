@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.entity.competition.CompetitionTeam;
@@ -23,6 +24,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
 @ActiveProfiles("test")
+@Transactional
 public class CompTeamServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(CompTeamServiceTest.class);
@@ -60,9 +62,7 @@ public class CompTeamServiceTest {
 
     @AfterEach
     public void tearDown() {
-        familyService.deleteByName(TEST_COMP_FAM);
-        teamService.deleteByName(TEAM_NAME);
-        teamService.deleteByName(TEAM_NAME_2);
+
 
     }
 
@@ -93,7 +93,7 @@ public class CompTeamServiceTest {
         assertThat(updatedCompTeam.getCompetition().getId()).isEqualTo(savedComp.getId());
         assertThat(updatedCompTeam.getTeam().getId()).isEqualTo(savedTeam2.getId());
 
-        compTeamService.deleteById(updatedCompTeam.getId());
+
 
     }
 
@@ -112,7 +112,7 @@ public class CompTeamServiceTest {
                 assertThat(compTeam.getCompetition().getName()).isEqualTo(savedComp.getName());
                 assertThat(compTeam.getTeam().getAcronym()).isIn(savedTeam1.getAcronym(), savedTeam2.getAcronym());
                 assertThat(compTeam.getTeam().getId()).isIn(savedTeam1.getId(), savedTeam2.getId());
-                compTeamService.deleteById(compTeam.getId());
+
             }
         }
     }
@@ -126,7 +126,7 @@ public class CompTeamServiceTest {
         List<CompetitionTeam> savedCompTeams = compTeamService.saveAll(List.of(compTeamDto, compTeamDto2));
 
         List<Long> ids = savedCompTeams.stream().map(CompetitionTeam::getId).toList();
-        compTeamService.deleteAll(ids);
+
 
     }
 
@@ -147,9 +147,7 @@ public class CompTeamServiceTest {
             assertThat(compTeam.getCompetition().getName()).isEqualTo(savedComp.getName());
             assertThat(compTeam.getTeam().getAcronym()).isIn(savedTeam1.getAcronym(), savedTeam2.getAcronym());
             assertThat(compTeam.getTeam().getId()).isIn(savedTeam1.getId(), savedTeam2.getId());
-            compTeamService.deleteById(compTeam.getId());
+
         }
-
-
     }
 }

@@ -52,7 +52,7 @@ public class TipperRepositoryTest {
         familyRepo.save(testFamily);
         Competition savedComp = compRepo.findByName(testComp.getName()).orElseThrow();
 
-        testTipper = new Tipper("Eckhard", "Kirschning", "TestTipper", "root", "hint", "eki@gmx.de", savedComp.getId());
+        testTipper = new Tipper("Eckhard", "Kirschning", "TestTipper", "root", "hint", "eki@gmx.de");
         testTipper = tipperRepo.save(testTipper);
         CompetitionRole testRole = new CompetitionRole("1. Bundesliga Saison 2025/26", "Meine Test Rolle", savedComp);
         testTipperRole = new TipperRole(testRole, testTipper);

@@ -42,7 +42,7 @@ class TipperServiceImpl implements TipperService {
      */
     @Override
     @Transactional
-    public Optional<Tipper> save(TipperDto dto) {
+    public Tipper save(TipperDto dto) {
         log.info("Tipper to be save:: {}", dto);
         Optional<Tipper> savedTipper = tipperRepo.findByUsername(dto.getUsername());
         if (savedTipper.isPresent()) {
@@ -52,7 +52,7 @@ class TipperServiceImpl implements TipperService {
         log.info("model be save:: {}", model);
         Tipper createdModel = tipperRepo.save(model);
         log.info("saved entity:: {}", createdModel);
-        return Optional.of(createdModel);
+        return createdModel;
 
     }
 
@@ -146,7 +146,7 @@ class TipperServiceImpl implements TipperService {
     @Override
     @Transactional(readOnly = true)
     public List<Tipper> getAllFormComp(Long compId) {
-        return List.of();
+        return  List.of();
     }
 
     /**

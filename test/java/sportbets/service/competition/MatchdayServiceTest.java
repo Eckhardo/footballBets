@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.entity.competition.CompetitionRound;
@@ -24,6 +25,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
 @ActiveProfiles("test")
+@Transactional
 public class MatchdayServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(MatchdayServiceTest.class);
@@ -60,9 +62,6 @@ public class MatchdayServiceTest {
         log.info("\n");
         log.info("Delete All Test data");
 
-        familyService.deleteByName(TEST_COMP_FAM);
-        compService.deleteByName(TEST_COMP);
-        compRoundService.deleteByName(TEST_COMP_ROUND);
     }
 
     @Test
@@ -76,7 +75,7 @@ public class MatchdayServiceTest {
         assertThat(savedMatchday.getCompetitionRound().getName()).isEqualTo(savedCompRound.getName());
         assertThat(savedMatchday.getCompetitionRound().getId()).isEqualTo(savedCompRound.getId());
         assertThat(savedMatchday.getStartDate()).isEqualTo(matchDayDto.getStartDate());
-        spieltagService.deleteById(savedMatchday.getId());
+
     }
 
     @Test
@@ -94,7 +93,7 @@ public class MatchdayServiceTest {
         assertThat(updatedMatchday.getStartDate()).isEqualTo(matchDayDto.getStartDate());
         assertThat(updatedMatchday.getCompetitionRound().getName()).isEqualTo(savedCompRound.getName());
         assertThat(updatedMatchday.getCompetitionRound().getId()).isEqualTo(savedCompRound.getId());
-        spieltagService.deleteById(savedMatchday.getId());
+
     }
 
     @Test
@@ -110,7 +109,7 @@ public class MatchdayServiceTest {
             assertThat(matchday.getStartDate()).isNotNull();
             assertThat(matchday.getCompetitionRound().getName()).isEqualTo(savedCompRound.getName());
             assertThat(matchday.getCompetitionRound().getId()).isEqualTo(savedCompRound.getId());
-            spieltagService.deleteById(matchday.getId());
+
         }
     }
 }

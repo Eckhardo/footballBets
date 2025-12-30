@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.authorization.CompetitionRole;
 import sportbets.persistence.entity.authorization.TipperRole;
 import sportbets.persistence.entity.community.Tipper;
@@ -28,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
+@Transactional
 class TipperRoleServiceTest {
     // Real service being tested
     private static final String TEST_COMP_FAM = "TestLiga";
@@ -67,10 +69,6 @@ class TipperRoleServiceTest {
         log.info("\n");
         log.info("Delete All Test data");
 
-        tipperRoleRepository.deleteAll();
-        familyService.deleteByName(TEST_COMP_FAM);
-        //   compService.deleteByName(TEST_COMP);
-        tipperService.deleteByUserName(TEST_USERNAME);
 
     }
 
@@ -85,7 +83,7 @@ class TipperRoleServiceTest {
         Competition myComp = compService.findById(savedComp.getId()).orElseThrow();
         assertThat(myComp.getCompetitionRoles()).isNotNull();
         TipperDto testTipper = new TipperDto(null, "Eckhard", "Kirschning", TEST_USERNAME, "root", "hint", "eki@gmx.de", savedComp.getId());
-        savedTipper = tipperService.save(testTipper).orElseThrow();
+        savedTipper = tipperService.save(testTipper);
         CompetitionRole savedRole = competitionRoleService.findByCompName(savedComp.getName()).orElseThrow();
 
         TipperRoleDto tipperRoleDto = new TipperRoleDto(null, savedTipper.getId(), savedTipper.getUsername(), savedRole.getId(), savedRole.getName());
@@ -103,7 +101,6 @@ class TipperRoleServiceTest {
         assertEquals(savedTipper.getId(), savedTipperRole.getTipper().getId());
         assertEquals(savedTipper.getUsername(), savedTipperRole.getTipper().getUsername());
         log.info("\n");
-        tipperRoleService.deleteById(savedTipperRole.getId());
 
     }
 

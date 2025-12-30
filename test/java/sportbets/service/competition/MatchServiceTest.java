@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.competition.*;
 import sportbets.web.dto.competition.*;
 
@@ -18,6 +19,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
 @ActiveProfiles("test")
+@Transactional
 public class MatchServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(MatchServiceTest.class);
@@ -68,12 +70,6 @@ public class MatchServiceTest {
         log.info("\n");
         log.info("Delete All Test data");
 
-        familyService.deleteByName(TEST_COMP_FAM);
-        compService.deleteByName(TEST_COMP);
-        compRoundService.deleteByName(TEST_COMP_ROUND);
-        spieltagService.deleteById(savedMatchday.getId());
-        teamService.deleteByName(TEAM_NAME);
-        teamService.deleteByName(TEAM_NAME_2);
 
     }
 
@@ -95,7 +91,7 @@ public class MatchServiceTest {
         assertThat(savedMatch.getGastTeam().getId()).isEqualTo(savedTeam2.getId());
         assertThat(savedMatch.getGastTeam().getAcronym()).isEqualTo(savedTeam2.getAcronym());
 
-        matchService.deleteById(savedMatch.getId());
+
     }
 
     @Test
@@ -122,8 +118,6 @@ public class MatchServiceTest {
         assertThat(updatedMatch.getSpieltag().getSpieltagNumber()).isEqualTo(savedMatchday.getSpieltagNumber());
         assertThat(updatedMatch.getSpieltag().getId()).isEqualTo(savedMatchday.getId());
 
-        matchService.deleteById(savedMatch.getId());
-        matchService.deleteById(savedMatch2.getId());
     }
 
     @Test
@@ -150,8 +144,6 @@ public class MatchServiceTest {
             assertThat(entity.getGastTeam().getAcronym()).isIn(savedTeam2.getAcronym(), savedTeam1.getAcronym());
             assertThat(savedMatch.getHeimTeam().getId()).isEqualTo(savedTeam1.getId());
 
-
-            matchService.deleteById(entity.getId());
         }
     }
 

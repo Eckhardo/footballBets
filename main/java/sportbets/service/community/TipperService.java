@@ -11,7 +11,7 @@ public interface TipperService {
     Optional<Tipper> findById(Long id);
 
 
-    Optional<Tipper> save(TipperDto dto);
+    Tipper save(TipperDto dto);
 
     List<Tipper> saveAll(List<TipperDto> dtos);
 

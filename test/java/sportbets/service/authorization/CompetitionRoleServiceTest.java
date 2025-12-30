@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.authorization.CompetitionRole;
 import sportbets.persistence.entity.community.Tipper;
 import sportbets.persistence.entity.competition.Competition;
@@ -26,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
+@Transactional
 public class CompetitionRoleServiceTest {
 
 
@@ -55,16 +57,13 @@ public class CompetitionRoleServiceTest {
         savedComp = compService.save(compDto);
         assertNotNull(savedComp);
         TipperDto testTipper = new TipperDto(null, "Eckhard", "Kirschning", TEST_USERNAME, "root", "hint", "eki@gmx.de", savedComp.getId());
-        savedTipper = tipperService.save(testTipper).orElseThrow();
+        savedTipper = tipperService.save(testTipper);
 
 
     }
 
     @AfterEach
     public void tearDown() {
-        familyService.deleteByName(TEST_COMP_FAM);
-        compService.deleteByName(TEST_COMP);
-        tipperService.deleteByUserName(TEST_USERNAME);
 
     }
 
