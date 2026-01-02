@@ -61,7 +61,6 @@ public class MatchdayServiceTest {
     public void tearDown() {
         log.info("\n");
         log.info("Delete All Test data");
-
     }
 
     @Test
@@ -75,7 +74,7 @@ public class MatchdayServiceTest {
         assertThat(savedMatchday.getCompetitionRound().getName()).isEqualTo(savedCompRound.getName());
         assertThat(savedMatchday.getCompetitionRound().getId()).isEqualTo(savedCompRound.getId());
         assertThat(savedMatchday.getStartDate()).isEqualTo(matchDayDto.getStartDate());
-
+        spieltagService.deleteById(savedMatchday.getId());
     }
 
     @Test
@@ -93,7 +92,7 @@ public class MatchdayServiceTest {
         assertThat(updatedMatchday.getStartDate()).isEqualTo(matchDayDto.getStartDate());
         assertThat(updatedMatchday.getCompetitionRound().getName()).isEqualTo(savedCompRound.getName());
         assertThat(updatedMatchday.getCompetitionRound().getId()).isEqualTo(savedCompRound.getId());
-
+        spieltagService.deleteById(savedMatchday.getId());
     }
 
     @Test
@@ -109,7 +108,7 @@ public class MatchdayServiceTest {
             assertThat(matchday.getStartDate()).isNotNull();
             assertThat(matchday.getCompetitionRound().getName()).isEqualTo(savedCompRound.getName());
             assertThat(matchday.getCompetitionRound().getId()).isEqualTo(savedCompRound.getId());
-
+            spieltagService.deleteById(matchday.getId());
         }
     }
 }

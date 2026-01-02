@@ -11,6 +11,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
+import sportbets.testdata.TestConstants;
 import sportbets.web.dto.competition.CompetitionDto;
 import sportbets.web.dto.competition.CompetitionFamilyDto;
 
@@ -23,10 +24,9 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 public class CompetitionServiceTest {
     private static final Logger log = LoggerFactory.getLogger(CompetitionServiceTest.class);
 
-    private static final String TEST_COMP_FAM = "TestLiga";
     private static final String TEST_COMP = "TestLiga: Saison 2025";
 
-    final CompetitionFamilyDto competitionFamily = new CompetitionFamilyDto(null, TEST_COMP_FAM, "description of testliga", true, true);
+    final CompetitionFamilyDto competitionFamily = TestConstants.TEST_FAMILY;
     CompetitionFamily savedFam = null;
     @Autowired
     private CompFamilyService familyService; // Real service being tested
@@ -50,7 +50,7 @@ public class CompetitionServiceTest {
     @Test
     void whenValidComp_thenCompShouldBeSaved() {
 
-        CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, savedFam.getId(), TEST_COMP_FAM);
+        CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, savedFam.getId(), savedFam.getName());
         Competition savedComp = compService.save(compDto);
 
         assertThat(savedComp.getId()).isNotNull();
@@ -65,7 +65,7 @@ public class CompetitionServiceTest {
     @Test
     void whenValidComp_thenCompShouldBeUpdated() {
 
-        CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, savedFam.getId(), TEST_COMP_FAM);
+        CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, savedFam.getId(), savedFam.getName());
         Competition savedComp = compService.save(compDto);
         compDto.setWinMultiplicator(2);
         compDto.setId(savedComp.getId());

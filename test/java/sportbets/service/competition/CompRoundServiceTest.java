@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.entity.competition.CompetitionRound;
+import sportbets.testdata.TestConstants;
 import sportbets.web.dto.competition.CompetitionDto;
 import sportbets.web.dto.competition.CompetitionFamilyDto;
 import sportbets.web.dto.competition.CompetitionRoundDto;
@@ -24,10 +25,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 public class CompRoundServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(CompRoundServiceTest.class);
-    private static final String TEST_COMP_FAM = "TestLiga";
-    private static final String TEST_COMP = "TestLiga: Saison 2025";
-    private static final String TEST_COMP_ROUND = "Saison 2025: Hinrunde";
-    final CompetitionFamilyDto competitionFamily = new CompetitionFamilyDto(null, TEST_COMP_FAM, "description of testliga", true, true);
+    final CompetitionFamilyDto competitionFamily = TestConstants.TEST_FAMILY;
     Competition savedComp = null;
 
     CompetitionRound savedCompRound = null;
@@ -42,8 +40,8 @@ public class CompRoundServiceTest {
     public void setup() {
 
         CompetitionFamily savedFam = familyService.save(competitionFamily).orElseThrow();
-        CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, savedFam.getId(), TEST_COMP_FAM);
-
+        CompetitionDto compDto = TestConstants.TEST_COMP;
+        compDto.setFamilyId(savedFam.getId());
         savedComp = compService.save(compDto);
     }
 
@@ -57,11 +55,12 @@ public class CompRoundServiceTest {
     @Test
     void whenValidCompRound_thenCompRoundShouldBeSaved() {
 
-        CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, TEST_COMP_ROUND, false,savedComp.getId(), savedComp.getName());
+        CompetitionRoundDto compRoundDto = TestConstants.TEST_ROUND;
+        compRoundDto.setCompId(savedComp.getId());
         CompetitionRound savedCompRound = compRoundService.save(compRoundDto);
 
         assertThat(savedCompRound.getId()).isNotNull();
-        assertThat(savedCompRound.getName()).isEqualTo(TEST_COMP_ROUND);
+        assertThat(savedCompRound.getName()).isEqualTo(savedCompRound.getName());
         assertThat(savedCompRound.getCompetition().getName()).isEqualTo(savedComp.getName());
         assertThat(savedCompRound.getCompetition().getId()).isEqualTo(savedComp.getId());
         // check for ref inegrity
@@ -72,14 +71,15 @@ public class CompRoundServiceTest {
     @Test
     void whenValidCompRound_thenCompRoundShouldBeUpdated() {
 
-        CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, TEST_COMP_ROUND, false,savedComp.getId(), savedComp.getName());
-       savedCompRound = compRoundService.save(compRoundDto);
+        CompetitionRoundDto compRoundDto = TestConstants.TEST_ROUND;
+        compRoundDto.setCompId(savedComp.getId());
+        savedCompRound = compRoundService.save(compRoundDto);
         compRoundDto.setRoundNumber(2);
         compRoundDto.setId(savedCompRound.getId());
         CompetitionRound updatedCompRound = compRoundService.updateRound(compRoundDto.getId(), compRoundDto).orElseThrow();
 
         assertThat(updatedCompRound.getId()).isNotNull();
-        assertThat(updatedCompRound.getName()).isEqualTo(TEST_COMP_ROUND);
+        assertThat(updatedCompRound.getName()).isEqualTo(savedCompRound.getName());
         assertThat(updatedCompRound.getRoundNumber()).isEqualTo(2);
         assertThat(updatedCompRound.getCompetition().getName()).isEqualTo(savedComp.getName());
         assertThat(updatedCompRound.getCompetition().getId()).isEqualTo(savedComp.getId());

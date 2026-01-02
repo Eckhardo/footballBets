@@ -16,6 +16,7 @@ import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.repository.competition.CompetitionFamilyRepository;
 import sportbets.persistence.repository.competition.CompetitionRepository;
+import sportbets.testdata.TestConstants;
 import sportbets.web.dto.competition.CompetitionDto;
 import sportbets.web.dto.competition.CompetitionFamilyDto;
 import sportbets.web.dto.competition.CompetitionRoundDto;
@@ -31,11 +32,11 @@ import static org.hamcrest.CoreMatchers.equalTo;
 public class ContractComApiIntegrationTest {
 
     private static final Logger log = LoggerFactory.getLogger(ContractComApiIntegrationTest.class);
-    private static final String TEST_COMP_FAM = "TestLiga";
+
     private static final String TEST_COMP = "TestLiga: Saison 2025";
     private static final String TEST_COMP_2 = "TestLiga: Saison 2026";
-    final CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, TEST_COMP_FAM, "Description of TestLiga", true, true);
-    final CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, null, TEST_COMP_FAM);
+    final CompetitionFamilyDto compFamilyDto = TestConstants.TEST_FAMILY;
+    final CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, null, compFamilyDto.getName());
     @Autowired
     WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();
     @Autowired
@@ -48,7 +49,7 @@ public class ContractComApiIntegrationTest {
         // Clean up all books created during tests
         log.info("cleanup");
 
-        CompetitionFamily fam = competitionFamilyRepository.findByName(TEST_COMP_FAM).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_FAM));
+        CompetitionFamily fam = competitionFamilyRepository.findByName(compFamilyDto.getName()).orElseThrow(() -> new EntityNotFoundException(compFamilyDto.getName()));
         webClient.delete()
                 .uri("/families/" + fam.getId())
                 .exchange()
@@ -68,7 +69,7 @@ public class ContractComApiIntegrationTest {
                 .expectStatus()
                 .isCreated()
         ;
-        CompetitionFamily fam = competitionFamilyRepository.findByName(TEST_COMP_FAM).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_FAM));
+        CompetitionFamily fam = competitionFamilyRepository.findByName(compFamilyDto.getName()).orElseThrow(() -> new EntityNotFoundException(compFamilyDto.getName()));
         compDto.setFamilyId(fam.getId());
 
         webClient.post()
@@ -88,7 +89,7 @@ public class ContractComApiIntegrationTest {
     @Test
     @Order(1)
     void createNewComp_withValidCompJsonInput_thenSuccess() {
-        CompetitionFamily fam = competitionFamilyRepository.findByName(TEST_COMP_FAM).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_FAM));
+        CompetitionFamily fam = competitionFamilyRepository.findByName(compFamilyDto.getName()).orElseThrow(() -> new EntityNotFoundException(compFamilyDto.getName()));
         compDto.setFamilyId(fam.getId());
         compDto.setName(TEST_COMP_2);
 
@@ -182,7 +183,7 @@ public class ContractComApiIntegrationTest {
     @Test
     @Order(4)
     void whenFindAllForComp_ThenFetchAll() {
-        Competition comp = repository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_FAM));
+        Competition comp = repository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(compFamilyDto.getName()));
 
         webClient.get()
                 .uri("/competitions/" + comp.getId() + "/rounds")

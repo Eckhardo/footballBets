@@ -14,6 +14,7 @@ import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.entity.competition.CompetitionTeam;
 import sportbets.persistence.entity.competition.Team;
 import sportbets.persistence.repository.competition.CompetitionRepository;
+import sportbets.testdata.TestConstants;
 import sportbets.web.dto.competition.CompetitionDto;
 import sportbets.web.dto.competition.CompetitionFamilyDto;
 import sportbets.web.dto.competition.CompetitionTeamDto;
@@ -28,11 +29,10 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 public class CompTeamServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(CompTeamServiceTest.class);
-    private static final String TEST_COMP_FAM = "TestLiga";
     private static final String TEST_COMP = "TestLiga: Saison 2025";
     private static final String TEAM_NAME = "Eintracht Braunschweig";
     private static final String TEAM_NAME_2 = "Holstein Kiel";
-    final CompetitionFamilyDto competitionFamily = new CompetitionFamilyDto(null, TEST_COMP_FAM, "description of testliga", true, true);
+    final CompetitionFamilyDto competitionFamily = TestConstants.TEST_FAMILY;
     final Team team = new Team(TEAM_NAME, "Braunschweig");
     final Team team1 = new Team(TEAM_NAME_2, "Kiel");
     @Autowired
@@ -52,9 +52,10 @@ public class CompTeamServiceTest {
     @BeforeEach
     public void setup() {
         log.info("\n");
-        log.info("Delete All Test data");
+        log.info("setup All Test data");
         CompetitionFamily savedFam = familyService.save(competitionFamily).orElseThrow();
-        CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, savedFam.getId(), TEST_COMP_FAM);
+        CompetitionDto compDto = TestConstants.TEST_COMP;
+        compDto.setFamilyId(savedFam.getId());
         savedComp = compService.save(compDto);
         savedTeam1 = teamService.save(team);
         savedTeam2 = teamService.save(team1);

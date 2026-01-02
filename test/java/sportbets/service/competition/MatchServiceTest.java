@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.competition.*;
+import sportbets.testdata.TestConstants;
 import sportbets.web.dto.competition.*;
 
 import java.time.LocalDateTime;
@@ -54,7 +55,9 @@ public class MatchServiceTest {
         CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, savedFam.getId(), TEST_COMP_FAM);
 
         Competition savedComp = compService.save(compDto);
-        CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, TEST_COMP_ROUND, false,savedComp.getId(), savedComp.getName());
+        CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, TEST_COMP_ROUND, false, savedComp.getId(), savedComp.getName());
+
+        compRoundDto.setCompId(savedComp.getId());
         CompetitionRound savedCompRound = compRoundService.save(compRoundDto);
         SpieltagDto matchDayDto = new SpieltagDto(null, 5, LocalDateTime.now(),savedCompRound.getId(),savedCompRound.getName());
         savedMatchday = spieltagService.save(matchDayDto);
