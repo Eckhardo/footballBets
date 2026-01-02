@@ -16,7 +16,6 @@ import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.service.community.TipperService;
 import sportbets.service.competition.CompFamilyService;
 import sportbets.service.competition.CompService;
-import sportbets.web.dto.authorization.CompetitionRoleDto;
 import sportbets.web.dto.community.TipperDto;
 import sportbets.web.dto.competition.CompetitionDto;
 import sportbets.web.dto.competition.CompetitionFamilyDto;
@@ -58,7 +57,7 @@ public class CompetitionRoleServiceTest {
 
         savedComp = compService.save(compDto);
         assertNotNull(savedComp);
-        TipperDto testTipper = new TipperDto(null, "Eckhard", "Kirschning", TEST_USERNAME, "root", "hint", "eki@gmx.de", savedComp.getId());
+        TipperDto testTipper = new TipperDto(null, "Eckhard", "Kirschning", TEST_USERNAME, "root", "hint", "eki@gmx.de");
         savedTipper = tipperService.save(testTipper);
 
 

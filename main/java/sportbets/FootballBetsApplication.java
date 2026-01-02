@@ -14,16 +14,20 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import sportbets.common.DateUtil;
 import sportbets.persistence.builder.*;
+import sportbets.persistence.entity.authorization.CommunityRole;
 import sportbets.persistence.entity.authorization.CompetitionRole;
 import sportbets.persistence.entity.authorization.Role;
 import sportbets.persistence.entity.authorization.TipperRole;
+import sportbets.persistence.entity.community.Community;
+import sportbets.persistence.entity.community.CommunityMembership;
 import sportbets.persistence.entity.community.Tipper;
 import sportbets.persistence.entity.competition.*;
 import sportbets.persistence.repository.authorization.RoleRepository;
 import sportbets.persistence.repository.authorization.TipperRoleRepository;
+import sportbets.persistence.repository.community.CommunityMembershipRepository;
+import sportbets.persistence.repository.community.CommunityRepository;
 import sportbets.persistence.repository.community.TipperRepository;
 import sportbets.persistence.repository.competition.*;
-import sportbets.service.competition.TeamService;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -60,8 +64,8 @@ public class FootballBetsApplication {
     @Autowired
     private SpielRepository spielRepo;
 
-//    @Autowired
-//    private TeamService teamService;
+    @Autowired
+    private TeamRepository teamRepository;
 
     @Autowired
     private TipperRepository tipperRepo;
@@ -69,6 +73,15 @@ public class FootballBetsApplication {
     private TipperRoleRepository tipperRoleRepo;
     @Autowired
     private RoleRepository roleRepo;
+
+    @Autowired
+    private CommunityRepository commRepo;
+
+    @Autowired
+    private CompetitionMembershipRepository compMembRepo;
+
+    @Autowired
+    private CommunityMembershipRepository commMembRepo;
 
 
     @Bean
@@ -80,15 +93,38 @@ public class FootballBetsApplication {
 //            CompetitionRole competitionRole = new CompetitionRole(comp.getName(), comp.getDescription(), comp);
 //            fam.addCompetition(comp);
 //            comp.addCompetitionRole(competitionRole);
-//            Role savedRole = roleRepo.save(competitionRole);
+//            Role savedCompetitionRole = roleRepo.save(competitionRole);
 //
 //
 //            Tipper ebi = TipperConstants.ECKHARD;
 //            ebi.setDefaultCompetitionId(comp.getId());
 //            tipperRepo.save(ebi);
-//            TipperRole tipperRole = new TipperRole(savedRole, ebi);
-//            ebi.addTipperRole(tipperRole);
-//            tipperRoleRepo.save(tipperRole);
+//            TipperRole tipperCompRole = new TipperRole(savedCompetitionRole, ebi);
+//            ebi.addTipperRole(tipperCompRole);
+//            tipperRoleRepo.save(tipperCompRole);
+//            Community community = new Community("TestCommunity", "Description of test community");
+//            CommunityRole communityRole = new CommunityRole(community.getName(), community.getDescription(), community);
+//            community.addCommunityRole(communityRole);
+//            Community savedCommunity = commRepo.save(community);
+//            ebi.setDefaultCommunityId(savedCommunity.getId());
+//            tipperRepo.save(ebi);
+//            Role savedCommmunityRole = roleRepo.save(communityRole);
+//            TipperRole tipperCommRole = new TipperRole(savedCommmunityRole, ebi);
+//            tipperRoleRepo.save(tipperCommRole);
+//
+//            CompetitionMembership compMemb = new CompetitionMembership(savedCommunity, comp);
+//            comp.addCompetitionMembership(compMemb);
+//            savedCommunity.addCompetitionMembership(compMemb);
+//            compMembRepo.save(compMemb);
+//            compRepo.save(comp);
+//
+//            CommunityMembership commMemb = new CommunityMembership(savedCommunity, ebi);
+//            ebi.addCommunityMembership(commMemb);
+//            savedCommunity.addCommunityMembership(commMemb);
+//            commMembRepo.save(commMemb);
+//            commRepo.save(community);
+//
+//
 //
 //            CompetitionRound hinRunde = compRoundRepo.save(CompRoundConstants.getHinrunde(comp));
 //            CompetitionRound rueckRunde = compRoundRepo.save(CompRoundConstants.getRueckrunde(comp));
@@ -199,15 +235,15 @@ public class FootballBetsApplication {
 //
 //            List<Spiel> spiele = retrieveSpiele();
 //            for (Spiel spiel : spiele) {
-//                log.info(" spiele:: {} {}", spiel.getSpielNumber(), spiel.getSpieltag().getSpieltagNumber());
+//              //  log.info(" spiele:: {} {}", spiel.getSpielNumber(), spiel.getSpieltag().getSpieltagNumber());
 //
 //            }
 //
-//
-//            ///     List<Spiel> spieleHin = spielRepo.saveAll(SpielConstants.getSpieleHinrunde(spieltagHin, pauli, hsv));
-//
-//
-//            //     List<Spiel> spieleRueck = spielRepo.saveAll(SpielConstants.getSpieleRückrunde(spieltagRueck, werder, bay));
+
+            ///     List<Spiel> spieleHin = spielRepo.saveAll(SpielConstants.getSpieleHinrunde(spieltagHin, pauli, hsv));
+
+
+            //     List<Spiel> spieleRueck = spielRepo.saveAll(SpielConstants.getSpieleRückrunde(spieltagRueck, werder, bay));
 
 
             System.out.println("Save all cascade");
@@ -274,86 +310,86 @@ public class FootballBetsApplication {
         String filePath = "src/test/java/sportbets/testdata/bl.json";
 
         List<Spiel> spiele = new ArrayList<>();
-//        try (FileReader reader = new FileReader(filePath)) {
-//
-//            JsonObject jsonObject = (JsonObject) Jsoner.deserialize(reader);
-//
-//            // read value one by one manually
-//            System.out.println((String) jsonObject.get("name"));
-//
-//            // loops the array
-//            JsonArray msg = (JsonArray) jsonObject.get("matches");
-//
-//            int i = 1;
-//            int k = 1;
-//            String lastSpieltag = null;
-//            for (Object o : msg) {
-//                JsonObject nestedObj = (JsonObject) o;
-//
-//                String anpfiffTag = (String) nestedObj.get("date");
-//                String time = (String) nestedObj.get("time");
-//                if (time == null) {
-//                    time = "15:30";
-//                }
-//                LocalDateTime dt = DateUtil.formatDate(anpfiffTag + " " + time);
-//
-//                String heim = (String) nestedObj.get("team1");
-//
-//
-//                String auswärts = (String) nestedObj.get("team2");
-//                JsonObject scores = (JsonObject) nestedObj.get("score");
-//                JsonArray fts = (JsonArray) scores.get("ft");
-//                BigDecimal heimTor = null;
-//                BigDecimal gastTor = null;
-//                if (fts != null) {
-//                    int j = 1;
-//                    for (Object ft : fts) {
-//
-//                        if (j == 1) {
-//                            heimTor = (BigDecimal) ft;
-//                            j++;
-//                        } else if (j == 2) {
-//                            gastTor = (BigDecimal) ft;
-//                            j = 1;
-//                        }
-//                        ;
-//
-//                    }
-//                }
-//
-//                //    System.out.println(dt + " - " + heim + "-  " + auswärts + " " + (heimTor != null ? heimTor.intValue() : null) + " " + (gastTor != null ? gastTor.intValue() : null));
-//                boolean stattgefunden = true;
-//                if (heimTor == null || gastTor == null) {
-//                    stattgefunden = false;
-//                }
-//                Integer homeGoals = heimTor != null ? heimTor.intValue() : 0;
-//                Integer guestGoals = gastTor != null ? gastTor.intValue() : 0;
-//
-//                Spieltag spieltag = spieltagRepo.findByNumber(k);
-//
-//                Team heimTeam = teamService.findByName(heim).orElseThrow();
-//                Team gastTeam = teamService.findByName(auswärts).orElseThrow();
-//                Long ID = (long) i;
-//                spiele.add(new Spiel(spieltag, i, dt, heimTeam, gastTeam, homeGoals, guestGoals, stattgefunden));
-////                (Spieltag spieltag, int spielNumber, LocalDateTime startDate,
-////                        Team heimTeam, Team gastTeam, Integer heimTore, Integer gastTore,
-////                        Boolean stattgefunden
-//
-//                if (i % 9 == 0) {
-//
-//                    log.info("" + k);
-//                    k++;
-//                }
-//                i++;
-//            }
-//            spielRepo.saveAll(spiele);
-//
-//        } catch (IOException | JsonException e) {
-//            System.out.println("##" + e.getMessage());
-//            throw new RuntimeException(e);
-//        }
-//
-//        System.out.println("size::" + spiele.size());
+        try (FileReader reader = new FileReader(filePath)) {
+
+            JsonObject jsonObject = (JsonObject) Jsoner.deserialize(reader);
+
+            // read value one by one manually
+            System.out.println((String) jsonObject.get("name"));
+
+            // loops the array
+            JsonArray msg = (JsonArray) jsonObject.get("matches");
+
+            int i = 1;
+            int k = 1;
+            String lastSpieltag = null;
+            for (Object o : msg) {
+                JsonObject nestedObj = (JsonObject) o;
+
+                String anpfiffTag = (String) nestedObj.get("date");
+                String time = (String) nestedObj.get("time");
+                if (time == null) {
+                    time = "15:30";
+                }
+                LocalDateTime dt = DateUtil.formatDate(anpfiffTag + " " + time);
+
+                String heim = (String) nestedObj.get("team1");
+
+
+                String auswärts = (String) nestedObj.get("team2");
+                JsonObject scores = (JsonObject) nestedObj.get("score");
+                JsonArray fts = (JsonArray) scores.get("ft");
+                BigDecimal heimTor = null;
+                BigDecimal gastTor = null;
+                if (fts != null) {
+                    int j = 1;
+                    for (Object ft : fts) {
+
+                        if (j == 1) {
+                            heimTor = (BigDecimal) ft;
+                            j++;
+                        } else if (j == 2) {
+                            gastTor = (BigDecimal) ft;
+                            j = 1;
+                        }
+                        ;
+
+                    }
+                }
+
+                //    System.out.println(dt + " - " + heim + "-  " + auswärts + " " + (heimTor != null ? heimTor.intValue() : null) + " " + (gastTor != null ? gastTor.intValue() : null));
+                boolean stattgefunden = true;
+                if (heimTor == null || gastTor == null) {
+                    stattgefunden = false;
+                }
+                Integer homeGoals = heimTor != null ? heimTor.intValue() : 0;
+                Integer guestGoals = gastTor != null ? gastTor.intValue() : 0;
+
+                Spieltag spieltag = spieltagRepo.findByNumber(k);
+
+                Team heimTeam = teamRepository.findByName(heim).orElseThrow();
+                Team gastTeam = teamRepository.findByName(auswärts).orElseThrow();
+                Long ID = (long) i;
+                spiele.add(new Spiel(spieltag, i, dt, heimTeam, gastTeam, homeGoals, guestGoals, stattgefunden));
+//                (Spieltag spieltag, int spielNumber, LocalDateTime startDate,
+//                        Team heimTeam, Team gastTeam, Integer heimTore, Integer gastTore,
+//                        Boolean stattgefunden
+
+                if (i % 9 == 0) {
+
+                    log.info("" + k);
+                    k++;
+                }
+                i++;
+            }
+            spielRepo.saveAll(spiele);
+
+        } catch (IOException | JsonException e) {
+            System.out.println("##" + e.getMessage());
+            throw new RuntimeException(e);
+        }
+
+        System.out.println("size::" + spiele.size());
 
         return spiele;
     }

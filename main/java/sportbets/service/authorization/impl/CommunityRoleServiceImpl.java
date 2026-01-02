@@ -5,6 +5,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.authorization.CommunityRole;
 import sportbets.persistence.entity.authorization.Role;
@@ -16,7 +17,7 @@ import sportbets.web.dto.authorization.CommunityRoleDto;
 
 import java.util.List;
 import java.util.Optional;
-
+@Service
 public class CommunityRoleServiceImpl implements CommunityRoleService {
 
     private static final Logger log = LoggerFactory.getLogger(CommunityRoleServiceImpl.class);

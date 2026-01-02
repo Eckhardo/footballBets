@@ -1,6 +1,7 @@
 package sportbets.service.community;
 
 import sportbets.persistence.entity.community.Community;
+import sportbets.persistence.entity.competition.Competition;
 import sportbets.web.dto.community.CommunityDto;
 
 import java.util.List;
@@ -20,6 +21,9 @@ public interface CommunityService {
 
     void deleteByName(String name);
 
+    void deleteAll();
+
     List<Community> getAll();
+    Optional<Community> findByIdTest(Long id);
 
 }

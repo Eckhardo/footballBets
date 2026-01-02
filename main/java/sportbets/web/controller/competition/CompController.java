@@ -88,7 +88,7 @@ public class CompController {
     @PutMapping(value = "/competitions/{id}")
     public CompetitionDto update(@PathVariable Long id, @RequestBody CompetitionDto compDto) {
 
-        Competition updatedComp = this.compService.updateComp(id, compDto);
+        Competition updatedComp = this.compService.updateComp(id, compDto).orElseThrow();
 
         log.info("Updated competition {}", updatedComp);
 

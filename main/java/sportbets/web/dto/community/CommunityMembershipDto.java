@@ -12,19 +12,23 @@ import java.util.Objects;
  */
 public class CommunityMembershipDto implements Serializable {
     private Long id;
-    private LocalDateTime createdOn = LocalDateTime.now();
     @NotNull(message = " tipper id cannot be null")
     private Long tipperId;
     private String tipperName;
     @NotNull(message = " community id cannot be null")
     private Long commId;
     private String commName;
+
     public CommunityMembershipDto() {
     }
 
-    public CommunityMembershipDto(Long id, LocalDateTime createdOn) {
+
+    public CommunityMembershipDto(Long id, Long tipperId, String tipperName, Long commId, String commName) {
         this.id = id;
-        this.createdOn = createdOn;
+        this.tipperId = tipperId;
+        this.tipperName = tipperName;
+        this.commId = commId;
+        this.commName = commName;
     }
 
     public Long getId() {
@@ -33,14 +37,6 @@ public class CommunityMembershipDto implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public LocalDateTime getCreatedOn() {
-        return createdOn;
-    }
-
-    public void setCreatedOn(LocalDateTime createdOn) {
-        this.createdOn = createdOn;
     }
 
     public Long getTipperId() {
@@ -80,19 +76,19 @@ public class CommunityMembershipDto implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CommunityMembershipDto entity = (CommunityMembershipDto) o;
-        return Objects.equals(this.id, entity.id) &&
-                Objects.equals(this.createdOn, entity.createdOn);
+        return Objects.equals(this.id, entity.id) ;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, createdOn);
+        return Objects.hash(id, tipperId,commId);
     }
 
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" +
                 "id = " + id + ", " +
-                "createdOn = " + createdOn + ")";
+                "commName = " + commName + ", " +
+                "tipperName = " + tipperName + ")";
     }
 }

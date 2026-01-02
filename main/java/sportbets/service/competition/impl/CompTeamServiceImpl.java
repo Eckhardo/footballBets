@@ -115,7 +115,7 @@ public class CompTeamServiceImpl implements CompTeamService {
         log.info("update Match dto:: {}", competitionTeamDto);
         Optional<CompetitionTeam> updateModel = compTeamRepo.findById(id);
         if (updateModel.isEmpty()) {
-            throw new EntityNotFoundException("spiel  does not exits given id:" + competitionTeamDto.getId());
+            throw new EntityNotFoundException("compTeam  does not exits given id:" + competitionTeamDto.getId());
         }
         CompetitionTeam model = modelMapper.map(competitionTeamDto, CompetitionTeam.class);
         Competition comp = compRepo.findByName(competitionTeamDto.getCompName()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -123,7 +123,7 @@ public class CompTeamServiceImpl implements CompTeamService {
         model.setCompetition(comp);
         model.setTeam(team);
         CompetitionTeam competitionTeam = updateFields(updateModel.get(), model);
-        log.info("updated Comp  with {}", competitionTeam);
+        log.info("updated CompTeam  with {}", competitionTeam);
         return Optional.of(compTeamRepo.save(competitionTeam));
 
 

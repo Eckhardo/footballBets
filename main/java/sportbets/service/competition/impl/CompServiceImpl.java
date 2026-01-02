@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sportbets.persistence.entity.authorization.CommunityRole;
 import sportbets.persistence.entity.authorization.CompetitionRole;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
@@ -75,7 +76,7 @@ public class CompServiceImpl implements CompService {
 
     @Override
     @Transactional
-    public Competition updateComp(Long id, CompetitionDto compDto) {
+    public Optional<Competition> updateComp(Long id, CompetitionDto compDto) {
 
 
         log.info("updateComp  with {}", compDto);
@@ -83,12 +84,21 @@ public class CompServiceImpl implements CompService {
         if (updateModel.isEmpty()) {
             throw new EntityNotFoundException("spiel  does not exits given name:" + compDto.getName());
         }
-        Competition model = modelMapper.map(compDto, Competition.class);
-        CompetitionFamily fam = compFamilyRepo.findById(compDto.getFamilyId()).orElseThrow(() -> new EntityNotFoundException("compFam not found "));
-        model.setCompetitionFamily(fam);
-        Competition updatedComp = updateFields(updateModel.get(), model);
-        log.info("updated Comp  with {}", updatedComp);
-        return compRepository.save(updatedComp);
+
+
+        Optional<CompetitionRole> oldRole = updateModel.get().getCompetitionRoleByName(updateModel.get().getName());
+        if (oldRole.isPresent()) {
+            log.info("old {}",oldRole.get().getName());
+
+            oldRole.get().setName(compDto.getName());
+            oldRole.get().setDescription(compDto.getDescription());
+        }
+        updateModel.get().setName(compDto.getName());
+        updateModel.get().setDescription(compDto.getDescription());
+        updateModel.get().setWinMultiplicator(compDto.getWinMultiplicator());
+        updateModel.get().setRemisMultiplicator(compDto.getRemisMultiplicator());
+        log.info("updated Comp  with {}", updateModel);
+        return  Optional.of(compRepository.save(updateModel.get()));
 
     }
 
@@ -136,13 +146,6 @@ public class CompServiceImpl implements CompService {
 
     }
 
-    private Competition updateFields(Competition base, Competition updatedComp) {
-        base.setName(updatedComp.getName());
-        base.setDescription(updatedComp.getDescription());
-        base.setWinMultiplicator(updatedComp.getWinMultiplicator());
-        base.setRemisMultiplicator(updatedComp.getRemisMultiplicator());
-        return base;
-    }
 
     @Override
     @Transactional

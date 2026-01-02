@@ -1,0 +1,88 @@
+package sportbets.service.authorization;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
+import sportbets.persistence.entity.authorization.CommunityRole;
+import sportbets.persistence.entity.community.Community;
+import sportbets.persistence.entity.community.Tipper;
+import sportbets.service.community.CommunityService;
+import sportbets.service.community.TipperService;
+import sportbets.web.dto.community.CommunityDto;
+import sportbets.web.dto.community.TipperDto;
+
+import java.util.List;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+@SpringBootTest
+@ActiveProfiles("test")
+@Transactional
+public class CommunityRoleServiceTest {
+
+    private static final Logger log = LoggerFactory.getLogger(CommunityRoleServiceTest.class);
+    private static final String TEST_COMM = "Test Community";
+    private static final String TEST_USERNAME = "TEST_USER";
+    Community savedCommunity = null;
+    Tipper savedTipper = null;
+
+    @Autowired
+    private CommunityService communityService; // Real service being tested
+    @Autowired
+    private CommunityRoleService communityRoleService;
+
+    @Autowired
+    private TipperService tipperService;
+
+
+
+    @BeforeEach
+    public void setup() {
+
+        CommunityDto compDto = new CommunityDto(null, TEST_COMM, "Description of Community");
+
+        savedCommunity = communityService.save(compDto);
+        assertNotNull(savedCommunity);
+        TipperDto testTipper = new TipperDto(null, "Eckhard", "Kirschning", TEST_USERNAME, "root", "hint", "eki@gmx.de");
+        savedTipper = tipperService.save(testTipper);
+
+
+    }
+    @AfterEach
+    public void tearDown() {
+
+    }
+
+    @Test
+    public void saveCommunityRole() {
+        log.info("saveCompRole");
+        CommunityRole communityRole = communityRoleService.findByCommunityName(savedCommunity.getName()).orElseThrow();
+
+        assertEquals(savedCommunity.getName(), communityRole.getName());
+        assertEquals(savedCommunity.getId(), communityRole.getCommunity().getId());
+        assertEquals(savedCommunity.getName(), communityRole.getCommunity().getName());
+        Community myComm = communityService.findByIdTest(savedCommunity.getId()).orElseThrow();
+        assertThat(myComm.getCommunityRoles()).isNotNull();
+    }
+
+
+    @Test
+    public void findAllCommunityRoles() {
+        log.info("findCommunityRoles");
+
+        List<CommunityRole> roles = communityRoleService.getAllCommunityRoles();
+        assertThat(roles).isNotNull();
+        assertThat(roles.size()).isEqualTo(1);
+        assertEquals(savedCommunity.getId(), roles.get(0).getCommunity().getId());
+        assertEquals(savedCommunity.getName(), roles.get(0).getCommunity().getName());
+    }
+
+}

@@ -2,11 +2,15 @@ package sportbets.persistence.entity.competition;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sportbets.persistence.entity.authorization.CommunityRole;
 import sportbets.persistence.entity.authorization.CompetitionRole;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 
@@ -14,6 +18,7 @@ import java.util.Set;
 public class Competition {
 
 
+    private static final Logger log = LoggerFactory.getLogger(Competition.class);
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,7 +30,7 @@ public class Competition {
     @Column(nullable = false)
     private final LocalDateTime createdOn = LocalDateTime.now();
 
-    @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     final Set<CompetitionRole> competitionRoles = new HashSet<>();
 
     @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -133,10 +138,22 @@ public class Competition {
         }
         this.getCompetitionMemberships().add(compMemb);
     }
+    public Optional<CompetitionRole> getCompetitionRoleByName(String roleName ) {
+        log.info("getCompetitionRoleByName:: {}",roleName);
+        for (CompetitionRole role : competitionRoles) {
+            log.info("competitionRole:: {}",role.getName());
+            if (role.getName().equals(roleName)) {
+                log.info("treffer");
+                return Optional.of(role);
+            }
+        }
+        return Optional.empty();
+    }
 
     public Set<CompetitionRole> getCompetitionRoles() {
         return competitionRoles;
     }
+
 
     public void addCompetitionRole(CompetitionRole role) {
         if (role == null) {
@@ -178,10 +195,11 @@ public class Competition {
         return "Competition{" +
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", winMultiplicator=" + winMultiplicator +
-                ", remisMultiplicator=" + remisMultiplicator +
-                ", createdOn=" + createdOn +
-                ", family [=" + (competitionFamily == null ? null : competitionFamily) +
+                ", winMultiplicator=" + winMultiplicator + '\'' +
+                ", remisMultiplicator=" + remisMultiplicator + '\'' +
+                ", createdOn=" + createdOn + '\'' +
+                ", ROLE name =" + (competitionRoles.isEmpty() ? "nothing": competitionRoles.stream().findFirst().get().getName()) + '\'' +
+                ", family name [=" + (competitionFamily == null ? null : competitionFamily.getName()) +
                 "]}";
     }
 }

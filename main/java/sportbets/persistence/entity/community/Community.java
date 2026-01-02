@@ -9,6 +9,7 @@ import sportbets.persistence.entity.competition.CompetitionMembership;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 @Entity
@@ -22,8 +23,10 @@ public class Community {
     private String description;
     private final LocalDateTime createdOn = LocalDateTime.now();
 
-    @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "community", cascade = CascadeType.ALL,  orphanRemoval = true, fetch = FetchType.EAGER)
     Set<CommunityRole> communityRoles = new HashSet<>();
+    @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    final Set<CommunityMembership> communityMemberships = new HashSet<>();
 
     @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<CompetitionMembership> competitionMemberships = new HashSet<>();
@@ -72,16 +75,46 @@ public class Community {
         return communityRoles;
     }
 
+    public Optional<CommunityRole> getCommunityRoleByName(String roleName) {
+
+        for (CommunityRole communityRole : communityRoles) {
+
+            if (communityRole.getName().equals(roleName)) {
+
+                return Optional.of(communityRole);
+            }
+        }
+        return Optional.empty();
+    }
+
     public void addCommunityRole(CommunityRole role) {
         if (role == null) {
             throw new IllegalArgumentException("Can't add a null Community role.");
         }
         this.getCommunityRoles().add(role);
     }
+    public void removeCommunityRole(CommunityRole role) {
+        if (role == null) {
+            throw new IllegalArgumentException("Can't add a null Community role.");
+        }
+        this.getCommunityRoles().remove(role);
+    }
+
+    public Set<CommunityMembership> getCommunityMemberships() {
+        return communityMemberships;
+    }
+
+    public void addCommunityMembership(CommunityMembership communityMembership) {
+        if (communityMembership == null) {
+            throw new IllegalArgumentException("Can't add a null CommMemb role.");
+        }
+        this.getCommunityMemberships().add(communityMembership);
+    }
 
     public Set<CompetitionMembership> getCompetitionMemberships() {
         return competitionMemberships;
     }
+
 
     public void addCompetitionMembership(CompetitionMembership compMemb) {
         if (compMemb == null) {
@@ -107,7 +140,8 @@ public class Community {
         return "Community{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", description='" + description +
+                ", description='" + description + + '\'' +
+                ", ROLE name =" + (communityRoles.isEmpty() ? "nothing": communityRoles.stream().findFirst().get().getName()) +
                 '}';
     }
 }

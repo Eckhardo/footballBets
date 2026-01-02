@@ -12,19 +12,22 @@ import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.entity.competition.CompetitionRound;
+import sportbets.persistence.entity.competition.CompetitionTeam;
 import sportbets.testdata.TestConstants;
 import sportbets.web.dto.competition.CompetitionDto;
 import sportbets.web.dto.competition.CompetitionFamilyDto;
 import sportbets.web.dto.competition.CompetitionRoundDto;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
 @ActiveProfiles("test")
-@Transactional
-public class CompRoundServiceTest {
 
-    private static final Logger log = LoggerFactory.getLogger(CompRoundServiceTest.class);
+public class CompRoundServiceTestNonTransactional {
+
+    private static final Logger log = LoggerFactory.getLogger(CompRoundServiceTestNonTransactional.class);
     final CompetitionFamilyDto competitionFamily = TestConstants.TEST_FAMILY;
     CompetitionDto compDto = TestConstants.TEST_COMP;
     Competition savedComp = null;
@@ -41,7 +44,7 @@ public class CompRoundServiceTest {
     public void setup() {
 
         CompetitionFamily savedFam = familyService.save(competitionFamily).orElseThrow();
-
+        CompetitionDto compDto = TestConstants.TEST_COMP;
         compDto.setFamilyId(savedFam.getId());
         savedComp = compService.save(compDto);
     }
@@ -50,6 +53,8 @@ public class CompRoundServiceTest {
     public void tearDown() {
         log.info("\n");
         log.info("Delete All Test data");
+        familyService.deleteByName(competitionFamily.getName());
+
 
     }
 
@@ -57,6 +62,7 @@ public class CompRoundServiceTest {
     void whenValidCompRound_thenCompRoundShouldBeSaved() {
 
         CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, "TEST Round", false, null, compDto.getName());;
+
         compRoundDto.setCompId(savedComp.getId());
         CompetitionRound savedCompRound = compRoundService.save(compRoundDto);
 
@@ -71,6 +77,7 @@ public class CompRoundServiceTest {
 
     @Test
     void whenValidCompRound_thenCompRoundShouldBeUpdated() {
+
         CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, "TEST Round", false, null, compDto.getName());;
 
         compRoundDto.setCompId(savedComp.getId());
@@ -85,5 +92,30 @@ public class CompRoundServiceTest {
         assertThat(updatedCompRound.getCompetition().getName()).isEqualTo(savedComp.getName());
         assertThat(updatedCompRound.getCompetition().getId()).isEqualTo(savedComp.getId());
 
+    }
+
+
+    @Test
+    void whenFamilyIsDeleted_thenCompRoundShouldBeDeleted() {
+
+        CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, "TEST Round", false, null, compDto.getName());;
+
+        compRoundDto.setCompId(savedComp.getId());
+        CompetitionRound savedCompRound = compRoundService.save(compRoundDto);
+
+        assertThat(savedCompRound.getId()).isNotNull();
+        assertThat(savedCompRound.getName()).isEqualTo(savedCompRound.getName());
+        assertThat(savedCompRound.getCompetition().getName()).isEqualTo(savedComp.getName());
+        assertThat(savedCompRound.getCompetition().getId()).isEqualTo(savedComp.getId());
+        // check for ref inegrity
+        Competition compModel = compService.findById(savedCompRound.getCompetition().getId()).orElseThrow();
+        assertThat(compModel.getCompetitionRounds()).isNotNull();
+        log.info("\n");
+        familyService.deleteByName(competitionFamily.getName());
+        Optional<Competition> deletedComp = compService.findByName(savedComp.getName());
+        assertThat(deletedComp.isEmpty());
+        Optional<CompetitionRound> deletedRound = compRoundService.findById(savedCompRound.getId());
+        assertThat(deletedRound.isEmpty());
+        log.info("\n");
     }
 }

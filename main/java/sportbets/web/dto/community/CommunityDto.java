@@ -24,11 +24,11 @@ public class CommunityDto implements Serializable {
     public CommunityDto() {
     }
 
-    public CommunityDto(Long id, String name, String description, LocalDateTime createdOn) {
+    public CommunityDto(Long id, String name, String description) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.createdOn = createdOn;
+
     }
 
     public Long getId() {

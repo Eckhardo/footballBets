@@ -11,7 +11,7 @@ public interface TipperRoleService {
 
     Optional<TipperRole> save(TipperRoleDto dto);
 
-
+    Optional<TipperRole> findById(Long id );
     void deleteAll();
 
     void deleteById(Long id);

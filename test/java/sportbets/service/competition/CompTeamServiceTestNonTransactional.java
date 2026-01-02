@@ -26,9 +26,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
 @ActiveProfiles("test")
-@Transactional
-public class CompTeamServiceTest {
 
+public class CompTeamServiceTestNonTransactional {
     private static final Logger log = LoggerFactory.getLogger(CompTeamServiceTest.class);
     private static final String TEST_COMP = "TestLiga: Saison 2025";
     private static final String TEAM_NAME = "Eintracht Braunschweig";
@@ -63,7 +62,9 @@ public class CompTeamServiceTest {
 
     @AfterEach
     public void tearDown() {
-
+      familyService.deleteByName(competitionFamily.getName());
+      teamService.deleteByName(team.getName());
+      teamService.deleteByName(team1.getName());
 
     }
 
@@ -131,6 +132,25 @@ public class CompTeamServiceTest {
     }
 
 
+    @Test
+    void whenCompIsDeleted_thenCompTeamShouldBeDeleted() {
+
+        CompetitionTeamDto compTeamDto = new CompetitionTeamDto(null, savedComp.getId(), savedComp.getName(), savedTeam1.getId(), savedTeam1.getAcronym());
+        CompetitionTeam savedCompTeam = compTeamService.save(compTeamDto);
+
+        assertThat(savedCompTeam.getId()).isNotNull();
+        assertThat(savedCompTeam.getCompetition().getId()).isEqualTo(savedComp.getId());
+        assertThat(savedCompTeam.getTeam().getId()).isEqualTo(savedTeam1.getId());
+        log.info("\n");
+        familyService.deleteByName(competitionFamily.getName());
+        Optional<Competition> deletedComp = compService.findByName(savedComp.getName());
+        assertThat(deletedComp.isEmpty());
+        Optional<CompetitionTeam> deletedCompTeam = compTeamService.findById(savedCompTeam.getId());
+        assertThat(deletedCompTeam.isEmpty());
+        log.info("\n");
+
+
+    }
 
     @Test
     void whenValidComp_thenAllCompTeamsShouldBeRetrieved() {

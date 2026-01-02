@@ -51,6 +51,6 @@ public class CompetitionRole extends Role {
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), competition);
+        return Objects.hash(super.hashCode(), getName(),getDescription());
     }
 }

@@ -50,6 +50,6 @@ public class CommunityRole extends Role {
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), community.getName());
+        return Objects.hash(super.hashCode(), getName(),getDescription());
     }
 }

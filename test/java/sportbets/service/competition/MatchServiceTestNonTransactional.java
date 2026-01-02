@@ -8,21 +8,21 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.competition.*;
 import sportbets.web.dto.competition.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
 @ActiveProfiles("test")
-@Transactional
-public class MatchServiceTest {
 
-    private static final Logger log = LoggerFactory.getLogger(MatchServiceTest.class);
+public class MatchServiceTestNonTransactional {
+
+    private static final Logger log = LoggerFactory.getLogger(MatchServiceTestNonTransactional.class);
     private static final String TEST_COMP_FAM = "TestLiga";
     private static final String TEST_COMP = "TestLiga: Saison 2025";
     private static final String TEST_COMP_ROUND = "Saison 2025: Hinrunde";
@@ -71,6 +71,9 @@ public class MatchServiceTest {
     public void tearDown() {
         log.info("\n");
         log.info("Delete All Test data");
+        familyService.deleteByName(TEST_COMP_FAM);
+        teamService.deleteByName(TEAM_NAME);
+        teamService.deleteByName(TEAM_NAME_2);
 
 
     }
@@ -147,6 +150,34 @@ public class MatchServiceTest {
             assertThat(savedMatch.getHeimTeam().getId()).isEqualTo(savedTeam1.getId());
 
         }
+    }
+    @Test
+    void whenFamilyIsDeleted_thenMatchShouldBeDeleted() {
+        SpielDto testSpiel1 = new SpielDto(null, 1, 3, 1, false, LocalDateTime.now(), savedMatchday.getId(), savedMatchday.getSpieltagNumber(), savedTeam1.getId(), savedTeam1.getAcronym(), savedTeam2.getId(), savedTeam2.getAcronym());
+
+        Spiel savedMatch = matchService.save(testSpiel1);
+        assertThat(savedMatch.getId()).isNotNull();
+        assertThat(savedMatch.getAnpfiffdate()).isEqualTo(testSpiel1.getAnpfiffdate());
+        assertThat(savedMatch.getSpielNumber()).isEqualTo(testSpiel1.getSpielNumber());
+        assertThat(savedMatch.getHeimTore()).isEqualTo(testSpiel1.getHeimTore());
+        assertThat(savedMatch.getGastTore()).isEqualTo(testSpiel1.getGastTore());
+
+        assertThat(savedMatch.getSpieltag().getSpieltagNumber()).isEqualTo(savedMatchday.getSpieltagNumber());
+        assertThat(savedMatch.getSpieltag().getId()).isEqualTo(savedMatchday.getId());
+        assertThat(savedMatch.getHeimTeam().getId()).isEqualTo(savedTeam1.getId());
+        assertThat(savedMatch.getHeimTeam().getAcronym()).isEqualTo(savedTeam1.getAcronym());
+        assertThat(savedMatch.getGastTeam().getId()).isEqualTo(savedTeam2.getId());
+        assertThat(savedMatch.getGastTeam().getAcronym()).isEqualTo(savedTeam2.getAcronym());
+        log.info("\n");
+        familyService.deleteByName(TEST_COMP_FAM);
+        Optional<Competition> deletedComp = compService.findByName(TEST_COMP);
+        assertThat(deletedComp.isEmpty());
+        Optional<Spieltag> deletedMatchday = spieltagService.findById(savedMatchday.getId());
+        assertThat(deletedMatchday.isEmpty());
+        Optional<Spiel> deletedMatch = matchService.findById(savedMatch.getId());
+        assertThat(deletedMatch.isEmpty());
+        log.info("\n");
+
     }
 
 }

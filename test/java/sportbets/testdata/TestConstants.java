@@ -11,5 +11,4 @@ public class TestConstants {
     public static CompetitionFamily FIFA_WM = new CompetitionFamily("FIFA WM", "Fussball Weltmeisterschaft", false, false);
     public static CompetitionFamilyDto TEST_FAMILY = new CompetitionFamilyDto(null, "TEST FAMILY", "description of testliga", true, true);
     public static CompetitionDto TEST_COMP = new CompetitionDto(null, "TestLiga: Saison 2025", "Description of Competition", 3, 1, null, TEST_FAMILY.getName());
-    public static CompetitionRoundDto TEST_ROUND = new CompetitionRoundDto(null, 1, "TEST Round", false, null, TEST_COMP.getName());
-}
+   }

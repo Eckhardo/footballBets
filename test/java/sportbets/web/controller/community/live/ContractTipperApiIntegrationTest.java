@@ -36,7 +36,7 @@ public class ContractTipperApiIntegrationTest {
     private static final String TEST_COMP_FAM = "TestLiga";
     private static final String TEST_COMP = "TestLiga: Saison 2025";
     private static final String TEST_USERNAME = "Testuser";
-    TipperDto testTipper = new TipperDto(null, "Eckhard", "Kirschning", TEST_USERNAME, "passwd", "hint", "eki@gmx.de", null);
+    TipperDto testTipper = new TipperDto(null, "Eckhard", "Kirschning", TEST_USERNAME, "passwd", "hint", "eki@gmx.de");
     Competition savedComp = null;
 
     @Autowired

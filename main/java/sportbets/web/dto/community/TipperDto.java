@@ -28,10 +28,12 @@ public class TipperDto implements Serializable {
 
     private Long defaultCompetitionId;
 
+    private Long defaultCommunityId;
+
     public TipperDto() {
     }
 
-    public TipperDto(Long id, String firstname, String lastname, String username, String passwort, String passwortHint, String email, Long defaultCompetitionId) {
+    public TipperDto(Long id, String firstname, String lastname, String username, String passwort, String passwortHint, String email) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -39,7 +41,6 @@ public class TipperDto implements Serializable {
         this.passwort = passwort;
         this.passwortHint = passwortHint;
         this.email = email;
-        this.defaultCompetitionId = defaultCompetitionId;
     }
 
     public Long getId() {

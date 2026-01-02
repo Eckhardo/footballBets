@@ -6,6 +6,7 @@ import sportbets.web.dto.authorization.CommunityRoleDto;
 import java.util.List;
 import java.util.Optional;
 
+
 public interface CommunityRoleService {
 
     Optional<CommunityRole> findById(Long id);

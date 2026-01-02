@@ -34,10 +34,7 @@ class TipperRoleServiceImpl implements TipperRoleService {
         this.roleRepository = roleRepository;
     }
 
-    /**
-     * @param dto
-     * @return
-     */
+
     @Override
     public Optional<TipperRole> save(TipperRoleDto dto) {
         log.info("\n");
@@ -52,10 +49,6 @@ class TipperRoleServiceImpl implements TipperRoleService {
         return Optional.of(model);
     }
 
-    /**
-     * @param tipperId
-     * @return
-     */
     @Override
     public List<TipperRole> getAllForTipper(Long tipperId) {
         List<TipperRole> tipperRoles = tipperRoleRepo.getAllForTipper(tipperId);
@@ -64,19 +57,18 @@ class TipperRoleServiceImpl implements TipperRoleService {
         return tipperRoles;
     }
 
-    /**
-     *
-     */
     @Override
     public void deleteAll() {
         tipperRoleRepo.deleteAll();
     }
 
-    /**
-     * @param id
-     */
     @Override
     public void deleteById(Long id) {
         tipperRoleRepo.deleteById(id);
+    }
+
+    @Override
+    public Optional<TipperRole> findById(Long id) {
+        return tipperRoleRepo.findById(id);
     }
 }

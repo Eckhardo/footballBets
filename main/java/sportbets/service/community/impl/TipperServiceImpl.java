@@ -111,9 +111,7 @@ class TipperServiceImpl implements TipperService {
 
     }
 
-    /**
-     * @param ids
-     */
+
     @Override
     @Transactional
     public void deleteAll(List<Long> ids) {
@@ -122,36 +120,33 @@ class TipperServiceImpl implements TipperService {
         }
     }
 
-    /**
-     * @param id
-     */
     @Override
+    public void deleteAll() {
+        tipperRepo.deleteAll();
+    }
+
+
+    @Override
+    @Transactional
     public void deleteById(Long id) {
         tipperRepo.deleteById(id);
     }
 
-    /**
-     * @param userName
-     */
+
     @Override
     @Transactional
     public void deleteByUserName(String userName) {
         tipperRepo.deleteByUsername(userName);
     }
 
-    /**
-     * @param compId
-     * @return
-     */
+
     @Override
     @Transactional(readOnly = true)
     public List<Tipper> getAllFormComp(Long compId) {
         return  List.of();
     }
 
-    /**
-     * @return
-     */
+
     @Override
     public List<Tipper> getAll() {
        return tipperRepo.findAll();

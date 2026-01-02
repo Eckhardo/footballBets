@@ -16,7 +16,7 @@ public interface CompService {
 
     Competition save(CompetitionDto compDto);
 
-    Competition updateComp(Long id, CompetitionDto compDto);
+    Optional<Competition> updateComp(Long id, CompetitionDto compDto);
 
     void deleteById(Long id);
 
