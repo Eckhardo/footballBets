@@ -11,11 +11,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.authorization.CommunityRole;
 import sportbets.persistence.entity.community.Community;
-import sportbets.persistence.entity.community.Tipper;
 import sportbets.service.community.CommunityService;
-import sportbets.service.community.TipperService;
 import sportbets.web.dto.community.CommunityDto;
-import sportbets.web.dto.community.TipperDto;
 
 import java.util.List;
 

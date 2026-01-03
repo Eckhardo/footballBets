@@ -1,6 +1,5 @@
 package sportbets.web.controller.community.live;
 
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +13,6 @@ import sportbets.config.TestProfileLiveTest;
 import sportbets.persistence.entity.community.Community;
 import sportbets.persistence.entity.community.CommunityMembership;
 import sportbets.persistence.entity.community.Tipper;
-import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.repository.community.CommunityMembershipRepository;
 import sportbets.persistence.repository.community.CommunityRepository;
 import sportbets.persistence.repository.community.TipperRepository;

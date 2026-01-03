@@ -4,7 +4,6 @@ import jakarta.validation.constraints.NotNull;
 import sportbets.persistence.entity.competition.CompetitionMembership;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**

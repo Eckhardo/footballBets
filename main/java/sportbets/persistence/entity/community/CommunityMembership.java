@@ -2,7 +2,6 @@ package sportbets.persistence.entity.community;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import sportbets.persistence.entity.competition.Competition;
 
 import java.time.LocalDateTime;
 import java.util.Objects;

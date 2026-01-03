@@ -13,14 +13,12 @@ import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.entity.competition.CompetitionTeam;
 import sportbets.persistence.entity.competition.Team;
-import sportbets.persistence.repository.competition.CompetitionRepository;
 import sportbets.testdata.TestConstants;
 import sportbets.web.dto.competition.CompetitionDto;
 import sportbets.web.dto.competition.CompetitionFamilyDto;
 import sportbets.web.dto.competition.CompetitionTeamDto;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 

@@ -4,7 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import sportbets.persistence.entity.community.CommunityMembership;
-import sportbets.persistence.entity.competition.CompetitionTeam;
 
 import java.util.Optional;
 @Repository

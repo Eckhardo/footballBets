@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionRound;
-import sportbets.service.competition.CompFamilyService;
 import sportbets.service.competition.CompService;
 import sportbets.web.dto.MapperUtil;
 import sportbets.web.dto.competition.CompetitionDto;

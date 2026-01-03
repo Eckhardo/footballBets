@@ -3,7 +3,6 @@ package sportbets.testdata;
 import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.web.dto.competition.CompetitionDto;
 import sportbets.web.dto.competition.CompetitionFamilyDto;
-import sportbets.web.dto.competition.CompetitionRoundDto;
 
 public class TestConstants {
     

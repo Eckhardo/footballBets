@@ -6,18 +6,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import sportbets.persistence.entity.community.Tipper;
-import sportbets.persistence.entity.competition.Competition;
-import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.service.community.TipperService;
-import sportbets.service.competition.CompService;
-import sportbets.web.dto.MapperUtil;
 import sportbets.web.dto.community.TipperDto;
-import sportbets.web.dto.competition.CompetitionDto;
-import sportbets.web.dto.competition.CompetitionFamilyDto;
 
 import java.util.ArrayList;
 import java.util.List;

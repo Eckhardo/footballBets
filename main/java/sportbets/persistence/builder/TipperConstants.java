@@ -1,7 +1,6 @@
 package sportbets.persistence.builder;
 
 import sportbets.persistence.entity.community.Tipper;
-import sportbets.persistence.entity.competition.CompetitionFamily;
 
 public class TipperConstants {
 

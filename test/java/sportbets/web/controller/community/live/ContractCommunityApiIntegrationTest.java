@@ -14,7 +14,6 @@ import sportbets.config.TestProfileLiveTest;
 import sportbets.persistence.entity.community.Community;
 import sportbets.persistence.repository.community.CommunityRepository;
 import sportbets.web.dto.community.CommunityDto;
-import sportbets.web.dto.competition.SpieltagDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
