@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.authorization.CommunityRole;
 import sportbets.persistence.entity.authorization.CompetitionRole;
 import sportbets.persistence.entity.authorization.TipperRole;
@@ -34,7 +33,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 @ActiveProfiles("test")
-@Transactional
 class TipperRoleServiceTest {
     // Real service being tested
     private static final String TEST_COMP_FAM = "TestLiga";
@@ -78,7 +76,7 @@ class TipperRoleServiceTest {
         savedCommunity = communityService.save(communityDto);
         assertNotNull(savedCommunity);
 
-        TipperDto testTipper= new TipperDto(null, "Eckhard", "Kirschning", TEST_USERNAME, "root", "hint", "eki@gmx.de");
+        TipperDto testTipper = new TipperDto(null, "Eckhard", "Kirschning", TEST_USERNAME, "root", "hint", "eki@gmx.de");
         savedTipper = tipperService.save(testTipper);
         assertNotNull(savedTipper);
     }
@@ -87,8 +85,9 @@ class TipperRoleServiceTest {
     public void tearDown() {
         log.info("\n");
         log.info("Delete All Test data");
-
-
+        tipperService.deleteByUserName(TEST_USERNAME);
+        familyService.deleteByName(TEST_COMP_FAM);
+        communityService.deleteByName(TEST_COMM);
     }
 
     @Test

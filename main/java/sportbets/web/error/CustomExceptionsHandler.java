@@ -1,10 +1,13 @@
 package sportbets.web.error;
 
 import jakarta.annotation.Nullable;
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.hibernate.TransientObjectException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.*;
 import org.springframework.validation.BindingResult;
@@ -15,17 +18,31 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import sportbets.web.controller.competition.SpieltagController;
 
 import java.net.URI;
 
 @ControllerAdvice
 public class CustomExceptionsHandler extends ResponseEntityExceptionHandler {
+    private static final Logger log = LoggerFactory.getLogger(CustomExceptionsHandler.class);
 
     @ExceptionHandler({EntityNotFoundException.class, TransientObjectException.class})
     public ProblemDetail resolveEntityNotFoundException2(Exception ex, ServletRequest request, HttpServletResponse response) {
+    log.error("EntityNotFoundException", ex);
+
+
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Invalid associated entity: " + ex.getMessage());
         problemDetail.setType(URI.create("https://example.com/errors/invalid-associated-entity"));
         problemDetail.setTitle("Invalid associated entity");
+        return problemDetail;
+    }
+
+    @ExceptionHandler({EntityExistsException.class})
+    public ProblemDetail resolveEntityExitsException2(Exception ex, ServletRequest request, HttpServletResponse response) {
+
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "duplicate entity: " + ex.getMessage());
+        problemDetail.setType(URI.create("https://example.com/errors/invalid-associated-entity"));
+        problemDetail.setTitle("duplicate entity");
         return problemDetail;
     }
 
@@ -42,6 +59,8 @@ public class CustomExceptionsHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(@SuppressWarnings("NullableProblems") Exception ex, @Nullable Object body, @SuppressWarnings("NullableProblems") HttpHeaders headers, @SuppressWarnings("NullableProblems") HttpStatusCode statusCode, @SuppressWarnings("NullableProblems") WebRequest request) {
+
+        log.error(" handle error {}", ex.getMessage(), ex);
         ResponseEntity<Object> response = super.handleExceptionInternal(ex, body, headers, statusCode, request);
 
         if (response.getBody() instanceof ProblemDetail problemDetailBody) {

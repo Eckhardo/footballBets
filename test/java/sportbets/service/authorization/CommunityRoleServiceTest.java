@@ -30,17 +30,12 @@ public class CommunityRoleServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(CommunityRoleServiceTest.class);
     private static final String TEST_COMM = "Test Community";
-    private static final String TEST_USERNAME = "TEST_USER";
     Community savedCommunity = null;
-    Tipper savedTipper = null;
 
     @Autowired
     private CommunityService communityService; // Real service being tested
     @Autowired
     private CommunityRoleService communityRoleService;
-
-    @Autowired
-    private TipperService tipperService;
 
 
 
@@ -51,8 +46,6 @@ public class CommunityRoleServiceTest {
 
         savedCommunity = communityService.save(compDto);
         assertNotNull(savedCommunity);
-        TipperDto testTipper = new TipperDto(null, "Eckhard", "Kirschning", TEST_USERNAME, "root", "hint", "eki@gmx.de");
-        savedTipper = tipperService.save(testTipper);
 
 
     }

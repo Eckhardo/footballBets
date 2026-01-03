@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.http.ProblemDetail;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import sportbets.FootballBetsApplication;
@@ -22,6 +23,7 @@ import sportbets.web.dto.competition.CompetitionFamilyDto;
 import sportbets.web.dto.competition.CompetitionRoundDto;
 import sportbets.web.dto.competition.TeamDto;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.equalTo;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -192,5 +194,52 @@ public class ContractComApiIntegrationTest {
                 .isOk()
                 .expectBodyList(CompetitionRoundDto.class).hasSize(0);
     }
+
+
+
+
+    @Test
+    @Order(5)
+    void createNewComp_withInvalidDtoInput_thenFailure() {
+        CompetitionFamily fam = competitionFamilyRepository.findByName(compFamilyDto.getName()).orElseThrow(() -> new EntityNotFoundException(compFamilyDto.getName()));
+        compDto.setFamilyId(fam.getId());
+        compDto.setName(TEST_COMP_2);
+
+        webClient.post()
+                .uri("/competitions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(compDto)
+                .exchange()
+                .expectStatus()
+                .isCreated()
+                .expectBody()
+                .jsonPath("$.id")
+                .exists()
+                .jsonPath("$.name")
+                .isEqualTo(TEST_COMP_2)
+                .jsonPath("$.winMultiplicator")
+                .isEqualTo(3)
+                .jsonPath("$.remisMultiplicator")
+                .exists();
+
+
+        // same community again
+        webClient.post()
+                .uri("/competitions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(compDto)
+                .exchange()
+                .expectStatus()
+                .isBadRequest()
+                .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+                .expectBody(ProblemDetail.class)
+                .value(problem -> {
+                    assertThat(problem.getTitle()).isEqualTo("duplicate entity");
+                    assertThat(problem.getStatus()).isEqualTo(400);
+                    assertThat(problem.getDetail()).contains("Comp  already exist with given name");
+
+                });
+    }
+
 
 }

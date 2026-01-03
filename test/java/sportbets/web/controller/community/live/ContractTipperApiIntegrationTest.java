@@ -1,12 +1,14 @@
 package sportbets.web.controller.community.live;
 
 import jakarta.persistence.EntityNotFoundException;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.http.ProblemDetail;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import sportbets.FootballBetsApplication;
@@ -239,5 +241,44 @@ public class ContractTipperApiIntegrationTest {
 
 
     }
+    @Test
+    @Order(2)
+    void createDuplicateTipper_withSameUserNane_thenFailure() {
+
+        testTipper.setDefaultCompetitionId(savedComp.getId());
+        webClient.post()
+                .uri("/tipper")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(testTipper)
+                .exchange()
+                .expectStatus()
+                .isCreated()
+                .expectBody()
+                .jsonPath("$.id")
+                .exists()
+                .jsonPath("$.username")
+                .isEqualTo(TEST_USERNAME);
+
+        webClient.post()
+                .uri("/tipper")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(testTipper)
+                .exchange()
+                .expectStatus()
+                .isBadRequest()
+                .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+                .expectBody(ProblemDetail.class)
+                .value(problem -> {
+                    Assertions.assertThat(problem.getTitle()).isEqualTo("duplicate entity");
+                    Assertions.assertThat(problem.getStatus()).isEqualTo(400);
+                    Assertions.assertThat(problem.getDetail()).contains("Tipper already exist with given username");
+
+                });
+
+    }
+
+
+
+
 
 }

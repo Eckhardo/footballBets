@@ -19,7 +19,6 @@ public class CommunityDto implements Serializable {
     @NotNull
     @NotEmpty(message = "must not be empty")
     private String description;
-    private LocalDateTime createdOn = LocalDateTime.now();
 
     public CommunityDto() {
     }
@@ -55,13 +54,7 @@ public class CommunityDto implements Serializable {
         this.description = description;
     }
 
-    public LocalDateTime getCreatedOn() {
-        return createdOn;
-    }
 
-    public void setCreatedOn(LocalDateTime createdOn) {
-        this.createdOn = createdOn;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -70,13 +63,12 @@ public class CommunityDto implements Serializable {
         CommunityDto entity = (CommunityDto) o;
         return Objects.equals(this.id, entity.id) &&
                 Objects.equals(this.name, entity.name) &&
-                Objects.equals(this.description, entity.description) &&
-                Objects.equals(this.createdOn, entity.createdOn);
+                Objects.equals(this.description, entity.description) ;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, createdOn);
+        return Objects.hash(id, name, description);
     }
 
     @Override
@@ -84,7 +76,6 @@ public class CommunityDto implements Serializable {
         return getClass().getSimpleName() + "(" +
                 "id = " + id + ", " +
                 "name = " + name + ", " +
-                "description = " + description + ", " +
-                "createdOn = " + createdOn + ")";
+                "description = " + description +  ")";
     }
 }

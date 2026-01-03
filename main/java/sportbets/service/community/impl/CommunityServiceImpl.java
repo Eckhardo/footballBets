@@ -49,7 +49,7 @@ public class CommunityServiceImpl implements CommunityService {
         log.info("Community to be save:: {}", communityDto);
         Optional<Community> savedCommunity = communityRepo.findByName(communityDto.getName());
         if (savedCommunity.isPresent()) {
-            throw new EntityExistsException("Community already exist with given username:" + communityDto.getName());
+            throw new EntityExistsException("Community already exist with given name:" + communityDto.getName());
         }
 
         Community model = modelMapper.map(communityDto, Community.class);

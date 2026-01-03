@@ -38,16 +38,12 @@ public class CompetitionRoleServiceTest {
     private static final String TEST_USERNAME = "TEST_USER";
     final CompetitionFamilyDto competitionFamily = new CompetitionFamilyDto(null, TEST_COMP_FAM, "description of testliga", true, true);
     Competition savedComp = null;
-    Tipper savedTipper = null;
     @Autowired
     private CompFamilyService familyService; // Real service being tested
     @Autowired
     private CompService compService; // Real service being tested
     @Autowired
     private CompetitionRoleService competitionRoleService;
-
-    @Autowired
-    private TipperService tipperService;
 
     @BeforeEach
     public void setup() {
@@ -57,8 +53,6 @@ public class CompetitionRoleServiceTest {
 
         savedComp = compService.save(compDto);
         assertNotNull(savedComp);
-        TipperDto testTipper = new TipperDto(null, "Eckhard", "Kirschning", TEST_USERNAME, "root", "hint", "eki@gmx.de");
-        savedTipper = tipperService.save(testTipper);
 
 
     }

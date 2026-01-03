@@ -7,7 +7,6 @@ import sportbets.persistence.entity.competition.Team;
 import java.util.Optional;
 
 @Repository
-
 public interface TeamRepository extends JpaRepository<Team, Long> {
     Optional<Team> findByName(String name);
 
