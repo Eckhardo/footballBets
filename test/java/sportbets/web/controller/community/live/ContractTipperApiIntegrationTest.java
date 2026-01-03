@@ -276,9 +276,4 @@ public class ContractTipperApiIntegrationTest {
                 });
 
     }
-
-
-
-
-
 }

@@ -7,17 +7,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sportbets.persistence.entity.authorization.CommunityRole;
 import sportbets.persistence.entity.authorization.CompetitionRole;
 import sportbets.persistence.entity.authorization.Role;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.repository.authorization.RoleRepository;
 import sportbets.persistence.repository.competition.CompetitionRepository;
 import sportbets.service.authorization.CompetitionRoleService;
-import sportbets.web.dto.MapperUtil;
 import sportbets.web.dto.authorization.CompetitionRoleDto;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

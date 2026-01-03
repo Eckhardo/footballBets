@@ -1,9 +1,6 @@
 package sportbets.service.community;
 
-import org.springframework.stereotype.Service;
-import sportbets.persistence.entity.community.Community;
 import sportbets.persistence.entity.community.CommunityMembership;
-import sportbets.web.dto.community.CommunityDto;
 import sportbets.web.dto.community.CommunityMembershipDto;
 
 import java.util.List;
@@ -19,4 +16,6 @@ public interface CommunityMembershipService {
 
     void deleteById(Long id);
     List<CommunityMembership> getAll();
+
+    Optional<CommunityMembership> findByCommIdAndTipperId(Long commId, Long tipperId);
 }

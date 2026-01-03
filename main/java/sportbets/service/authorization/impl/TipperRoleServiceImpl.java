@@ -1,7 +1,6 @@
 package sportbets.service.authorization.impl;
 
 import jakarta.persistence.EntityNotFoundException;
-import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -12,10 +11,8 @@ import sportbets.persistence.repository.authorization.RoleRepository;
 import sportbets.persistence.repository.authorization.TipperRoleRepository;
 import sportbets.persistence.repository.community.TipperRepository;
 import sportbets.service.authorization.TipperRoleService;
-import sportbets.web.dto.MapperUtil;
 import sportbets.web.dto.authorization.TipperRoleDto;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

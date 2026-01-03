@@ -1,7 +1,6 @@
 package sportbets.service.community;
 
 import sportbets.persistence.entity.community.Community;
-import sportbets.persistence.entity.competition.Competition;
 import sportbets.web.dto.community.CommunityDto;
 
 import java.util.List;

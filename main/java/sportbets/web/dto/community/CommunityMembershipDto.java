@@ -89,6 +89,8 @@ public class CommunityMembershipDto implements Serializable {
         return getClass().getSimpleName() + "(" +
                 "id = " + id + ", " +
                 "commName = " + commName + ", " +
+                "commId = " + commId + ", " +
+                "tipperId = " + tipperId + ", " +
                 "tipperName = " + tipperName + ")";
     }
 }

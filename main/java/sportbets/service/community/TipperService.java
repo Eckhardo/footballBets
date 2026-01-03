@@ -1,7 +1,6 @@
 package sportbets.service.community;
 
 
-import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.community.Tipper;
 import sportbets.web.dto.community.TipperDto;
 

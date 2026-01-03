@@ -2,7 +2,6 @@ package sportbets.service.community.impl;
 
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
-import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -12,9 +11,6 @@ import org.springframework.web.server.ResponseStatusException;
 import sportbets.persistence.entity.community.Community;
 import sportbets.persistence.entity.community.CommunityMembership;
 import sportbets.persistence.entity.community.Tipper;
-import sportbets.persistence.entity.competition.Competition;
-import sportbets.persistence.entity.competition.CompetitionTeam;
-import sportbets.persistence.entity.competition.Team;
 import sportbets.persistence.repository.community.CommunityMembershipRepository;
 import sportbets.persistence.repository.community.CommunityRepository;
 import sportbets.persistence.repository.community.TipperRepository;
@@ -101,5 +97,10 @@ public class CommunityMembershipServiceImpl implements CommunityMembershipServic
     @Override
     public List<CommunityMembership> getAll() {
         return membershipRepository.findAll();
+    }
+
+    @Override
+    public Optional<CommunityMembership> findByCommIdAndTipperId(Long commId, Long tipperId) {
+       return membershipRepository.findByCommIdAndTipperId(commId, tipperId);
     }
 }
