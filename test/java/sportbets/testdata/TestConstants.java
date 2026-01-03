@@ -6,6 +6,7 @@ import sportbets.web.dto.competition.CompetitionFamilyDto;
 import sportbets.web.dto.competition.CompetitionRoundDto;
 
 public class TestConstants {
+    
 
     public static CompetitionFamily BUNDESLIGA = new CompetitionFamily("1. Bundesliga", "1. Deutsche Fussball Bundesliga", true, true);
     public static CompetitionFamily FIFA_WM = new CompetitionFamily("FIFA WM", "Fussball Weltmeisterschaft", false, false);

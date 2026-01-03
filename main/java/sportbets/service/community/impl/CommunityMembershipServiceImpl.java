@@ -30,13 +30,12 @@ public class CommunityMembershipServiceImpl implements CommunityMembershipServic
     private final CommunityMembershipRepository membershipRepository;
     private final CommunityRepository communityRepository;
     private final TipperRepository tipperRepository;
-    private final ModelMapper modelMapper;
 
-    public CommunityMembershipServiceImpl(CommunityMembershipRepository communityMembershipRepository, CommunityRepository communityRepository, TipperRepository tipperRepository, ModelMapper modelMapper) {
+    public CommunityMembershipServiceImpl(CommunityMembershipRepository communityMembershipRepository, CommunityRepository communityRepository, TipperRepository tipperRepository) {
         this.membershipRepository = communityMembershipRepository;
         this.communityRepository = communityRepository;
         this.tipperRepository = tipperRepository;
-        this.modelMapper = modelMapper;
+
     }
 
     private static final Logger log = LoggerFactory.getLogger(CommunityMembershipServiceImpl.class);

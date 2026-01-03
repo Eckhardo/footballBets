@@ -12,7 +12,6 @@ import java.util.Objects;
  */
 public class CompetitionMembershipDto implements Serializable {
     private Long id;
-    private LocalDateTime createdOn;
     @NotNull(message = " competition id cannot be null")
     private Long compId;
     private String compName;
@@ -23,25 +22,20 @@ public class CompetitionMembershipDto implements Serializable {
     public CompetitionMembershipDto() {
     }
 
-    public CompetitionMembershipDto(Long id, LocalDateTime createdOn) {
-        this.id = id;
-        this.createdOn = createdOn;
-    }
 
     public Long getId() {
         return id;
     }
 
+    public CompetitionMembershipDto(Long compId, String compName, Long commId, String commName) {
+        this.compId = compId;
+        this.compName = compName;
+        this.commId = commId;
+        this.commName = commName;
+    }
+
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public LocalDateTime getCreatedOn() {
-        return createdOn;
-    }
-
-    public void setCreatedOn(LocalDateTime createdOn) {
-        this.createdOn = createdOn;
     }
 
     public Long getCompId() {
@@ -82,18 +76,20 @@ public class CompetitionMembershipDto implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         CompetitionMembershipDto entity = (CompetitionMembershipDto) o;
         return Objects.equals(this.id, entity.id) &&
-                Objects.equals(this.createdOn, entity.createdOn);
+                Objects.equals(this.commId, entity.commId)
+                && Objects.equals(this.compId, entity.compId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, createdOn);
+        return Objects.hash(id, commId, compId);
     }
 
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" +
                 "id = " + id + ", " +
-                "createdOn = " + createdOn + ")";
+                "compId = " + compId + ", " +
+                "commId = " + commId + ")";
     }
 }
