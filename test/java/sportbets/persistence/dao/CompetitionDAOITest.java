@@ -40,7 +40,7 @@ public class CompetitionDAOITest {
         testComp = new Competition("Saison 2025/26", "3. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
 
         testFamily.addCompetition(testComp);
-        log.info("Save all cascade");
+        log.debug("Save all cascade");
         this.familyDAO.save(testFamily);
         this.competitionDAO.save(testComp);
     }

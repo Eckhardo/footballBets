@@ -30,7 +30,7 @@ public class CommunityController {
 
     @GetMapping("/communities")
     public List<CommunityDto> findAll() {
-        log.info(":findAll");
+        log.debug(":findAll");
         List<Community> communities = communityService.getAll();
         List<CommunityDto> communityDtos = new ArrayList<>();
 
@@ -42,10 +42,10 @@ public class CommunityController {
 
     @GetMapping("/communities/{id}")
     public CommunityDto findOne(@PathVariable Long id) {
-        log.info(":findOne::{}", id);
+        log.debug(":findOne::{}", id);
         Community model = communityService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        log.info("Community found with {}", model);
+        log.debug("Community found with {}", model);
         return modelMapper.map(model, CommunityDto.class);
 
     }
@@ -53,10 +53,10 @@ public class CommunityController {
     @PostMapping("/communities")
     @ResponseStatus(HttpStatus.CREATED)
     public CommunityDto post(@RequestBody @Valid CommunityDto newComm) {
-        log.info("New community {}", newComm);
+        log.debug("New community {}", newComm);
         Community createdModel = communityService.save(newComm);
         CommunityDto createdDto = modelMapper.map(createdModel, CommunityDto.class);
-        log.info("Community RETURN do {}", createdDto);
+        log.debug("Community RETURN do {}", createdDto);
         return createdDto;
     }
 
@@ -64,9 +64,9 @@ public class CommunityController {
     public CommunityDto update(@PathVariable Long id, @RequestBody CommunityDto commDto) {
 
         Community updatedComm = this.communityService.update(id, commDto).orElseThrow();
-        log.info("Updated community {}", updatedComm);
+        log.debug("Updated community {}", updatedComm);
         CommunityDto updatedDto = modelMapper.map(updatedComm, CommunityDto.class);
-        log.info("Community RETURN do {}", updatedDto);
+        log.debug("Community RETURN do {}", updatedDto);
         return updatedDto;
 
 
@@ -74,7 +74,7 @@ public class CommunityController {
 
     @DeleteMapping(value = "/communities/{id}")
     public ResponseEntity<HttpStatus> delete(@PathVariable Long id) {
-        log.info("CommunityController.delete::{}", id);
+        log.debug("CommunityController.delete::{}", id);
         try {
             communityService.deleteById(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

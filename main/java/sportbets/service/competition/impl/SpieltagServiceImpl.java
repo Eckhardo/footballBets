@@ -49,7 +49,7 @@ public class SpieltagServiceImpl implements SpieltagService {
     @Override
     @Transactional
     public Spieltag save(SpieltagDto spieltagDto) {
-        log.info("save :: {}", spieltagDto);
+        log.debug("save :: {}", spieltagDto);
         Optional<Spieltag> optionalSpieltag = spieltagRepository.findByNumberWithRoundId(spieltagDto.getSpieltagNumber(), spieltagDto.getCompRoundId());
         if (optionalSpieltag.isPresent()) {
             throw new EntityExistsException("Spieltag  already exist with given id:" + spieltagDto.getId());
@@ -66,7 +66,7 @@ public class SpieltagServiceImpl implements SpieltagService {
     @Override
     @Transactional
     public Optional<Spieltag> updateMatchDay(Long id, SpieltagDto spieltagDto) {
-        log.info("updateMatchday:: {}", spieltagDto);
+        log.debug("updateMatchday:: {}", spieltagDto);
         CompetitionRound competitionRound = compRoundRepo.findById(spieltagDto.getCompRoundId()).orElseThrow(() -> new EntityNotFoundException("spieltag not found "));
         Spieltag model = modelMapper.map(spieltagDto, Spieltag.class);
         model.setCompetitionRound(competitionRound);
@@ -79,7 +79,7 @@ public class SpieltagServiceImpl implements SpieltagService {
 
 
         Spieltag updatedModel = updateFields(updateModel.get(), model);
-        log.info("updated Comp  with {}", model);
+        log.debug("updated Comp  with {}", model);
         return Optional.of(spieltagRepository.save(updatedModel));
 
     }

@@ -40,13 +40,13 @@ public class ReadJSONTest {
 
     @BeforeEach
     public void setup() {
-        log.info("setup");
+        log.debug("setup");
 
     }
 
     @AfterEach
     public void tearDown() {
-        log.info("tearDown");
+        log.debug("tearDown");
     }
     @Test
     void testTest(){
@@ -93,7 +93,7 @@ public class ReadJSONTest {
         }
 
 
-        log.info("size::{}", teams.size());
+        log.debug("size::{}", teams.size());
         // return teams;
     }
 
@@ -161,7 +161,7 @@ public class ReadJSONTest {
 
                 if (i % 9 == 0) {
 
-                    log.info("{}", k);
+                    log.debug("{}", k);
                     k++;
                 }
                 i++;
@@ -245,8 +245,8 @@ public class ReadJSONTest {
                 rueckDates.add(entry.getValue());
             }
         }
-        log.info("hin ::{}", hinDates.size());
-        log.info("rueck ::{}", rueckDates.size());
+        log.debug("hin ::{}", hinDates.size());
+        log.debug("rueck ::{}", rueckDates.size());
         // return teams;
     }
 }

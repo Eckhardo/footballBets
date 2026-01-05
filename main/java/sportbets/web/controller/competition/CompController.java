@@ -43,10 +43,10 @@ public class CompController {
 
     @GetMapping("/competitions/{id}")
     public CompetitionDto findOne(@PathVariable Long id) {
-        log.info("CompController:findOne::{}", id);
+        log.debug("CompController:findOne::{}", id);
         Competition model = compService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         ModelMapper modelMapper = MapperUtil.getModelMapperForFamily();
-        log.info("Competition found with {}", model);
+        log.debug("Competition found with {}", model);
         return modelMapper.map(model, CompetitionDto.class);
 
     }
@@ -55,13 +55,13 @@ public class CompController {
     public List<TeamDto> findAllTeams(@PathVariable Long id) {
 
         List<TeamDto> teamDtos = compService.findTeamsForComp(id);
-        log.info("TeamDtos found with {}", teamDtos);
+        log.debug("TeamDtos found with {}", teamDtos);
         return teamDtos;
     }
 
     @GetMapping("/competitions/{id}/rounds")
     public List<CompetitionRoundDto> findAllRounds(@PathVariable Long id) {
-        log.info(" CompetitionRoundDto:findAll for comp::");
+        log.debug(" CompetitionRoundDto:findAll for comp::");
         List<CompetitionRound> compRounds = compService.getAllFormComp(id);
         List<CompetitionRoundDto> roundDtos = new ArrayList<>();
         ModelMapper myMapper = MapperUtil.getModelMapperForCompetition();
@@ -74,13 +74,13 @@ public class CompController {
     @PostMapping("/competitions")
     @ResponseStatus(HttpStatus.CREATED)
     public CompetitionDto post(@RequestBody @Valid CompetitionDto newComp) {
-        log.info("New competition {}", newComp);
+        log.debug("New competition {}", newComp);
 
         Competition createdModel = compService.save(newComp);
 
         ModelMapper myModelMapper = MapperUtil.getModelMapperForFamily();
         CompetitionDto createdDto = myModelMapper.map(createdModel, CompetitionDto.class);
-        log.info("Competition RETURN do {}", createdDto);
+        log.debug("Competition RETURN do {}", createdDto);
         return createdDto;
     }
 
@@ -89,11 +89,11 @@ public class CompController {
 
         Competition updatedComp = this.compService.updateComp(id, compDto).orElseThrow();
 
-        log.info("Updated competition {}", updatedComp);
+        log.debug("Updated competition {}", updatedComp);
 
         ModelMapper myModelMapper = MapperUtil.getModelMapperForFamily();
         CompetitionDto updatedDto = myModelMapper.map(updatedComp, CompetitionDto.class);
-        log.info("Competition RETURN do {}", updatedDto);
+        log.debug("Competition RETURN do {}", updatedDto);
         return updatedDto;
 
 
@@ -101,7 +101,7 @@ public class CompController {
 
     @DeleteMapping(value = "/competitions/{id}")
     public ResponseEntity<HttpStatus> delete(@PathVariable Long id) {
-        log.info("CompController.delete::{}", id);
+        log.debug("CompController.delete::{}", id);
         try {
             compService.deleteById(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

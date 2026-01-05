@@ -57,7 +57,7 @@ public class CompRoundServiceImpl implements CompRoundService {
     public Optional<CompetitionRound> updateRound(Long id, CompetitionRoundDto compRoundDto) {
 
 
-        log.info("updateCompRound  with {}", compRoundDto);
+        log.debug("updateCompRound  with {}", compRoundDto);
         Optional<CompetitionRound> updateModel = roundRepository.findById(id);
         if (updateModel.isEmpty()) {
             throw new EntityNotFoundException("spiel  does not exits given id:" + compRoundDto.getId());
@@ -67,7 +67,7 @@ public class CompRoundServiceImpl implements CompRoundService {
         model.setCompetition(comp);
 
         CompetitionRound updatedCompRound = updateFields(updateModel.get(), model);
-        log.info("updated Comp  with {}", updatedCompRound);
+        log.debug("updated Comp  with {}", updatedCompRound);
         return Optional.of(roundRepository.save(updatedCompRound));
     }
 

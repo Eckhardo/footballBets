@@ -48,8 +48,8 @@ public class CompTeamServiceTestNonTransactional {
 
     @BeforeEach
     public void setup() {
-        log.info("\n");
-        log.info("setup All Test data");
+        log.debug("\n");
+        log.debug("setup All Test data");
         CompetitionFamily savedFam = familyService.save(competitionFamily).orElseThrow();
         CompetitionDto compDto = TestConstants.TEST_COMP;
         compDto.setFamilyId(savedFam.getId());
@@ -139,13 +139,13 @@ public class CompTeamServiceTestNonTransactional {
         assertThat(savedCompTeam.getId()).isNotNull();
         assertThat(savedCompTeam.getCompetition().getId()).isEqualTo(savedComp.getId());
         assertThat(savedCompTeam.getTeam().getId()).isEqualTo(savedTeam1.getId());
-        log.info("\n");
+        log.debug("\n");
         familyService.deleteByName(competitionFamily.getName());
         Optional<Competition> deletedComp = compService.findByName(savedComp.getName());
         assertThat(deletedComp.isEmpty());
         Optional<CompetitionTeam> deletedCompTeam = compTeamService.findById(savedCompTeam.getId());
         assertThat(deletedCompTeam.isEmpty());
-        log.info("\n");
+        log.debug("\n");
 
 
     }

@@ -36,7 +36,7 @@ public class CommunityRoleServiceImpl implements CommunityRoleService {
     @Transactional(readOnly = true)
     public Optional<CommunityRole> findById(Long id) {
         Role model = roleRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Role not found"));
-        log.info("\n");
+        log.debug("\n");
         if (model instanceof CommunityRole) {
             return Optional.of((CommunityRole) model);
         } else {
@@ -48,7 +48,7 @@ public class CommunityRoleServiceImpl implements CommunityRoleService {
     @Override
     @Transactional
     public CommunityRole save(CommunityRoleDto dto) {
-        log.info(" to be save:: {}", dto);
+        log.debug(" to be save:: {}", dto);
         Optional<CommunityRole> savedRole = roleRepository.findByCommunityName(dto.getName());
         if (savedRole.isPresent()) {
             throw new EntityExistsException("CompetitionRole  already exist with given name:" + savedRole.get().getName());
@@ -57,9 +57,9 @@ public class CommunityRoleServiceImpl implements CommunityRoleService {
 
         CommunityRole model = modelMapper.map(dto, CommunityRole.class);
         model.setCommunity(community);
-        log.info("model be save:: {}", model);
+        log.debug("model be save:: {}", model);
         CommunityRole createdModel = roleRepository.save(model);
-        log.info("saved entity:: {}", createdModel);
+        log.debug("saved entity:: {}", createdModel);
 
         return createdModel;
 

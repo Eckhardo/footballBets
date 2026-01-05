@@ -53,7 +53,7 @@ public class ContractMatchDayApiIntegrationTest {
     @AfterEach
     public void cleanup() {
         // Clean up all books created during tests
-        log.info("cleanup");
+        log.debug("cleanup");
 
         CompetitionFamily fam = competitionFamilyRepository.findByName(TEST_COMP_FAM).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_FAM));
         webClient.delete()

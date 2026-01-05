@@ -39,7 +39,7 @@ public class CommunityServiceTest {
     }
     @AfterEach
     public void tearDown() {
-        log.info("Tear down");
+        log.debug("Tear down");
     }
 
     @Test
@@ -51,8 +51,8 @@ public class CommunityServiceTest {
         assertThat(saved.getId()).isNotNull();
         assertThat(saved.getName()).isEqualTo(TEST_COMM);
         List<CommunityRole> roles = communityRoleService.getAllCommunityRoles();
-        log.info(saved.getName());
-        log.info( roles.get(0).getCommunity().getName());
+        log.debug(saved.getName());
+        log.debug( roles.get(0).getCommunity().getName());
         assertThat(roles).isNotNull();
         assertThat(roles.size()).isEqualTo(1);
         assertEquals(saved.getId(), roles.get(0).getCommunity().getId());
@@ -77,8 +77,8 @@ public class CommunityServiceTest {
         assertThat(roles).isNotNull();
         assertThat(roles.size()).isEqualTo(1);
         assertEquals(updatedComp.getId(), roles.get(0).getCommunity().getId());
-        log.info(updatedComp.getName());
-        log.info( roles.get(0).getCommunity().getName());
+        log.debug(updatedComp.getName());
+        log.debug( roles.get(0).getCommunity().getName());
         assertEquals(updatedComp.getName(), roles.get(0).getCommunity().getName());
         assertEquals(updatedComp.getName(), roles.get(0).getName());
     }

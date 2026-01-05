@@ -138,11 +138,11 @@ public class Competition {
         this.getCompetitionMemberships().add(compMemb);
     }
     public Optional<CompetitionRole> getCompetitionRoleByName(String roleName ) {
-        log.info("getCompetitionRoleByName:: {}",roleName);
+        log.debug("getCompetitionRoleByName:: {}",roleName);
         for (CompetitionRole role : competitionRoles) {
-            log.info("competitionRole:: {}",role.getName());
+            log.debug("competitionRole:: {}",role.getName());
             if (role.getName().equals(roleName)) {
-                log.info("treffer");
+                log.debug("treffer");
                 return Optional.of(role);
             }
         }

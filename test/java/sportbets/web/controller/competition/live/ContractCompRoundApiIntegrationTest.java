@@ -54,7 +54,7 @@ public class ContractCompRoundApiIntegrationTest {
     @AfterEach
     public void cleanup() {
         // Clean up all books created during tests
-        log.info("cleanup");
+        log.debug("cleanup");
 
         CompetitionFamily fam = competitionFamilyRepository.findByName(TEST_COMP_FAM).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_FAM));
         webClient.delete()
@@ -119,7 +119,7 @@ public class ContractCompRoundApiIntegrationTest {
         compRoundDto.setCompId(comp.getId());
         compRoundDto.setCompName(comp.getName());
         compRoundDto.setName(TEST_COMP_ROUND_2);
-        log.info("createNewRound_withValidDtoInput_thenSuccess {}", compRoundDto.getCompId());
+        log.debug("createNewRound_withValidDtoInput_thenSuccess {}", compRoundDto.getCompId());
         webClient.post()
                 .uri("/rounds")
                 .contentType(MediaType.APPLICATION_JSON)

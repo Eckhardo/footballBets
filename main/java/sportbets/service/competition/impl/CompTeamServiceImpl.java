@@ -57,7 +57,7 @@ public class CompTeamServiceImpl implements CompTeamService {
     @Override
     @Transactional
     public CompetitionTeam save(CompetitionTeamDto compTeamDto) {
-        log.info("Service save compTeam {}", compTeamDto);
+        log.debug("Service save compTeam {}", compTeamDto);
         Optional<CompetitionTeam> entity = compTeamRepo.findByTeamIdAndCompId(compTeamDto.getTeamId(), compTeamDto.getCompId());
 
         if (entity.isPresent()) {
@@ -70,7 +70,7 @@ public class CompTeamServiceImpl implements CompTeamService {
         model.setCompetition(comp);
         model.setTeam(team);
 
-        log.info("save compTeam {}", model);
+        log.debug("save compTeam {}", model);
         return compTeamRepo.save(model);
 
 
@@ -112,7 +112,7 @@ public class CompTeamServiceImpl implements CompTeamService {
     @Transactional
     public Optional<CompetitionTeam> update(Long id, CompetitionTeamDto competitionTeamDto) {
 
-        log.info("update Match dto:: {}", competitionTeamDto);
+        log.debug("update Match dto:: {}", competitionTeamDto);
         Optional<CompetitionTeam> updateModel = compTeamRepo.findById(id);
         if (updateModel.isEmpty()) {
             throw new EntityNotFoundException("compTeam  does not exits given id:" + competitionTeamDto.getId());
@@ -123,7 +123,7 @@ public class CompTeamServiceImpl implements CompTeamService {
         model.setCompetition(comp);
         model.setTeam(team);
         CompetitionTeam competitionTeam = updateFields(updateModel.get(), model);
-        log.info("updated CompTeam  with {}", competitionTeam);
+        log.debug("updated CompTeam  with {}", competitionTeam);
         return Optional.of(compTeamRepo.save(competitionTeam));
 
 

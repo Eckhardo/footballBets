@@ -48,7 +48,7 @@ public class CompFamilyServiceImpl implements CompFamilyService {
             Set<Competition> comps = model.get().getCompetitions();
             assert !comps.isEmpty();
             for (Competition comp : comps) {
-                log.info("Competition of current family found with {}", comp);
+                log.debug("Competition of current family found with {}", comp);
             }
         }
         return model;
@@ -77,7 +77,7 @@ public class CompFamilyServiceImpl implements CompFamilyService {
     @Override
     @Transactional
     public Optional<CompetitionFamily> updateFamily(Long id, CompetitionFamilyDto compFamDto) {
-        log.info("updateFamily:: {}", compFamDto);
+        log.debug("updateFamily:: {}", compFamDto);
         Optional<CompetitionFamily> updateModel = compFamilyRepository.findById(id);
         if (updateModel.isEmpty()) {
             throw new EntityNotFoundException("family  DOES NOT exist with given id:" + id);
@@ -85,7 +85,7 @@ public class CompFamilyServiceImpl implements CompFamilyService {
         CompetitionFamily model = modelMapper.map(compFamDto, CompetitionFamily.class);
 
         CompetitionFamily updated = updateFields(updateModel.get(), model);
-        log.info("updated Comp  with {}", updated);
+        log.debug("updated Comp  with {}", updated);
         return Optional.of(compFamilyRepository.save(updated));
     }
 

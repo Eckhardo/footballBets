@@ -96,7 +96,7 @@ public class CompetitionMembershipServiceTest {
     }
     @Test
     public void updateCompMembership() {
-        log.info("updateCompMembership");
+        log.debug("updateCompMembership");
 
         assertNotNull(savedComp);
         assertNotNull(savedCommunity);
@@ -136,7 +136,7 @@ public class CompetitionMembershipServiceTest {
     }
     @Test
     public void deleteCompMembership() {
-        log.info("deleteCompMembership");
+        log.debug("deleteCompMembership");
         assertNotNull(savedComp);
         assertNotNull(savedCommunity);
 
@@ -151,7 +151,7 @@ public class CompetitionMembershipServiceTest {
 
     @Test
     public void whenDeleteCommunity_thenRoleIsDeletedAndMembershipIsDeleted() {
-        log.info("deleteCommunity");
+        log.debug("deleteCommunity");
         assertNotNull(savedComp);
         assertNotNull(savedCommunity);
         CommunityRole savedCommunityRole = communityRoleService.findByCommunityName(savedCommunity.getName()).orElseThrow();
@@ -165,7 +165,7 @@ public class CompetitionMembershipServiceTest {
         assertNotNull(savedCompMemb);
 
         communityService.deleteById(savedCommunity.getId());
-        log.info("community deleted");
+        log.debug("community deleted");
         Optional<Community> deletedComm = communityService.findById(savedCommunity.getId());
         assertTrue(deletedComm.isEmpty());
         Optional<CommunityRole> deletedRole = communityRoleService.findByCommunityName(savedCommunity.getName());
@@ -177,7 +177,7 @@ public class CompetitionMembershipServiceTest {
 
     @Test
     public void whenDeleteCompetition_thenRoleIsDeletedAndMembershipIsDeleted() {
-        log.info("deletCompetition");
+        log.debug("deletCompetition");
         assertNotNull(savedComp);
         assertNotNull(savedCommunity);
         CompetitionRole competitionRole = compRoleService.findByCompName(savedComp.getName()).orElseThrow();
@@ -191,7 +191,7 @@ public class CompetitionMembershipServiceTest {
         assertNotNull(savedCompMemb);
 
         compService.deleteById(savedComp.getId());
-        log.info("comp deleted");
+        log.debug("comp deleted");
         Optional<Competition> deletedComp = compService.findById(savedComp.getId());
         assertTrue(deletedComp.isEmpty());
         Optional<CompetitionRole> deletedRole = compRoleService.findByCompName(savedComp.getName());

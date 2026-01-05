@@ -91,14 +91,14 @@ public class TipperRoleRepositoryTest {
 
     @Test
     public void getAllTipperRolesForTipper() {
-        log.info("findByUsername");
+        log.debug("findByUsername");
         Tipper tipper = tipperRepo.findByUsername(testTipper.getUsername()).orElseThrow();
         assertNotNull(tipper);
 
         List<TipperRole> tipperRoles1 = tRoleRepo.getAllForTipper(tipper.getId());
         for (TipperRole role : tipperRoles1) {
             assertNotNull(role);
-            log.info("TIPPER ROLE ={}", role.getRole());
+            log.debug("TIPPER ROLE ={}", role.getRole());
             //   assertEquals(role.getRolle().getName(), compTipperRole.getRolle().getName());
         }
 
@@ -106,7 +106,7 @@ public class TipperRoleRepositoryTest {
 
     @Test
     public void getAllCompetitionRolesForTipper() {
-        log.info("findByUsername");
+        log.debug("findByUsername");
         Tipper tipper = tipperRepo.findByUsername(testTipper.getUsername()).orElseThrow();
         assertNotNull(tipper);
         List<CompetitionRole> roles = roleRepo.getAllCompRoles();
@@ -119,7 +119,7 @@ public class TipperRoleRepositoryTest {
 
     @Test
     public void getAllCommunityRolesForTipper() {
-        log.info("findByUsername");
+        log.debug("findByUsername");
         Tipper tipper = tipperRepo.findByUsername(testTipper.getUsername()).orElseThrow();
         assertNotNull(tipper);
         List<CommunityRole> roles = roleRepo.getAllCommunityRoles();
@@ -134,13 +134,13 @@ public class TipperRoleRepositoryTest {
     public void getAllTippers() {
         List<Tipper> tippers = tipperRepo.findAll();
         for (Tipper tipper : tippers) {
-            log.info("TIPPER ={}", tipper.getUsername());
+            log.debug("TIPPER ={}", tipper.getUsername());
         }
         assertSame(1, tippers.size());
 
         List<Competition> competitions = compRepo.findAll();
         for (Competition competition : competitions) {
-            log.info("COMPETITION ={}", competition.getName());
+            log.debug("COMPETITION ={}", competition.getName());
         }
 
 

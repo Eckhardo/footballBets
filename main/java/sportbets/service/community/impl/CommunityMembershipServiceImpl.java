@@ -45,7 +45,7 @@ public class CommunityMembershipServiceImpl implements CommunityMembershipServic
     @Override
     @Transactional
     public CommunityMembership save(CommunityMembershipDto membershipDto) {
-        log.info("Service save communityMembership {}", membershipDto);
+        log.debug("Service save communityMembership {}", membershipDto);
         Optional<CommunityMembership> entity = membershipRepository.findByCommIdAndTipperId(membershipDto.getCommId(), membershipDto.getTipperId());
 
         if (entity.isPresent()) {
@@ -58,7 +58,7 @@ public class CommunityMembershipServiceImpl implements CommunityMembershipServic
         model.setCommunity(community);
         model.setTipper(tipper);
 
-        log.info("save CommunityMembership {}", model);
+        log.debug("save CommunityMembership {}", model);
         return membershipRepository.save(model);
     }
 
@@ -67,7 +67,7 @@ public class CommunityMembershipServiceImpl implements CommunityMembershipServic
     @Transactional
     public Optional<CommunityMembership> update(Long id, CommunityMembershipDto membershipDto) {
 
-        log.info("update CommunityMembership dto:: {}", membershipDto);
+        log.debug("update CommunityMembership dto:: {}", membershipDto);
         Optional<CommunityMembership> updateModel = membershipRepository.findById(id);
         if (updateModel.isEmpty()) {
             throw new EntityNotFoundException("CommunityMembership  does not exits given id:" + membershipDto.getId());
@@ -77,7 +77,7 @@ public class CommunityMembershipServiceImpl implements CommunityMembershipServic
         Tipper tipper = tipperRepository.findById(membershipDto.getTipperId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         updateModel.get().setCommunity(community);
         updateModel.get().setTipper(tipper);
-        log.info("updated CommunityMembership  with {}", updateModel.get());
+        log.debug("updated CommunityMembership  with {}", updateModel.get());
         return Optional.of(membershipRepository.save(updateModel.get()));
     }
     private CommunityMembership updateFields(CommunityMembership base, CommunityMembership membership) {

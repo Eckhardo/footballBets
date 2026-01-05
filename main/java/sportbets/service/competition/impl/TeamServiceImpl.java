@@ -55,7 +55,7 @@ public class TeamServiceImpl implements TeamService {
     @Override
     @Transactional
     public Optional<Team> updateTeam(Long id, Team team) {
-        log.info("updateDto:: {}", team);
+        log.debug("updateDto:: {}", team);
         Optional<Team> updateModel = teamRepository.findById(id);
 
 
@@ -64,7 +64,7 @@ public class TeamServiceImpl implements TeamService {
         }
 
         Team updated = updateFields(updateModel.get(), team);
-        log.info("updated Team  with {}", updated);
+        log.debug("updated Team  with {}", updated);
         return Optional.of(teamRepository.save(updated));
 
     }

@@ -79,7 +79,7 @@ public class CommunityMembershipServiceTest {
 
     @Test
     public void saveCommunityMembership() {
-        log.info("saveCommunityMembership");
+        log.debug("saveCommunityMembership");
 
         assertNotNull(savedTipper);
         assertNotNull(savedCommunity);
@@ -93,7 +93,7 @@ public class CommunityMembershipServiceTest {
 
     @Test
     public void updateCommunityMembership() {
-        log.info("updateCommunityMembership");
+        log.debug("updateCommunityMembership");
 
         assertNotNull(savedTipper);
         assertNotNull(savedCommunity);
@@ -136,7 +136,7 @@ public class CommunityMembershipServiceTest {
 
     @Test
     public void deleteCommunityMembership() {
-        log.info("deleteCommunityMembership");
+        log.debug("deleteCommunityMembership");
         assertNotNull(savedTipper);
         assertNotNull(savedCommunity);
     
@@ -153,7 +153,7 @@ public class CommunityMembershipServiceTest {
 
     @Test
     public void whenDeleteCommunity_thenRoleIsDeletedAndMembershipIsDeleted() {
-        log.info("deleteCommunity");
+        log.debug("deleteCommunity");
         assertNotNull(savedTipper);
         assertNotNull(savedCommunity);
         CommunityRole savedCommunityRole = communityRoleService.findByCommunityName(savedCommunity.getName()).orElseThrow();
@@ -167,7 +167,7 @@ public class CommunityMembershipServiceTest {
         CommunityMembership savedCommunityMembership = membershipService.save(dto);
         assertNotNull(savedCommunityMembership);
         communityService.deleteById(savedCommunity.getId());
-        log.info("community deleted");
+        log.debug("community deleted");
         Optional<Community> deletedComm = communityService.findById(savedCommunity.getId());
         assertTrue(deletedComm.isEmpty());
         Optional<CommunityRole> deletedRole = communityRoleService.findByCommunityName(communityDto.getName());
@@ -179,7 +179,7 @@ public class CommunityMembershipServiceTest {
 
     @Test
     public void whenDeletedTipper_thenTipperRoleIsDeletedAndMembershipIsDeleted() {
-        log.info("deleteTipper");
+        log.debug("deleteTipper");
 
         assertNotNull(savedTipper);
         assertNotNull(savedCommunity);
@@ -188,7 +188,7 @@ public class CommunityMembershipServiceTest {
         TipperRoleDto tipperRoleDto = new TipperRoleDto(null, savedTipper.getId(), savedTipper.getUsername(), savedCommunityRole.getId(), savedCommunityRole.getName());
 
 
-        log.info("\n");
+        log.debug("\n");
         TipperRole savedTipperRole = tipperRoleService.save(tipperRoleDto).orElseThrow(() -> new EntityNotFoundException("savedTipperRole not found"));
         assertNotNull(savedTipperRole);
 
@@ -197,7 +197,7 @@ public class CommunityMembershipServiceTest {
         CommunityMembership savedCommunityMembership = membershipService.save(dto);
         assertNotNull(savedCommunityMembership);
         tipperService.deleteById(savedTipper.getId());
-        log.info("tipper deleted");
+        log.debug("tipper deleted");
         Optional<Tipper> deletedTipper = tipperService.findById(savedTipper.getId());
         assertTrue(deletedTipper.isEmpty());
         Optional<CommunityMembership> deleted = membershipService.findById(savedCommunityMembership.getId());

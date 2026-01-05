@@ -1,5 +1,6 @@
-package sportbets.web.controller.community.live;
+package sportbets.web.controller.competition.live;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,67 +13,72 @@ import sportbets.FootballBetsApplication;
 import sportbets.config.TestProfileLiveTest;
 import sportbets.persistence.entity.community.Community;
 import sportbets.persistence.entity.community.CommunityMembership;
-import sportbets.persistence.entity.community.Tipper;
-import sportbets.persistence.repository.community.CommunityMembershipRepository;
+import sportbets.persistence.entity.competition.Competition;
+import sportbets.persistence.entity.competition.CompetitionFamily;
+import sportbets.persistence.entity.competition.CompetitionMembership;
 import sportbets.persistence.repository.community.CommunityRepository;
-import sportbets.persistence.repository.community.TipperRepository;
+import sportbets.persistence.repository.competition.CompetitionFamilyRepository;
+import sportbets.persistence.repository.competition.CompetitionMembershipRepository;
+import sportbets.persistence.repository.competition.CompetitionRepository;
 import sportbets.web.dto.community.CommunityDto;
 import sportbets.web.dto.community.CommunityMembershipDto;
-import sportbets.web.dto.community.TipperDto;
+import sportbets.web.dto.competition.CompetitionDto;
+import sportbets.web.dto.competition.CompetitionFamilyDto;
+import sportbets.web.dto.competition.CompetitionMembershipDto;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         classes = {FootballBetsApplication.class, TestProfileLiveTest.class})
 @ActiveProfiles("test")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class ContractCommMembApiIntegrationTest {
+public class ContractCompMembApiIntegrationTest {
 
 
-    private static final Logger log = LoggerFactory.getLogger(ContractCommMembApiIntegrationTest.class);
+    private static final Logger log = LoggerFactory.getLogger(ContractCompMembApiIntegrationTest.class);
 
+
+    private static final String TEST_COMP = "PremLegue: Saison 2025";
+    private static final String TEST_COMP_2 = "PremierLiga: Saison 2025";
 
     private static final String TEST_COMM = "My Test Community";
     private static final String TEST_COMM_2 = "My Test Community 2";
-    private static final String TEST_USERNAME = "TEST_USER";
-    private static final String TEST_USERNAME2 = "TEST_USER2";
+    private static final String COMP_FAM = "Premier League";
 
-    CommunityDto communityDto = new CommunityDto(null, TEST_COMM, "Description of Community");
-    TipperDto testTipper = new TipperDto(null, "Eckhard", "Kirschning", TEST_USERNAME, "password", "hint", "eki@gmx.de");
-    TipperDto testTipper2 = new TipperDto(null, "Werner", "Wernersen", TEST_USERNAME2, "password", "hint", "werner@gmx.de");
+    final CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, COMP_FAM, "Description of TestLiga", true, true);
+    final CommunityDto communityDto = new CommunityDto(null, TEST_COMM, "Description of Community");
+    final CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, null, COMP_FAM);
+    final CompetitionDto compDto2 = new CompetitionDto(null, TEST_COMP_2, "Description of Competition2", 3, 1, null, COMP_FAM);
 
     @Autowired
     WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();
     @Autowired
     CommunityRepository communityRepository;
-    @Autowired
-    TipperRepository tipperRepo;
-    @Autowired
-    CommunityMembershipRepository commMembRepo;
 
+
+    @Autowired
+    CompetitionFamilyRepository competitionFamilyRepository;
+    @Autowired
+    CompetitionRepository compRepo;
+    @Autowired
+    CompetitionMembershipRepository compMembRepo;
 
     @AfterEach
     public void cleanup() {
         // Clean up all books created during tests
         log.debug("cleanup");
+
+        CompetitionFamily fam = competitionFamilyRepository.findByName(compFamilyDto.getName()).orElseThrow(() -> new EntityNotFoundException(compFamilyDto.getName()));
+        webClient.delete()
+                .uri("/families/" + fam.getId())
+                .exchange()
+                .expectStatus()
+                .isNoContent();
+
         Community savedComm = communityRepository.findByName(TEST_COMM).orElseThrow();
         webClient.delete()
                 .uri("/communities/" + savedComm.getId())
-                .exchange()
-                .expectStatus()
-                .isNoContent();
-
-
-        Tipper savedTipper = tipperRepo.findByUsername(TEST_USERNAME).orElseThrow();
-        webClient.delete()
-                .uri("/tipper/" + savedTipper.getId())
-                .exchange()
-                .expectStatus()
-                .isNoContent();
-
-        Tipper savedTipper2 = tipperRepo.findByUsername(TEST_USERNAME2).orElseThrow();
-        webClient.delete()
-                .uri("/tipper/" + savedTipper2.getId())
                 .exchange()
                 .expectStatus()
                 .isNoContent();
@@ -81,7 +87,47 @@ public class ContractCommMembApiIntegrationTest {
 
     @BeforeEach
     public void setUp() {
-        log.debug("setup tipper and community");
+        log.debug("setup competition and community");
+        webClient.post()
+                .uri("/families")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(compFamilyDto)
+                .exchange()
+                .expectStatus()
+                .isCreated()
+        ;
+        CompetitionFamily fam = competitionFamilyRepository.findByName(compFamilyDto.getName()).orElseThrow(() -> new EntityNotFoundException(compFamilyDto.getName()));
+        compDto.setFamilyId(fam.getId());
+        compDto.setFamilyName(COMP_FAM);
+
+        webClient.post()
+                .uri("/competitions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(compDto)
+                .exchange()
+                .expectStatus()
+                .isCreated()
+                .expectBody()
+                .jsonPath("$.id")
+                .exists()
+                .jsonPath("$.name")
+                .isEqualTo(TEST_COMP);
+
+        compDto2.setFamilyId(fam.getId());
+        compDto2.setFamilyName(COMP_FAM);
+
+        webClient.post()
+                .uri("/competitions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(compDto2)
+                .exchange()
+                .expectStatus()
+                .isCreated()
+                .expectBody()
+                .jsonPath("$.id")
+                .exists()
+                .jsonPath("$.name")
+                .isEqualTo(TEST_COMP_2);
 
         webClient.post()
                 .uri("/communities")
@@ -96,45 +142,20 @@ public class ContractCommMembApiIntegrationTest {
                 .jsonPath("$.name")
                 .isEqualTo(TEST_COMM);
 
-        webClient.post()
-                .uri("/tipper")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(testTipper)
-                .exchange()
-                .expectStatus()
-                .isCreated()
-                .expectBody()
-                .jsonPath("$.id")
-                .exists()
-                .jsonPath("$.username")
-                .isEqualTo(TEST_USERNAME);
-
-
-        webClient.post()
-                .uri("/tipper")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(testTipper2)
-                .exchange()
-                .expectStatus()
-                .isCreated()
-                .expectBody()
-                .jsonPath("$.id")
-                .exists()
-                .jsonPath("$.username")
-                .isEqualTo(TEST_USERNAME2);
 
     }
 
     @Test
     @Order(1)
-    void createNewCommunityMembership_withValidDtoInput_thenSuccess() {
-        Tipper tipper = tipperRepo.findByUsername(TEST_USERNAME).orElseThrow();
+    void createNewCompetiitonMembership_withValidDtoInput_thenSuccess() {
+
+        Competition competition = compRepo.findByName(TEST_COMP).orElseThrow();
         Community community = communityRepository.findByName(TEST_COMM).orElseThrow();
 
-        CommunityMembershipDto dto = new CommunityMembershipDto(null, tipper.getId(), tipper.getUsername(), community.getId(), community.getName());
+        CompetitionMembershipDto dto = new CompetitionMembershipDto(competition.getId(), competition.getName(), community.getId(), community.getName());
 
         webClient.post()
-                .uri("/commMembs")
+                .uri("/compMembs")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(dto)
                 .exchange()
@@ -147,28 +168,25 @@ public class ContractCommMembApiIntegrationTest {
                 .isEqualTo(TEST_COMM)
                 .jsonPath("$.commId")
                 .exists()
-                .jsonPath("$.tipperName")
-                .isEqualTo(TEST_USERNAME)
-                .jsonPath("$.tipperId")
+                .jsonPath("$.compName")
+                .isEqualTo(TEST_COMP)
+                .jsonPath("$.compId")
                 .exists();
 
-
     }
-
 
     @Test
     @Order(2)
     void updateNewCommunityMembership_withValidDtoInput_thenSuccess() {
 
 
-
-        Tipper tipper = tipperRepo.findByUsername(TEST_USERNAME).orElseThrow();
+        Competition competition = compRepo.findByName(TEST_COMP).orElseThrow();
         Community community = communityRepository.findByName(TEST_COMM).orElseThrow();
 
-        CommunityMembershipDto dto = new CommunityMembershipDto(null, tipper.getId(), tipper.getUsername(), community.getId(), community.getName());
+        CompetitionMembershipDto dto = new CompetitionMembershipDto(competition.getId(), competition.getName(), community.getId(), community.getName());
 
         webClient.post()
-                .uri("/commMembs")
+                .uri("/compMembs")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(dto)
                 .exchange()
@@ -181,18 +199,20 @@ public class ContractCommMembApiIntegrationTest {
                 .isEqualTo(TEST_COMM)
                 .jsonPath("$.commId")
                 .exists()
-                .jsonPath("$.tipperName")
-                .isEqualTo(TEST_USERNAME)
-                .jsonPath("$.tipperId")
+                .jsonPath("$.compName")
+                .isEqualTo(TEST_COMP)
+                .jsonPath("$.compId")
                 .exists();
-
-        Tipper tipper2 = tipperRepo.findByUsername(TEST_USERNAME2).orElseThrow();
-        CommunityMembership commMemb=commMembRepo.findByCommIdAndTipperId(community.getId(), tipper.getId()).orElseThrow();
-        dto.setTipperId(tipper2.getId());
-        dto.setTipperName(tipper2.getUsername());
+        Competition competition2 = compRepo.findByName(TEST_COMP_2).orElseThrow();
+        assertNotNull(competition2);
+        CompetitionMembership compMemb = compMembRepo.findByCommIdAndCompId(community.getId(), competition.getId()).orElseThrow();
+        assertNotNull(compMemb);
+        dto.setId(compMemb.getId());
+        dto.setCompId(competition2.getId());
+        dto.setCompName(competition2.getName());
         log.debug("update now");
         webClient.put()
-                .uri("/commMembs/" + commMemb.getId())
+                .uri("/compMembs/" + compMemb.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(dto)
                 .exchange()
@@ -205,24 +225,24 @@ public class ContractCommMembApiIntegrationTest {
                 .isEqualTo(TEST_COMM)
                 .jsonPath("$.commId")
                 .exists()
-                .jsonPath("$.tipperName")
-                .isEqualTo(TEST_USERNAME2)
-                .jsonPath("$.tipperId")
+                .jsonPath("$.compName")
+                .isEqualTo(TEST_COMP_2)
+                .jsonPath("$.compId")
                 .exists();
-
     }
 
 
     @Test
     @Order(3)
     void deleteExistingCommunityMembership_withValidDtoInput_thenSuccess() {
-        Tipper tipper = tipperRepo.findByUsername(TEST_USERNAME).orElseThrow();
+
+        Competition competition = compRepo.findByName(TEST_COMP).orElseThrow();
         Community community = communityRepository.findByName(TEST_COMM).orElseThrow();
 
-        CommunityMembershipDto dto = new CommunityMembershipDto(null, tipper.getId(), tipper.getUsername(), community.getId(), community.getName());
+        CompetitionMembershipDto dto = new CompetitionMembershipDto(competition.getId(), competition.getName(), community.getId(), community.getName());
 
         webClient.post()
-                .uri("/commMembs")
+                .uri("/compMembs")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(dto)
                 .exchange()
@@ -235,31 +255,32 @@ public class ContractCommMembApiIntegrationTest {
                 .isEqualTo(TEST_COMM)
                 .jsonPath("$.commId")
                 .exists()
-                .jsonPath("$.tipperName")
-                .isEqualTo(TEST_USERNAME)
-                .jsonPath("$.tipperId")
+                .jsonPath("$.compName")
+                .isEqualTo(TEST_COMP)
+                .jsonPath("$.compId")
                 .exists();
 
-        CommunityMembership commMemb=commMembRepo.findByCommIdAndTipperId(community.getId(), tipper.getId()).orElseThrow();
+        CompetitionMembership compMemb = compMembRepo.findByCommIdAndCompId(community.getId(), competition.getId()).orElseThrow();
 
         webClient.delete()
-                .uri("/commMembs/" + commMemb.getId())
+                .uri("/commMembs/" + compMemb.getId())
                 .exchange()
                 .expectStatus()
                 .isNoContent();
 
 
     }
+
     @Test
     @Order(4)
     void givenPreloadedData_whenGetSingleCommMemby_thenResponseContainsFields() {
-        Tipper tipper = tipperRepo.findByUsername(TEST_USERNAME).orElseThrow();
+        Competition competition = compRepo.findByName(TEST_COMP).orElseThrow();
         Community community = communityRepository.findByName(TEST_COMM).orElseThrow();
 
-        CommunityMembershipDto dto = new CommunityMembershipDto(null, tipper.getId(), tipper.getUsername(), community.getId(), community.getName());
+        CompetitionMembershipDto dto = new CompetitionMembershipDto(competition.getId(), competition.getName(), community.getId(), community.getName());
 
         webClient.post()
-                .uri("/commMembs")
+                .uri("/compMembs")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(dto)
                 .exchange()
@@ -272,32 +293,30 @@ public class ContractCommMembApiIntegrationTest {
                 .isEqualTo(TEST_COMM)
                 .jsonPath("$.commId")
                 .exists()
-                .jsonPath("$.tipperName")
-                .isEqualTo(TEST_USERNAME)
-                .jsonPath("$.tipperId")
+                .jsonPath("$.compName")
+                .isEqualTo(TEST_COMP)
+                .jsonPath("$.compId")
                 .exists();
 
-        CommunityMembership commMemb=commMembRepo.findByCommIdAndTipperId(community.getId(), tipper.getId()).orElseThrow();
+        CompetitionMembership compMemb = compMembRepo.findByCommIdAndCompId(community.getId(), competition.getId()).orElseThrow();
 
         webClient.get()
-                .uri("/commMembs/" + commMemb.getId())
+                .uri("/compMembs/" + compMemb.getId())
                 .exchange()
                 .expectStatus()
                 .isOk()
                 .expectBody()
                 .jsonPath("$.id")
-                .value(Long.class, equalTo(commMemb.getId()))
+                .exists()
                 .jsonPath("$.commName")
                 .isEqualTo(TEST_COMM)
                 .jsonPath("$.commId")
                 .exists()
-                .jsonPath("$.tipperName")
-                .isEqualTo(TEST_USERNAME)
-                .jsonPath("$.tipperId")
+                .jsonPath("$.compName")
+                .isEqualTo(TEST_COMP)
+                .jsonPath("$.compId")
                 .exists();
 
 
     }
-
-
 }

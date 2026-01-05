@@ -59,7 +59,7 @@ public class ContractCompTeamApiIntegrationTest {
     @AfterEach
     public void cleanup() {
         // Clean up all books created during tests
-        log.info("cleanup");
+        log.debug("cleanup");
 
         CompetitionFamily fam = competitionFamilyRepository.findByName(TEST_COMP_FAM).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_FAM));
         webClient.delete()
@@ -69,7 +69,7 @@ public class ContractCompTeamApiIntegrationTest {
                 .isNoContent();
         Team team = teamRepository.findByName(TEAM_NAME).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME));
         Long id = team.getId();
-        log.info("delete team with id::{}", id);
+        log.debug("delete team with id::{}", id);
         webClient.delete()
                 .uri("/teams/" + id)
                 .exchange()
@@ -77,7 +77,7 @@ public class ContractCompTeamApiIntegrationTest {
                 .isNoContent();
         Team team2 = teamRepository.findByName(TEAM_NAME_2).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME));
         Long id2 = team2.getId();
-        log.info("delete team with id::{}", id2);
+        log.debug("delete team with id::{}", id2);
         webClient.delete()
                 .uri("/teams/" + id2)
                 .exchange()
@@ -132,7 +132,7 @@ public class ContractCompTeamApiIntegrationTest {
         Team entity2 = teamRepository.findByName(TEAM_NAME_2).orElseThrow(() -> new EntityNotFoundException("Team not found"));
         teamDto1.setId(entity2.getId());
         CompetitionTeamDto compTeamDto2 = new CompetitionTeamDto(null, comp.getId(), comp.getName(), teamDto1.getId(), teamDto1.getAcronym());
-        log.info("Post competition team 1{}", compTeamDto);
+        log.debug("Post competition team 1{}", compTeamDto);
         // save newcompTeam dto 1
         webClient.post()
                 .uri("/compTeam")
@@ -141,7 +141,7 @@ public class ContractCompTeamApiIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isCreated();
-        log.info("post compTeam 2{}", compTeamDto2);
+        log.debug("post compTeam 2{}", compTeamDto2);
         // save newcompTeam dto 2
         webClient.post()
                 .uri("/compTeam")
@@ -155,7 +155,7 @@ public class ContractCompTeamApiIntegrationTest {
     @Test
     @Order(1)
     void givenPreloadedData_whenGetSingleTeam_thenResponseContainsFields() {
-        log.info("givenPreloadedData_whenGetSingleTeam_thenResponseContainsFields");
+        log.debug("givenPreloadedData_whenGetSingleTeam_thenResponseContainsFields");
 
         Team team = teamRepository.findByName(TEAM_NAME).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME));
         Long id = team.getId();

@@ -65,7 +65,7 @@ public class ContractMatchApiIntegrationTest {
     @AfterEach
     public void cleanup() {
         // Clean up all books created during tests
-        log.info("cleanup");
+        log.debug("cleanup");
 
         CompetitionFamily fam = competitionFamilyRepository.findByName(TEST_COMP_FAM).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_FAM));
         webClient.delete()
@@ -75,7 +75,7 @@ public class ContractMatchApiIntegrationTest {
                 .isNoContent();
         Team team = teamRepository.findByName(TEAM_NAME).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME));
         Long id = team.getId();
-        log.info("delete team with id::{}", id);
+        log.debug("delete team with id::{}", id);
         webClient.delete()
                 .uri("/teams/" + id)
                 .exchange()
@@ -83,7 +83,7 @@ public class ContractMatchApiIntegrationTest {
                 .isNoContent();
         Team team2 = teamRepository.findByName(TEAM_NAME_2).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME));
         Long id2 = team2.getId();
-        log.info("delete team with id::{}", id2);
+        log.debug("delete team with id::{}", id2);
         webClient.delete()
                 .uri("/teams/" + id2)
                 .exchange()
@@ -91,7 +91,7 @@ public class ContractMatchApiIntegrationTest {
                 .isNoContent();
         Team team3 = teamRepository.findByName(TEAM_NAME_3).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME));
         Long id3 = team3.getId();
-        log.info("delete team with id::{}", id2);
+        log.debug("delete team with id::{}", id2);
         webClient.delete()
                 .uri("/teams/" + id3)
                 .exchange()
@@ -150,7 +150,7 @@ public class ContractMatchApiIntegrationTest {
                 .exists()
                 .jsonPath("$.compRoundId")
                 .exists();
-        log.info("post team 1 {}", teamDto);
+        log.debug("post team 1 {}", teamDto);
         webClient.post()
                 .uri("/teams")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -159,7 +159,7 @@ public class ContractMatchApiIntegrationTest {
                 .expectStatus()
                 .isCreated();
 
-        log.info("post team 2 {}", teamDto1);
+        log.debug("post team 2 {}", teamDto1);
         webClient.post()
                 .uri("/teams")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -167,7 +167,7 @@ public class ContractMatchApiIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isCreated();
-        log.info("post team 3 {}", teamDto2);
+        log.debug("post team 3 {}", teamDto2);
         webClient.post()
                 .uri("/teams")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -188,7 +188,7 @@ public class ContractMatchApiIntegrationTest {
         testSpiel1.setHeimTeamId(entity.getId());
         testSpiel1.setGastTeamId(entity2.getId());
         testSpiel1.setSpieltagId(spieltag.getId());
-        log.info("post match 1  {}", testSpiel1);
+        log.debug("post match 1  {}", testSpiel1);
         webClient.post()
                 .uri("/matches")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -201,7 +201,7 @@ public class ContractMatchApiIntegrationTest {
         testSpiel2.setHeimTeamId(entity2.getId());
         testSpiel2.setGastTeamId(entity3.getId());
         testSpiel2.setSpieltagId(spieltag.getId());
-        log.info("post match 2 {}", testSpiel2);
+        log.debug("post match 2 {}", testSpiel2);
         webClient.post()
                 .uri("/matches")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -252,7 +252,7 @@ public class ContractMatchApiIntegrationTest {
         testSpiel1.setHeimTeamId(team.getId());
         testSpiel1.setHeimTore(5);
         testSpiel1.setGastTeamId(team.getId());
-        log.info("update spiel {}", testSpiel1);
+        log.debug("update spiel {}", testSpiel1);
 
         webClient.put()
                 .uri("/matches/" + spiel.getId())

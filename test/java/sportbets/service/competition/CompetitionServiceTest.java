@@ -45,9 +45,9 @@ public class CompetitionServiceTest {
 
     @BeforeEach
     public void setup() {
-        log.info("setup");
+        log.debug("setup");
         savedFam = familyService.save(competitionFamily).orElseThrow();
-        log.info("saved family: {}", savedFam);
+        log.debug("saved family: {}", savedFam);
     }
 
     @AfterEach

@@ -59,8 +59,8 @@ public class MatchdayServiceTest {
 
     @AfterEach
     public void tearDown() {
-        log.info("\n");
-        log.info("Delete All Test data");
+        log.debug("\n");
+        log.debug("Delete All Test data");
     }
 
     @Test

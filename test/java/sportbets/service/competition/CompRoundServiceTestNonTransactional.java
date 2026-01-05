@@ -49,8 +49,8 @@ public class CompRoundServiceTestNonTransactional {
 
     @AfterEach
     public void tearDown() {
-        log.info("\n");
-        log.info("Delete All Test data");
+        log.debug("\n");
+        log.debug("Delete All Test data");
         familyService.deleteByName(competitionFamily.getName());
 
 
@@ -108,12 +108,12 @@ public class CompRoundServiceTestNonTransactional {
         // check for ref inegrity
         Competition compModel = compService.findById(savedCompRound.getCompetition().getId()).orElseThrow();
         assertThat(compModel.getCompetitionRounds()).isNotNull();
-        log.info("\n");
+        log.debug("\n");
         familyService.deleteByName(competitionFamily.getName());
         Optional<Competition> deletedComp = compService.findByName(savedComp.getName());
         assertThat(deletedComp.isEmpty());
         Optional<CompetitionRound> deletedRound = compRoundService.findById(savedCompRound.getId());
         assertThat(deletedRound.isEmpty());
-        log.info("\n");
+        log.debug("\n");
     }
 }

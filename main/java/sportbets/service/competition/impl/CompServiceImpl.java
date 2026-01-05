@@ -78,7 +78,7 @@ public class CompServiceImpl implements CompService {
     public Optional<Competition> updateComp(Long id, CompetitionDto compDto) {
 
 
-        log.info("updateComp  with {}", compDto);
+        log.debug("updateComp  with {}", compDto);
         Optional<Competition> updateModel = compRepository.findById(id);
         if (updateModel.isEmpty()) {
             throw new EntityNotFoundException("spiel  does not exits given name:" + compDto.getName());
@@ -87,7 +87,7 @@ public class CompServiceImpl implements CompService {
 
         Optional<CompetitionRole> oldRole = updateModel.get().getCompetitionRoleByName(updateModel.get().getName());
         if (oldRole.isPresent()) {
-            log.info("old {}",oldRole.get().getName());
+            log.debug("old {}",oldRole.get().getName());
 
             oldRole.get().setName(compDto.getName());
             oldRole.get().setDescription(compDto.getDescription());
@@ -96,7 +96,7 @@ public class CompServiceImpl implements CompService {
         updateModel.get().setDescription(compDto.getDescription());
         updateModel.get().setWinMultiplicator(compDto.getWinMultiplicator());
         updateModel.get().setRemisMultiplicator(compDto.getRemisMultiplicator());
-        log.info("updated Comp  with {}", updateModel);
+        log.debug("updated Comp  with {}", updateModel);
         return  Optional.of(compRepository.save(updateModel.get()));
 
     }
@@ -117,7 +117,7 @@ public class CompServiceImpl implements CompService {
 
     @Override
     public Optional<Competition> findByNameJoinFetchRounds(String name) {
-        log.info("CompService:findByNameJoinFetchRounds::{}", name);
+        log.debug("CompService:findByNameJoinFetchRounds::{}", name);
         return compRepository.findByNameJoinFetchRounds(name);
     }
 
@@ -134,7 +134,7 @@ public class CompServiceImpl implements CompService {
 
     @Override
     public Competition findByIdJoinFetchRounds(Long id) {
-        log.info("CompService:findById::{}", id);
+        log.debug("CompService:findById::{}", id);
         return compRepository.findByIdJoinFetchRounds(id);
     }
 
@@ -159,13 +159,13 @@ public class CompServiceImpl implements CompService {
     @Override
     @Transactional
     public Optional<Competition> findByIdTest(Long id) {
-        log.info("\n");
+        log.debug("\n");
         Optional<Competition> model = compRepository.findById(id);
         if (model.isPresent()) {
             Set<CompetitionRound> rounds = model.get().getCompetitionRounds();
             if (!rounds.isEmpty()) {
                 for (CompetitionRound round : rounds) {
-                    log.info("round of current comp found with {}", round);
+                    log.debug("round of current comp found with {}", round);
                 }
             }
         }
@@ -173,10 +173,10 @@ public class CompServiceImpl implements CompService {
         Set<CompetitionRole> roles = model.get().getCompetitionRoles();
         if (!roles.isEmpty()) {
             for (CompetitionRole role : roles) {
-                log.info("role of current comp found with {}", role);
+                log.debug("role of current comp found with {}", role);
             }
         }
-        log.info("\n");
+        log.debug("\n");
         return model;
     }
 }

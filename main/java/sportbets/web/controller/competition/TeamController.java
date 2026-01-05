@@ -28,7 +28,7 @@ public class TeamController {
 
     @GetMapping("/teams/{id}")
     public TeamDto findOne(@PathVariable Long id) {
-        log.info("TeamDto:findOne::{}", id);
+        log.debug("TeamDto:findOne::{}", id);
         Team model = teamService.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
@@ -49,22 +49,22 @@ public class TeamController {
     @PostMapping("/teams")
     @ResponseStatus(HttpStatus.CREATED)
     public TeamDto post(@RequestBody TeamDto teamDto) {
-        log.info("New team {}", teamDto);
+        log.debug("New team {}", teamDto);
         Team model = modelMapper.map(teamDto, Team.class);
         Team createdModel = teamService.save(model);
         TeamDto saved = modelMapper.map(createdModel, TeamDto.class);
-        log.info("return save::{}", saved);
+        log.debug("return save::{}", saved);
         return saved;
     }
 
     @PutMapping(value = "/teams/{id}")
     public TeamDto update(@PathVariable Long id, @RequestBody TeamDto teamDto) {
-        log.info("Update team  {}", teamDto);
+        log.debug("Update team  {}", teamDto);
 
         Team model = modelMapper.map(teamDto, Team.class);
         Team updatedModel = teamService.updateTeam(id, model).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         TeamDto updated = modelMapper.map(updatedModel, TeamDto.class);
-        log.info("return save::{}", updated);
+        log.debug("return save::{}", updated);
         return updated;
     }
 

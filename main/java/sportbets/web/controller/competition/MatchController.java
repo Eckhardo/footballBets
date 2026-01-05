@@ -28,12 +28,12 @@ public class MatchController {
 
     @GetMapping("/matches/{id}")
     public SpielDto findOne(@PathVariable Long id) {
-        log.info("SpielDto:findOne::{}", id);
+        log.debug("SpielDto:findOne::{}", id);
 
         Spiel model = spielService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         ModelMapper modelMapper = MapperUtil.getModelMapperForSpiel();
-        log.info("Spiel found with {}", model);
+        log.debug("Spiel found with {}", model);
         return modelMapper.map(model, SpielDto.class);
 
     }
@@ -42,25 +42,25 @@ public class MatchController {
     @PostMapping("/matches")
     @ResponseStatus(HttpStatus.CREATED)
     public SpielDto post(@RequestBody @Valid SpielDto spielDto) {
-        log.info("New match day {}", spielDto);
+        log.debug("New match day {}", spielDto);
 
         Spiel createdModel = spielService.save(spielDto);
         ModelMapper myModelMapper = MapperUtil.getModelMapperForSpiel();
         SpielDto updatedDto = myModelMapper.map(createdModel, SpielDto.class);
-        log.info("Spiel RETURN do {}", updatedDto);
+        log.debug("Spiel RETURN do {}", updatedDto);
         return updatedDto;
     }
 
     @PutMapping(value = "/matches/{id}")
     public SpielDto update(@PathVariable Long id, @RequestBody SpielDto spielDto) {
-        log.info("Update match day {}", spielDto);
+        log.debug("Update match day {}", spielDto);
 
 
         Spiel updatedModel = spielService.updateSpiel(id, spielDto)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         ModelMapper myModelMapper = MapperUtil.getModelMapperForSpiel();
         SpielDto updatedDto = myModelMapper.map(updatedModel, SpielDto.class);
-        log.info("Spiel RETURN do {}", updatedDto);
+        log.debug("Spiel RETURN do {}", updatedDto);
         return updatedDto;
     }
 

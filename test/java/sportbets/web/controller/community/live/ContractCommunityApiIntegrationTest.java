@@ -27,6 +27,8 @@ public class ContractCommunityApiIntegrationTest {
     private static final String TEST_COMM = "My Test Community";
     private static final String TEST_COMM_2 = "My Test Community 2";
 
+    CommunityDto communityDto2 = new CommunityDto(null, null, "Description of Community");
+
 
     CommunityDto communityDto = new CommunityDto(null, TEST_COMM, "Description of Community");
 
@@ -39,7 +41,7 @@ public class ContractCommunityApiIntegrationTest {
     @AfterEach
     public void cleanup() {
         // Clean up all books created during tests
-        log.info("cleanup");
+        log.debug("cleanup");
         Community savedComm = communityRepository.findByName(TEST_COMM).orElseThrow();
         webClient.delete()
                 .uri("/communities/" + savedComm.getId())
@@ -58,7 +60,7 @@ public class ContractCommunityApiIntegrationTest {
     @Order(1)
     void createNewCommunity_withValidDtoInput_thenSuccess() {
 
-        log.info("createNewCommunity_withValidDtoInput_thenSuccess");
+        log.debug("createNewCommunity_withValidDtoInput_thenSuccess");
         webClient.post()
                 .uri("/communities")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -80,7 +82,7 @@ public class ContractCommunityApiIntegrationTest {
     @Order(2)
     void createNewCommunity_withInvalidDtoInput_thenFailure() {
 
-        log.info("createNewCommunity_withInvalidDtoInput_thenFailure");
+        log.debug("createNewCommunity_withInvalidDtoInput_thenFailure");
         webClient.post()
                 .uri("/communities")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -172,7 +174,7 @@ public class ContractCommunityApiIntegrationTest {
     @Order(4)
     void createNewCommunity_thenGetAll_isSuccess() {
 
-        log.info("createNewCommunity_thenGetAll_isSuccess");
+        log.debug("createNewCommunity_thenGetAll_isSuccess");
         webClient.post()
                 .uri("/communities")
                 .contentType(MediaType.APPLICATION_JSON)

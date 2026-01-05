@@ -53,7 +53,7 @@ public class ContractTipperApiIntegrationTest {
     @AfterEach
     public void cleanup() {
         // Clean up all books created during tests
-        log.info("cleanup");
+        log.debug("cleanup");
 
         CompetitionFamily fam = competitionFamilyRepository.findByName(TEST_COMP_FAM).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_FAM));
         webClient.delete()
@@ -65,7 +65,7 @@ public class ContractTipperApiIntegrationTest {
 
         Tipper tipper = tipperRepository.findByUsername(TEST_USERNAME).orElseThrow(() -> new EntityNotFoundException(TEST_USERNAME));
         Long id = tipper.getId();
-        log.info("delete tipper with id::{}", id);
+        log.debug("delete tipper with id::{}", id);
         webClient.delete()
                 .uri("/tipper/" + id)
                 .exchange()

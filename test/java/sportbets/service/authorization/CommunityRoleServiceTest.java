@@ -53,7 +53,7 @@ public class CommunityRoleServiceTest {
 
     @Test
     public void saveCommunityRole() {
-        log.info("saveCompRole");
+        log.debug("saveCompRole");
         CommunityRole communityRole = communityRoleService.findByCommunityName(savedCommunity.getName()).orElseThrow();
 
         assertEquals(savedCommunity.getName(), communityRole.getName());
@@ -66,7 +66,7 @@ public class CommunityRoleServiceTest {
 
     @Test
     public void findAllCommunityRoles() {
-        log.info("findCommunityRoles");
+        log.debug("findCommunityRoles");
 
         List<CommunityRole> roles = communityRoleService.getAllCommunityRoles();
         assertThat(roles).isNotNull();

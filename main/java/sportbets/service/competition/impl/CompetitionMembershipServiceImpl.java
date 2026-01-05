@@ -46,7 +46,7 @@ public class CompetitionMembershipServiceImpl implements CompetitionMembershipSe
     @Override
     @Transactional
     public CompetitionMembership save(CompetitionMembershipDto membershipDto) {
-        log.info("Service save CompetitionMembership {}", membershipDto);
+        log.debug("Service save CompetitionMembership {}", membershipDto);
         Optional<CompetitionMembership> entity = membershipRepository.findByCommIdAndCompId(membershipDto.getCommId(), membershipDto.getCompId());
 
         if (entity.isPresent()) {
@@ -59,7 +59,7 @@ public class CompetitionMembershipServiceImpl implements CompetitionMembershipSe
         model.setCommunity(community);
         model.setCompetition(competition);
 
-        log.info("save CompetitionMembership {}", model);
+        log.debug("save CompetitionMembership {}", model);
         return membershipRepository.save(model);
     }
 
@@ -68,7 +68,7 @@ public class CompetitionMembershipServiceImpl implements CompetitionMembershipSe
     @Transactional
     public Optional<CompetitionMembership> update(Long id, CompetitionMembershipDto membershipDto) {
 
-        log.info("update CompetitionMembership dto:: {}", membershipDto);
+        log.debug("update CompetitionMembership dto:: {}", membershipDto);
         Optional<CompetitionMembership> updateModel = membershipRepository.findById(id);
         if (updateModel.isEmpty()) {
             throw new EntityNotFoundException("CompetitionMembership  does not exits given id:" + membershipDto.getId());
@@ -79,7 +79,7 @@ public class CompetitionMembershipServiceImpl implements CompetitionMembershipSe
         updateModel.get().setCommunity(community);
         updateModel.get().setCompetition(competition);
 
-        log.info("updated CompMemb  with {}", updateModel.get());
+        log.debug("updated CompMemb  with {}", updateModel.get());
         return Optional.of(membershipRepository.save(updateModel.get()));
     }
 

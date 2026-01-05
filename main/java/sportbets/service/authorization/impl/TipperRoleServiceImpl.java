@@ -34,14 +34,14 @@ class TipperRoleServiceImpl implements TipperRoleService {
 
     @Override
     public Optional<TipperRole> save(TipperRoleDto dto) {
-        log.info("\n");
-        log.info("TipperRoleServiceImpl.save {}", dto);
+        log.debug("\n");
+        log.debug("TipperRoleServiceImpl.save {}", dto);
         Tipper tipper = tipperRepository.findById(dto.getTipperId()).orElseThrow(() -> new EntityNotFoundException("Tipper not found"));
         Role compRole = roleRepository.findById(dto.getRoleId()).orElseThrow(() -> new EntityNotFoundException("Role not found"));
 
         TipperRole tipperRole = new TipperRole(compRole, tipper);
         TipperRole model = tipperRoleRepo.save(tipperRole);
-        log.info("model {}", model);
+        log.debug("model {}", model);
 
         return Optional.of(model);
     }
@@ -50,7 +50,7 @@ class TipperRoleServiceImpl implements TipperRoleService {
     public List<TipperRole> getAllForTipper(Long tipperId) {
         List<TipperRole> tipperRoles = tipperRoleRepo.getAllForTipper(tipperId);
 
-        log.info("return all tipperRole dtos::");
+        log.debug("return all tipperRole dtos::");
         return tipperRoles;
     }
 

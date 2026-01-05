@@ -38,10 +38,10 @@ public class ContractCompFamilyApiIntegrationTest {
     @AfterEach
     public void cleanup() {
         // Clean up all books created during tests
-        log.info("cleanup");
+        log.debug("cleanup");
         CompetitionFamily fam = competitionFamilyRepository.findByName(COMP_FAM).orElseThrow(() -> new EntityNotFoundException(COMP_FAM));
         Long id = fam.getId();
-        log.info("deleteFamily with id::{}", id);
+        log.debug("deleteFamily with id::{}", id);
         webClient.delete()
                 .uri("/families/" + id)
                 .exchange()
@@ -91,12 +91,12 @@ public class ContractCompFamilyApiIntegrationTest {
     @Test
     @Order(2)
     void updateFamily_withValidFamilyJsonInput_thenSuccess() {
-        log.info("updateFamily_withValidFamilyJsonInput_thenSuccess");
+        log.debug("updateFamily_withValidFamilyJsonInput_thenSuccess");
 
         CompetitionFamily fam = competitionFamilyRepository.findByName(COMP_FAM).orElseThrow(() -> new EntityNotFoundException(COMP_FAM));
         compFamilyDto.setDescription("Changed Description");
         Long id = fam.getId();
-        log.info("updateFamily with id::{}", id);
+        log.debug("updateFamily with id::{}", id);
         webClient.put()
                 .uri("/families/" + id)
                 .contentType(MediaType.APPLICATION_JSON)

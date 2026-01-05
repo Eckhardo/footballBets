@@ -66,10 +66,10 @@ public class TipperRepositoryTest {
 
     @Test
     public void findByUsername() {
-        log.info("findByUsername");
+        log.debug("findByUsername");
         Tipper tipper = tipperRepo.findByUsername(testTipper.getUsername()).orElseThrow();
         assertNotNull(tipper);
-        log.info("tipper {}", tipper);
+        log.debug("tipper {}", tipper);
 
 
     }

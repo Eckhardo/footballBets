@@ -28,37 +28,37 @@ class TipperController {
 
     @GetMapping("/tipper/{id}")
     public TipperDto findOne(@PathVariable Long id) {
-        log.info("TipperController:findOne::{}", id);
+        log.debug("TipperController:findOne::{}", id);
         Tipper model = tipperService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        log.info("Tipper found with {}", model.getUsername());
+        log.debug("Tipper found with {}", model.getUsername());
         return modelMapper.map(model, TipperDto.class);
 
     }
     @PostMapping("/tipper")
     @ResponseStatus(HttpStatus.CREATED)
     public TipperDto post(@RequestBody @Valid TipperDto newTipper) {
-        log.info("TipperController.create::{}", newTipper);
+        log.debug("TipperController.create::{}", newTipper);
         Tipper createdModel = tipperService.save(newTipper);
         TipperDto tipperDto = modelMapper.map(createdModel, TipperDto.class);
-        log.info("return save::{}", tipperDto);
+        log.debug("return save::{}", tipperDto);
         return tipperDto;
     }
 
 
     @PutMapping(value = "/tipper/{id}")
     public TipperDto update(@PathVariable Long id, @RequestBody @Valid TipperDto tipperDto) {
-        log.info("CompFamilyController.update::{}", tipperDto.toString());
+        log.debug("CompFamilyController.update::{}", tipperDto.toString());
         Tipper updatedModel = tipperService.update(id, tipperDto).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         TipperDto dto = modelMapper.map(updatedModel, TipperDto.class);
-        log.info("return save::{}", dto);
+        log.debug("return save::{}", dto);
         return dto;
     }
 
 
     @DeleteMapping(value = "/tipper/{id}")
     public ResponseEntity<HttpStatus> delete(@PathVariable Long id) {
-        log.info("CompFamilyController.delete::{}", id);
+        log.debug("CompFamilyController.delete::{}", id);
         try {
             tipperService.deleteById(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

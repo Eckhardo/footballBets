@@ -74,7 +74,7 @@ public class CompetitionQueryTest {
         System.out.println("Found competition name: " + comp.getName());
         comp.getCompetitionRounds().forEach(compRound -> {
 
-            log.info("Found competitionRound name: {}", compRound.getName());
+            log.debug("Found competitionRound name: {}", compRound.getName());
         });
     }
 
@@ -87,7 +87,7 @@ public class CompetitionQueryTest {
 
         comp.getCompetitionRounds().forEach(compRound -> {
 
-            log.info("Found competitionRound name: {}", compRound.getName());
+            log.debug("Found competitionRound name: {}", compRound.getName());
             compRound.getSpieltage().forEach(spieltag -> System.out.println("Found spieltag name: " + spieltag.getSpieltagNumber()));
         });
     }
@@ -100,7 +100,7 @@ public class CompetitionQueryTest {
         List<Team> teams = compRepo.findTeamsForComp(testComp.getId());
         assertNotNull(teams);
         teams.forEach(team -> {
-            log.info("Found team name: {}", team);
+            log.debug("Found team name: {}", team);
         });
     }
 }

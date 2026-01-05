@@ -32,7 +32,7 @@ public class CommunityMembershipController {
 
     @GetMapping("/commMembs")
     public List<CommunityMembershipDto> findAll() {
-        log.info(":findAll");
+        log.debug(":findAll");
         List<CommunityMembership> commMembs = commMembService.getAll();
         List<CommunityMembershipDto> commMembDtos = new ArrayList<>();
         ModelMapper modelMapper = MapperUtil.getModelMapperForCommunityMembership();
@@ -44,10 +44,10 @@ public class CommunityMembershipController {
 
     @GetMapping("/commMembs/{id}")
     public CommunityMembershipDto findOne(@PathVariable Long id) {
-        log.info(":findOne::{}", id);
+        log.debug(":findOne::{}", id);
         CommunityMembership model = commMembService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         ModelMapper modelMapper = MapperUtil.getModelMapperForCommunityMembership();
-        log.info("Community found with {}", model);
+        log.debug("Community found with {}", model);
         return modelMapper.map(model, CommunityMembershipDto.class);
 
     }
@@ -55,11 +55,11 @@ public class CommunityMembershipController {
     @PostMapping("/commMembs")
     @ResponseStatus(HttpStatus.CREATED)
     public CommunityMembershipDto post(@RequestBody @Valid CommunityMembershipDto newCommMemb) {
-        log.info("New commMemb {}", newCommMemb);
+        log.debug("New commMemb {}", newCommMemb);
         CommunityMembership createdModel = commMembService.save(newCommMemb);
         ModelMapper modelMapper = MapperUtil.getModelMapperForCommunityMembership();
         CommunityMembershipDto createdDto = modelMapper.map(createdModel, CommunityMembershipDto.class);
-        log.info("commMemb RETURN do {}", createdDto);
+        log.debug("commMemb RETURN do {}", createdDto);
         return createdDto;
     }
 
@@ -67,10 +67,10 @@ public class CommunityMembershipController {
     public CommunityMembershipDto update(@PathVariable Long id, @RequestBody CommunityMembershipDto membershipDto) {
 
         CommunityMembership updatedComm = this.commMembService.update(id, membershipDto).orElseThrow();
-        log.info("Updated commMemb entity {}", updatedComm);
+        log.debug("Updated commMemb entity {}", updatedComm);
         ModelMapper modelMapper = MapperUtil.getModelMapperForCommunityMembership();
         CommunityMembershipDto updatedDto = modelMapper.map(updatedComm, CommunityMembershipDto.class);
-        log.info("CommMembDto RETURN  {}", updatedDto);
+        log.debug("CommMembDto RETURN  {}", updatedDto);
         return updatedDto;
 
 
@@ -78,7 +78,7 @@ public class CommunityMembershipController {
 
     @DeleteMapping(value = "/commMembs/{id}")
     public ResponseEntity<HttpStatus> delete(@PathVariable Long id) {
-        log.info("CommunityMembershipController.delete::{}", id);
+        log.debug("CommunityMembershipController.delete::{}", id);
         try {
             commMembService.deleteById(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

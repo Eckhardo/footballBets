@@ -49,7 +49,7 @@ public class ContractComApiIntegrationTest {
     @AfterEach
     public void cleanup() {
         // Clean up all books created during tests
-        log.info("cleanup");
+        log.debug("cleanup");
 
         CompetitionFamily fam = competitionFamilyRepository.findByName(compFamilyDto.getName()).orElseThrow(() -> new EntityNotFoundException(compFamilyDto.getName()));
         webClient.delete()
@@ -142,12 +142,12 @@ public class ContractComApiIntegrationTest {
     @Test
     @Order(3)
     void updateComp_withValidCompJsonInput_thenSuccess() {
-        log.info("updateComp_withValidCompJsonInput_thenSuccess");
+        log.debug("updateComp_withValidCompJsonInput_thenSuccess");
 
         Competition entity = repository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP));
         Long id = entity.getId();
         compDto.setDescription("changed description");
-        log.info("updateComp with id::{}", id);
+        log.debug("updateComp with id::{}", id);
         webClient.put()
                 .uri("/competitions/" + id)
                 .contentType(MediaType.APPLICATION_JSON)

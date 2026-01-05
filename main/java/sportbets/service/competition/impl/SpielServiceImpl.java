@@ -51,7 +51,7 @@ public class SpielServiceImpl implements SpielService {
     @Override
     @Transactional
     public Spiel save(SpielDto spielDto) {
-        log.info("save Spiel :: {}", spielDto);
+        log.debug("save Spiel :: {}", spielDto);
         Optional<Spiel> optionalSpiel = spielRepo.findByNumberWithSpieltagId(spielDto.getSpielNumber(), spielDto.getSpieltagId());
         if (optionalSpiel.isPresent()) {
             throw new EntityExistsException("Spiel  already exist with given spiel number:" + spielDto.getSpielNumber());
@@ -72,7 +72,7 @@ public class SpielServiceImpl implements SpielService {
     @Transactional
     public Optional<Spiel> updateSpiel(Long id, SpielDto spielDto) {
 
-        log.info("update Match dto:: {}", spielDto);
+        log.debug("update Match dto:: {}", spielDto);
         Optional<Spiel> updateModel = spielRepo.findById(id);
         if (updateModel.isEmpty()) {
             throw new EntityNotFoundException("spiel  does not exits given id:" + spielDto.getId());
@@ -86,7 +86,7 @@ public class SpielServiceImpl implements SpielService {
         model.setGastTeam(gastTeam);
 
         Spiel updated = updateFields(updateModel.get(), model);
-        log.info("updated Comp  with {}", updated);
+        log.debug("updated Comp  with {}", updated);
         return Optional.of(spielRepo.save(updated));
 
     }

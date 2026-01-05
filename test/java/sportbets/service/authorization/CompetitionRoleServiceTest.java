@@ -61,7 +61,7 @@ public class CompetitionRoleServiceTest {
 
     @Test
     public void saveCompRole() {
-        log.info("saveCompRole");
+        log.debug("saveCompRole");
         CompetitionRole compRole = competitionRoleService.findByCompName(savedComp.getName()).orElseThrow();
 
         assertEquals(savedComp.getName(), compRole.getName());
@@ -74,7 +74,7 @@ public class CompetitionRoleServiceTest {
 
     @Test
     public void findAllCompRoles() {
-        log.info("findCompRole");
+        log.debug("findCompRole");
 
         List<CompetitionRole> roles = competitionRoleService.getAllCompRoles();
         assertThat(roles).isNotNull();

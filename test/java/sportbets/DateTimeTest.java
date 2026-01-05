@@ -66,9 +66,9 @@ public class DateTimeTest {
         Date java7Date = new Date();
         LocalDateTime localDateTime = java7Date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
         LocalDate localDate = localDateTime.toLocalDate();
-        logger.info("java.util.Date value:{}", java7Date);
-        logger.info("Equivalent java.time.LocalDate value:{}", localDate);
-        logger.info("Equivalent java.time.LocalDateTime value:{}", localDateTime);
+        logger.debug("java.util.Date value:{}", java7Date);
+        logger.debug("Equivalent java.time.LocalDate value:{}", localDate);
+        logger.debug("Equivalent java.time.LocalDateTime value:{}", localDateTime);
 
     }
 
@@ -97,7 +97,7 @@ public class DateTimeTest {
     public void convertSqlDateToLocalDateTime() {
 
         // returns an instance of java.sql.Date which extends java.util.Date (does not
-        // carry time information)
+        // carry time.debugrmation)
         Date sqlDate = new Date();
         Date utilDate = new Date(sqlDate.getTime());
         logger.debug("java.sql.Date value:{}", sqlDate);

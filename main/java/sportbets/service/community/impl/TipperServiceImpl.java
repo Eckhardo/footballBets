@@ -43,15 +43,15 @@ class TipperServiceImpl implements TipperService {
     @Override
     @Transactional
     public Tipper save(TipperDto dto) {
-        log.info("Tipper to be save:: {}", dto);
+        log.debug("Tipper to be save:: {}", dto);
         Optional<Tipper> savedTipper = tipperRepo.findByUsername(dto.getUsername());
         if (savedTipper.isPresent()) {
             throw new EntityExistsException("Tipper already exist with given username:" + savedTipper.get().getUsername());
         }
         Tipper model = modelMapper.map(dto, Tipper.class);
-        log.info("model be save:: {}", model);
+        log.debug("model be save:: {}", model);
         Tipper createdModel = tipperRepo.save(model);
-        log.info("saved entity:: {}", createdModel);
+        log.debug("saved entity:: {}", createdModel);
         return createdModel;
 
     }
@@ -87,7 +87,7 @@ class TipperServiceImpl implements TipperService {
     @Override
     @Transactional
     public Optional<Tipper> update(Long id, TipperDto dto) {
-        log.info("updateFamily:: {}", dto);
+        log.debug("updateFamily:: {}", dto);
         Optional<Tipper> updateModel = tipperRepo.findById(id);
         if (updateModel.isEmpty()) {
             throw new EntityNotFoundException("Tipper  DOES NOT exist with given id:" + id);
@@ -95,7 +95,7 @@ class TipperServiceImpl implements TipperService {
         Tipper model = modelMapper.map(dto, Tipper.class);
 
         Tipper updated = updateFields(updateModel.get(), model);
-        log.info("updated Comp  with {}", updated);
+        log.debug("updated Comp  with {}", updated);
         return Optional.of(tipperRepo.save(updated));
     }
 

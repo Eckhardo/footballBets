@@ -45,12 +45,12 @@ class ModelMapperEntityDtoTest {
 
 
         CompetitionRoundDto compRoundDto = modelMapper.map(testRound, CompetitionRoundDto.class);
-        log.info("Round:: {}", compRoundDto.toString());
+        log.debug("Round:: {}", compRoundDto.toString());
         CompetitionDto compDto = modelMapper.map(testComp, CompetitionDto.class);
-        log.info("Comp:: {}", compDto.toString());
+        log.debug("Comp:: {}", compDto.toString());
 
         CompetitionFamilyDto famDto = modelMapper.map(testFamily, CompetitionFamilyDto.class);
-        log.info("Family:: {}", famDto.toString());
+        log.debug("Family:: {}", famDto.toString());
 
 
     }
@@ -58,18 +58,18 @@ class ModelMapperEntityDtoTest {
 
     @Test
     public void checkFamily() {
-        log.info("\n validate family");
+        log.debug("\n validate family");
         modelMapper.createTypeMap(CompetitionFamilyDto.class, CompetitionFamily.class);
         modelMapper.validate();
         CompetitionFamily testFamily = new CompetitionFamily(TEST_FAM, TEST_FAM_DESCR, true, true);
         CompetitionFamilyDto famDto = modelMapper.map(testFamily, CompetitionFamilyDto.class);
-        log.info("Family:: {}", famDto.toString());
+        log.debug("Family:: {}", famDto.toString());
 
     }
 
     @Test
     public void checkComp() {
-        log.info("\n validate competition");
+        log.debug("\n validate competition");
 
         CompetitionFamily testFamily = new CompetitionFamily(TEST_FAM, TEST_FAM_DESCR, true, true);
         testFamily.setId(10L);
@@ -77,12 +77,12 @@ class ModelMapperEntityDtoTest {
         testComp.setId(5L);
         CompetitionDto compDto = modelMapper.map(testComp, CompetitionDto.class);
 
-        log.info("Comp:: {}", compDto.toString());
+        log.debug("Comp:: {}", compDto.toString());
     }
 
     @Test
     public void checkRound() {
-        log.info("\n validate comp round");
+        log.debug("\n validate comp round");
 
         CompetitionFamily testFamily = new CompetitionFamily(TEST_FAM, TEST_FAM_DESCR, true, true);
         testFamily.setId(10L);
@@ -90,13 +90,13 @@ class ModelMapperEntityDtoTest {
         testComp.setId(5L);
         CompetitionRound testRound = new CompetitionRound(1, COMP_ROUND, testComp, false);
         CompetitionRoundDto compRoundDto = modelMapper.map(testRound, CompetitionRoundDto.class);
-        log.info("Round:: {}", compRoundDto.toString());
+        log.debug("Round:: {}", compRoundDto.toString());
 
     }
 
     @Test
     public void checkSpieltag() {
-        log.info("\n validate spieltag");
+        log.debug("\n validate spieltag");
 
 
         CompetitionFamily testFamily = new CompetitionFamily(TEST_FAM, TEST_FAM_DESCR, true, true);
@@ -112,13 +112,13 @@ class ModelMapperEntityDtoTest {
         final ModelMapper myMapper = MapperUtil.getModelMapperForCompetitionRound();
         spieltage.forEach(spieltag -> {
             SpieltagDto spieltagDto = myMapper.map(spieltag, SpieltagDto.class);
-            log.info("Spieltag:: {}", spieltagDto.toString());
+            log.debug("Spieltag:: {}", spieltagDto.toString());
         });
     }
 
     @Test
     public void checkSpiel() {
-        log.info("\n validate spiel");
+        log.debug("\n validate spiel");
 
         CompetitionFamily testFamily = new CompetitionFamily(TEST_FAM, TEST_FAM_DESCR, true, true);
         testFamily.setId(10L);
@@ -168,7 +168,7 @@ class ModelMapperEntityDtoTest {
 
     @Test
     public void checkCompTeam() {
-        log.info("\n validate spiel");
+        log.debug("\n validate spiel");
 
         CompetitionFamily testFamily = new CompetitionFamily(TEST_FAM, TEST_FAM_DESCR, true, true);
         testFamily.setId(10L);

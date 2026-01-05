@@ -49,8 +49,8 @@ public class CompTeamServiceTest {
 
     @BeforeEach
     public void setup() {
-        log.info("\n");
-        log.info("setup All Test data");
+        log.debug("\n");
+        log.debug("setup All Test data");
         CompetitionFamily savedFam = familyService.save(competitionFamily).orElseThrow();
         CompetitionDto compDto = TestConstants.TEST_COMP;
         compDto.setFamilyId(savedFam.getId());

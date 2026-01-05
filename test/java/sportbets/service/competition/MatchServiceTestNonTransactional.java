@@ -69,8 +69,8 @@ public class MatchServiceTestNonTransactional {
 
     @AfterEach
     public void tearDown() {
-        log.info("\n");
-        log.info("Delete All Test data");
+        log.debug("\n");
+        log.debug("Delete All Test data");
         familyService.deleteByName(TEST_COMP_FAM);
         teamService.deleteByName(TEAM_NAME);
         teamService.deleteByName(TEAM_NAME_2);
@@ -168,7 +168,7 @@ public class MatchServiceTestNonTransactional {
         assertThat(savedMatch.getHeimTeam().getAcronym()).isEqualTo(savedTeam1.getAcronym());
         assertThat(savedMatch.getGastTeam().getId()).isEqualTo(savedTeam2.getId());
         assertThat(savedMatch.getGastTeam().getAcronym()).isEqualTo(savedTeam2.getAcronym());
-        log.info("\n");
+        log.debug("\n");
         familyService.deleteByName(TEST_COMP_FAM);
         Optional<Competition> deletedComp = compService.findByName(TEST_COMP);
         assertThat(deletedComp.isEmpty());
@@ -176,7 +176,7 @@ public class MatchServiceTestNonTransactional {
         assertThat(deletedMatchday.isEmpty());
         Optional<Spiel> deletedMatch = matchService.findById(savedMatch.getId());
         assertThat(deletedMatch.isEmpty());
-        log.info("\n");
+        log.debug("\n");
 
     }
 

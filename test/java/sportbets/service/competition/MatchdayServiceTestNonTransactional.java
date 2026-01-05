@@ -59,8 +59,8 @@ public class MatchdayServiceTestNonTransactional {
 
     @AfterEach
     public void tearDown() {
-        log.info("\n");
-        log.info("Delete All Test data");
+        log.debug("\n");
+        log.debug("Delete All Test data");
         familyService.deleteByName(TEST_COMP_FAM);
     }
 
@@ -123,7 +123,7 @@ public class MatchdayServiceTestNonTransactional {
         assertThat(savedMatchday.getCompetitionRound().getName()).isEqualTo(savedCompRound.getName());
         assertThat(savedMatchday.getCompetitionRound().getId()).isEqualTo(savedCompRound.getId());
         assertThat(savedMatchday.getStartDate()).isEqualTo(matchDayDto.getStartDate());
-        log.info("\n");
+        log.debug("\n");
         familyService.deleteByName(TEST_COMP_FAM);
         Optional<Competition> deletedComp = compService.findByName(TEST_COMP);
         assertThat(deletedComp.isEmpty());
@@ -131,7 +131,7 @@ public class MatchdayServiceTestNonTransactional {
         assertThat(deletedRound.isEmpty());
         Optional<Spieltag> deletedMatchday = spieltagService.findById(savedMatchday.getId());
         assertThat(deletedMatchday.isEmpty());
-        log.info("\n");
+        log.debug("\n");
     }
 
 }

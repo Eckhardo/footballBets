@@ -46,7 +46,7 @@ public class CommunityServiceImpl implements CommunityService {
     @Override
     @Transactional
     public Community save(CommunityDto communityDto) {
-        log.info("Community to be save:: {}", communityDto);
+        log.debug("Community to be save:: {}", communityDto);
         Optional<Community> savedCommunity = communityRepo.findByName(communityDto.getName());
         if (savedCommunity.isPresent()) {
             throw new EntityExistsException("Community already exist with given name:" + communityDto.getName());
@@ -55,9 +55,9 @@ public class CommunityServiceImpl implements CommunityService {
         Community model = modelMapper.map(communityDto, Community.class);
         CommunityRole communityRole = new CommunityRole(model.getName(), model.getDescription(), model);
         model.addCommunityRole(communityRole);
-        log.info("model be save:: {}", model);
+        log.debug("model be save:: {}", model);
         Community createdModel = communityRepo.save(model);
-        log.info("saved entity:: {}", createdModel);
+        log.debug("saved entity:: {}", createdModel);
         return createdModel;
     }
 
@@ -65,7 +65,7 @@ public class CommunityServiceImpl implements CommunityService {
     @Override
     @Transactional
     public Optional<Community> update(Long id, CommunityDto commDto) {
-        log.info("update:: {}", commDto);
+        log.debug("update:: {}", commDto);
         Optional<Community> updateModel = communityRepo.findById(id);
         if (updateModel.isEmpty()) {
             throw new EntityNotFoundException("Community  DOES NOT exist with given id:" + id);
@@ -82,7 +82,7 @@ public class CommunityServiceImpl implements CommunityService {
         updateModel.get().setName(commDto.getName());
         updateModel.get().setDescription(commDto.getDescription());
 
-        log.info("updated Community  with {}", updateModel.get());
+        log.debug("updated Community  with {}", updateModel.get());
         return Optional.of(communityRepo.save(updateModel.get()));
     }
 

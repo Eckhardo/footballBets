@@ -221,15 +221,15 @@ public class FootballBetsApplication {
 //                    rueckDates.add(entry.getValue());
 //                }
 //            }
-//            log.info("hin ::" + hinDates.size());
-//            log.info("rueck ::" + rueckDates.size());
+//            log.debug("hin ::" + hinDates.size());
+//            log.debug("rueck ::" + rueckDates.size());
 //
 //            List<Spieltag> spieltagHin = spieltagRepo.saveAll(SpieltagConstants.getSpieltageHinrunde(hinRunde, hinDates));
 //            List<Spieltag> spieltagRueck = spieltagRepo.saveAll(SpieltagConstants.getSpieltageRueckrunde(rueckRunde, rueckDates));
 //
 //            List<Spiel> spiele = retrieveSpiele();
 //            for (Spiel spiel : spiele) {
-//              //  log.info(" spiele:: {} {}", spiel.getSpielNumber(), spiel.getSpieltag().getSpieltagNumber());
+//              //  log.debug(" spiele:: {} {}", spiel.getSpielNumber(), spiel.getSpieltag().getSpieltagNumber());
 //
 //            }
 //
@@ -371,7 +371,7 @@ public class FootballBetsApplication {
 
                 if (i % 9 == 0) {
 
-                    log.info("" + k);
+                    log.debug("" + k);
                     k++;
                 }
                 i++;

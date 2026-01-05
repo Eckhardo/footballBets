@@ -35,9 +35,9 @@ public class CompetitionRoleServiceImpl implements CompetitionRoleService {
 
     @Override
     public Optional<CompetitionRole> findById(Long id) {
-        log.info("CompetitionRoleServiceImpl.findById");
+        log.debug("CompetitionRoleServiceImpl.findById");
         Role model = roleRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Role not found"));
-        log.info("\n");
+        log.debug("\n");
         if (model instanceof CompetitionRole) {
 
             return Optional.of((CompetitionRole) model);
@@ -50,7 +50,7 @@ public class CompetitionRoleServiceImpl implements CompetitionRoleService {
     @Override
     @Transactional
     public CompetitionRole save(CompetitionRoleDto dto) {
-        log.info("FmDto to be save:: {}", dto);
+        log.debug("FmDto to be save:: {}", dto);
         Optional<CompetitionRole> savedRole = roleRepository.findByCompName(dto.getName());
         if (savedRole.isPresent()) {
             throw new EntityExistsException("CompetitionRole  already exist with given name:" + savedRole.get().getName());
@@ -59,9 +59,9 @@ public class CompetitionRoleServiceImpl implements CompetitionRoleService {
 
         CompetitionRole model = modelMapper.map(dto, CompetitionRole.class);
         model.setCompetition(comp);
-        log.info("model be save:: {}", model);
+        log.debug("model be save:: {}", model);
         CompetitionRole createdModel = roleRepository.save(model);
-        log.info("saved entity:: {}", createdModel);
+        log.debug("saved entity:: {}", createdModel);
 
         return createdModel;
 
