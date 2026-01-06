@@ -128,10 +128,10 @@ class ModelMapperEntityDtoTest {
         testRound.setId(7L);
         Spieltag testSpieltag = new Spieltag(1, LocalDateTime.now(), testRound);
         testSpieltag.setId(7L);
-        Team team1 = new Team("Test1", "1");
-        Team team2 = new Team("Test2", "2");
-        Team team3 = new Team("Test3", "3");
-        Team team4 = new Team("Test4", "4");
+        Team team1 = new Team("Test1", "1",true );
+        Team team2 = new Team("Test2", "2",true );
+        Team team3 = new Team("Test3", "3", true);
+        Team team4 = new Team("Test4", "4", true);
         team1.setId(4L);
         team2.setId(5L);
         team3.setId(6L);
@@ -175,10 +175,10 @@ class ModelMapperEntityDtoTest {
         Competition testComp = new Competition(TEST_COMP, TEST_COMP_DESCR, 3, 1, testFamily);
         testComp.setId(5L);
 
-        Team team1 = new Team("Test1", "1");
-        Team team2 = new Team("Test2", "2");
-        Team team3 = new Team("Test3", "3");
-        Team team4 = new Team("Test4", "4");
+        Team team1 = new Team("Test1", "1", true);
+        Team team2 = new Team("Test2", "2", true);
+        Team team3 = new Team("Test3", "3", true);
+        Team team4 = new Team("Test4", "4", true);
         team1.setId(4L);
         team2.setId(5L);
         team3.setId(6L);

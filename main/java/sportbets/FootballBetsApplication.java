@@ -13,15 +13,22 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import sportbets.common.DateUtil;
-import sportbets.persistence.entity.competition.Spiel;
-import sportbets.persistence.entity.competition.Spieltag;
-import sportbets.persistence.entity.competition.Team;
+import sportbets.persistence.builder.*;
+import sportbets.persistence.entity.authorization.CommunityRole;
+import sportbets.persistence.entity.authorization.CompetitionRole;
+import sportbets.persistence.entity.authorization.Role;
+import sportbets.persistence.entity.authorization.TipperRole;
+import sportbets.persistence.entity.community.Community;
+import sportbets.persistence.entity.community.CommunityMembership;
+import sportbets.persistence.entity.community.Tipper;
+import sportbets.persistence.entity.competition.*;
 import sportbets.persistence.repository.authorization.RoleRepository;
 import sportbets.persistence.repository.authorization.TipperRoleRepository;
 import sportbets.persistence.repository.community.CommunityMembershipRepository;
 import sportbets.persistence.repository.community.CommunityRepository;
 import sportbets.persistence.repository.community.TipperRepository;
 import sportbets.persistence.repository.competition.*;
+import sportbets.service.competition.TeamService;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -77,6 +84,8 @@ public class FootballBetsApplication {
     @Autowired
     private CommunityMembershipRepository commMembRepo;
 
+    @Autowired
+    SpielFormulaRepository spielFormulaRepo;
 
     @Bean
     public CommandLineRunner run() {
@@ -117,7 +126,6 @@ public class FootballBetsApplication {
 //            savedCommunity.addCommunityMembership(commMemb);
 //            commMembRepo.save(commMemb);
 //            commRepo.save(community);
-//
 //
 //
 //            CompetitionRound hinRunde = compRoundRepo.save(CompRoundConstants.getHinrunde(comp));
@@ -221,23 +229,14 @@ public class FootballBetsApplication {
 //                    rueckDates.add(entry.getValue());
 //                }
 //            }
-//            log.debug("hin ::" + hinDates.size());
-//            log.debug("rueck ::" + rueckDates.size());
+//            log.info("hin ::" + hinDates.size());
+//            log.info("rueck ::" + rueckDates.size());
 //
 //            List<Spieltag> spieltagHin = spieltagRepo.saveAll(SpieltagConstants.getSpieltageHinrunde(hinRunde, hinDates));
 //            List<Spieltag> spieltagRueck = spieltagRepo.saveAll(SpieltagConstants.getSpieltageRueckrunde(rueckRunde, rueckDates));
 //
-//            List<Spiel> spiele = retrieveSpiele();
-//            for (Spiel spiel : spiele) {
-//              //  log.debug(" spiele:: {} {}", spiel.getSpielNumber(), spiel.getSpieltag().getSpieltagNumber());
-//
-//            }
-//
-
-            ///     List<Spiel> spieleHin = spielRepo.saveAll(SpielConstants.getSpieleHinrunde(spieltagHin, pauli, hsv));
-
-
-            //     List<Spiel> spieleRueck = spielRepo.saveAll(SpielConstants.getSpieleRückrunde(spieltagRueck, werder, bay));
+//            List<Spiel> savedSpiele = retrieveSpiele();
+//            log.info("add spielformula ::" + savedSpiele.size());
 
 
             System.out.println("Save all cascade");
@@ -302,6 +301,7 @@ public class FootballBetsApplication {
 
     List<Spiel> retrieveSpiele() {
         String filePath = "src/test/java/sportbets/testdata/bl.json";
+        Competition comp = compRepo.findByName(CompetitionConstants.BUNDESLIGA_NAME_2025).orElseThrow();
 
         List<Spiel> spiele = new ArrayList<>();
         try (FileReader reader = new FileReader(filePath)) {
@@ -358,25 +358,44 @@ public class FootballBetsApplication {
                 }
                 Integer homeGoals = heimTor != null ? heimTor.intValue() : 0;
                 Integer guestGoals = gastTor != null ? gastTor.intValue() : 0;
-
+        log.info(" start ################################################################");
                 Spieltag spieltag = spieltagRepo.findByNumber(k);
 
                 Team heimTeam = teamRepository.findByName(heim).orElseThrow();
                 Team gastTeam = teamRepository.findByName(auswärts).orElseThrow();
-                Long ID = (long) i;
-                spiele.add(new Spiel(spieltag, i, dt, heimTeam, gastTeam, homeGoals, guestGoals, stattgefunden));
-//                (Spieltag spieltag, int spielNumber, LocalDateTime startDate,
-//                        Team heimTeam, Team gastTeam, Integer heimTore, Integer gastTore,
-//                        Boolean stattgefunden
+                log.info("stop ################################################################");
+                Spiel spiel = new Spiel(spieltag, i, dt, heimTeam, gastTeam, homeGoals, guestGoals, stattgefunden);
+                spiele.add(spiel);
+
+                int heimPoints = SpielFormula.calculatePoints(comp,
+                        spiel.getHeimTore(), spiel.getGastTore(), spiel
+                                .isStattgefunden());
+                SpielFormula heimFormel = new SpielFormula(spiel, heimTeam.getName(), heimTeam.getAcronym(),
+                        true, spiel.getHeimTore(), spiel
+                        .getGastTore(), heimPoints);
+
+                //  spielFormulaRepo.save(heimFormel);
+                int gastPoints = SpielFormula.calculatePoints(comp,
+                        spiel.getGastTore(), spiel.getHeimTore(), spiel
+                                .isStattgefunden());
+                SpielFormula gastFormel = new SpielFormula(spiel, gastTeam.getName(), gastTeam.getAcronym(),
+                        false, spiel.getGastTore(), spiel
+                        .getHeimTore(), gastPoints);
+
+                spiel.addSpielFormula(heimFormel);
+                spiel.addSpielFormula(gastFormel);
+                spiele.add(spiel);
+
+
 
                 if (i % 9 == 0) {
 
-                    log.debug("" + k);
+                    log.info("" + k);
                     k++;
                 }
                 i++;
             }
-            spielRepo.saveAll(spiele);
+
 
         } catch (IOException | JsonException e) {
             System.out.println("##" + e.getMessage());
@@ -385,7 +404,7 @@ public class FootballBetsApplication {
 
         System.out.println("size::" + spiele.size());
 
-        return spiele;
+        return spielRepo.saveAll(spiele);
     }
 }
 

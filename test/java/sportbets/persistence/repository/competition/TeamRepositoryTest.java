@@ -28,7 +28,7 @@ public class TeamRepositoryTest {
 
     @Before
     public void setup() {
-        teamRepo.save(new Team("TestTeam", "Team"));
+        teamRepo.save(new Team("TestTeam", "Team", true));
     }
 
     @After

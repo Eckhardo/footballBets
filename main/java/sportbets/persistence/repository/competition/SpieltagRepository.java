@@ -1,7 +1,9 @@
 package sportbets.persistence.repository.competition;
 
+import jakarta.persistence.QueryHint;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.stereotype.Repository;
 import sportbets.persistence.entity.competition.Spieltag;
 
@@ -19,6 +21,7 @@ public interface SpieltagRepository extends JpaRepository<Spieltag, Long> {
 
     @Query("select  sp from Spieltag sp "
             + " where sp.spieltagNumber =:number")
+    @QueryHints(@QueryHint(name = "org.hibernate.cacheable", value = "true"))
     Spieltag findByNumber(int number);
 
 

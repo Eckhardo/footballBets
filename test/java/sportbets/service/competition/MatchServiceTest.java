@@ -60,8 +60,8 @@ public class MatchServiceTest {
         CompetitionRound savedCompRound = compRoundService.save(compRoundDto);
         SpieltagDto matchDayDto = new SpieltagDto(null, 5, LocalDateTime.now(),savedCompRound.getId(),savedCompRound.getName());
         savedMatchday = spieltagService.save(matchDayDto);
-        Team team = new Team(TEAM_NAME, "Braunschweig");
-        Team team1 = new Team(TEAM_NAME_2, "Kiel");
+        Team team = new Team(TEAM_NAME, "Braunschweig", true);
+        Team team1 = new Team(TEAM_NAME_2, "Kiel",true );
         savedTeam1 = teamService.save(team);
         savedTeam2 = teamService.save(team1);
 

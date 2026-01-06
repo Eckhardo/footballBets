@@ -58,10 +58,10 @@ public class SpielRepositoryTest {
         testRound.addCompetitionGroup(testGroup);
         Spieltag testSpieltag = new Spieltag(1, LocalDateTime.now(), testRound);
         testRound.addSpieltag(testSpieltag);
-        Team team1 = new Team("Test1", "1");
-        Team team2 = new Team("Test2", "2");
-        Team team3 = new Team("Test3", "3");
-        Team team4 = new Team("Test4", "4");
+        Team team1 = new Team("Test1", "1",true );
+        Team team2 = new Team("Test2", "2", true);
+        Team team3 = new Team("Test3", "3",true );
+        Team team4 = new Team("Test4", "4", true);
 
         CompetitionTeam ct1 = new CompetitionTeam(team1, testComp);
         team1.addCompetitionTeam(ct1);

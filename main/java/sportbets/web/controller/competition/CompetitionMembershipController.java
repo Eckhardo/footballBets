@@ -8,16 +8,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
 import sportbets.persistence.entity.competition.CompetitionMembership;
-import sportbets.web.dto.competition.CompetitionMembershipDto;
-
 import sportbets.service.competition.CompetitionMembershipService;
 import sportbets.web.dto.MapperUtil;
+import sportbets.web.dto.competition.CompetitionMembershipDto;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 @RestController
 public class CompetitionMembershipController {
 

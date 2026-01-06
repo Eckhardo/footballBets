@@ -16,8 +16,6 @@ import java.util.TreeSet;
 @Entity
 public class Spieltag {
     private static final Logger log = LoggerFactory.getLogger(Spieltag.class);
-    @OneToMany(mappedBy = "spieltag", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private final SortedSet<Spiel> spiele = new TreeSet<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,10 +24,14 @@ public class Spieltag {
     // Specifies the format for JSON serialization (when the entity is returned as a response)
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
     private LocalDateTime startDate;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fk_comp_round_id",foreignKey = @ForeignKey(name = "FK_SPIELTAG_TO_ROUND"))
     @NotNull
     private CompetitionRound competitionRound;
+
+    @OneToMany(mappedBy = "spieltag", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private final SortedSet<Spiel> spiele = new TreeSet<>();
 
     public Spieltag() {
 

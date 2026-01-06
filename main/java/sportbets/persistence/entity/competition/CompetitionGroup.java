@@ -10,20 +10,23 @@ import java.util.Set;
 
 @Entity
 public class CompetitionGroup {
-    @Column(nullable = false)
-    private final LocalDateTime createdOn = LocalDateTime.now();
-    @OneToMany(mappedBy = "competitionGroup", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    private final Set<Spiel> spiele = new HashSet<>();
-    @Id
+     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
     private String name;
     private int groupNumber;
+
+    @Column(nullable = false)
+    private final LocalDateTime createdOn = LocalDateTime.now();
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fk_comp_round_id")
     @NotNull
     private CompetitionRound competitionRound;
+
+    @OneToMany(mappedBy = "competitionGroup", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    private final Set<Spiel> spiele = new HashSet<>();
 
 
     //	********************** Constructors ********************** //

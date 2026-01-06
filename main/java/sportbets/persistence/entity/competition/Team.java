@@ -8,8 +8,6 @@ import java.util.Set;
 
 @Entity
 public class Team {
-    @OneToMany(mappedBy = "team", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    private final Set<CompetitionTeam> competitionTeams = new HashSet<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,13 +16,21 @@ public class Team {
     @Column(unique = true, nullable = false)
     private String acronym;
 
+    private boolean isClub = true;
+
+
+    @OneToMany(mappedBy = "team", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    private final Set<CompetitionTeam> competitionTeams = new HashSet<>();
+
+
     public Team() {
 
     }
 
-    public Team(String name, String acronym) {
+    public Team(String name, String acronym, boolean isClub) {
         this.name = name;
         this.acronym = acronym;
+        this.isClub = isClub;
     }
 
     public Long getId() {
@@ -51,6 +57,15 @@ public class Team {
         this.acronym = acronym;
     }
 
+
+    public boolean isClub() {
+        return isClub;
+    }
+
+    public void setClub(boolean club) {
+        isClub = club;
+    }
+
     public Set<CompetitionTeam> getCompetitionTeams() {
         return competitionTeams;
     }
@@ -68,6 +83,7 @@ public class Team {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", acronym='" + acronym + '\'' +
+                ", isClub=" + isClub +
                 '}';
     }
 
@@ -80,6 +96,6 @@ public class Team {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, acronym);
+        return Objects.hash(id, name, acronym, isClub);
     }
 }

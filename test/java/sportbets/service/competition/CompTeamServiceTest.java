@@ -32,8 +32,8 @@ public class CompTeamServiceTest {
     private static final String TEAM_NAME = "Eintracht Braunschweig";
     private static final String TEAM_NAME_2 = "Holstein Kiel";
     final CompetitionFamilyDto competitionFamily = TestConstants.TEST_FAMILY;
-    final Team team = new Team(TEAM_NAME, "Braunschweig");
-    final Team team1 = new Team(TEAM_NAME_2, "Kiel");
+    final Team team = new Team(TEAM_NAME, "Braunschweig",true );
+    final Team team1 = new Team(TEAM_NAME_2, "Kiel", true);
 
     Competition savedComp = null;
     Team savedTeam1 = null;

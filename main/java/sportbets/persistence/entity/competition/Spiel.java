@@ -6,7 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import sportbets.common.DateUtil;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 public class Spiel implements Comparable<Spiel> {
@@ -40,8 +40,14 @@ public class Spiel implements Comparable<Spiel> {
     @JoinColumn(name = "fk_spieltag_id",foreignKey = @ForeignKey(name = "FK_SPIEL_TO_SPIELTAG"))
     private Spieltag spieltag;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private CompetitionGroup competitionGroup;
+
+
+
+
+    @OneToMany(mappedBy = "spiel", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private final Set<SpielFormula> spielFormulas = new HashSet<>();
 
     public Spiel() {
 
@@ -185,7 +191,16 @@ public class Spiel implements Comparable<Spiel> {
     public void setCompetitionGroup(CompetitionGroup competitionGroup) {
         this.competitionGroup = competitionGroup;
     }
+    public Set<SpielFormula> getSpielFormulas() {
+        return spielFormulas;
+    }
 
+    public void addSpielFormula(SpielFormula spielFormula) {
+        if (spielFormula == null)
+            throw new IllegalArgumentException("Can't add a null spielFormula.");
+        this.getSpielFormulas().add(spielFormula);
+
+    }
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;

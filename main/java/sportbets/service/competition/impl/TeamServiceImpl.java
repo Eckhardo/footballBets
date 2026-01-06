@@ -36,6 +36,7 @@ public class TeamServiceImpl implements TeamService {
      * @return
      */
     @Override
+    @Transactional
     public Optional<Team> findByName(String name) {
         return teamRepository.findByName(name);
 
