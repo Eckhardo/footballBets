@@ -68,6 +68,7 @@ public class FootballBetsApplication {
     @Autowired
     private TeamRepository teamRepository;
 
+
     @Autowired
     private TipperRepository tipperRepo;
     @Autowired
@@ -105,7 +106,7 @@ public class FootballBetsApplication {
 //            TipperRole tipperCompRole = new TipperRole(savedCompetitionRole, ebi);
 //            ebi.addTipperRole(tipperCompRole);
 //            tipperRoleRepo.save(tipperCompRole);
-//            Community community = new Community("TestCommunity", "Description of test community");
+//            Community community = new Community("Bulitipper", "Die Dinos des Tippens");
 //            CommunityRole communityRole = new CommunityRole(community.getName(), community.getDescription(), community);
 //            community.addCommunityRole(communityRole);
 //            Community savedCommunity = commRepo.save(community);
@@ -237,7 +238,7 @@ public class FootballBetsApplication {
 //
 //            List<Spiel> savedSpiele = retrieveSpiele();
 //            log.info("add spielformula ::" + savedSpiele.size());
-
+//
 
             System.out.println("Save all cascade");
         };
