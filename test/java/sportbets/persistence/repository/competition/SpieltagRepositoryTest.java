@@ -1,6 +1,5 @@
 package sportbets.persistence.repository.competition;
 
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,16 +20,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DataJpaTest()
-
 @RunWith(SpringRunner.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-
 public class SpieltagRepositoryTest {
 
     private static final Logger log = LoggerFactory.getLogger(SpieltagRepositoryTest.class);
 
     private CompetitionRound testRound;
-
     private CompetitionGroup testGroup;
 
     @Autowired

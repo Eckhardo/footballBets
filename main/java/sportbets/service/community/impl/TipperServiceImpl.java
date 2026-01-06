@@ -49,10 +49,9 @@ class TipperServiceImpl implements TipperService {
             throw new EntityExistsException("Tipper already exist with given username:" + savedTipper.get().getUsername());
         }
         Tipper model = modelMapper.map(dto, Tipper.class);
-        log.debug("model be save:: {}", model);
-        Tipper createdModel = tipperRepo.save(model);
-        log.debug("saved entity:: {}", createdModel);
-        return createdModel;
+
+        return tipperRepo.save(model);
+
 
     }
 
@@ -143,12 +142,12 @@ class TipperServiceImpl implements TipperService {
     @Override
     @Transactional(readOnly = true)
     public List<Tipper> getAllFormComp(Long compId) {
-        return  List.of();
+        return List.of();
     }
 
 
     @Override
     public List<Tipper> getAll() {
-       return tipperRepo.findAll();
+        return tipperRepo.findAll();
     }
 }

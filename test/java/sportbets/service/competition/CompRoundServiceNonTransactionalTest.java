@@ -23,9 +23,9 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @SpringBootTest
 @ActiveProfiles("test")
 
-public class CompRoundServiceTestNonTransactional {
+public class CompRoundServiceNonTransactionalTest {
 
-    private static final Logger log = LoggerFactory.getLogger(CompRoundServiceTestNonTransactional.class);
+    private static final Logger log = LoggerFactory.getLogger(CompRoundServiceNonTransactionalTest.class);
     final CompetitionFamilyDto competitionFamily = TestConstants.TEST_FAMILY;
     CompetitionDto compDto = TestConstants.TEST_COMP;
     Competition savedComp = null;
@@ -108,12 +108,12 @@ public class CompRoundServiceTestNonTransactional {
         // check for ref inegrity
         Competition compModel = compService.findById(savedCompRound.getCompetition().getId()).orElseThrow();
         assertThat(compModel.getCompetitionRounds()).isNotNull();
-        log.debug("\n");
+
         familyService.deleteByName(competitionFamily.getName());
         Optional<Competition> deletedComp = compService.findByName(savedComp.getName());
         assertThat(deletedComp.isEmpty());
         Optional<CompetitionRound> deletedRound = compRoundService.findById(savedCompRound.getId());
         assertThat(deletedRound.isEmpty());
-        log.debug("\n");
+
     }
 }

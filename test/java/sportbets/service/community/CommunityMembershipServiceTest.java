@@ -60,19 +60,22 @@ public class CommunityMembershipServiceTest {
     Tipper savedTipper = null;
     Tipper savedTipper2 = null;
     Community savedCommunity = null;
-    Community savedCommunity2 =null;
+    Community savedCommunity2 = null;
+
     @BeforeEach
     public void setup() {
         savedTipper = tipperService.save(testTipper);
         savedTipper2 = tipperService.save(testTipper2);
         savedCommunity = communityService.save(communityDto);
-       savedCommunity2 = communityService.save(communityDto2);
+        savedCommunity2 = communityService.save(communityDto2);
     }
 
     @AfterEach
     public void tearDown() {
-        tipperService.deleteAll();
-        communityService.deleteAll();
+        tipperService.deleteById(savedTipper.getId());
+        tipperService.deleteById(savedTipper2.getId());
+        communityService.deleteById(savedCommunity.getId());
+        communityService.deleteById(savedCommunity2.getId());
 
     }
 
@@ -88,6 +91,7 @@ public class CommunityMembershipServiceTest {
         CommunityMembership savedCommunityMembership = membershipService.save(dto);
         assertNotNull(savedCommunityMembership);
         assertEquals(savedTipper.getId(), savedCommunityMembership.getTipper().getId());
+        membershipService.deleteById(savedCommunityMembership.getId());
     }
 
 
@@ -131,6 +135,7 @@ public class CommunityMembershipServiceTest {
         assertEquals(savedTipper2.getUsername(), updatedComm.getTipper().getUsername());
         assertEquals(savedCommunity2.getId(), updatedComm.getCommunity().getId());
         assertEquals(savedCommunity2.getName(), updatedComm.getCommunity().getName());
+        membershipService.deleteById(savedCommunityMembership.getId());
     }
 
 
@@ -139,7 +144,7 @@ public class CommunityMembershipServiceTest {
         log.debug("deleteCommunityMembership");
         assertNotNull(savedTipper);
         assertNotNull(savedCommunity);
-    
+
         CommunityMembershipDto dto = new CommunityMembershipDto(null, savedTipper.getId(), savedTipper.getUsername(), savedCommunity.getId(), savedCommunity.getName());
 
         CommunityMembership savedCommunityMembership = membershipService.save(dto);
@@ -171,7 +176,7 @@ public class CommunityMembershipServiceTest {
         Optional<Community> deletedComm = communityService.findById(savedCommunity.getId());
         assertTrue(deletedComm.isEmpty());
         Optional<CommunityRole> deletedRole = communityRoleService.findByCommunityName(communityDto.getName());
-        assertTrue(deletedRole.isEmpty()); 
+        assertTrue(deletedRole.isEmpty());
         Optional<CommunityMembership> deleted = membershipService.findById(savedCommunityMembership.getId());
         assertTrue(deleted.isEmpty());
 

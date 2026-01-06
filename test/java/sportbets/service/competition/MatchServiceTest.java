@@ -69,7 +69,7 @@ public class MatchServiceTest {
 
     @AfterEach
     public void tearDown() {
-        log.debug("\n");
+
         log.debug("Delete All Test data");
 
 

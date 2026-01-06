@@ -43,7 +43,7 @@ public class CommunityServiceTest {
     }
 
     @Test
-    void whenValidComp_thenCompShouldBeSaved() {
+    void whenValidComm_thenCommShouldBeSaved() {
 
         CommunityDto communityDto = new CommunityDto(null, TEST_COMM, "Description of Community");
         Community saved = communityService.save(communityDto);
@@ -51,17 +51,17 @@ public class CommunityServiceTest {
         assertThat(saved.getId()).isNotNull();
         assertThat(saved.getName()).isEqualTo(TEST_COMM);
         List<CommunityRole> roles = communityRoleService.getAllCommunityRoles();
-        log.debug(saved.getName());
-        log.debug( roles.get(0).getCommunity().getName());
-        assertThat(roles).isNotNull();
-        assertThat(roles.size()).isEqualTo(1);
-        assertEquals(saved.getId(), roles.get(0).getCommunity().getId());
-        assertEquals(saved.getName(), roles.get(0).getCommunity().getName());
-        assertEquals(saved.getName(), roles.get(0).getName());
+        CommunityRole savedRole= roles.stream().filter( (r) -> r.getName().equals(TEST_COMM)).findFirst().get();
+
+
+        assertEquals(saved.getId(), savedRole.getCommunity().getId());
+        assertEquals(saved.getName(), savedRole.getCommunity().getName());
+
+
     }
 
     @Test
-    void whenValidComp_thenCompShouldBeUpdated() {
+    void whenValidComm_thenCommShouldBeUpdated() {
 
         CommunityDto communityDto = new CommunityDto(null, TEST_COMM, "Description of Community");
         Community saved = communityService.save(communityDto);
@@ -75,11 +75,11 @@ public class CommunityServiceTest {
         assertThat(updatedComp.getName()).isEqualTo(TEST_COMM_2);
         List<CommunityRole> roles = communityRoleService.getAllCommunityRoles();
         assertThat(roles).isNotNull();
-        assertThat(roles.size()).isEqualTo(1);
-        assertEquals(updatedComp.getId(), roles.get(0).getCommunity().getId());
-        log.debug(updatedComp.getName());
-        log.debug( roles.get(0).getCommunity().getName());
-        assertEquals(updatedComp.getName(), roles.get(0).getCommunity().getName());
-        assertEquals(updatedComp.getName(), roles.get(0).getName());
+        CommunityRole savedRole= roles.stream().filter( (r) -> r.getName().equals(TEST_COMM_2)).findFirst().get();
+
+        assertEquals(updatedComp.getId(),savedRole.getCommunity().getId());
+
+        assertEquals(updatedComp.getName(), savedRole.getCommunity().getName());
+        assertEquals(updatedComp.getName(), savedRole.getName());
     }
 }

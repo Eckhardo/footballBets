@@ -44,7 +44,6 @@ public class SpielRepositoryTest {
     public void setUp() {
         CompetitionFamily testFamily = getCompFamily();
         familyRepo.save(testFamily);
-        //  competitionDAO.save(testComp);
     }
 
     private CompetitionFamily getCompFamily() {

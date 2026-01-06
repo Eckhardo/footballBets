@@ -22,12 +22,11 @@ public class CommunityServiceImpl implements CommunityService {
 
     private static final Logger log = LoggerFactory.getLogger(CommunityServiceImpl.class);
     private final CommunityRepository communityRepo;
-    private final RoleRepository roleRepo;
     private final ModelMapper modelMapper;
 
-    public CommunityServiceImpl(CommunityRepository communityRepo, RoleRepository roleRepo, ModelMapper modelMapper) {
+    public CommunityServiceImpl(CommunityRepository communityRepo,  ModelMapper modelMapper) {
         this.communityRepo = communityRepo;
-        this.roleRepo = roleRepo;
+
         this.modelMapper = modelMapper;
     }
 
@@ -55,10 +54,8 @@ public class CommunityServiceImpl implements CommunityService {
         Community model = modelMapper.map(communityDto, Community.class);
         CommunityRole communityRole = new CommunityRole(model.getName(), model.getDescription(), model);
         model.addCommunityRole(communityRole);
-        log.debug("model be save:: {}", model);
-        Community createdModel = communityRepo.save(model);
-        log.debug("saved entity:: {}", createdModel);
-        return createdModel;
+        return communityRepo.save(model);
+
     }
 
 
@@ -74,19 +71,15 @@ public class CommunityServiceImpl implements CommunityService {
 
         Optional<CommunityRole> oldCommunityRole = updateModel.get().getCommunityRoleByName(updateModel.get().getName());
         if (oldCommunityRole.isPresent()) {
-
-
-           oldCommunityRole.get().setName(commDto.getName());
-           oldCommunityRole.get().setDescription(commDto.getDescription());
+            oldCommunityRole.get().setName(commDto.getName());
+            oldCommunityRole.get().setDescription(commDto.getDescription());
         }
         updateModel.get().setName(commDto.getName());
         updateModel.get().setDescription(commDto.getDescription());
 
-        log.debug("updated Community  with {}", updateModel.get());
+
         return Optional.of(communityRepo.save(updateModel.get()));
     }
-
-
 
 
     @Override

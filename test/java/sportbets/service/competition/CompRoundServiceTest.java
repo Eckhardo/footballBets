@@ -48,7 +48,7 @@ public class CompRoundServiceTest {
 
     @AfterEach
     public void tearDown() {
-        log.debug("\n");
+
         log.debug("Delete All Test data");
 
     }

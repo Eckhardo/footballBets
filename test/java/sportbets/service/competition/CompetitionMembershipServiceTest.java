@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.authorization.CommunityRole;
 import sportbets.persistence.entity.authorization.CompetitionRole;
 import sportbets.persistence.entity.community.Community;
@@ -28,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ActiveProfiles("test")
+
 public class CompetitionMembershipServiceTest {
 
 
@@ -59,7 +61,7 @@ public class CompetitionMembershipServiceTest {
     Competition savedComp = null;
     Competition savedComp2 = null;
     Community savedCommunity = null;
-    Community savedCommunity2 =null;
+    Community savedCommunity2 = null;
 
     @BeforeEach
     public void setup() {
@@ -79,13 +81,15 @@ public class CompetitionMembershipServiceTest {
     @AfterEach
     public void tearDown() {
         familyService.deleteByName(TEST_COMP_FAM);
-        communityService.deleteAll();
+        communityService.deleteByName(TEST_COMM);
+        communityService.deleteByName(TEST_COMM_2);
 
     }
-    @Test
-    public void whenCompMembIsCreated_thenSuccess(){
 
-        CompetitionMembershipDto competitionMembershipDto = new CompetitionMembershipDto(savedComp.getId(), savedComp.getName(), savedCommunity.getId(),savedCommunity.getName());
+    @Test
+    public void whenCompMembIsCreated_thenSuccess() {
+
+        CompetitionMembershipDto competitionMembershipDto = new CompetitionMembershipDto(savedComp.getId(), savedComp.getName(), savedCommunity.getId(), savedCommunity.getName());
         CompetitionMembership savedCommunityMembership = membershipService.save(competitionMembershipDto);
         assertNotNull(savedCommunityMembership);
         assertEquals(savedCommunity.getId(), savedCommunityMembership.getCommunity().getId());
@@ -94,6 +98,7 @@ public class CompetitionMembershipServiceTest {
         assertEquals(savedComp.getName(), savedCommunityMembership.getCompetition().getName());
 
     }
+
     @Test
     public void updateCompMembership() {
         log.debug("updateCompMembership");
@@ -101,7 +106,7 @@ public class CompetitionMembershipServiceTest {
         assertNotNull(savedComp);
         assertNotNull(savedCommunity);
 
-        CompetitionMembershipDto dto = new CompetitionMembershipDto(savedComp.getId(), savedComp.getName(), savedCommunity.getId(),savedCommunity.getName());
+        CompetitionMembershipDto dto = new CompetitionMembershipDto(savedComp.getId(), savedComp.getName(), savedCommunity.getId(), savedCommunity.getName());
         CompetitionMembership savedCompMemb = membershipService.save(dto);
         assertNotNull(savedCompMemb);
         assertEquals(savedCommunity.getId(), savedCompMemb.getCommunity().getId());
@@ -134,13 +139,14 @@ public class CompetitionMembershipServiceTest {
         assertEquals(savedCommunity2.getId(), updatedComp.getCommunity().getId());
         assertEquals(savedCommunity2.getName(), updatedComp.getCommunity().getName());
     }
+
     @Test
     public void deleteCompMembership() {
         log.debug("deleteCompMembership");
         assertNotNull(savedComp);
         assertNotNull(savedCommunity);
 
-        CompetitionMembershipDto dto = new CompetitionMembershipDto(savedComp.getId(), savedComp.getName(), savedCommunity.getId(),savedCommunity.getName());
+        CompetitionMembershipDto dto = new CompetitionMembershipDto(savedComp.getId(), savedComp.getName(), savedCommunity.getId(), savedCommunity.getName());
         CompetitionMembership savedCompMemb = membershipService.save(dto);
         assertNotNull(savedCompMemb);
 
@@ -160,7 +166,7 @@ public class CompetitionMembershipServiceTest {
 
         CommunityRole communityRole = communityRoleService.findByCommunityName(savedCommunity.getName()).orElseThrow();
         assertNotNull(communityRole);
-        CompetitionMembershipDto dto = new CompetitionMembershipDto(savedComp.getId(), savedComp.getName(), savedCommunity.getId(),savedCommunity.getName());
+        CompetitionMembershipDto dto = new CompetitionMembershipDto(savedComp.getId(), savedComp.getName(), savedCommunity.getId(), savedCommunity.getName());
         CompetitionMembership savedCompMemb = membershipService.save(dto);
         assertNotNull(savedCompMemb);
 
@@ -186,7 +192,7 @@ public class CompetitionMembershipServiceTest {
 
         CommunityRole communityRole = communityRoleService.findByCommunityName(savedCommunity.getName()).orElseThrow();
         assertNotNull(communityRole);
-        CompetitionMembershipDto dto = new CompetitionMembershipDto(savedComp.getId(), savedComp.getName(), savedCommunity.getId(),savedCommunity.getName());
+        CompetitionMembershipDto dto = new CompetitionMembershipDto(savedComp.getId(), savedComp.getName(), savedCommunity.getId(), savedCommunity.getName());
         CompetitionMembership savedCompMemb = membershipService.save(dto);
         assertNotNull(savedCompMemb);
 
@@ -194,9 +200,9 @@ public class CompetitionMembershipServiceTest {
         log.debug("comp deleted");
         Optional<Competition> deletedComp = compService.findById(savedComp.getId());
         assertTrue(deletedComp.isEmpty());
+         Optional<CompetitionMembership> deleted = membershipService.findById(savedCompMemb.getId());
         Optional<CompetitionRole> deletedRole = compRoleService.findByCompName(savedComp.getName());
         assertTrue(deletedRole.isEmpty());
-        Optional<CompetitionMembership> deleted = membershipService.findById(savedCompMemb.getId());
         assertTrue(deleted.isEmpty());
 
     }

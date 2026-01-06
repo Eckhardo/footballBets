@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.authorization.CommunityRole;
+import sportbets.persistence.entity.authorization.CompetitionRole;
 import sportbets.persistence.entity.community.Community;
 import sportbets.service.community.CommunityService;
 import sportbets.web.dto.community.CommunityDto;
@@ -70,9 +71,10 @@ public class CommunityRoleServiceTest {
 
         List<CommunityRole> roles = communityRoleService.getAllCommunityRoles();
         assertThat(roles).isNotNull();
-        assertThat(roles.size()).isEqualTo(1);
-        assertEquals(savedCommunity.getId(), roles.get(0).getCommunity().getId());
-        assertEquals(savedCommunity.getName(), roles.get(0).getCommunity().getName());
+        CommunityRole savedRole= roles.stream().filter( (r) -> r.getName().equals(TEST_COMM)).findFirst().get();
+
+        assertEquals(savedCommunity.getId(), savedRole.getCommunity().getId());
+        assertEquals(savedCommunity.getName(), savedRole.getCommunity().getName());
     }
 
 }

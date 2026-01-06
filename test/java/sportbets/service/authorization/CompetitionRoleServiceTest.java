@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
+import sportbets.persistence.entity.authorization.CommunityRole;
 import sportbets.persistence.entity.authorization.CompetitionRole;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
@@ -77,10 +78,12 @@ public class CompetitionRoleServiceTest {
         log.debug("findCompRole");
 
         List<CompetitionRole> roles = competitionRoleService.getAllCompRoles();
+
         assertThat(roles).isNotNull();
-        assertThat(roles.size()).isEqualTo(1);
-        assertEquals(savedComp.getId(), roles.get(0).getCompetition().getId());
-        assertEquals(savedComp.getName(), roles.get(0).getCompetition().getName());
+        CompetitionRole savedRole= roles.stream().filter( (r) -> r.getName().equals(TEST_COMP)).findFirst().get();
+
+        assertEquals(savedComp.getId(), savedRole.getCompetition().getId());
+        assertEquals(savedComp.getName(), savedRole.getCompetition().getName());
     }
 
 

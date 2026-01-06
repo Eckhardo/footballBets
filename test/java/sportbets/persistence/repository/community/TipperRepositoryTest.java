@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.authorization.CompetitionRole;
 import sportbets.persistence.entity.authorization.TipperRole;
 import sportbets.persistence.entity.community.Tipper;
@@ -28,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Transactional
 public class TipperRepositoryTest {
 
     private static final Logger log = LoggerFactory.getLogger(TipperRepositoryTest.class);
@@ -44,16 +46,18 @@ public class TipperRepositoryTest {
     @Autowired
     private CompetitionRepository compRepo;
 
+    CompetitionFamily testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true);
+
+
     @Before
     public void setUp() {
-        CompetitionFamily testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true);
         Competition testComp = new Competition("TestLiga: Saison 2025/26", "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
         testFamily.addCompetition(testComp);
         familyRepo.save(testFamily);
         Competition savedComp = compRepo.findByName(testComp.getName()).orElseThrow();
 
         testTipper = new Tipper("Eckhard", "Kirschning", "TestTipper", "root", "hint", "eki@gmx.de");
-        testTipper = tipperRepo.save(testTipper);
+         tipperRepo.save(testTipper);
         CompetitionRole testRole = new CompetitionRole("1. Bundesliga Saison 2025/26", "Meine Test Rolle", savedComp);
         testTipperRole = new TipperRole(testRole, testTipper);
         roleRepo.save(testRole);
@@ -62,6 +66,10 @@ public class TipperRepositoryTest {
 
     @After
     public void tearDown() {
+        log.info("Deleting test tipper");
+     //   tipperRepo.deleteByUsername(testTipper.getUsername());
+     //   familyRepo.deleteByName(testFamily.getName());
+
     }
 
     @Test
@@ -70,7 +78,8 @@ public class TipperRepositoryTest {
         Tipper tipper = tipperRepo.findByUsername(testTipper.getUsername()).orElseThrow();
         assertNotNull(tipper);
         log.debug("tipper {}", tipper);
-
+        tipperRepo.deleteByUsername(testTipper.getUsername());
+        log.debug("deleted tipper ");
 
     }
 
@@ -80,6 +89,7 @@ public class TipperRepositoryTest {
         assertNotNull(tipper);
 
         tipperRepo.deleteByUsername(testTipper.getUsername());
+        log.debug("deleted tipper ");
 
     }
 }

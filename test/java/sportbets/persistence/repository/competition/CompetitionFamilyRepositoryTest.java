@@ -62,7 +62,7 @@ public class CompetitionFamilyRepositoryTest {
 
     @Test
     public void givenCompFamily_whenSaved_thenCanBeFoundById() {
-        System.out.println("givenUser_whenSaved");
+
         CompetitionFamily family = familyRepo.findById(testFamily.getId()).orElse(null);
         assertNotNull(family);
 
@@ -80,7 +80,7 @@ public class CompetitionFamilyRepositoryTest {
 
         assertNotNull(updateFamily);
         assertEquals("UEFA European Championship", updateFamily.getName());
-        System.out.println("Family::" + updateFamily);
+
 
     }
 

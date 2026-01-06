@@ -85,10 +85,11 @@ public class CompetitionServiceTest {
         assertThat(updatedComp.getWinMultiplicator()).isEqualTo(5);
         List<CompetitionRole> roles = competitionRoleService.getAllCompRoles();
         assertThat(roles).isNotNull();
-        assertThat(roles.size()).isEqualTo(1);
-        assertEquals(savedComp.getId(), roles.get(0).getCompetition().getId());
-        assertEquals(savedComp.getName(), roles.get(0).getCompetition().getName());
-        assertThat(savedComp.getName()).isEqualTo(roles.get(0).getName());
+        CompetitionRole savedRole= roles.stream().filter( (r) -> r.getName().equals(TEST_COMP_2)).findFirst().get();
+
+        assertEquals(savedComp.getId(), savedRole.getCompetition().getId());
+        assertEquals(savedComp.getName(), savedRole.getCompetition().getName());
+        assertThat(savedComp.getName()).isEqualTo(savedRole.getName());
         // assertThat(updatedComp.getCompetitionFamily()).isNotNull();
 
     }

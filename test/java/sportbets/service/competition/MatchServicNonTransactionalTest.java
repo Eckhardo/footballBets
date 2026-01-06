@@ -20,9 +20,9 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @SpringBootTest
 @ActiveProfiles("test")
 
-public class MatchServiceTestNonTransactional {
+public class MatchServicNonTransactionalTest {
 
-    private static final Logger log = LoggerFactory.getLogger(MatchServiceTestNonTransactional.class);
+    private static final Logger log = LoggerFactory.getLogger(MatchServicNonTransactionalTest.class);
     private static final String TEST_COMP_FAM = "TestLiga";
     private static final String TEST_COMP = "TestLiga: Saison 2025";
     private static final String TEST_COMP_ROUND = "Saison 2025: Hinrunde";

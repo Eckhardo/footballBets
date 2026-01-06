@@ -26,9 +26,9 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @SpringBootTest
 @ActiveProfiles("test")
 
-public class MatchdayServiceTestNonTransactional {
+public class MatchdayServiceNonTransactionalTest {
 
-    private static final Logger log = LoggerFactory.getLogger(MatchdayServiceTestNonTransactional.class);
+    private static final Logger log = LoggerFactory.getLogger(MatchdayServiceNonTransactionalTest.class);
     private static final String TEST_COMP_FAM = "TestLiga";
     private static final String TEST_COMP = "TestLiga: Saison 2025";
     private static final String TEST_COMP_ROUND = "Saison 2025: Hinrunde";

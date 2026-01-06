@@ -24,7 +24,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @DataJpaTest
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
-//@Transactional(propagation = Propagation.NOT_SUPPORTED)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class CompetitionTeamRepositoryTest {
 
