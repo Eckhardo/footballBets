@@ -3,6 +3,7 @@ package sportbets.service.competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.web.dto.competition.CompetitionFamilyDto;
 
+
 import java.util.List;
 import java.util.Optional;
 
@@ -22,4 +23,6 @@ public interface CompFamilyService {
     List<CompetitionFamily> getAll();
 
     Optional<CompetitionFamily> findByIdTest(Long familyId);
+
+    Optional<CompetitionFamily> findByByName(String name);
 }

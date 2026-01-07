@@ -194,6 +194,22 @@ public class Spiel implements Comparable<Spiel> {
     public Set<SpielFormula> getSpielFormulas() {
         return spielFormulas;
     }
+    public Optional<SpielFormula> getSpielFormulaForHeim() {
+        for (SpielFormula spielFormula : spielFormulas) {
+            if (spielFormula.isHeimTeam()) {
+                return Optional.of(spielFormula);
+            }
+        }
+        return Optional.empty();
+    }
+    public Optional<SpielFormula> getSpielFormulaForGast() {
+        for (SpielFormula spielFormula : spielFormulas) {
+            if (! spielFormula.isHeimTeam()) {
+                return Optional.of(spielFormula);
+            }
+        }
+        return Optional.empty();
+    }
 
     public void addSpielFormula(SpielFormula spielFormula) {
         if (spielFormula == null)

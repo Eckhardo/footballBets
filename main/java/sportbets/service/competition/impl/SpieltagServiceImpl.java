@@ -24,6 +24,7 @@ public class SpieltagServiceImpl implements SpieltagService {
     private final SpieltagRepository spieltagRepository;
     private final CompetitionRoundRepository compRoundRepo;
     private final ModelMapper modelMapper;
+
     public SpieltagServiceImpl(SpieltagRepository spieltagRepository, CompetitionRoundRepository compRoundRepo, ModelMapper modelMapper) {
 
         this.spieltagRepository = spieltagRepository;
@@ -38,6 +39,11 @@ public class SpieltagServiceImpl implements SpieltagService {
 
         return spieltagRepository.findAll();
 
+    }
+
+    @Override
+    public Optional<Spieltag> findByNumberAndRound(int spieltagNumber, Long id) {
+        return spieltagRepository.findByNumberAndRound(spieltagNumber, id);
     }
 
 

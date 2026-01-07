@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 public class SpielFormula {
@@ -166,6 +167,33 @@ public class SpielFormula {
 
     public void setWon(int won) {
         this.won = won;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        SpielFormula that = (SpielFormula) o;
+        return won == that.won && remis == that.remis && lost == that.lost && isHeimTeam == that.isHeimTeam && points == that.points && Objects.equals(id, that.id) && Objects.equals(createdOn, that.createdOn) && Objects.equals(teamNameAcronym, that.teamNameAcronym) && Objects.equals(spiel.getSpielNumber(), that.spiel.getSpielNumber());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, won, remis, lost, isHeimTeam, points, createdOn, teamNameAcronym, spiel);
+    }
+
+    @Override
+    public String toString() {
+        return "SpielFormula{" +
+                "diffTore=" + diffTore +
+                ", gastTore=" + gastTore +
+                ", heimTore=" + heimTore +
+                ", isHeimTeam=" + isHeimTeam +
+                ", points=" + points +
+                ", lost=" + lost +
+                ", remis=" + remis +
+                ", won=" + won +
+                ", teamName='" + teamName + '\'' +
+                '}';
     }
 
     public void calculateTrend(int tore1, int tore2,

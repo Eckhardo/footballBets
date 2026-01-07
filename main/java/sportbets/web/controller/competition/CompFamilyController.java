@@ -38,6 +38,15 @@ public class CompFamilyController {
 
     }
 
+    @GetMapping("/families/search")
+    public CompetitionFamilyDto findByName(@RequestParam String name) {
+
+        CompetitionFamily model = compFamilyService.findByByName(name)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        return modelMapper.map(model, CompetitionFamilyDto.class);
+
+    }
     @PostMapping("/families")
     @ResponseStatus(HttpStatus.CREATED)
     public CompetitionFamilyDto post(@RequestBody @Valid CompetitionFamilyDto newFam) {

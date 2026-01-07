@@ -62,6 +62,11 @@ public class CompFamilyServiceImpl implements CompFamilyService {
     }
 
     @Override
+    public Optional<CompetitionFamily> findByByName(String name) {
+        return compFamilyRepository.findByName(name);
+    }
+
+    @Override
     @Transactional
     public Optional<CompetitionFamily> save(CompetitionFamilyDto compFamDto) {
         Optional<CompetitionFamily> savedCompFamily = compFamilyRepository.findByName(compFamDto.getName());

@@ -9,27 +9,27 @@ public class TeamPositionSummaryRow implements Serializable, Comparable<TeamPosi
 
     private String teamNameAcronym;
 
-    private int spieltage;
+    private long spieltage;
 
-    private int points;
+    private long points;
 
-    private int heimtore;
+    private long heimtore;
 
-    private int gasttore;
+    private long gasttore;
 
-    private int difftore;
+    private long difftore;
 
-    private int gamesWon;
+    private long gamesWon;
 
-    private int gamesRemis;
+    private long gamesRemis;
 
-    private int gamesLost;
+    private long gamesLost;
 
     public TeamPositionSummaryRow() {
 
     }
 
-    public TeamPositionSummaryRow(String name, int spieltage, int points, int heimtore, int gasttore, int difftore, int gamesWon, int gamesRemis, int gamesLost) {
+    public TeamPositionSummaryRow(String name, long spieltage, long points, long heimtore, long gasttore, long difftore, long gamesWon, long gamesRemis, long gamesLost) {
         this.teamName = name;
         this.spieltage = spieltage;
         this.points = points;
@@ -42,11 +42,11 @@ public class TeamPositionSummaryRow implements Serializable, Comparable<TeamPosi
 
     }
 
-    public TeamPositionSummaryRow(String name, String acro, int spieltage, int points, int heimtore, int gasttore, int difftore, int gamesWon, int gamesRemis, int gamesLost) {
+    public TeamPositionSummaryRow(String name, String acro, long spieltage, long polongs, long heimtore, long gasttore, long difftore, long gamesWon, long gamesRemis, long gamesLost) {
         this.teamName = name;
         this.teamNameAcronym = acro;
         this.spieltage = spieltage;
-        this.points = points;
+        this.points = polongs;
         this.heimtore = heimtore;
         this.gasttore = gasttore;
         this.difftore = difftore;
@@ -61,56 +61,56 @@ public class TeamPositionSummaryRow implements Serializable, Comparable<TeamPosi
     /**
      * @return Returns the difftore.
      */
-    public int getDifftore() {
+    public long getDifftore() {
         return difftore;
     }
 
     /**
      * @return Returns the gamesLost.
      */
-    public int getGamesLost() {
+    public long getGamesLost() {
         return gamesLost;
     }
 
     /**
      * @return Returns the gamesRemis.
      */
-    public int getGamesRemis() {
+    public long getGamesRemis() {
         return gamesRemis;
     }
 
     /**
      * @return Returns the gamesWon.
      */
-    public int getGamesWon() {
+    public long getGamesWon() {
         return gamesWon;
     }
 
     /**
      * @return Returns the gasttore.
      */
-    public int getGasttore() {
+    public long getGasttore() {
         return gasttore;
     }
 
     /**
      * @return Returns the heimtore.
      */
-    public int getHeimtore() {
+    public long getHeimtore() {
         return heimtore;
     }
 
     /**
-     * @return Returns the points.
+     * @return Returns the polongs.
      */
-    public int getPoints() {
+    public long getPoints() {
         return points;
     }
 
     /**
      * @return Returns the spieltage.
      */
-    public int getSpieltage() {
+    public long getSpieltage() {
         return spieltage;
     }
 
@@ -130,9 +130,25 @@ public class TeamPositionSummaryRow implements Serializable, Comparable<TeamPosi
 
     @Override
     public int compareTo(TeamPositionSummaryRow tr) {
-        return Comparator.comparingInt(TeamPositionSummaryRow::getPoints)
-                .thenComparingInt(TeamPositionSummaryRow::getDifftore)
-                .thenComparingInt(TeamPositionSummaryRow::getHeimtore)
+        return Comparator.comparingLong(TeamPositionSummaryRow::getPoints)
+                .thenComparingLong(TeamPositionSummaryRow::getDifftore)
+                .thenComparingLong(TeamPositionSummaryRow::getHeimtore)
                 .compare(this, tr);
+    }
+
+    @Override
+    public String toString() {
+        return "TeamPositionSummaryRow{" +
+                "difftore=" + difftore +
+                ", teamName='" + teamName + '\'' +
+                ", teamNameAcronym='" + teamNameAcronym + '\'' +
+                ", spieltage=" + spieltage +
+                ", points=" + points +
+                ", heimtore=" + heimtore +
+                ", gasttore=" + gasttore +
+                ", gamesWon=" + gamesWon +
+                ", gamesRemis=" + gamesRemis +
+                ", gamesLost=" + gamesLost +
+                '}';
     }
 }

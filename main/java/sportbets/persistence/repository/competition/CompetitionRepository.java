@@ -1,5 +1,6 @@
 package sportbets.persistence.repository.competition;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -23,13 +24,14 @@ public interface CompetitionRepository extends JpaRepository<Competition, Long> 
             + " order by c.name asc")
     Optional<Competition> findByNameWithFamily(String name, Long id);
 
-    @Query("select  c from Competition c join fetch c.competitionRounds"
+    @EntityGraph(attributePaths = {"competitionRounds"})
+    @Query("select  c from Competition c  "
             + " where c.name =:name"
             + " order by c.name asc")
     Optional<Competition> findByNameJoinFetchRounds(String name);
 
-
-    @Query("select  c from Competition c join fetch c.competitionRounds"
+    @EntityGraph(attributePaths = {"competitionRounds, competitionRoles"})
+    @Query("select  c from Competition c join c.competitionFamily join fetch c.competitionRounds join fetch c.competitionRoles"
             + " where c.id =:id"
             + " order by c.name asc")
     Competition findByIdJoinFetchRounds(Long id);

@@ -20,4 +20,5 @@ public interface SpieltagService {
 
     List<Spieltag> getAll();
 
+    Optional<Spieltag> findByNumberAndRound(int spieltagNumber, Long id);
 }
