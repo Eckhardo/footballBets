@@ -100,6 +100,11 @@ public class CommunityMembershipServiceImpl implements CommunityMembershipServic
     }
 
     @Override
+    public List<CommunityMembership> findCommunities(Long tipperId) {
+        return membershipRepository.findTipperCommunities(tipperId);
+    }
+
+    @Override
     public Optional<CommunityMembership> findByCommIdAndTipperId(Long commId, Long tipperId) {
        return membershipRepository.findByCommIdAndTipperId(commId, tipperId);
     }

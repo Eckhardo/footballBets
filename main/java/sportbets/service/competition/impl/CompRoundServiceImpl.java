@@ -14,6 +14,7 @@ import sportbets.persistence.repository.competition.CompetitionRoundRepository;
 import sportbets.service.competition.CompRoundService;
 import sportbets.web.dto.competition.CompetitionRoundDto;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -69,6 +70,11 @@ public class CompRoundServiceImpl implements CompRoundService {
         CompetitionRound updatedCompRound = updateFields(updateModel.get(), model);
         log.debug("updated Comp  with {}", updatedCompRound);
         return Optional.of(roundRepository.save(updatedCompRound));
+    }
+
+    @Override
+    public List<CompetitionRound> findAll() {
+        return roundRepository.findAll();
     }
 
     @Override

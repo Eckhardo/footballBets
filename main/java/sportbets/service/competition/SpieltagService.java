@@ -16,9 +16,9 @@ public interface SpieltagService {
 
     void deleteById(Long id);
 
-    List<Spieltag> getAllForRound(Long id);
-
     List<Spieltag> getAll();
+
+    List<Spieltag> getAllForCompetition(Long id);
 
     Optional<Spieltag> findByNumberAndRound(int spieltagNumber, Long id);
 }

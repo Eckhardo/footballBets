@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class SpielFormulaRepositoryTest {
 
     private static final Logger log = LoggerFactory.getLogger(SpielFormulaRepositoryTest.class);
-private static final String COMP_NAME="Saison 2025";
+private static final String COMP_NAME="1. Bundesliga Saison 2025";
     @Autowired
     CompetitionRepository compRepo;
 

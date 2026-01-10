@@ -10,10 +10,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionRound;
+import sportbets.persistence.entity.competition.Spieltag;
 import sportbets.service.competition.CompService;
+import sportbets.service.competition.SpieltagService;
 import sportbets.web.dto.MapperUtil;
 import sportbets.web.dto.competition.CompetitionDto;
 import sportbets.web.dto.competition.CompetitionRoundDto;
+import sportbets.web.dto.competition.SpieltagDto;
 import sportbets.web.dto.competition.TeamDto;
 
 import java.util.ArrayList;
@@ -24,9 +27,10 @@ public class CompController {
 
     private static final Logger log = LoggerFactory.getLogger(CompController.class);
     private final CompService compService;
-
-    public CompController(CompService compService) {
+    private final SpieltagService spieltagService;
+    public CompController(CompService compService, SpieltagService spieltagService) {
         this.compService = compService;
+        this.spieltagService = spieltagService;
     }
 
     @GetMapping("/competitions")
@@ -57,6 +61,18 @@ public class CompController {
         List<TeamDto> teamDtos = compService.findTeamsForComp(id);
         log.debug("TeamDtos found with {}", teamDtos);
         return teamDtos;
+    }
+
+    @GetMapping("/competitions/{compId}/matchdays")
+    public List<SpieltagDto> findAllForCompetition(@PathVariable Long compId) {
+        log.info("SpieltagDto:findAll::{}", compId);
+        List<Spieltag> spieltags = spieltagService.getAllForCompetition(compId);
+        List<SpieltagDto> spieltagDtos = new ArrayList<>();
+        ModelMapper myMapper = MapperUtil.getModelMapperForCompetitionRound();
+        spieltags.forEach(comp -> {
+            spieltagDtos.add(myMapper.map(comp, SpieltagDto.class));
+        });
+        return spieltagDtos;
     }
 
     @GetMapping("/competitions/{id}/rounds")

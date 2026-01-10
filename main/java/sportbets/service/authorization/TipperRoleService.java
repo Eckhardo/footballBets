@@ -1,6 +1,7 @@
 package sportbets.service.authorization;
 
 import sportbets.persistence.entity.authorization.TipperRole;
+import sportbets.persistence.entity.community.CommunityMembership;
 import sportbets.web.dto.authorization.TipperRoleDto;
 
 import java.util.List;

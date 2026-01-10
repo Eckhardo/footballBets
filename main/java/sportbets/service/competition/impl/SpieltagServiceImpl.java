@@ -97,8 +97,8 @@ public class SpieltagServiceImpl implements SpieltagService {
     }
 
     @Override
-    public List<Spieltag> getAllForRound(Long roundId) {
-        return spieltagRepository.findAllByRoundId(roundId);
+    public List<Spieltag> getAllForCompetition(Long id) {
+        return spieltagRepository.findAllByCompId(id);
 
     }
 

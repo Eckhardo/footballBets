@@ -119,10 +119,10 @@ public class ContractMatchDayApiIntegrationTest {
     @Order(1)
     void whenRoundIdProvided_ThenFetchAllMatchDays() {
 
-        CompetitionRound entity = competitionRoundRepository.findByName(TEST_COMP_ROUND).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
-        Long id = entity.getId();
+        Competition comp = competitionRepository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP));
+        Long id = comp.getId();
         webClient.get()
-                .uri("/rounds/" + id + "/matchdays")
+                .uri("/competitions/" + id + "/matchdays")
                 .exchange()
                 .expectStatus()
                 .isOk()

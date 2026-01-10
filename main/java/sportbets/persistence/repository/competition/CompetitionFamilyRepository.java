@@ -20,4 +20,8 @@ public interface CompetitionFamilyRepository extends JpaRepository<CompetitionFa
     List<Team> findTeamsForCompFamily(Long id);
 
     void deleteByName(String name);
+
+    @Query("select distinct cf from CompetitionFamily cf join cf.competitions c "
+            + " where c.id =:id")
+    Optional<CompetitionFamily> findByByCompId(Long id);
 }

@@ -25,12 +25,15 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class SpieltagRepositoryTest {
 
     private static final Logger log = LoggerFactory.getLogger(SpieltagRepositoryTest.class);
-
+    private Competition testComp;
     private CompetitionRound testRound;
     private CompetitionGroup testGroup;
 
     @Autowired
     private CompetitionFamilyRepository familyRepo;
+    @Autowired
+    private CompetitionRepository compRepo;
+
     @Autowired
     private CompetitionRoundRepository compRoundRepo;
     @Autowired
@@ -41,7 +44,7 @@ public class SpieltagRepositoryTest {
     public void setUp() {
         // Initialize test data before test methods
         CompetitionFamily testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true);
-        Competition testComp = new Competition("Saison 2025/26", "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
+        testComp = new Competition("Saison 2025/26", "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
         testFamily.addCompetition(testComp);
         testRound = new CompetitionRound(1, "Vorrunde", testComp, false);
         testComp.addCompetitionRound(testRound);
@@ -79,11 +82,11 @@ public class SpieltagRepositoryTest {
         Predicate<Spieltag> p1 = g -> g.getSpieltagNumber() == 1;
         Predicate<Spieltag> p2 = g -> g.getSpieltagNumber() == 100;
 
-        CompetitionRound foundRound = compRoundRepo.findByName(testRound.getName()).orElse(null);
+        Competition foundRound = compRepo.findByName(testComp.getName()).orElse(null);
 
         assertNotNull(foundRound);
 
-        List<Spieltag> sp = spieltagRepo.findAllByRoundId(foundRound.getId());
+        List<Spieltag> sp = spieltagRepo.findAllByCompId(foundRound.getId());
         assertNotNull(sp);
         assertEquals(2, sp.size());
 

@@ -89,6 +89,14 @@ public class Tipper {
         this.username = username;
     }
 
+    public boolean isCommunityAdmin() {
+        return isCommunityAdmin;
+    }
+
+    public void setCommunityAdmin(boolean communityAdmin) {
+        isCommunityAdmin = communityAdmin;
+    }
+
     public String getPasswort() {
         return passwort;
     }

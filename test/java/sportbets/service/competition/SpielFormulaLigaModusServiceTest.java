@@ -25,7 +25,7 @@ public class SpielFormulaLigaModusServiceTest {
     private static final Logger log = LoggerFactory.getLogger(SpielFormulaLigaModusServiceTest.class);
 
     private static final String TEST_COMP_FAM = "1. Bundesliga";
-    private static final String TEST_COMP = "Saison 2025";
+    private static final String TEST_COMP = "1. Bundesliga Saison 2025";
     private static final String TEST_COMP_ROUND = "Hinrunde";
     private static final int TEST_MATCH_DAY = 11;
 

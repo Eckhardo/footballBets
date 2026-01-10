@@ -25,4 +25,6 @@ public interface CompFamilyService {
     Optional<CompetitionFamily> findByIdTest(Long familyId);
 
     Optional<CompetitionFamily> findByByName(String name);
+
+    Optional<CompetitionFamily> findByByCompId(Long id);
 }

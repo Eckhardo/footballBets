@@ -47,7 +47,7 @@ public class CompetitionQueryTest {
     public void setUp() {
         // Initialize test data before test methods
         testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true);
-        testComp = new Competition("TestLiga: Saison 2025/26", "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
+        testComp = new Competition(TEST_LIGA_SAISON_2025_26, "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
         testFamily.addCompetition(testComp);
         CompetitionRound testRound = new CompetitionRound(1, "Hinrunde", testComp, false);
         testComp.addCompetitionRound(testRound);
@@ -67,9 +67,9 @@ public class CompetitionQueryTest {
 
     @Test
     public void findByIdJoinFetchRounds() {
-        Competition foundComp = compRepo.findByName(testComp.getName()).orElse(null);
+        Competition foundComp = compRepo.findByName(testComp.getName()).orElseThrow();
 
-        Competition comp = compRepo.findByIdJoinFetchRounds(testComp.getId());
+        Competition comp = compRepo.findByIdJoinFetchRounds(foundComp.getId());
         assertNotNull(comp);
         System.out.println("Found competition name: " + comp.getName());
         comp.getCompetitionRounds().forEach(compRound -> {

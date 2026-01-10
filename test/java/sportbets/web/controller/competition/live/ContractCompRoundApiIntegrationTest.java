@@ -197,11 +197,11 @@ public class ContractCompRoundApiIntegrationTest {
 
     @Test
     @Order(4)
-    void whenRoundIdProvided_ThenFetchAllMatchDays() {
-        CompetitionRound round = competitionRoundRepository.findByName(TEST_COMP_ROUND).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
+    void whenCompIdProvided_ThenFetchAllMatchDays() {
+        Competition comp = competitionRepository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_FAM));
 
         webClient.get()
-                .uri("/rounds/" + round.getId() + "/matchdays")
+                .uri("/competitions/" + comp.getId() + "/matchdays")
                 .exchange()
                 .expectStatus()
                 .isOk()

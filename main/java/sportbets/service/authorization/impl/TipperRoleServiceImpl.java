@@ -68,4 +68,5 @@ class TipperRoleServiceImpl implements TipperRoleService {
     public Optional<TipperRole> findById(Long id) {
         return tipperRoleRepo.findById(id);
     }
+
 }

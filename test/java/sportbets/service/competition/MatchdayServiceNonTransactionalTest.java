@@ -29,21 +29,22 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 public class MatchdayServiceNonTransactionalTest {
 
     private static final Logger log = LoggerFactory.getLogger(MatchdayServiceNonTransactionalTest.class);
+
+     @Autowired
+    private CompFamilyService familyService; // Real service being tested
+    @Autowired
+    private CompService compService; // Real service being tested
+    @Autowired
+    private CompRoundService compRoundService;
+    @Autowired
+    private SpieltagService spieltagService;
     private static final String TEST_COMP_FAM = "TestLiga";
     private static final String TEST_COMP = "TestLiga: Saison 2025";
     private static final String TEST_COMP_ROUND = "Saison 2025: Hinrunde";
     private static final int TEST_MATCH_DAY = 1;
 
     CompetitionRound savedCompRound = null;
-    @Autowired
-    private CompFamilyService familyService; // Real service being tested
-    @Autowired
-    private CompService compService; // Real service being tested
-    @Autowired
-    private CompRoundService compRoundService;
-
-    @Autowired
-    private SpieltagService spieltagService;
+    Competition savedComp=null;
 
     @BeforeEach
     public void setup() {
@@ -51,7 +52,7 @@ public class MatchdayServiceNonTransactionalTest {
         CompetitionFamily savedFam = familyService.save(competitionFamily).orElseThrow();
         CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, savedFam.getId(), TEST_COMP_FAM);
 
-        Competition savedComp = compService.save(compDto);
+        savedComp = compService.save(compDto);
         CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, TEST_COMP_ROUND, false, savedComp.getId(), savedComp.getName());
         savedCompRound = compRoundService.save(compRoundDto);
 
@@ -101,7 +102,7 @@ public class MatchdayServiceNonTransactionalTest {
         SpieltagDto matchDayDto = new SpieltagDto(null, TEST_MATCH_DAY, LocalDateTime.now(), savedCompRound.getId(), savedCompRound.getName());
         Spieltag savedMatchday = spieltagService.save(matchDayDto);
 
-        List<Spieltag> matchdays = spieltagService.getAllForRound(savedCompRound.getId());
+        List<Spieltag> matchdays = spieltagService.getAllForCompetition(savedComp.getId());
         assertThat(matchdays.size()).isEqualTo(1);
         for (Spieltag matchday : matchdays) {
             assertThat(matchday.getId()).isNotNull();

@@ -30,8 +30,8 @@ public interface CompetitionRepository extends JpaRepository<Competition, Long> 
             + " order by c.name asc")
     Optional<Competition> findByNameJoinFetchRounds(String name);
 
-    @EntityGraph(attributePaths = {"competitionRounds, competitionRoles"})
-    @Query("select  c from Competition c join c.competitionFamily join fetch c.competitionRounds join fetch c.competitionRoles"
+
+    @Query("select  c from Competition c  join fetch c.competitionRounds"
             + " where c.id =:id"
             + " order by c.name asc")
     Competition findByIdJoinFetchRounds(Long id);

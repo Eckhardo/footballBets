@@ -90,4 +90,13 @@ public class CompFamilyController {
         return famDtos;
     }
 
+    @GetMapping("/families/{id}/families")
+    public CompetitionFamilyDto findByCompId(@PathVariable Long id) {
+
+        CompetitionFamily model = compFamilyService.findByByCompId(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        return modelMapper.map(model, CompetitionFamilyDto.class);
+
+    }
 }

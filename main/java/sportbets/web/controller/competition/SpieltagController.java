@@ -64,6 +64,8 @@ public class SpieltagController {
         return spielDtos;
     }
 
+
+
     @GetMapping("/matchdays/{id}")
     public SpieltagDto findOne(@PathVariable Long id) {
         log.debug("SpieltagDto:findOne::{}", id);

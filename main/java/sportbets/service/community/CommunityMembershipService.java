@@ -16,6 +16,6 @@ public interface CommunityMembershipService {
 
     void deleteById(Long id);
     List<CommunityMembership> getAll();
-
+    List<CommunityMembership> findCommunities(Long tipperId);
     Optional<CommunityMembership> findByCommIdAndTipperId(Long commId, Long tipperId);
 }

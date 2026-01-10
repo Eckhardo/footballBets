@@ -27,10 +27,27 @@ public class CompRoundController {
     private final CompRoundService roundService;
     private final SpieltagService spieltagService;
 
-    public CompRoundController( CompRoundService roundService, SpieltagService spieltagService) {
+    public CompRoundController(CompRoundService roundService, SpieltagService spieltagService) {
         this.roundService = roundService;
         this.spieltagService = spieltagService;
-       }
+    }
+
+    @GetMapping("/rounds")
+    public List<CompetitionRoundDto> findAll() {
+        log.debug("CompetitionRound findAll:: ");
+        List<CompetitionRound> models = roundService.findAll();
+
+        List<CompetitionRoundDto> dtos = new ArrayList<>();
+        for (CompetitionRound round : models) {
+
+
+            ModelMapper modelMapper = MapperUtil.getModelMapperForCompetition();
+            log.debug("CompetitionRound found with {}", round);
+            dtos.add(modelMapper.map(round, CompetitionRoundDto.class));
+
+        }
+        return dtos;
+    }
 
     @GetMapping("/rounds/{id}")
     public CompetitionRoundDto findOne(@PathVariable Long id) {
@@ -51,18 +68,6 @@ public class CompRoundController {
         CompetitionRoundDto createdDto = myModelMapper.map(createdModel, CompetitionRoundDto.class);
         log.debug("CompetitionRound RETURN do {}", createdDto);
         return createdDto;
-    }
-
-    @GetMapping("/rounds/{roundId}/matchdays")
-    public List<SpieltagDto> findAllForComp(@PathVariable Long roundId) {
-        log.debug("SpieltagDto:findAll::{}", roundId);
-        List<Spieltag> spieltags = spieltagService.getAllForRound(roundId);
-        List<SpieltagDto> spieltagDtos = new ArrayList<>();
-        ModelMapper myMapper = MapperUtil.getModelMapperForCompetitionRound();
-        spieltags.forEach(comp -> {
-            spieltagDtos.add(myMapper.map(comp, SpieltagDto.class));
-        });
-        return spieltagDtos;
     }
 
 
