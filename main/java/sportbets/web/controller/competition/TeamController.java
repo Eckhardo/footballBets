@@ -49,8 +49,8 @@ public class TeamController {
     @PostMapping("/teams")
     @ResponseStatus(HttpStatus.CREATED)
     public TeamDto post(@RequestBody TeamDto teamDto) {
-        log.debug("New team {}", teamDto);
-        Team model = modelMapper.map(teamDto, Team.class);
+        log.info("New team {}", teamDto);
+        Team model =new Team(teamDto.getName(),teamDto.getAcronym(),teamDto.isClub());
         Team createdModel = teamService.save(model);
         TeamDto saved = modelMapper.map(createdModel, TeamDto.class);
         log.debug("return save::{}", saved);

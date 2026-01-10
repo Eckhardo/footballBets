@@ -57,6 +57,13 @@ public class Tipper {
 
     }
 
+    public Tipper(  String firstname, String lastname, String username,  String passwort, String passwortHint,String email,  boolean isCommunityAdmin, boolean isCompetitionAdmin) {
+      this(firstname, lastname, username, passwort, passwortHint, email);
+        this.isCommunityAdmin = isCommunityAdmin;
+        this.isCompetitionAdmin = isCompetitionAdmin;
+
+    }
+
     public Long getId() {
         return id;
     }
@@ -95,6 +102,14 @@ public class Tipper {
 
     public void setCommunityAdmin(boolean communityAdmin) {
         isCommunityAdmin = communityAdmin;
+    }
+
+    public boolean isCompetitionAdmin() {
+        return isCompetitionAdmin;
+    }
+
+    public void setCompetitionAdmin(boolean competitionAdmin) {
+        isCompetitionAdmin = competitionAdmin;
     }
 
     public String getPasswort() {

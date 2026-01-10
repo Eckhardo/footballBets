@@ -27,8 +27,8 @@ public class ContractTeamApiIntegrationTest {
     private static final Logger log = LoggerFactory.getLogger(ContractTeamApiIntegrationTest.class);
     private static final String TEAM_NAME = "Eintracht Braunschweig";
     private static final String TEAM_NAME_2 = "Holstein Kiel";
-    final TeamDto teamDto = new TeamDto(null, TEAM_NAME, "Braunschweig");
-    final TeamDto teamDto1 = new TeamDto(null, TEAM_NAME_2, "Kiel");
+    final TeamDto teamDto = new TeamDto(null, TEAM_NAME, "Braunschweig",true);
+    final TeamDto teamDto1 = new TeamDto(null, TEAM_NAME_2, "Kiel",true);
     @Autowired
     WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();
     @Autowired

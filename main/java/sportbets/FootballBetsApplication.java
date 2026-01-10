@@ -238,7 +238,7 @@ public class FootballBetsApplication {
 //
 //            List<Spiel> savedSpiele = retrieveSpiele();
 //            log.info("add spielformula ::" + savedSpiele.size());
-//
+
 
             System.out.println("Save all cascade");
         };

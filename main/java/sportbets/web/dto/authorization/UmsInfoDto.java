@@ -14,7 +14,7 @@ public class UmsInfoDto {
     private String username;
     boolean loggedIn=false;
     private boolean isCommunityAdmin;
-    private Boolean isCompetitionAdmin;
+    private boolean isCompetitionAdmin;
     private Long defaultCommunityId;
     private Long defaultCompetitionId;
     /**
@@ -33,10 +33,11 @@ public class UmsInfoDto {
     private Set<Long> tipperCommunities=new HashSet<>();
 
 
-    public UmsInfoDto(Long defaultCommunityId, Long defaultCompetitionId, boolean isCommunityAdmin, String username) {
+    public UmsInfoDto(Long defaultCommunityId, Long defaultCompetitionId, boolean isCommunityAdmin, boolean isCompetitionAdmin, String username) {
         this.defaultCommunityId = defaultCommunityId;
         this.defaultCompetitionId = defaultCompetitionId;
         this.isCommunityAdmin = isCommunityAdmin;
+        this.isCompetitionAdmin = isCompetitionAdmin;
         this.username = username;
     }
 
@@ -80,11 +81,11 @@ public class UmsInfoDto {
         isCommunityAdmin = communityAdmin;
     }
 
-    public Boolean getCompetitionAdmin() {
+    public boolean getCompetitionAdmin() {
         return isCompetitionAdmin;
     }
 
-    public void setCompetitionAdmin(Boolean competitionAdmin) {
+    public void setCompetitionAdmin(boolean competitionAdmin) {
         isCompetitionAdmin = competitionAdmin;
     }
 

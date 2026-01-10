@@ -43,8 +43,8 @@ public class ContractCompTeamApiIntegrationTest {
     private static final String TEAM_NAME_2 = "Holstein Kiel";
     final CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, TEST_COMP_FAM, "Description of TestLiga", true, true);
     final CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, null, TEST_COMP_FAM);
-    final TeamDto teamDto = new TeamDto(null, TEAM_NAME, "Braunschweig");
-    final TeamDto teamDto1 = new TeamDto(null, TEAM_NAME_2, "Kiel");
+    final TeamDto teamDto = new TeamDto(null, TEAM_NAME, "Braunschweig",true);
+    final TeamDto teamDto1 = new TeamDto(null, TEAM_NAME_2, "Kiel",true);
     @Autowired
     WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();
     @Autowired

@@ -54,7 +54,8 @@ public class AuthController {
                 tipper.get().getDefaultCommunityId(),
                 tipper.get().getDefaultCompetitionId(),
                 tipper.get().isCommunityAdmin(),
-                tipper.get().getUsername());
+                tipper.get().isCompetitionAdmin(),
+                tipper.get().getUsername() );
           umsInfo.setLoggedIn(true);
         // fetch communities and competitions where tipper has admin rights
         List<TipperRole> tipperRoles = tipperRoleService.getAllForTipper(tipper.get().getId());

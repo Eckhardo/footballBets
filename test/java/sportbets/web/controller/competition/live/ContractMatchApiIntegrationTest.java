@@ -42,9 +42,9 @@ public class ContractMatchApiIntegrationTest {
     final CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, null, TEST_COMP_FAM);
     final CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, TEST_COMP_ROUND, false);
     final SpieltagDto matchDayDto = new SpieltagDto(null, TEST_MATCH_DAY, LocalDateTime.now());
-    final TeamDto teamDto = new TeamDto(null, TEAM_NAME, "Braunschweig");
-    final TeamDto teamDto1 = new TeamDto(null, TEAM_NAME_2, "Kiel");
-    final TeamDto teamDto2 = new TeamDto(null, TEAM_NAME_3, "Paderborn");
+    final TeamDto teamDto = new TeamDto(null, TEAM_NAME, "Braunschweig",true);
+    final TeamDto teamDto1 = new TeamDto(null, TEAM_NAME_2, "Kiel",true);
+    final TeamDto teamDto2 = new TeamDto(null, TEAM_NAME_3, "Paderborn",true);
     final SpielDto testSpiel1 = new SpielDto(null, 1, 3, 1, false, LocalDateTime.now(), matchDayDto.getId(), matchDayDto.getSpieltagNumber(), teamDto.getId(), teamDto.getAcronym(), teamDto2.getId(), teamDto2.getAcronym());
     final SpielDto testSpiel2 = new SpielDto(null, 2, 3, 3, false, LocalDateTime.now(), matchDayDto.getId(), matchDayDto.getSpieltagNumber(), teamDto1.getId(), teamDto1.getAcronym(), teamDto.getId(), teamDto.getAcronym());
     @Autowired

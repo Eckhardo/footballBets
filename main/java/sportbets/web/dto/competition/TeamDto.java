@@ -16,15 +16,17 @@ public class TeamDto implements Serializable {
 
     @NotBlank(message = "acronym cannot be blank")
     private String acronym;
+    private boolean isClub = true;
 
 
     public TeamDto() {
     }
 
-    public TeamDto(Long id, String name, String acronym) {
+    public TeamDto(Long id, String name, String acronym,  boolean isClub) {
         this.id = id;
         this.name = name;
         this.acronym = acronym;
+        this.isClub = isClub;
     }
 
     public Long getId() {
@@ -50,7 +52,13 @@ public class TeamDto implements Serializable {
     public void setAcronym(String acronym) {
         this.acronym = acronym;
     }
+    public boolean isClub() {
+        return isClub;
+    }
 
+    public void setClub(boolean club) {
+        isClub = club;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -74,4 +82,6 @@ public class TeamDto implements Serializable {
                 "name = " + name + ", " +
                 "acronym = " + acronym + ")";
     }
+
+
 }
