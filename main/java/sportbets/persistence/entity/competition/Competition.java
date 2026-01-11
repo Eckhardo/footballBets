@@ -29,7 +29,7 @@ public class Competition {
     @Column(nullable = false)
     private final LocalDateTime createdOn = LocalDateTime.now();
 
-    @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "competition", cascade =CascadeType.PERSIST, orphanRemoval = true, fetch = FetchType.LAZY)
     final Set<CompetitionRole> competitionRoles = new HashSet<>();
 
     @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -43,7 +43,7 @@ public class Competition {
     private Set<CompetitionMembership> competitionMemberships = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "competitionFamily_id",foreignKey = @ForeignKey(name = "FK_COMP_TO_FAM"))
+    @JoinColumn(name = "competitionFamily_id", foreignKey = @ForeignKey(name = "FK_COMP_TO_FAM"))
     @NotNull
     private CompetitionFamily competitionFamily;
 
@@ -137,10 +137,11 @@ public class Competition {
         }
         this.getCompetitionMemberships().add(compMemb);
     }
-    public Optional<CompetitionRole> getCompetitionRoleByName(String roleName ) {
-        log.debug("getCompetitionRoleByName:: {}",roleName);
+
+    public Optional<CompetitionRole> getCompetitionRoleByName(String roleName) {
+        log.debug("getCompetitionRoleByName:: {}", roleName);
         for (CompetitionRole role : competitionRoles) {
-            log.debug("competitionRole:: {}",role.getName());
+            log.debug("competitionRole:: {}", role.getName());
             if (role.getName().equals(roleName)) {
                 log.debug("treffer");
                 return Optional.of(role);
@@ -197,7 +198,7 @@ public class Competition {
                 ", winMultiplicator=" + winMultiplicator + '\'' +
                 ", remisMultiplicator=" + remisMultiplicator + '\'' +
                 ", createdOn=" + createdOn + '\'' +
-                ", ROLE name =" + (competitionRoles.isEmpty() ? "nothing": competitionRoles.stream().findFirst().get().getName()) + '\'' +
+                ", ROLE name =" + (competitionRoles.isEmpty() ? "nothing" : competitionRoles.stream().findFirst().get().getName()) + '\'' +
                 ", family name [=" + (competitionFamily == null ? null : competitionFamily.getName()) +
                 "]}";
     }

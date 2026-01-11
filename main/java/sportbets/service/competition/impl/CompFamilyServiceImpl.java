@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
+import sportbets.persistence.repository.authorization.TipperRoleRepository;
 import sportbets.persistence.repository.competition.CompetitionFamilyRepository;
+import sportbets.persistence.repository.competition.CompetitionRepository;
 import sportbets.service.competition.CompFamilyService;
 import sportbets.web.dto.competition.CompetitionFamilyDto;
 
@@ -23,9 +25,9 @@ public class CompFamilyServiceImpl implements CompFamilyService {
     private static final Logger log = LoggerFactory.getLogger(CompFamilyServiceImpl.class);
     private final CompetitionFamilyRepository compFamilyRepository;
     private final ModelMapper modelMapper;
+
     public CompFamilyServiceImpl(CompetitionFamilyRepository compFamilyRepository, ModelMapper modelMapper) {
         this.compFamilyRepository = compFamilyRepository;
-
         this.modelMapper = modelMapper;
     }
 
@@ -111,12 +113,15 @@ public class CompFamilyServiceImpl implements CompFamilyService {
     @Override
     @Transactional
     public void deleteByName(String name) {
+
         compFamilyRepository.deleteByName(name);
     }
 
     @Override
     @Transactional
     public void deleteById(Long id) {
+
+
         compFamilyRepository.deleteById(id);
     }
 

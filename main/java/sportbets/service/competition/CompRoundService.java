@@ -17,4 +17,5 @@ public interface CompRoundService {
 
     void deleteByName(String name);
     List<CompetitionRound> findAll();
+    Optional<CompetitionRound> findByNameAndCompId(String roundName, Long compId);
 }

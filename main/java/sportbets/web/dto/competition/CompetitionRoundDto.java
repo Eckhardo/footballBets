@@ -17,8 +17,9 @@ public class CompetitionRoundDto implements Serializable {
     @NotBlank(message = "name must not be empty")
     private String name;
     private boolean hasGroups = false;
-    @NotNull(message = " competition id cannot be null")
+
     private Long compId;
+    @NotBlank (message = " competition name cannot be empty")
     private String compName;
 
     public CompetitionRoundDto() {

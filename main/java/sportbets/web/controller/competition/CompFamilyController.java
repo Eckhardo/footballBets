@@ -69,8 +69,7 @@ public class CompFamilyController {
 
     @DeleteMapping(value = "/families/{id}")
     public ResponseEntity<HttpStatus> delete(@PathVariable Long id) {
-        // CompetitionFamily model = compFamilyService.findById(id) .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));;
-        log.debug("CompFamilyController.delete::{}", id);
+        log.info("CompFamilyController.delete::{}", id);
         try {
             compFamilyService.deleteById(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

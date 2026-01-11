@@ -57,4 +57,11 @@ public interface CompetitionRepository extends JpaRepository<Competition, Long> 
 
     @Query("select cr from CompetitionRound cr join cr.competition c where c.id=:compId")
     List<CompetitionRound> findAllForComp(Long compId);
+
+    @Query(" select c from Competition c join c.competitionFamily cf   "
+            + " where  cf.id=:id ")
+    List<Competition> findByFamilyId(Long id);
+    @Query(" select c from Competition c join c.competitionFamily cf   "
+            + " where  cf.name=:name ")
+    List<Competition> findByFamilyName(String name);
 }

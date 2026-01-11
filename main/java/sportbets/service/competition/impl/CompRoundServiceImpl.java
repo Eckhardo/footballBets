@@ -42,9 +42,9 @@ public class CompRoundServiceImpl implements CompRoundService {
     @Transactional
     public CompetitionRound save(CompetitionRoundDto compRoundDto) {
         log.debug("Saving competition round");
-        Optional<CompetitionRound> round = roundRepository.findByName(compRoundDto.getName());
+        Optional<CompetitionRound> round = roundRepository.findByNameAndCompId(compRoundDto.getName(),compRoundDto.getCompId());
         if (round.isPresent()) {
-            throw new EntityExistsException("Comp Round already exist with given name:" + compRoundDto.getName());
+            throw new EntityExistsException("Comp Round already exist for comp " + compRoundDto.getCompName()+  " with given name:" + compRoundDto.getName());
         }
         Competition comp = compRepo.findById(compRoundDto.getCompId()).orElseThrow(() -> new EntityNotFoundException("comp not found "));
         CompetitionRound model = modelMapper.map(compRoundDto, CompetitionRound.class);
@@ -75,6 +75,11 @@ public class CompRoundServiceImpl implements CompRoundService {
     @Override
     public List<CompetitionRound> findAll() {
         return roundRepository.findAll();
+    }
+
+    @Override
+    public Optional<CompetitionRound> findByNameAndCompId(String roundName, Long compId) {
+        return roundRepository.findByNameAndCompId(roundName, compId);
     }
 
     @Override
