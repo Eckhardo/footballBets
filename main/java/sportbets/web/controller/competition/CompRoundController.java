@@ -93,4 +93,17 @@ public class CompRoundController {
         }
 
     }
+
+    @GetMapping("/rounds/{roundId}/matchdays")
+    public List<SpieltagDto> findAllForRound(@PathVariable Long roundId) {
+        log.info("SpieltagDto:findAllForRound::{}", roundId);
+        List<Spieltag> spieltags = spieltagService.getAllForRound(roundId);
+        List<SpieltagDto> spieltagDtos = new ArrayList<>();
+        ModelMapper myMapper = MapperUtil.getModelMapperForCompetitionRound();
+        spieltags.forEach(comp -> {
+            spieltagDtos.add(myMapper.map(comp, SpieltagDto.class));
+        });
+        return spieltagDtos;
+    }
+
 }

@@ -102,6 +102,10 @@ public class SpieltagServiceImpl implements SpieltagService {
 
     }
 
+    @Override
+    public List<Spieltag> getAllForRound(Long id) {
+        return spieltagRepository.findAllByRoundId(id);
+    }
 
     private Spieltag updateFields(Spieltag base, Spieltag updatedMatchDay) {
         base.setSpieltagNumber(updatedMatchDay.getSpieltagNumber());

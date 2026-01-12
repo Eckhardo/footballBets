@@ -18,6 +18,8 @@ public interface SpieltagService {
 
     List<Spieltag> getAll();
 
+    List<Spieltag> getAllForRound(Long id);
+
     List<Spieltag> getAllForCompetition(Long id);
 
     Optional<Spieltag> findByNumberAndRound(int spieltagNumber, Long id);
