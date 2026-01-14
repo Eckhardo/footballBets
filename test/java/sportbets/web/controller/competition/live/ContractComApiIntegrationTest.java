@@ -236,7 +236,7 @@ public class ContractComApiIntegrationTest {
                 .value(problem -> {
                     assertThat(problem.getTitle()).isEqualTo("duplicate entity");
                     assertThat(problem.getStatus()).isEqualTo(400);
-                    assertThat(problem.getDetail()).contains("Comp  already exist with given name");
+                    assertThat(problem.getDetail()).contains("duplicate entity: Competition already exists with given name:TestLiga: Saison 2026");
 
                 });
     }

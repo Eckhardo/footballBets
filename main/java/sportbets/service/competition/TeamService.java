@@ -19,4 +19,7 @@ public interface TeamService {
     List<Team> getAll();
 
     Optional<Team> findByName(String name);
+
+    List<Team> getAllClubTeams();
+    List<Team> getAllNationTeams();
 }

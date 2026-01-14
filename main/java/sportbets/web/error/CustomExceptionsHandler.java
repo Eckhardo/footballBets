@@ -17,6 +17,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.net.URI;
@@ -42,6 +43,15 @@ public class CustomExceptionsHandler extends ResponseEntityExceptionHandler {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "duplicate entity: " + ex.getMessage());
         problemDetail.setType(URI.create("https://example.com/errors/invalid-associated-entity"));
         problemDetail.setTitle("duplicate entity");
+        return problemDetail;
+    }
+
+    @ExceptionHandler({ MethodArgumentTypeMismatchException.class})
+    public ProblemDetail resolveMethodArgumentTypeMismatchException(Exception ex, ServletRequest request, HttpServletResponse response) {
+
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "wrong method argument type: " + ex.getMessage());
+        problemDetail.setType(URI.create("https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/method/annotation/MethodArgumentTypeMismatchException.html"));
+        problemDetail.setTitle("wrong method argument type");
         return problemDetail;
     }
 

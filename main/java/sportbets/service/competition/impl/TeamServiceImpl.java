@@ -94,4 +94,14 @@ public class TeamServiceImpl implements TeamService {
         return teamRepository.findAll();
 
     }
+
+    @Override
+    public List<Team> getAllClubTeams() {
+        return teamRepository.findAllClubTeams();
+    }
+
+    @Override
+    public List<Team> getAllNationTeams() {
+        return teamRepository.findAllNationTeams();
+    }
 }

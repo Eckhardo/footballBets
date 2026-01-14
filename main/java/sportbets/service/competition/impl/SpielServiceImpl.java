@@ -54,7 +54,7 @@ public class SpielServiceImpl implements SpielService {
         log.debug("save Spiel :: {}", spielDto);
         Optional<Spiel> optionalSpiel = spielRepo.findByNumberWithSpieltagId(spielDto.getSpielNumber(), spielDto.getSpieltagId());
         if (optionalSpiel.isPresent()) {
-            throw new EntityExistsException("Spiel  already exist with given spiel number:" + spielDto.getSpielNumber());
+            throw new EntityExistsException("Spiel  already exist with given spiel number:" + spielDto.getSpielNumber()+ "for spieltag "+spielDto.getSpieltagNumber());
         }
         Spieltag spieltag = spieltagRepo.findById(spielDto.getSpieltagId()).orElseThrow(() -> new EntityNotFoundException("Matchday not found"));
         Team heimTeam = teamRepo.findById(spielDto.getHeimTeamId()).orElseThrow(() -> new EntityNotFoundException("Team heim not found"));

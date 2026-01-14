@@ -75,14 +75,14 @@ public class CompFamilyServiceImpl implements CompFamilyService {
 
     @Override
     @Transactional
-    public Optional<CompetitionFamily> save(CompetitionFamilyDto compFamDto) {
+    public CompetitionFamily save(CompetitionFamilyDto compFamDto) {
         Optional<CompetitionFamily> savedCompFamily = compFamilyRepository.findByName(compFamDto.getName());
         if (savedCompFamily.isPresent()) {
-            throw new EntityExistsException("CompFamily already exist with given name:" + compFamDto.getName());
+            throw new EntityExistsException("CompFamily already exists with given name:" + compFamDto.getName());
         }
         CompetitionFamily model = modelMapper.map(compFamDto, CompetitionFamily.class);
 
-        return Optional.of(compFamilyRepository.save(model));
+        return compFamilyRepository.save(model);
 
     }
 

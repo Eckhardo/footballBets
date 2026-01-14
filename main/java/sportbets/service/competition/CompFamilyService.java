@@ -12,7 +12,7 @@ public interface CompFamilyService {
 
     Optional<CompetitionFamily> findById(Long id);
 
-    Optional<CompetitionFamily> save(CompetitionFamilyDto compFamDto);
+    CompetitionFamily save(CompetitionFamilyDto compFamDto);
 
     Optional<CompetitionFamily> updateFamily(Long id, CompetitionFamilyDto compFamDto);
 

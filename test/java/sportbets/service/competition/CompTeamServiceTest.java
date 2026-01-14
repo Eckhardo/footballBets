@@ -51,7 +51,7 @@ public class CompTeamServiceTest {
     public void setup() {
         log.debug("\n");
         log.debug("setup All Test data");
-        CompetitionFamily savedFam = familyService.save(competitionFamily).orElseThrow();
+        CompetitionFamily savedFam = familyService.save(competitionFamily);
         CompetitionDto compDto = TestConstants.TEST_COMP;
         compDto.setFamilyId(savedFam.getId());
         savedComp = compService.save(compDto);

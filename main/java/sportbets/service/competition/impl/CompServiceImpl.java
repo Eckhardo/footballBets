@@ -62,7 +62,7 @@ public class CompServiceImpl implements CompService {
 
         Optional<Competition> competition = compRepository.findByName(compDto.getName());
         if (competition.isPresent()) {
-            throw new EntityExistsException("Comp  already exist with given name:" + compDto.getName());
+            throw new EntityExistsException("Competition already exists with given name:" + compDto.getName());
         }
         Competition model = modelMapper.map(compDto, Competition.class);
         CompetitionFamily fam = compFamilyRepo.findById(compDto.getFamilyId()).orElseThrow(() -> new EntityNotFoundException("compFam not found "));

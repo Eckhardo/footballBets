@@ -50,10 +50,10 @@ public class CompFamilyController {
     @PostMapping("/families")
     @ResponseStatus(HttpStatus.CREATED)
     public CompetitionFamilyDto post(@RequestBody @Valid CompetitionFamilyDto newFam) {
-        log.debug("CompFamilyController.create::{}", newFam);
-        CompetitionFamily createdModel = compFamilyService.save(newFam).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        log.info("CompFamilyController.create::{}", newFam);
+        CompetitionFamily createdModel = compFamilyService.save(newFam);
         CompetitionFamilyDto famDto = modelMapper.map(createdModel, CompetitionFamilyDto.class);
-        log.debug("return save::{}", famDto);
+        log.info("return save::{}", famDto);
         return famDto;
     }
 

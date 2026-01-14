@@ -1,5 +1,6 @@
 package sportbets.web.controller.competition;
 
+import jakarta.persistence.EntityExistsException;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -8,16 +9,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.entity.competition.CompetitionRound;
 import sportbets.persistence.entity.competition.Spieltag;
 import sportbets.service.competition.CompRoundService;
 import sportbets.service.competition.SpieltagService;
 import sportbets.web.dto.MapperUtil;
+import sportbets.web.dto.competition.CompetitionFamilyDto;
 import sportbets.web.dto.competition.CompetitionRoundDto;
 import sportbets.web.dto.competition.SpieltagDto;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class CompRoundController {
@@ -58,15 +62,26 @@ public class CompRoundController {
 
     }
 
+    @GetMapping("rounds/search")
+    public CompetitionRoundDto searchProducts(
+            @RequestParam(value = "name") String name,
+            @RequestParam(value = "compId") Long compId) {
+        log.info("CompetitionRound findByNameAndCompId:: {} ", compId);
+        CompetitionRound model = roundService.findByNameAndCompId(name,compId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        log.info("CompetitionRound foundByName:: {} ", model);
+        ModelMapper modelMapper = MapperUtil.getModelMapperForCompetition();
+        return modelMapper.map(model, CompetitionRoundDto.class);
+
+    }
     @PostMapping("/rounds")
     @ResponseStatus(HttpStatus.CREATED)
     public CompetitionRoundDto post(@RequestBody @Valid CompetitionRoundDto roundDto) {
-        log.debug("post: {}", roundDto);
+        log.info("post: {}", roundDto);
 
         CompetitionRound createdModel = roundService.save(roundDto);
         ModelMapper myModelMapper = MapperUtil.getModelMapperForCompetition();
         CompetitionRoundDto createdDto = myModelMapper.map(createdModel, CompetitionRoundDto.class);
-        log.debug("CompetitionRound RETURN do {}", createdDto);
+        log.info("CompetitionRound RETURN do {}", createdDto);
         return createdDto;
     }
 

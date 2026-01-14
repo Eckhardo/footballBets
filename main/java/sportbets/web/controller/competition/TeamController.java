@@ -46,6 +46,26 @@ public class TeamController {
         return teamDtos;
     }
 
+    @GetMapping("/teams/clubs")
+    public List<TeamDto> findAllClubTeams() {
+
+        List<Team> teams = teamService.getAllClubTeams();
+        List<TeamDto> teamDtos = new ArrayList<>();
+        teams.forEach(fam -> {
+            teamDtos.add(modelMapper.map(fam, TeamDto.class));
+        });
+        return teamDtos;
+    }
+    @GetMapping("/teams/nations")
+    public List<TeamDto> findAllNationTeams() {
+
+        List<Team> teams = teamService.getAllNationTeams();
+        List<TeamDto> teamDtos = new ArrayList<>();
+        teams.forEach(fam -> {
+            teamDtos.add(modelMapper.map(fam, TeamDto.class));
+        });
+        return teamDtos;
+    }
     @PostMapping("/teams")
     @ResponseStatus(HttpStatus.CREATED)
     public TeamDto post(@RequestBody TeamDto teamDto) {

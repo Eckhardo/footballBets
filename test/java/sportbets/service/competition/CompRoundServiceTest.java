@@ -40,7 +40,7 @@ public class CompRoundServiceTest {
     @BeforeEach
     public void setup() {
 
-        CompetitionFamily savedFam = familyService.save(competitionFamily).orElseThrow();
+        CompetitionFamily savedFam = familyService.save(competitionFamily);
 
         compDto.setFamilyId(savedFam.getId());
         savedComp = compService.save(compDto);
