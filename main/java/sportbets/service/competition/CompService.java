@@ -33,4 +33,6 @@ public interface CompService {
     List<CompetitionRound> getAllFormComp(Long compId);
 
     Optional<Competition> findByIdTest(Long id);
+
+    List<Competition> findByFamilyId(Long familyId);
 }

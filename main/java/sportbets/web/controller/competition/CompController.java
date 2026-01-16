@@ -75,6 +75,19 @@ public class CompController {
         return spieltagDtos;
     }
 
+    @GetMapping("/competitions/{familyId}/competitions")
+    public List<CompetitionDto> findAllCompsByFamId(@PathVariable Long familyId) {
+        log.info("CompetitionDto:findAllCompsByFamId::{}", familyId);
+        List<Competition> comps = compService.findByFamilyId(familyId);
+        List<CompetitionDto> compDtos = new ArrayList<>();
+        ModelMapper myMapper = MapperUtil.getModelMapperForFamily();
+        comps.forEach(comp -> {
+            compDtos.add(myMapper.map(comp, CompetitionDto.class));
+        });
+        return compDtos;
+    }
+
+
     @GetMapping("/competitions/{id}/rounds")
     public List<CompetitionRoundDto> findAllRounds(@PathVariable Long id) {
         log.debug(" CompetitionRoundDto:findAll for comp::");

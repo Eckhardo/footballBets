@@ -145,6 +145,10 @@ public class CompServiceImpl implements CompService {
 
     }
 
+    @Override
+    public List<Competition> findByFamilyId(Long familyId) {
+        return compRepository.findByFamilyId(familyId);
+    }
 
     @Override
     @Transactional
