@@ -7,9 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sportbets.persistence.entity.competition.Spiel;
-import sportbets.persistence.entity.competition.Spieltag;
-import sportbets.persistence.entity.competition.Team;
+import sportbets.persistence.entity.competition.*;
+import sportbets.persistence.repository.competition.CompetitionRepository;
 import sportbets.persistence.repository.competition.SpielRepository;
 import sportbets.persistence.repository.competition.SpieltagRepository;
 import sportbets.persistence.repository.competition.TeamRepository;
@@ -22,12 +21,15 @@ import java.util.Optional;
 @Service
 public class SpielServiceImpl implements SpielService {
     private static final Logger log = LoggerFactory.getLogger(SpielServiceImpl.class);
+
+    private final CompetitionRepository competitionRepo;
     private final SpielRepository spielRepo;
     private final SpieltagRepository spieltagRepo;
     private final TeamRepository teamRepo;
     private final ModelMapper modelMapper;
 
-    public SpielServiceImpl(SpielRepository spielRepo, SpieltagRepository spieltagRepo, TeamRepository teamRepo, ModelMapper modelMapper) {
+    public SpielServiceImpl(CompetitionRepository competitionRepo, SpielRepository spielRepo, SpieltagRepository spieltagRepo, TeamRepository teamRepo, ModelMapper modelMapper) {
+        this.competitionRepo = competitionRepo;
         this.spielRepo = spielRepo;
         this.spieltagRepo = spieltagRepo;
         this.teamRepo = teamRepo;
@@ -51,19 +53,45 @@ public class SpielServiceImpl implements SpielService {
     @Override
     @Transactional
     public Spiel save(SpielDto spielDto) {
-        log.debug("save Spiel :: {}", spielDto);
+        log.info("save SpielDto :: {}", spielDto);
         Optional<Spiel> optionalSpiel = spielRepo.findByNumberWithSpieltagId(spielDto.getSpielNumber(), spielDto.getSpieltagId());
         if (optionalSpiel.isPresent()) {
-            throw new EntityExistsException("Spiel  already exist with given spiel number:" + spielDto.getSpielNumber()+ "for spieltag "+spielDto.getSpieltagNumber());
+            throw new EntityExistsException("Spiel  already exist with given spiel number:" + spielDto.getSpielNumber() + "for spieltag " + spielDto.getSpieltagNumber());
         }
+        Competition comp = competitionRepo.findBySpieltagId(spielDto.getSpieltagId()).orElseThrow(() -> new EntityNotFoundException("Competition not found"));
         Spieltag spieltag = spieltagRepo.findById(spielDto.getSpieltagId()).orElseThrow(() -> new EntityNotFoundException("Matchday not found"));
         Team heimTeam = teamRepo.findById(spielDto.getHeimTeamId()).orElseThrow(() -> new EntityNotFoundException("Team heim not found"));
         Team gastTeam = teamRepo.findById(spielDto.getGastTeamId()).orElseThrow(() -> new EntityNotFoundException("Team gast not found"));
         Spiel model = modelMapper.map(spielDto, Spiel.class);
+        log.info("model Spiel :: {}", model);
         model.setSpieltag(spieltag);
         model.setHeimTeam(heimTeam);
         model.setGastTeam(gastTeam);
-        return spielRepo.save(model);
+
+        int heimPoints = SpielFormula.calculatePoints(comp,
+                model.getHeimTore(), model.getGastTore(), model
+                        .isStattgefunden());
+        SpielFormula heimFormel = new SpielFormula(model, heimTeam.getName(), heimTeam.getAcronym(),
+                true, model.getHeimTore(), model
+                .getGastTore(), heimPoints);
+
+        //  spielFormulaRepo.save(heimFormel);
+        int gastPoints = SpielFormula.calculatePoints(comp,
+                model.getGastTore(), model.getHeimTore(), model
+                        .isStattgefunden());
+        SpielFormula gastFormel = new SpielFormula(model, gastTeam.getName(), gastTeam.getAcronym(),
+                false, model.getGastTore(), model
+                .getHeimTore(), gastPoints);
+
+        model.addSpielFormula(heimFormel);
+        model.addSpielFormula(gastFormel);
+        log.info("finally save Spiel :: {}", model);
+        Spiel savedSpiel = spielRepo.save(model);
+        SpielFormula heimel = savedSpiel.getSpielFormulaForHeim().orElseThrow();
+        SpielFormula gastel = savedSpiel.getSpielFormulaForGast().orElseThrow();
+        log.info("finally saved heimel :: {}", heimel);
+        log.info("finally saved gastel :: {}", gastel);
+        return savedSpiel;
 
 
     }
@@ -72,11 +100,12 @@ public class SpielServiceImpl implements SpielService {
     @Transactional
     public Optional<Spiel> updateSpiel(Long id, SpielDto spielDto) {
 
-        log.debug("update Match dto:: {}", spielDto);
-        Optional<Spiel> updateModel = spielRepo.findById(id);
-        if (updateModel.isEmpty()) {
-            throw new EntityNotFoundException("spiel  does not exits given id:" + spielDto.getId());
-        }
+        log.info("update Match dto:: {}", spielDto);
+        Spiel savedSpiel = spielRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("spiel  does not exist given id:" + spielDto.getId()));
+        ;
+
+        Competition savedComp = competitionRepo.findBySpieltagId(spielDto.getSpieltagId()).orElseThrow(() -> new EntityNotFoundException("Competition not found"));
+
         Spieltag spieltag = spieltagRepo.findById(spielDto.getSpieltagId()).orElseThrow(() -> new EntityNotFoundException("Matchday not found"));
         Team heimTeam = teamRepo.findById(spielDto.getHeimTeamId()).orElseThrow(() -> new EntityNotFoundException("Team heim not found"));
         Team gastTeam = teamRepo.findById(spielDto.getGastTeamId()).orElseThrow(() -> new EntityNotFoundException("Team gast not found"));
@@ -85,9 +114,47 @@ public class SpielServiceImpl implements SpielService {
         model.setHeimTeam(heimTeam);
         model.setGastTeam(gastTeam);
 
-        Spiel updated = updateFields(updateModel.get(), model);
-        log.debug("updated Comp  with {}", updated);
-        return Optional.of(spielRepo.save(updated));
+        Spiel updated = updateFields(savedSpiel, model);
+        log.info("updated Match dto:: {}", updated);
+
+
+        SpielFormula heim = savedSpiel.getSpielFormulaForHeim().orElseThrow();
+
+        int heimPoints = SpielFormula.calculatePoints(savedComp,
+                updated.getHeimTore(), updated.getGastTore(), updated
+                        .isStattgefunden());
+
+        heim.setPoints(heimPoints);
+        heim.setHeimTore(updated.getHeimTore());
+        heim.setGastTore(updated.getGastTore());
+        heim.calculateTrend(heim.getHeimTore(),
+                heim.getGastTore(), updated.isStattgefunden());
+
+        log.info("heim formula:: {}", heim);
+
+        model.addSpielFormula(heim);
+
+
+        SpielFormula gast = savedSpiel.getSpielFormulaForGast().orElseThrow();
+
+        int gastPoints = SpielFormula.calculatePoints(savedComp,
+                updated.getGastTore(), updated.getHeimTore(), updated
+                        .isStattgefunden());
+
+        gast.setPoints(gastPoints);
+
+        gast.setHeimTore(updated.getGastTore());
+        gast.setGastTore(updated.getHeimTore());
+        gast.calculateTrend(gast.getHeimTore(),
+                gast.getGastTore(), updated.isStattgefunden());
+        model.addSpielFormula(gast);
+        log.info("update Soiel  with {}", updated);
+        Spiel updatedSpiel = spielRepo.save(model);
+        SpielFormula heimel = updatedSpiel.getSpielFormulaForHeim().orElseThrow();
+        SpielFormula gastel = updatedSpiel.getSpielFormulaForGast().orElseThrow();
+        log.info("finally saved heimel :: {}", heimel);
+        log.info("finally saved gastel :: {}", gastel);
+        return Optional.of(updatedSpiel);
 
     }
 

@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.authorization.CommunityRole;
 import sportbets.persistence.entity.community.Community;
-import sportbets.persistence.repository.authorization.RoleRepository;
 import sportbets.persistence.repository.community.CommunityRepository;
 import sportbets.service.community.CommunityService;
 import sportbets.web.dto.community.CommunityDto;

@@ -9,9 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
-import sportbets.persistence.repository.authorization.TipperRoleRepository;
 import sportbets.persistence.repository.competition.CompetitionFamilyRepository;
-import sportbets.persistence.repository.competition.CompetitionRepository;
 import sportbets.service.competition.CompFamilyService;
 import sportbets.web.dto.competition.CompetitionFamilyDto;
 

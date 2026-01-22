@@ -1,6 +1,5 @@
 package sportbets.service.competition;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -24,10 +23,8 @@ public class SpielFormulaLigaModusServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(SpielFormulaLigaModusServiceTest.class);
 
-    private static final String TEST_COMP_FAM = "1. Bundesliga";
     private static final String TEST_COMP = "1. Bundesliga Saison 2025";
     private static final String TEST_COMP_ROUND = "Hinrunde";
-    private static final int TEST_MATCH_DAY = 11;
 
 
     @Autowired
@@ -67,7 +64,7 @@ public class SpielFormulaLigaModusServiceTest {
         Set<Spiel> spiele = spieltag.getSpiele();
         savedSpiel = spiele.stream().filter((spiel -> spiel.getId().equals(91L))).findFirst().orElseThrow();
         assertNotNull(savedSpiel);
-        log.info("spiel evaluated");
+        log.info("spiel evaluated {}", savedSpiel);
         // Mainz(15)-Hoffenheim(12) 1:1 SpielId=91, spielNumber=91
 
         ;
@@ -94,7 +91,7 @@ public class SpielFormulaLigaModusServiceTest {
         heim.calculateTrend(heim.getHeimTore(),
                 heim.getGastTore(), savedSpiel.isStattgefunden());
 
-         log.info("heim formula:: {}", heim);
+        log.info("heim formula:: {}", heim);
 
 
         SpielFormula gast = savedSpiel.getSpielFormulaForGast().orElseThrow();
@@ -113,11 +110,11 @@ public class SpielFormulaLigaModusServiceTest {
         log.info("gast formula:: {}", gast);
 
 
-      Spiel spiel=  spielRepository.save(savedSpiel);
+        Spiel spiel = spielRepository.save(savedSpiel);
         log.info("spiel was saved:: {}", spiel);
 
-        SpielFormula theHeim=spiel.getSpielFormulaForHeim().orElseThrow();
-        SpielFormula theGast=spiel.getSpielFormulaForGast().orElseThrow();
+        SpielFormula theHeim = spiel.getSpielFormulaForHeim().orElseThrow();
+        SpielFormula theGast = spiel.getSpielFormulaForGast().orElseThrow();
         log.info("spielformula heim:: {}", theHeim);
         log.info("spielformula gast:: {}", theGast);
 

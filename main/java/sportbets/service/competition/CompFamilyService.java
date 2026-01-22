@@ -3,7 +3,6 @@ package sportbets.service.competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.web.dto.competition.CompetitionFamilyDto;
 
-
 import java.util.List;
 import java.util.Optional;
 

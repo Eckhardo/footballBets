@@ -9,9 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import sportbets.persistence.entity.competition.*;
+import sportbets.persistence.rowObject.TeamPositionSummaryRow;
 import sportbets.web.dto.competition.*;
+import sportbets.web.dto.competition.search.TableSearchCriteria;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,22 +48,28 @@ public class MatchServicNonTransactionalTest {
 
     @Autowired
     private SpielService matchService;
+    @Autowired
+    private CompTableService compTableService;
+
+    Competition myComp = null;
 
     @BeforeEach
     public void setup() {
-       CompetitionFamilyDto competitionFamily = new CompetitionFamilyDto(null, TEST_COMP_FAM, "description of testliga", true, true);
+        CompetitionFamilyDto competitionFamily = new CompetitionFamilyDto(null, TEST_COMP_FAM, "description of testliga", true, true);
 
         CompetitionFamily savedFam = familyService.save(competitionFamily);
         CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, savedFam.getId(), TEST_COMP_FAM);
 
-        Competition savedComp = compService.save(compDto);
-        CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, TEST_COMP_ROUND, false, savedComp.getId(), savedComp.getName());
+        myComp = compService.save(compDto);
+        CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, TEST_COMP_ROUND, false, myComp.getId(), myComp.getName());
 
-        compRoundDto.setCompId(savedComp.getId());
+        compRoundDto.setCompId(myComp.getId());
         CompetitionRound savedCompRound = compRoundService.save(compRoundDto);
-        SpieltagDto matchDayDto = new SpieltagDto(null, 5, LocalDateTime.now(),savedCompRound.getId(),savedCompRound.getName());
+        SpieltagDto matchDayDto = new SpieltagDto(null, 1, LocalDateTime.now(), savedCompRound.getId(), savedCompRound.getName());
+        SpieltagDto matchDayDto2 = new SpieltagDto(null, 2, LocalDateTime.now(), savedCompRound.getId(), savedCompRound.getName());
         savedMatchday = spieltagService.save(matchDayDto);
-        Team team = new Team(TEAM_NAME, "Braunschweig",true );
+        Spieltag savedMatchday2 = spieltagService.save(matchDayDto2);
+        Team team = new Team(TEAM_NAME, "Braunschweig", true);
         Team team1 = new Team(TEAM_NAME_2, "Kiel", true);
         savedTeam1 = teamService.save(team);
         savedTeam2 = teamService.save(team1);
@@ -80,7 +89,7 @@ public class MatchServicNonTransactionalTest {
 
     @Test
     void whenValidMatch_thenMatchShouldBeSaved() {
-        SpielDto testSpiel1 = new SpielDto(null, 1, 3, 1, false, LocalDateTime.now(), savedMatchday.getId(), savedMatchday.getSpieltagNumber(), savedTeam1.getId(), savedTeam1.getAcronym(), savedTeam2.getId(), savedTeam2.getAcronym());
+        SpielDto testSpiel1 = new SpielDto(null, 1, 3, 1, true, LocalDateTime.now(), savedMatchday.getId(), savedMatchday.getSpieltagNumber(), savedTeam1.getId(), savedTeam1.getAcronym(), savedTeam2.getId(), savedTeam2.getAcronym());
 
         Spiel savedMatch = matchService.save(testSpiel1);
         assertThat(savedMatch.getId()).isNotNull();
@@ -95,19 +104,24 @@ public class MatchServicNonTransactionalTest {
         assertThat(savedMatch.getHeimTeam().getAcronym()).isEqualTo(savedTeam1.getAcronym());
         assertThat(savedMatch.getGastTeam().getId()).isEqualTo(savedTeam2.getId());
         assertThat(savedMatch.getGastTeam().getAcronym()).isEqualTo(savedTeam2.getAcronym());
+        TableSearchCriteria searchCriteria = new TableSearchCriteria(myComp.getId(), 1, 2,null);
 
+        List<TeamPositionSummaryRow> rows = compTableService.findTableForLigaModus(searchCriteria);
+        assertThat(rows.size()).isEqualTo(2);
+        rows.sort(Comparator.comparing(TeamPositionSummaryRow::getPoints).reversed());
+        rows.forEach(row -> System.out.println(row.getTeamName() + " " + row.getPoints()));
 
     }
 
     @Test
     void whenValidMatch_thenMatchShouldBeUpdated() {
-        SpielDto testSpiel1 = new SpielDto(null, 1, 3, 1, false, LocalDateTime.now(), savedMatchday.getId(), savedMatchday.getSpieltagNumber(), savedTeam1.getId(), savedTeam1.getAcronym(), savedTeam2.getId(), savedTeam2.getAcronym());
-        SpielDto testSpiel2 = new SpielDto(null, 2, 3, 1, false, LocalDateTime.now(), savedMatchday.getId(), savedMatchday.getSpieltagNumber(), savedTeam2.getId(), savedTeam2.getAcronym(), savedTeam1.getId(), savedTeam1.getAcronym());
+        SpielDto testSpiel1 = new SpielDto(null, 1, 3, 1, true, LocalDateTime.now(), savedMatchday.getId(), savedMatchday.getSpieltagNumber(), savedTeam1.getId(), savedTeam1.getAcronym(), savedTeam2.getId(), savedTeam2.getAcronym());
+        SpielDto testSpiel2 = new SpielDto(null, 2, 3, 1, true, LocalDateTime.now(), savedMatchday.getId(), savedMatchday.getSpieltagNumber(), savedTeam2.getId(), savedTeam2.getAcronym(), savedTeam1.getId(), savedTeam1.getAcronym());
         Spiel savedMatch = matchService.save(testSpiel1);
         Spiel savedMatch2 = matchService.save(testSpiel2);
         // set gast team to same value as heimteam
-         testSpiel1.setId(savedMatch.getId());
-         testSpiel1.setGastTore(4);
+        testSpiel1.setId(savedMatch.getId());
+        testSpiel1.setGastTore(4);
         Spiel updatedMatch = matchService.updateSpiel(testSpiel1.getId(), testSpiel1).orElseThrow();
 
         assertThat(updatedMatch.getId()).isNotNull();
@@ -122,14 +136,19 @@ public class MatchServicNonTransactionalTest {
         assertThat(updatedMatch.getGastTeam().getAcronym()).isEqualTo(savedTeam2.getAcronym());
         assertThat(updatedMatch.getSpieltag().getSpieltagNumber()).isEqualTo(savedMatchday.getSpieltagNumber());
         assertThat(updatedMatch.getSpieltag().getId()).isEqualTo(savedMatchday.getId());
+        TableSearchCriteria searchCriteria = new TableSearchCriteria(myComp.getId(), 1, 2,null);
 
+        List<TeamPositionSummaryRow> rows = compTableService.findTableForLigaModus(searchCriteria);
+        assertThat(rows.size()).isEqualTo(2);
+        rows.sort(Comparator.comparing(TeamPositionSummaryRow::getPoints).reversed());
+        rows.forEach(row -> System.out.println(row.getTeamName() + " " + row.getPoints()));
     }
 
     @Test
     void whenValidMatchDay_thenMatchesShouldBeRetrieved() {
 
-        SpielDto testSpiel1 = new SpielDto(null, 1, 3, 1, false, LocalDateTime.now(), savedMatchday.getId(), savedMatchday.getSpieltagNumber(), savedTeam1.getId(), savedTeam1.getAcronym(), savedTeam2.getId(), savedTeam2.getAcronym());
-        SpielDto testSpiel2 = new SpielDto(null, 2, 3, 1, false, LocalDateTime.now(), savedMatchday.getId(), savedMatchday.getSpieltagNumber(), savedTeam2.getId(), savedTeam2.getAcronym(), savedTeam1.getId(), savedTeam1.getAcronym());
+        SpielDto testSpiel1 = new SpielDto(null, 1, 3, 1, true, LocalDateTime.now(), savedMatchday.getId(), savedMatchday.getSpieltagNumber(), savedTeam1.getId(), savedTeam1.getAcronym(), savedTeam2.getId(), savedTeam2.getAcronym());
+        SpielDto testSpiel2 = new SpielDto(null, 2, 3, 1, true, LocalDateTime.now(), savedMatchday.getId(), savedMatchday.getSpieltagNumber(), savedTeam2.getId(), savedTeam2.getAcronym(), savedTeam1.getId(), savedTeam1.getAcronym());
         Spiel savedMatch = matchService.save(testSpiel1);
         Spiel savedMatch2 = matchService.save(testSpiel2);
         List<Spiel> spiels = matchService.getAllForMatchday(savedMatchday.getId());
@@ -150,10 +169,17 @@ public class MatchServicNonTransactionalTest {
             assertThat(savedMatch.getHeimTeam().getId()).isEqualTo(savedTeam1.getId());
 
         }
+        TableSearchCriteria searchCriteria = new TableSearchCriteria(myComp.getId(), 1, 2,null);
+
+        List<TeamPositionSummaryRow> rows = compTableService.findTableForLigaModus(searchCriteria);
+        assertThat(rows.size()).isEqualTo(2);
+        rows.sort(Comparator.comparing(TeamPositionSummaryRow::getPoints).reversed());
+        rows.forEach(row -> System.out.println(row.getTeamName() + " " + row.getPoints()));
     }
+
     @Test
     void whenFamilyIsDeleted_thenMatchShouldBeDeleted() {
-        SpielDto testSpiel1 = new SpielDto(null, 1, 3, 1, false, LocalDateTime.now(), savedMatchday.getId(), savedMatchday.getSpieltagNumber(), savedTeam1.getId(), savedTeam1.getAcronym(), savedTeam2.getId(), savedTeam2.getAcronym());
+        SpielDto testSpiel1 = new SpielDto(null, 1, 3, 1, true, LocalDateTime.now(), savedMatchday.getId(), savedMatchday.getSpieltagNumber(), savedTeam1.getId(), savedTeam1.getAcronym(), savedTeam2.getId(), savedTeam2.getAcronym());
 
         Spiel savedMatch = matchService.save(testSpiel1);
         assertThat(savedMatch.getId()).isNotNull();

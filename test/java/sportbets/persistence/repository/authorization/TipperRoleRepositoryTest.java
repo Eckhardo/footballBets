@@ -28,7 +28,8 @@ import sportbets.persistence.repository.competition.SpielRepository;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DataJpaTest()
 @ActiveProfiles("test")

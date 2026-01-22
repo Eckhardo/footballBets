@@ -1,6 +1,5 @@
 package sportbets.web.controller.competition;
 
-import jakarta.persistence.EntityExistsException;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -9,19 +8,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.entity.competition.CompetitionRound;
 import sportbets.persistence.entity.competition.Spieltag;
 import sportbets.service.competition.CompRoundService;
 import sportbets.service.competition.SpieltagService;
 import sportbets.web.dto.MapperUtil;
-import sportbets.web.dto.competition.CompetitionFamilyDto;
 import sportbets.web.dto.competition.CompetitionRoundDto;
 import sportbets.web.dto.competition.SpieltagDto;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 public class CompRoundController {

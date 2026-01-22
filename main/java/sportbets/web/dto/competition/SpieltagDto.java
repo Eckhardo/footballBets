@@ -1,6 +1,7 @@
 package sportbets.web.dto.competition;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 import sportbets.persistence.entity.competition.Spieltag;
@@ -22,9 +23,9 @@ public class SpieltagDto implements Serializable {
     // Specifies the format for JSON serialization (when the entity is returned as a response)
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
     private LocalDateTime startDate;
-    @NotNull
+    @NotNull (message = " round id cannot be null")
     private Long compRoundId;
-    @NotNull
+    @NotBlank(message = " round name cannot be empty")
     private String compRoundName;
 
 

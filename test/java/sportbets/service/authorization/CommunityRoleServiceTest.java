@@ -10,7 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.authorization.CommunityRole;
-import sportbets.persistence.entity.authorization.CompetitionRole;
 import sportbets.persistence.entity.community.Community;
 import sportbets.service.community.CommunityService;
 import sportbets.web.dto.community.CommunityDto;

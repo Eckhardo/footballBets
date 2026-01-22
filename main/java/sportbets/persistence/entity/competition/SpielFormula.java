@@ -18,6 +18,7 @@ public class SpielFormula {
 
     private int lost;
 
+
     private boolean isHeimTeam;
 
     private int points;

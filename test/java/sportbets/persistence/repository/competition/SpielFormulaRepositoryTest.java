@@ -11,6 +11,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.rowObject.TeamPositionSummaryRow;
+import sportbets.web.dto.competition.search.TableSearchCriteria;
+
 
 import java.util.Collections;
 import java.util.List;
@@ -30,15 +32,16 @@ public class SpielFormulaRepositoryTest {
     CompetitionRepository compRepo;
 
     @Autowired
-    SpielFormulaRepository spielFormulaRepository;
+    CompTableRepository compTableRepository;
 
     @Test
     public void givenComp_whenFindSpielFormulaForHeimCalled_then18RowsAreFetched() {
 
         Competition foundComp = compRepo.findByName(COMP_NAME).orElse(null);
         assertNotNull(foundComp);
+        TableSearchCriteria searchCriteria = new TableSearchCriteria(foundComp.getId(),1,11,null);
 
-        List<TeamPositionSummaryRow> rows = spielFormulaRepository.findTableForLigaModus(foundComp.getId(), true, 1L, 10L);
+        List<TeamPositionSummaryRow> rows = compTableRepository.findTableForLigaModus(searchCriteria.getCompId(),searchCriteria.getStartSpieltag(),searchCriteria.getEndSpieltag());
         assertNotNull(rows);
         assertThat(rows.size()).isGreaterThan(17);
         rows.sort(Collections.reverseOrder());
@@ -51,8 +54,10 @@ public class SpielFormulaRepositoryTest {
 
         Competition foundComp = compRepo.findByName(COMP_NAME).orElse(null);
         assertNotNull(foundComp);
+        TableSearchCriteria searchCriteria = new TableSearchCriteria(foundComp.getId(),1,10,null);
 
-        List<TeamPositionSummaryRow> rows = spielFormulaRepository.findTableForLigaModus(foundComp.getId(), false, 1L, 10L);
+        List<TeamPositionSummaryRow> rows = compTableRepository.findTableForLigaModus(searchCriteria.getCompId(),searchCriteria.getStartSpieltag(),searchCriteria.getEndSpieltag());
+
         assertNotNull(rows);
         assertThat(rows.size()).isGreaterThan(17);
         rows.sort(Collections.reverseOrder());
@@ -61,5 +66,24 @@ public class SpielFormulaRepositoryTest {
         rows.forEach(System.out::println);
 
     }
+
+    @Test
+    public void givenComp_whenFindSpielFormulaForGastCalled_thenRowsAreFetched() {
+
+        Competition foundComp = compRepo.findByName(COMP_NAME).orElse(null);
+        assertNotNull(foundComp);
+        TableSearchCriteria searchCriteria = new TableSearchCriteria(foundComp.getId(),1,10,true);
+
+        List<TeamPositionSummaryRow> rows = compTableRepository.findTableHeimOrGastForLigaModus2(foundComp.getId(),true,1,10);
+
+        assertNotNull(rows);
+        assertThat(rows.size()).isGreaterThan(17);
+        rows.sort(Collections.reverseOrder());
+
+
+        rows.forEach(System.out::println);
+
+    }
+
 
 }

@@ -31,9 +31,10 @@ public class SpielDto implements Serializable, Comparable<SpielDto> {
     @NotNull
     private int spieltagNumber;
 
+    @NotNull(message = " heim team id cannot be null")
     private Long heimTeamId;
     private String heimTeamAcronym;
-
+    @NotNull(message = " gast team id cannot be null")
     private Long gastTeamId;
     private String gastTeamAcronym;
 

@@ -6,7 +6,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 import sportbets.common.DateUtil;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 
 @Entity
 public class Spiel implements Comparable<Spiel> {
@@ -46,7 +49,7 @@ public class Spiel implements Comparable<Spiel> {
 
 
 
-    @OneToMany(mappedBy = "spiel", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "spiel", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private final Set<SpielFormula> spielFormulas = new HashSet<>();
 
     public Spiel() {
