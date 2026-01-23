@@ -120,6 +120,7 @@ public class MapperUtil {
                 map(source.getCompetition().getName()).setCompName(null);
                 map(source.getTeam().getId()).setTeamId(null);
                 map(source.getTeam().getAcronym()).setTeamAcronym(null);
+                map(source.getTeam().isHasClub()).setHasClub(null);
 
             }
         });

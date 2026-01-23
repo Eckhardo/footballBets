@@ -17,16 +17,19 @@ public class CompetitionTeamDto implements Serializable {
     @NotNull(message = " team id cannot be null")
     private Long teamId;
     private String teamAcronym;
+    private Boolean hasClub = true;
 
     public CompetitionTeamDto() {
     }
 
-    public CompetitionTeamDto(Long id, Long compId, String compName, Long teamId, String teamAcronym) {
+    public CompetitionTeamDto(Long id, Long compId, String compName, Long teamId, String teamAcronym, Boolean isClub) {
         this.id = id;
         this.compId = compId;
         this.compName = compName;
         this.teamId = teamId;
         this.teamAcronym = teamAcronym;
+        this.hasClub = isClub;
+
     }
 
     public Long getId() {
@@ -68,6 +71,14 @@ public class CompetitionTeamDto implements Serializable {
 
     public void setTeamAcronym(String teamAcronym) {
         this.teamAcronym = teamAcronym;
+    }
+
+    public Boolean getHasClub() {
+        return hasClub;
+    }
+
+    public void setHasClub(Boolean hasClub) {
+        this.hasClub = hasClub;
     }
 
     @Override

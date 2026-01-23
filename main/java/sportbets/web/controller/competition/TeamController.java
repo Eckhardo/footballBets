@@ -1,5 +1,6 @@
 package sportbets.web.controller.competition;
 
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,8 +41,9 @@ public class TeamController {
 
         List<Team> teams = teamService.getAll();
         List<TeamDto> teamDtos = new ArrayList<>();
-        teams.forEach(fam -> {
-            teamDtos.add(modelMapper.map(fam, TeamDto.class));
+        teams.forEach(team -> {
+            teamDtos.add(modelMapper.map(team, TeamDto.class));
+            log.info("TeamDto:findAllTeams::{}", team);
         });
         return teamDtos;
     }
@@ -51,8 +53,9 @@ public class TeamController {
 
         List<Team> teams = teamService.getAllClubTeams();
         List<TeamDto> teamDtos = new ArrayList<>();
-        teams.forEach(fam -> {
-            teamDtos.add(modelMapper.map(fam, TeamDto.class));
+        teams.forEach(team -> {
+            teamDtos.add(modelMapper.map(team, TeamDto.class));
+            log.info("TeamDto:findAllClubTeams::{}", team);
         });
         return teamDtos;
     }
@@ -61,8 +64,8 @@ public class TeamController {
 
         List<Team> teams = teamService.getAllNationTeams();
         List<TeamDto> teamDtos = new ArrayList<>();
-        teams.forEach(fam -> {
-            teamDtos.add(modelMapper.map(fam, TeamDto.class));
+        teams.forEach(team -> {
+            teamDtos.add(modelMapper.map(team, TeamDto.class));
         });
         return teamDtos;
     }
@@ -70,21 +73,22 @@ public class TeamController {
     @ResponseStatus(HttpStatus.CREATED)
     public TeamDto post(@RequestBody TeamDto teamDto) {
         log.info("New team {}", teamDto);
-        Team model =new Team(teamDto.getName(),teamDto.getAcronym(),teamDto.isClub());
+        Team model =new Team(teamDto.getName(),teamDto.getAcronym(),teamDto.isHasClub());
         Team createdModel = teamService.save(model);
         TeamDto saved = modelMapper.map(createdModel, TeamDto.class);
-        log.debug("return save::{}", saved);
+        log.info("return save::{}", saved);
         return saved;
     }
 
     @PutMapping(value = "/teams/{id}")
-    public TeamDto update(@PathVariable Long id, @RequestBody TeamDto teamDto) {
-        log.debug("Update team  {}", teamDto);
+    public TeamDto update(@PathVariable Long id, @RequestBody  @Valid TeamDto teamDto) {
+        log.info("Update teamDTO  {}", teamDto);
 
         Team model = modelMapper.map(teamDto, Team.class);
+        log.info("Update team  {}", model);
         Team updatedModel = teamService.updateTeam(id, model).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         TeamDto updated = modelMapper.map(updatedModel, TeamDto.class);
-        log.debug("return save::{}", updated);
+        log.info("return save::{}", updated);
         return updated;
     }
 

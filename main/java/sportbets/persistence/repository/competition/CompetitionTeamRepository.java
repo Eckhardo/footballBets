@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface CompetitionTeamRepository extends JpaRepository<CompetitionTeam, Long> {
 
 
-    @Query("select  ct from CompetitionTeam ct join fetch  ct.competition c"
+    @Query("select  ct from CompetitionTeam ct join ct.competition c"
             + " where  c.id=:compId")
     List<CompetitionTeam> getAllFormComp(Long compId);
 

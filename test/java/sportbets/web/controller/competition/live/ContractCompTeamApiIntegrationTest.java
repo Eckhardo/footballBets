@@ -127,11 +127,11 @@ public class ContractCompTeamApiIntegrationTest {
 
         Team entity = teamRepository.findByName(TEAM_NAME).orElseThrow(() -> new EntityNotFoundException("Team not found"));
         teamDto.setId(entity.getId());
-        CompetitionTeamDto compTeamDto = new CompetitionTeamDto(null, comp.getId(), comp.getName(), teamDto.getId(), teamDto.getAcronym());
+        CompetitionTeamDto compTeamDto = new CompetitionTeamDto(null, comp.getId(), comp.getName(), teamDto.getId(), teamDto.getAcronym(), true);
 
         Team entity2 = teamRepository.findByName(TEAM_NAME_2).orElseThrow(() -> new EntityNotFoundException("Team not found"));
         teamDto1.setId(entity2.getId());
-        CompetitionTeamDto compTeamDto2 = new CompetitionTeamDto(null, comp.getId(), comp.getName(), teamDto1.getId(), teamDto1.getAcronym());
+        CompetitionTeamDto compTeamDto2 = new CompetitionTeamDto(null, comp.getId(), comp.getName(), teamDto1.getId(), teamDto1.getAcronym(), true);
         log.debug("Post competition team 1{}", compTeamDto);
         // save newcompTeam dto 1
         webClient.post()
@@ -184,7 +184,7 @@ public class ContractCompTeamApiIntegrationTest {
         assertNotNull(compTeams);
         CompetitionTeam compTeam = compTeams.stream().findFirst().orElseThrow(() -> new EntityNotFoundException("entity not found"));
         assertNotNull(compTeam);
-        CompetitionTeamDto compTeamDto = new CompetitionTeamDto(compTeam.getId(), comp.getId(), comp.getName(), team.getId(), team.getAcronym());
+        CompetitionTeamDto compTeamDto = new CompetitionTeamDto(compTeam.getId(), comp.getId(), comp.getName(), team.getId(), team.getAcronym(), true);
 
 
         webClient.put()
@@ -201,7 +201,7 @@ public class ContractCompTeamApiIntegrationTest {
 
 
         Team team2 = teamRepository.findByName(TEAM_NAME_2).orElseThrow(() -> new EntityNotFoundException("entity not found"));
-        CompetitionTeamDto compTeamDto2 = new CompetitionTeamDto(compTeam.getId(), comp.getId(), comp.getName(), team2.getId(), team2.getAcronym());
+        CompetitionTeamDto compTeamDto2 = new CompetitionTeamDto(compTeam.getId(), comp.getId(), comp.getName(), team2.getId(), team2.getAcronym(), true);
 
         webClient.put()
                 .uri("/compTeam/" + compTeam.getId())

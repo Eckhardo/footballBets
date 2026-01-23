@@ -32,7 +32,7 @@ public class ContractTeamApiIntegrationTest {
     private static final String TEAM_NAME_2 = "Holstein Kiel";
     final TeamDto teamDto = new TeamDto(null, TEAM_NAME, "Braunschweig",true);
     final TeamDto teamDto1 = new TeamDto(null, TEAM_NAME_2, "Kiel",true);
-    final TeamDto Germany = new TeamDto(null, "Germany", "GER",false);
+    final TeamDto FRANCE = new TeamDto(null, "France", "FRA",false);
     @Autowired
     WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();
     @Autowired
@@ -58,7 +58,7 @@ public class ContractTeamApiIntegrationTest {
         webClient.post()
                 .uri("/teams")
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(Germany)
+                .bodyValue(FRANCE)
                 .exchange()
                 .expectStatus()
                 .isCreated();
@@ -89,8 +89,8 @@ public class ContractTeamApiIntegrationTest {
                 .expectStatus()
                 .isNoContent();
 
-        Team germany = teamRepository.findByName("Germany").orElseThrow(() -> new EntityNotFoundException(TEAM_NAME));
-        Long id3 = germany.getId();
+        Team team3 = teamRepository.findByName(FRANCE.getName()).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME));
+        Long id3 = team3.getId();
         log.debug("delete team with id::{}", id3);
         webClient.delete()
                 .uri("/teams/" + id3)
@@ -175,7 +175,7 @@ public class ContractTeamApiIntegrationTest {
                 .consumeWith(response -> {
                     List<TeamDto> items = response.getResponseBody();
                     // Perform custom assertions with AssertJ or JUnit
-                    assertThat(items).extracting(TeamDto::isClub).contains(true);
+                    assertThat(items).extracting(TeamDto::isHasClub).contains(true);
                 });
     }
     @Test
@@ -194,7 +194,7 @@ public class ContractTeamApiIntegrationTest {
                 .consumeWith(response -> {
                     List<TeamDto> items = response.getResponseBody();
                     // Perform custom assertions with AssertJ or JUnit
-                    assertThat(items).extracting(TeamDto::isClub).contains(false);
+                    assertThat(items).extracting(TeamDto::isHasClub).contains(false);
                 });
     }
 }

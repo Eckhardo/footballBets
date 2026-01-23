@@ -16,7 +16,7 @@ public class Team {
     @Column(unique = true, nullable = false)
     private String acronym;
 
-    private boolean isClub = true;
+    private boolean hasClub = true;
 
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
@@ -30,7 +30,7 @@ public class Team {
     public Team(String name, String acronym, boolean isClub) {
         this.name = name;
         this.acronym = acronym;
-        this.isClub = isClub;
+        this.hasClub = isClub;
     }
 
     public Long getId() {
@@ -57,13 +57,12 @@ public class Team {
         this.acronym = acronym;
     }
 
-
-    public boolean isClub() {
-        return isClub;
+    public boolean isHasClub() {
+        return hasClub;
     }
 
-    public void setClub(boolean club) {
-        isClub = club;
+    public void setHasClub(boolean hasClub) {
+        this.hasClub = hasClub;
     }
 
     public Set<CompetitionTeam> getCompetitionTeams() {
@@ -83,7 +82,7 @@ public class Team {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", acronym='" + acronym + '\'' +
-                ", isClub=" + isClub +
+                ", isClub=" + hasClub +
                 '}';
     }
 
@@ -96,6 +95,6 @@ public class Team {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, acronym, isClub);
+        return Objects.hash(id, name, acronym, hasClub);
     }
 }

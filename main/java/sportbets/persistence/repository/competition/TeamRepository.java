@@ -17,9 +17,9 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
 
     void deleteByName(String name);
 
-    @Query(" select t from   Team t where t.isClub=true")
+    @Query(" select t from Team t where t.hasClub=true")
     List<Team> findAllClubTeams();
 
-    @Query(" select t from   Team t where t.isClub=false")
+    @Query(" select t from Team t where t.hasClub=false")
     List<Team> findAllNationTeams();
 }

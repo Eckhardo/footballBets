@@ -69,7 +69,7 @@ public class CompTeamServiceNonTransactionalTest {
     @Test
     void whenValidCompTeam_thenCompTeamShouldBeSaved() {
 
-        CompetitionTeamDto compTeamDto = new CompetitionTeamDto(null, savedComp.getId(), savedComp.getName(), savedTeam1.getId(), savedTeam1.getAcronym());
+        CompetitionTeamDto compTeamDto = new CompetitionTeamDto(null, savedComp.getId(), savedComp.getName(), savedTeam1.getId(), savedTeam1.getAcronym(), true);
         CompetitionTeam savedCompTeam = compTeamService.save(compTeamDto);
 
         assertThat(savedCompTeam.getId()).isNotNull();
@@ -81,7 +81,7 @@ public class CompTeamServiceNonTransactionalTest {
 
     @Test
     void whenValidCompTeam_thenCompTeamShouldBeUpdated() {
-        CompetitionTeamDto compTeamDto = new CompetitionTeamDto(null, savedComp.getId(), savedComp.getName(), savedTeam1.getId(), savedTeam1.getAcronym());
+        CompetitionTeamDto compTeamDto = new CompetitionTeamDto(null, savedComp.getId(), savedComp.getName(), savedTeam1.getId(), savedTeam1.getAcronym(), true);
         CompetitionTeam savedCompTeam = compTeamService.save(compTeamDto);
 
 
@@ -98,9 +98,9 @@ public class CompTeamServiceNonTransactionalTest {
 
     @Test
     void whenValidCompTeams_thenCompTeamsShouldBeSavedInBatch() {
-        CompetitionTeamDto compTeamDto = new CompetitionTeamDto(null, savedComp.getId(), savedComp.getName(), savedTeam1.getId(), savedTeam1.getAcronym());
+        CompetitionTeamDto compTeamDto = new CompetitionTeamDto(null, savedComp.getId(), savedComp.getName(), savedTeam1.getId(), savedTeam1.getAcronym(), true);
 
-        CompetitionTeamDto compTeamDto2 = new CompetitionTeamDto(null, savedComp.getId(), savedComp.getName(), savedTeam2.getId(), savedTeam2.getAcronym());
+        CompetitionTeamDto compTeamDto2 = new CompetitionTeamDto(null, savedComp.getId(), savedComp.getName(), savedTeam2.getId(), savedTeam2.getAcronym(), true);
 
 
         List<CompetitionTeam> savedCompTeams = compTeamService.saveAll(List.of(compTeamDto, compTeamDto2));
@@ -118,9 +118,9 @@ public class CompTeamServiceNonTransactionalTest {
 
     @Test
     void whenValidCompTeams_thenCompTeamsShouldBeDeletedInBatch() {
-        CompetitionTeamDto compTeamDto = new CompetitionTeamDto(null, savedComp.getId(), savedComp.getName(), savedTeam1.getId(), savedTeam1.getAcronym());
+        CompetitionTeamDto compTeamDto = new CompetitionTeamDto(null, savedComp.getId(), savedComp.getName(), savedTeam1.getId(), savedTeam1.getAcronym(), true);
 
-        CompetitionTeamDto compTeamDto2 = new CompetitionTeamDto(null, savedComp.getId(), savedComp.getName(), savedTeam2.getId(), savedTeam2.getAcronym());
+        CompetitionTeamDto compTeamDto2 = new CompetitionTeamDto(null, savedComp.getId(), savedComp.getName(), savedTeam2.getId(), savedTeam2.getAcronym(), true);
 
         List<CompetitionTeam> savedCompTeams = compTeamService.saveAll(List.of(compTeamDto, compTeamDto2));
 
@@ -133,7 +133,7 @@ public class CompTeamServiceNonTransactionalTest {
     @Test
     void whenCompIsDeleted_thenCompTeamShouldBeDeleted() {
 
-        CompetitionTeamDto compTeamDto = new CompetitionTeamDto(null, savedComp.getId(), savedComp.getName(), savedTeam1.getId(), savedTeam1.getAcronym());
+        CompetitionTeamDto compTeamDto = new CompetitionTeamDto(null, savedComp.getId(), savedComp.getName(), savedTeam1.getId(), savedTeam1.getAcronym(), true);
         CompetitionTeam savedCompTeam = compTeamService.save(compTeamDto);
 
         assertThat(savedCompTeam.getId()).isNotNull();
@@ -152,9 +152,9 @@ public class CompTeamServiceNonTransactionalTest {
 
     @Test
     void whenValidComp_thenAllCompTeamsShouldBeRetrieved() {
-        CompetitionTeamDto compTeamDto = new CompetitionTeamDto(null, savedComp.getId(), savedComp.getName(), savedTeam1.getId(), savedTeam1.getAcronym());
+        CompetitionTeamDto compTeamDto = new CompetitionTeamDto(null, savedComp.getId(), savedComp.getName(), savedTeam1.getId(), savedTeam1.getAcronym(), true);
 
-        CompetitionTeamDto compTeamDto2 = new CompetitionTeamDto(null, savedComp.getId(), savedComp.getName(), savedTeam2.getId(), savedTeam2.getAcronym());
+        CompetitionTeamDto compTeamDto2 = new CompetitionTeamDto(null, savedComp.getId(), savedComp.getName(), savedTeam2.getId(), savedTeam2.getAcronym(), true);
 
         List<CompetitionTeam> savedCompTeams = compTeamService.saveAll(List.of(compTeamDto, compTeamDto2));
 

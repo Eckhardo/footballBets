@@ -73,6 +73,7 @@ public class TeamServiceImpl implements TeamService {
     private Team updateFields(Team base, Team updatedTeam) {
         base.setName(updatedTeam.getName());
         base.setAcronym(updatedTeam.getAcronym());
+        base.setHasClub(updatedTeam.isHasClub());
         return base;
     }
 
@@ -91,8 +92,11 @@ public class TeamServiceImpl implements TeamService {
     @Override
     public List<Team> getAll() {
 
-        return teamRepository.findAll();
+        log.info("getAll");
 
+        List<Team> teams = teamRepository.findAll();
+        teams.forEach(System.out::println);
+        return teams;
     }
 
     @Override
