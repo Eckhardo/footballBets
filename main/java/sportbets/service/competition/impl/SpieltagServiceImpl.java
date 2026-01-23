@@ -80,12 +80,12 @@ public class SpieltagServiceImpl implements SpieltagService {
 
         Optional<Spieltag> updateModel = spieltagRepository.findById(id);
         if (updateModel.isEmpty()) {
-            throw new EntityNotFoundException("spiel  does not exits given id:" + spieltagDto.getId());
+            throw new EntityNotFoundException("spieltag  does not exits given id:" + spieltagDto.getId());
         }
 
 
         Spieltag updatedModel = updateFields(updateModel.get(), model);
-        log.debug("updated Comp  with {}", model);
+        log.debug("updated matchhday  with {}", model);
         return Optional.of(spieltagRepository.save(updatedModel));
 
     }

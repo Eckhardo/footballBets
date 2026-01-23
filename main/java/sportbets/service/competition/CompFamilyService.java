@@ -21,8 +21,6 @@ public interface CompFamilyService {
 
     List<CompetitionFamily> getAll();
 
-    Optional<CompetitionFamily> findByIdTest(Long familyId);
-
     Optional<CompetitionFamily> findByByName(String name);
 
     Optional<CompetitionFamily> findByByCompId(Long id);

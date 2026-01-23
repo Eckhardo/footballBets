@@ -18,12 +18,6 @@ public interface CompetitionRepository extends JpaRepository<Competition, Long> 
 
     void deleteByName(String name);
 
-    @Query("select  c from Competition c join fetch  c.competitionFamily cf"
-            + " where c.name =:name"
-            + " and cf.id=:id"
-            + " order by c.name asc")
-    Optional<Competition> findByNameWithFamily(String name, Long id);
-
     @EntityGraph(attributePaths = {"competitionRounds"})
     @Query("select  c from Competition c  "
             + " where c.name =:name"
@@ -35,11 +29,6 @@ public interface CompetitionRepository extends JpaRepository<Competition, Long> 
             + " where c.id =:id"
             + " order by c.name asc")
     Competition findByIdJoinFetchRounds(Long id);
-
-    @Query("select  c from Competition c join fetch c.competitionRounds r"
-            + " join fetch r.spieltage  where c.name =:name"
-            + " order by c.name asc")
-    Optional<Competition> findByNameJoinFetchRoundsAndSpieltage(String name);
 
     @Query("select  t from Team t  "
             + " join fetch t.competitionTeams ct"
@@ -61,9 +50,6 @@ public interface CompetitionRepository extends JpaRepository<Competition, Long> 
     @Query(" select c from Competition c join c.competitionFamily cf   "
             + " where  cf.id=:id ")
     List<Competition> findByFamilyId(Long id);
-    @Query(" select c from Competition c join c.competitionFamily cf   "
-            + " where  cf.name=:name ")
-    List<Competition> findByFamilyName(String name);
 
     @Query("select  c from Competition c join fetch c.competitionRounds r"
             + " join fetch r.spieltage sp where sp.id= :spieltagId")

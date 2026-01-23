@@ -11,38 +11,30 @@ import java.util.List;
 @Repository
 public interface CompTableRepository extends JpaRepository<SpielFormula, Long> {
 
-    @Query(" select new sportbets.persistence.rowObject.TeamPositionSummaryRow"
-            + " ("
-            + "  sf.teamName, sf.teamNameAcronym , count(st), sum(sf.points), sum(sf.heimTore),  sum(sf.gastTore),"
-            + " sum(sf.diffTore),sum(sf.won),sum(sf.remis),sum(sf.lost)"
-            + ") "
-            + " from SpielFormula sf  join sf.spiel s join s.spieltag st join s.heimTeam ht join s.gastTeam gt  "
-            + " join st.competitionRound cr  join cr.competition c  "
-            + " where c.id=:compId  and sf.isHeimTeam=:isHeimTeam  and s.stattgefunden=true and st.spieltagNumber between :firstSp and :lastSp"
-            + "   group by sf.teamName  ")
-    List<TeamPositionSummaryRow> findTableHeimOrGastForLigaModus(Long compId, int firstSp, int lastSp, boolean isHeimTeam);
-
 
     @Query(" select new sportbets.persistence.rowObject.TeamPositionSummaryRow"
             + " ("
-            + "  sf.teamName, sf.teamNameAcronym , count(st), sum(sf.points), sum(sf.heimTore),  sum(sf.gastTore),"
-            + " sum(sf.diffTore),sum(sf.won),sum(sf.remis),sum(sf.lost)"
+            + "  sf.teamName, sf.teamNameAcronym , count(s.stattgefunden), sum(sf.points), sum(sf.heimTore),  sum(sf.gastTore),"
+            + "  sum(sf.heimTore - sf.gastTore),sum(sf.won),sum(sf.remis),sum(sf.lost)"
             + ") "
             + " from SpielFormula sf  join sf.spiel s join s.spieltag st join s.heimTeam ht join s.gastTeam gt  "
             + " join st.competitionRound cr  join cr.competition c  "
-            + " where c.id=:compId  and s.stattgefunden=true and st.spieltagNumber between :firstSp and :lastSp"
-            + "   group by sf.teamName order by sum(sf.points) DESC")
+            + " where c.id=:compId  and st.spieltagNumber between :firstSp and :lastSp"
+            + " group by sf.teamName ")
     List<TeamPositionSummaryRow> findTableForLigaModus(Long compId, int firstSp, int lastSp);
 
 
     @Query(" select new sportbets.persistence.rowObject.TeamPositionSummaryRow"
             + " ("
             + "  sf.teamName, sf.teamNameAcronym , count(st), sum(sf.points), sum(sf.heimTore),  sum(sf.gastTore),"
-            + " sum(sf.diffTore),sum(sf.won),sum(sf.remis),sum(sf.lost)"
+            + " sum(sf.heimTore - sf.gastTore),sum(sf.won),sum(sf.remis),sum(sf.lost)"
             + ") "
             + " from SpielFormula sf  join sf.spiel s join s.spieltag st join s.heimTeam ht join s.gastTeam gt  "
             + " join st.competitionRound cr  join cr.competition c  "
-            + " where c.id=:compId  and sf.isHeimTeam=:isHeimTeam  and s.stattgefunden=true and st.spieltagNumber between :firstSp and :lastSp"
-            + "   group by sf.teamName order by sum(sf.points) DESC  ")
-    List<TeamPositionSummaryRow> findTableHeimOrGastForLigaModus2(Long compId, boolean isHeimTeam, int firstSp, int lastSp);
+            + " where c.id=:compId  and sf.isHeimTeam=:isHeimTeam  and st.spieltagNumber between :firstSp and :lastSp"
+            + " group by sf.teamName  ")
+    List<TeamPositionSummaryRow> findTableHeimOrGastForLigaModus(Long compId, int firstSp, int lastSp, boolean isHeimTeam);
+
+
+
 }

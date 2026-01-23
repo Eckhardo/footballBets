@@ -36,24 +36,6 @@ public class CompFamilyServiceImpl implements CompFamilyService {
 
     }
 
-    /**
-     * @param familyId
-     * @return
-     */
-    @Override
-    @Transactional
-    public Optional<CompetitionFamily> findByIdTest(Long familyId) {
-        Optional<CompetitionFamily> model = compFamilyRepository.findById(familyId);
-        if (model.isPresent()) {
-            Set<Competition> comps = model.get().getCompetitions();
-            assert !comps.isEmpty();
-            for (Competition comp : comps) {
-                log.debug("Competition of current family found with {}", comp);
-            }
-        }
-        return model;
-
-    }
 
     @Override
     public Optional<CompetitionFamily> findById(Long id) {

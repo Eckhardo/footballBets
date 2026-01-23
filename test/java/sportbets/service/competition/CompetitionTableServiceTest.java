@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.competition.Competition;
+import sportbets.persistence.entity.competition.CompetitionRound;
 import sportbets.persistence.repository.competition.CompTableRepository;
 import sportbets.persistence.rowObject.TeamPositionSummaryRow;
 import sportbets.web.dto.competition.search.TableSearchCriteria;
@@ -45,12 +46,16 @@ public class CompetitionTableServiceTest {
     private CompTableService compTableService;
 
     Competition myComp;
+    CompetitionRound myRound;
 
     @BeforeEach
     public void setup() {
 
-        myComp = compService.findByName(TEST_COMP).orElseThrow();
+       Competition comp = compService.findByName(TEST_COMP).orElseThrow();
+       myComp = compService.findByIdJoinFetchRounds(comp.getId());
         assertNotNull(myComp);
+        myRound = myComp.getCompetitionRounds().stream().findFirst().orElseThrow();
+        log.info("myRound  {}", myRound);
 
     }
 
@@ -61,7 +66,7 @@ public class CompetitionTableServiceTest {
 
     @Test
     public void retrieveTableData() {
-        TableSearchCriteria searchCriteria = new TableSearchCriteria(myComp.getId(), 1, 10,null);
+        TableSearchCriteria searchCriteria = new TableSearchCriteria(myComp.getId(), 1, 18,null);
 
         List<TeamPositionSummaryRow> rows = compTableService.findTableForLigaModus(searchCriteria);
         assertThat(rows.size()).isEqualTo(18);
@@ -71,7 +76,7 @@ public class CompetitionTableServiceTest {
 
     @Test
     public void retrieveTableDataHeim() {
-        TableSearchCriteria searchCriteria = new TableSearchCriteria(myComp.getId(), 1, 10,true);
+        TableSearchCriteria searchCriteria = new TableSearchCriteria(myComp.getId(), 1, 18,true);
 
         List<TeamPositionSummaryRow> rows = compTableService.findTableHeimOrGastForLigaModus(searchCriteria);
         assertThat(rows.size()).isEqualTo(18);
@@ -82,11 +87,11 @@ public class CompetitionTableServiceTest {
 
 
     @Test
-    public void retrieveTableDataHeim3() {
+    public void retrieveTableForRound() {
 
-        TableSearchCriteria searchCriteria = new TableSearchCriteria(myComp.getId(), 1, 10,true);
+        TableSearchCriteria searchCriteria = new TableSearchCriteria(myComp.getId(), 18, 34,true);
 
-        List<TeamPositionSummaryRow> rows = compTableService.findTableHeimOrGastForLigaModus2(searchCriteria.getCompId(),searchCriteria.getHeimOrGast(),searchCriteria.getStartSpieltag(),searchCriteria.getEndSpieltag() );
+        List<TeamPositionSummaryRow> rows = compTableService.findTableHeimOrGastForLigaModus(searchCriteria);
         assertThat(rows.size()).isEqualTo(18);
         rows.sort(Comparator.comparing(TeamPositionSummaryRow::getPoints).reversed());
         rows.forEach(row -> System.out.println(row.getTeamName() + " " + row.getPoints()));

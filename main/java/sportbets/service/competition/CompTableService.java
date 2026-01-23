@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface CompTableService {
    List< TeamPositionSummaryRow> findTableHeimOrGastForLigaModus(TableSearchCriteria searchCriteria);
-   List< TeamPositionSummaryRow> findTableHeimOrGastForLigaModus2(Long compId, boolean isHeimGast, int spieltagStart, int spieltagEnd);
 
    List< TeamPositionSummaryRow> findTableForLigaModus(TableSearchCriteria searchCriteria);
+   List<TeamPositionSummaryRow> findTableForRoundForLigaModus(Long compId, int spieltagStart, int spieltagEnd);
 }

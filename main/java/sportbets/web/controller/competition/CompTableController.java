@@ -24,7 +24,7 @@ public class CompTableController {
 
 
     @GetMapping("/compTable/search")
-    public List<TeamPositionSummaryRow> searchHeimGast(TableSearchCriteria criteria) {
+    public List<TeamPositionSummaryRow> search(TableSearchCriteria criteria) {
         log.info("CompTableController search {}", criteria);
 
         if (criteria.getHeimOrGast()!=null) {
