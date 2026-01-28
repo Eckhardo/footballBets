@@ -138,7 +138,7 @@ public class CompTeamServiceTest {
 
         List<CompetitionTeam> savedCompTeams = compTeamService.saveAll(List.of(compTeamDto, compTeamDto2));
 
-        List<CompetitionTeam> compTeams = compTeamService.getAllFormComp(savedComp.getId());
+        List<CompetitionTeam> compTeams = compTeamService.getAllForComp(savedComp.getId());
         assertThat(compTeams.size()).isEqualTo(savedCompTeams.size());
 
         for (CompetitionTeam compTeam : compTeams) {

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import sportbets.FootballBetsApplication;
 import sportbets.config.TestProfileLiveTest;
@@ -26,8 +27,11 @@ import sportbets.web.dto.competition.CompetitionTeamDto;
 import sportbets.web.dto.competition.TeamDto;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -180,7 +184,7 @@ public class ContractCompTeamApiIntegrationTest {
     void whenCompTeamIsUpdated_ThenDetailsHaveChanged() {
         Competition comp = competitionRepository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP));
         Team team = teamRepository.findByName(TEAM_NAME).orElseThrow(() -> new EntityNotFoundException("entity not found"));
-        List<CompetitionTeam> compTeams = compTeamRepo.getAllFormComp(comp.getId());
+        List<CompetitionTeam> compTeams = compTeamRepo.getAllForComp(comp.getId());
         assertNotNull(compTeams);
         CompetitionTeam compTeam = compTeams.stream().findFirst().orElseThrow(() -> new EntityNotFoundException("entity not found"));
         assertNotNull(compTeam);
@@ -229,6 +233,35 @@ public class ContractCompTeamApiIntegrationTest {
                 .expectStatus()
                 .isOk()
                 .expectBodyList(CompetitionTeamDto.class).hasSize(2);
+
+
+    }
+
+    @Test
+    @Order(3)
+    void whenCompIdIsProvided_ThenRegisteredAndUnregisteredCompTeamsAreRetrieved() {
+        String TEST_COMP = "1. Bundesliga Saison 2025";
+        Competition entity = competitionRepository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP));
+        Long id = entity.getId();
+
+        EntityExchangeResult<List<List>> result =   webClient.get()
+                .uri("/compTeams/" +id+"/teams")
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBodyList(List.class).hasSize(1)
+                .returnResult();
+
+        List<List> actualBody = result.getResponseBody();
+
+        assertNotNull(actualBody);
+        assertEquals( 1,actualBody.size());
+
+            log.info("unregistered competition team: " + actualBody);
+
+        for (List<CompetitionTeamDto> o : actualBody) {
+            log.info("competition team: " + o.getClass().getSimpleName());
+        }
 
 
     }

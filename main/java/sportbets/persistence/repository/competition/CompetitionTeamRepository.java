@@ -12,11 +12,12 @@ import java.util.Optional;
 public interface CompetitionTeamRepository extends JpaRepository<CompetitionTeam, Long> {
 
 
-    @Query("select  ct from CompetitionTeam ct join ct.competition c"
+    @Query("select  ct from CompetitionTeam ct join fetch ct.team join fetch  ct.competition c"
             + " where  c.id=:compId")
-    List<CompetitionTeam> getAllFormComp(Long compId);
+    List<CompetitionTeam> getAllForComp(Long compId);
 
-    @Query(" select ct from CompetitionTeam ct join ct.team t join ct.competition c " +
+    @Query(" select ct from CompetitionTeam ct join  ct.team t join  ct.competition c " +
             "where t.id=:teamId and c.id=:compId  ")
     Optional<CompetitionTeam> findByTeamIdAndCompId(Long teamId, Long compId);
+
 }

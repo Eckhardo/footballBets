@@ -1,6 +1,7 @@
 package sportbets.service.competition;
 
 import sportbets.persistence.entity.competition.CompetitionTeam;
+import sportbets.persistence.entity.competition.Team;
 import sportbets.web.dto.competition.CompetitionTeamDto;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public interface CompTeamService {
 
     void deleteById(Long id);
 
-    List<CompetitionTeam> getAllFormComp(Long compId);
-
+    List<CompetitionTeam> getAllForComp(Long compId);
+    List<Team>  findUnregisteredTeams(boolean isClub, List<CompetitionTeam> models);
+    Optional<CompetitionTeam> findByTeamIdAndCompId(Long teamId, Long compId);
 }

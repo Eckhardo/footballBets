@@ -28,11 +28,11 @@ import static org.hamcrest.CoreMatchers.equalTo;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ContractTeamApiIntegrationTest {
     private static final Logger log = LoggerFactory.getLogger(ContractTeamApiIntegrationTest.class);
-    private static final String TEAM_NAME = "Eintracht Braunschweig";
-    private static final String TEAM_NAME_2 = "Holstein Kiel";
-    final TeamDto teamDto = new TeamDto(null, TEAM_NAME, "Braunschweig",true);
-    final TeamDto teamDto1 = new TeamDto(null, TEAM_NAME_2, "Kiel",true);
-    final TeamDto FRANCE = new TeamDto(null, "France", "FRA",false);
+    private static final String TEAM_NAME = "TestTeam 1";
+    private static final String TEAM_NAME_2 = "TestTeam 2";
+    final TeamDto teamDto = new TeamDto(null, TEAM_NAME, "Team 1",true);
+    final TeamDto teamDto1 = new TeamDto(null, TEAM_NAME_2, "Team 2",true);
+    final TeamDto FRANCE = new TeamDto(null, "TestCountry", "TEST",false);
     @Autowired
     WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();
     @Autowired
@@ -115,7 +115,7 @@ public class ContractTeamApiIntegrationTest {
                 .jsonPath("$.name")
                 .isEqualTo(TEAM_NAME)
                 .jsonPath("$.acronym")
-                .isEqualTo("Braunschweig");
+                .isEqualTo("Team 1");
 
     }
 

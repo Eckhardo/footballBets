@@ -30,7 +30,7 @@ public class ContractCompTableApiIntegrationTest {
 
     private static final Logger log = LoggerFactory.getLogger(ContractCompTableApiIntegrationTest.class);
 
-    private static final String TEST_COMP = "1. Bundesliga Saison 2025/26";
+    private static final String TEST_COMP = "1. Bundesliga Saison 2025";
     @Autowired
     WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();
     @Autowired

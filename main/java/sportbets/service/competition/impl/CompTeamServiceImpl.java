@@ -162,10 +162,31 @@ public class CompTeamServiceImpl implements CompTeamService {
      */
     @Override
     @Transactional
-    public List<CompetitionTeam> getAllFormComp(Long compId) {
+    public List<CompetitionTeam> getAllForComp(Long compId) {
+        return compTeamRepo.getAllForComp(compId);
 
+    }
 
-        return compTeamRepo.getAllFormComp(compId);
+    @Override
+    public List<Team> findUnregisteredTeams(boolean isClub, List<CompetitionTeam> models) {
+        List<Team> allTeams;
+        if (isClub) {
+            allTeams = this.teamRepo.findAllClubTeams();
+        } else {
+            allTeams = this.teamRepo.findAllNationTeams();
+        }
+        for (CompetitionTeam ct : models) {
+            Team teamToEvaluate = ct.getTeam();
+            if (allTeams.contains(teamToEvaluate)) {
+                allTeams.remove(ct.getTeam());
+            }
+        }
 
+        return allTeams;
+    }
+
+    @Override
+   public Optional<CompetitionTeam> findByTeamIdAndCompId(Long teamId, Long compId){
+       return this.compTeamRepo.findByTeamIdAndCompId(teamId, compId);
     }
 }
