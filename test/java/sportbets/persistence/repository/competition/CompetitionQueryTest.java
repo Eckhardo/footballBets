@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import sportbets.common.Country;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.entity.competition.CompetitionRound;
@@ -46,7 +47,7 @@ public class CompetitionQueryTest {
     @Before
     public void setUp() {
         // Initialize test data before test methods
-        testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true);
+        testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true, Country.GERMANY);
         testComp = new Competition(TEST_LIGA_SAISON_2025_26, "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
         testFamily.addCompetition(testComp);
         CompetitionRound testRound = new CompetitionRound(1, "Hinrunde", testComp, false);

@@ -1,6 +1,8 @@
 package sportbets.persistence.entity.competition;
 
 import jakarta.persistence.*;
+import sportbets.common.Country;
+import sportbets.common.CountryAttributeConverter;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -17,7 +19,6 @@ public class Team {
     private String acronym;
 
     private boolean hasClub = true;
-
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private final Set<CompetitionTeam> competitionTeams = new HashSet<>();

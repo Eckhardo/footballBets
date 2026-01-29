@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import sportbets.common.Country;
 import sportbets.persistence.dao.impl.CompetitionDAOImpl;
 import sportbets.persistence.dao.impl.CompetitionFamilyDAOImpl;
 import sportbets.persistence.entity.competition.Competition;
@@ -36,7 +37,7 @@ public class CompetitionDAOITest {
     @BeforeEach
     public void setUp() {
         // Initialize test data before test methods
-        testFamily = new CompetitionFamily("3. Bundesliga", "1. Deutsche Fussball Bundesliga", true, true);
+        testFamily = new CompetitionFamily("3. Bundesliga", "1. Deutsche Fussball Bundesliga", true, true, Country.GERMANY);
         testComp = new Competition("Saison 2025/26", "3. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
 
         testFamily.addCompetition(testComp);

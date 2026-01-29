@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import sportbets.common.Country;
 import sportbets.persistence.entity.competition.CompetitionFamily;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public class CompetitionFamilyRepositoryTest {
     @Before
     public void setUp() {
         // Initialize test data before each test method
-        testFamily = new CompetitionFamily("TestLiga", "2. Deutsche Fussball TestLiga", true, true);
+        testFamily = new CompetitionFamily("TestLiga", "2. Deutsche Fussball TestLiga", true, true, Country.GERMANY);
 
         familyRepo.save(testFamily);
     }

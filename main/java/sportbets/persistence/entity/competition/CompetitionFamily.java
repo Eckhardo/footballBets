@@ -1,6 +1,8 @@
 package sportbets.persistence.entity.competition;
 
 import jakarta.persistence.*;
+import sportbets.common.Country;
+import sportbets.common.CountryAttributeConverter;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -18,6 +20,8 @@ public class CompetitionFamily {
     private String name;
     private String description;
 
+    @Convert(converter = CountryAttributeConverter.class)
+    private Country country;
 
     @Column(nullable = false)
     private LocalDateTime createdOn = LocalDateTime.now();
@@ -42,7 +46,7 @@ public class CompetitionFamily {
     /**
      * Basic constructor.
      */
-    public CompetitionFamily(String name, String description, Boolean ligaModus, Boolean hasClubs) {
+    public CompetitionFamily(String name, String description, Boolean ligaModus, Boolean hasClubs, Country country) {
 
         this.name = name;
         this.description = description;
@@ -103,6 +107,14 @@ public class CompetitionFamily {
             throw new IllegalArgumentException("Can't add a null competition.");
         this.getCompetitions().add(competition);
 
+    }
+
+    public Country getCountry() {
+        return country;
+    }
+
+    public void setCountry(Country country) {
+        this.country = country;
     }
 
     @Override

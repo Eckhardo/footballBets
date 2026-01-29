@@ -26,6 +26,7 @@ public class Competition {
     private String description;
     private int winMultiplicator = 3;
     private int remisMultiplicator = 1;
+
     @Column(nullable = false)
     private final LocalDateTime createdOn = LocalDateTime.now();
 
