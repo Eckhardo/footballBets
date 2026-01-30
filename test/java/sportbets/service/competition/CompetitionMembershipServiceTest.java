@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import sportbets.common.Country;
 import sportbets.persistence.entity.authorization.CommunityRole;
 import sportbets.persistence.entity.authorization.CompetitionRole;
 import sportbets.persistence.entity.community.Community;
@@ -55,7 +56,7 @@ public class CompetitionMembershipServiceTest {
     private static final String TEST_COMM_2 = "My Test Community 2";
     private static final String TEST_COMP = "TestLiga: Saison 2025";
     private static final String TEST_COMP_2 = "TestLiga 2: Saison 2025";
-    final CompetitionFamilyDto competitionFamily = new CompetitionFamilyDto(null, TEST_COMP_FAM, "description of testliga", true, true);
+    final CompetitionFamilyDto competitionFamily = new CompetitionFamilyDto(null, TEST_COMP_FAM, "description of testliga", true, true, Country.GERMANY);
 
     Competition savedComp = null;
     Competition savedComp2 = null;

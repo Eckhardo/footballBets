@@ -2,6 +2,7 @@ package sportbets.web.dto.authorization;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sportbets.common.Country;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -17,6 +18,7 @@ public class UmsInfoDto {
     private boolean isCompetitionAdmin;
     private Long defaultCommunityId;
     private Long defaultCompetitionId;
+    private Country defaultCountry;
     /**
      * a set of competitions where tipper has admin rights
      */
@@ -111,6 +113,14 @@ public class UmsInfoDto {
 
     public void setLoggedIn(boolean loggedIn) {
         this.loggedIn = loggedIn;
+    }
+
+    public Country getDefaultCountry() {
+        return defaultCountry;
+    }
+
+    public void setDefaultCountry(Country defaultCountry) {
+        this.defaultCountry = defaultCountry;
     }
 
     @Override

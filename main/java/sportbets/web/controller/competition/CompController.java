@@ -41,8 +41,9 @@ public class CompController {
         ModelMapper myMapper = MapperUtil.getModelMapperForFamily();
         competitions.forEach(comp -> {
             competitionDtos.add(myMapper.map(comp, CompetitionDto.class));
+
         });
-        return competitionDtos;
+         return competitionDtos;
     }
 
     @GetMapping("/competitions/{id}")

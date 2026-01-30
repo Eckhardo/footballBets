@@ -28,6 +28,7 @@ public class MapperUtil {
                 // to the 'parentId' field in the destination
                 map(source.getCompetitionFamily().getId()).setFamilyId(null);
                 map(source.getCompetitionFamily().getName()).setFamilyName(null);
+
             }
         });
 

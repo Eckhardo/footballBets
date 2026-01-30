@@ -39,7 +39,7 @@ class ModelMapperEntityDtoTest {
 
     @Test
     void checkModelMapper() {
-        CompetitionFamily testFamily = new CompetitionFamily(TEST_FAM, TEST_FAM_DESCR, true, true, Country.GERMANY);
+        CompetitionFamily testFamily = new CompetitionFamily(TEST_FAM, TEST_FAM_DESCR, true, true,  Country.GERMANY);
 
         Competition testComp = new Competition(TEST_COMP, TEST_COMP_DESCR, 3, 1, testFamily);
         CompetitionRound testRound = new CompetitionRound(1, COMP_ROUND, testComp, false);
@@ -62,7 +62,7 @@ class ModelMapperEntityDtoTest {
         log.debug("\n validate family");
         modelMapper.createTypeMap(CompetitionFamilyDto.class, CompetitionFamily.class);
         modelMapper.validate();
-        CompetitionFamily testFamily = new CompetitionFamily(TEST_FAM, TEST_FAM_DESCR, true, true, Country.GERMANY);
+        CompetitionFamily testFamily = new CompetitionFamily(TEST_FAM, TEST_FAM_DESCR, true, true,  Country.GERMANY);
         CompetitionFamilyDto famDto = modelMapper.map(testFamily, CompetitionFamilyDto.class);
         log.debug("Family:: {}", famDto.toString());
 
@@ -72,7 +72,7 @@ class ModelMapperEntityDtoTest {
     public void checkComp() {
         log.debug("\n validate competition");
 
-        CompetitionFamily testFamily = new CompetitionFamily(TEST_FAM, TEST_FAM_DESCR, true, true, Country.GERMANY);
+        CompetitionFamily testFamily = new CompetitionFamily(TEST_FAM, TEST_FAM_DESCR, true, true,  Country.GERMANY);
         testFamily.setId(10L);
         Competition testComp = new Competition(TEST_COMP, TEST_COMP_DESCR, 3, 1, testFamily);
         testComp.setId(5L);
@@ -85,7 +85,7 @@ class ModelMapperEntityDtoTest {
     public void checkRound() {
         log.debug("\n validate comp round");
 
-        CompetitionFamily testFamily = new CompetitionFamily(TEST_FAM, TEST_FAM_DESCR, true, true, Country.GERMANY);
+        CompetitionFamily testFamily = new CompetitionFamily(TEST_FAM, TEST_FAM_DESCR, true, true,  Country.GERMANY);
         testFamily.setId(10L);
         Competition testComp = new Competition(TEST_COMP, TEST_COMP_DESCR, 3, 1, testFamily);
         testComp.setId(5L);
@@ -100,7 +100,7 @@ class ModelMapperEntityDtoTest {
         log.debug("\n validate spieltag");
 
 
-        CompetitionFamily testFamily = new CompetitionFamily(TEST_FAM, TEST_FAM_DESCR, true, true, Country.GERMANY);
+        CompetitionFamily testFamily = new CompetitionFamily(TEST_FAM, TEST_FAM_DESCR, true, true,  Country.GERMANY);
         testFamily.setId(10L);
         Competition testComp = new Competition(TEST_COMP, TEST_COMP_DESCR, 3, 1, testFamily);
         testComp.setId(5L);
@@ -121,7 +121,7 @@ class ModelMapperEntityDtoTest {
     public void checkSpiel() {
         log.debug("\n validate spiel");
 
-        CompetitionFamily testFamily = new CompetitionFamily(TEST_FAM, TEST_FAM_DESCR, true, true, Country.GERMANY);
+        CompetitionFamily testFamily = new CompetitionFamily(TEST_FAM, TEST_FAM_DESCR, true, true,  Country.GERMANY);
         testFamily.setId(10L);
         Competition testComp = new Competition(TEST_COMP, TEST_COMP_DESCR, 3, 1, testFamily);
         testComp.setId(5L);
@@ -171,7 +171,7 @@ class ModelMapperEntityDtoTest {
     public void checkCompTeam() {
         log.debug("\n validate spiel");
 
-        CompetitionFamily testFamily = new CompetitionFamily(TEST_FAM, TEST_FAM_DESCR, true, true, Country.GERMANY);
+        CompetitionFamily testFamily = new CompetitionFamily(TEST_FAM, TEST_FAM_DESCR, true, true,  Country.GERMANY);
         testFamily.setId(10L);
         Competition testComp = new Competition(TEST_COMP, TEST_COMP_DESCR, 3, 1, testFamily);
         testComp.setId(5L);
@@ -214,7 +214,7 @@ class ModelMapperEntityDtoTest {
 
         final ModelMapper myMapper = MapperUtil.getModelMapperForTipperRole();
 
-        CompetitionFamily testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true, Country.GERMANY);
+        CompetitionFamily testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true,  Country.GERMANY);
         Competition testComp = new Competition(COMP_NAME, "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
         testComp.setId(4L);
 
@@ -258,7 +258,7 @@ class ModelMapperEntityDtoTest {
 
         final ModelMapper myCompRoleMapper = MapperUtil.getModelMapperForCompetitionRole();
 
-        CompetitionFamily testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true, Country.GERMANY);
+        CompetitionFamily testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true,  Country.GERMANY);
         Competition testComp = new Competition(COMP_NAME, "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
         testComp.setId(4L);
 

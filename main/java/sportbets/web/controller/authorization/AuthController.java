@@ -15,11 +15,14 @@ import sportbets.persistence.entity.authorization.CompetitionRole;
 import sportbets.persistence.entity.authorization.TipperRole;
 import sportbets.persistence.entity.community.CommunityMembership;
 import sportbets.persistence.entity.community.Tipper;
+import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.service.authorization.TipperRoleService;
 import sportbets.service.community.CommunityMembershipService;
 import sportbets.service.community.TipperService;
+import sportbets.service.competition.CompFamilyService;
 import sportbets.web.dto.authorization.LoginRequestDto;
 import sportbets.web.dto.authorization.UmsInfoDto;
+import sportbets.web.dto.competition.CompetitionFamilyDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,12 +34,14 @@ public class AuthController {
     private final TipperService tipperService;
     private final TipperRoleService tipperRoleService;
     private final CommunityMembershipService communityMembershipService;
+    private final CompFamilyService compFamilyService;
     private final ModelMapper modelMapper;
 
-    public AuthController(TipperService tipperService, TipperRoleService tipperRoleService, CommunityMembershipService communityMembershipService, ModelMapper modelMapper) {
+    public AuthController(TipperService tipperService, TipperRoleService tipperRoleService, CommunityMembershipService communityMembershipService, CompFamilyService compFamilyService, ModelMapper modelMapper) {
         this.tipperService = tipperService;
         this.tipperRoleService = tipperRoleService;
         this.communityMembershipService = communityMembershipService;
+        this.compFamilyService = compFamilyService;
         this.modelMapper = modelMapper;
     }
 
@@ -69,6 +74,8 @@ public class AuthController {
 
             }
         }
+        CompetitionFamily competitionFamily =compFamilyService.findByByCompId(umsInfo.getDefaultCompetitionId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Competition Family not found"));
+        umsInfo.setDefaultCountry(competitionFamily.getCountry());
         // fetch registered communities for common tipper
         List<CommunityMembership> commMembs = communityMembershipService.findCommunities(tipper.get().getId());
         if (!commMembs.isEmpty()) {

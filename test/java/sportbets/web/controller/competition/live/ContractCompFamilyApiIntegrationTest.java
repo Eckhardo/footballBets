@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import sportbets.FootballBetsApplication;
+import sportbets.common.Country;
 import sportbets.config.TestProfileLiveTest;
 import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.repository.competition.CompetitionFamilyRepository;
@@ -27,7 +28,7 @@ public class ContractCompFamilyApiIntegrationTest {
 
     private static final Logger log = LoggerFactory.getLogger(ContractCompFamilyApiIntegrationTest.class);
     private static final String COMP_FAM = "Premier League";
-    final CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, COMP_FAM, "Description of TestLiga", true, true);
+    final CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, COMP_FAM, "Description of TestLiga", true, true, Country.GERMANY);
 
     @Autowired
     WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();
@@ -53,6 +54,8 @@ public class ContractCompFamilyApiIntegrationTest {
 
     @BeforeEach
     public void setUp() {
+
+        log.info("setUp with family::{}", compFamilyDto);
         webClient.post()
                 .uri("/families")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -81,6 +84,8 @@ public class ContractCompFamilyApiIntegrationTest {
                 .isEqualTo(COMP_FAM)
                 .jsonPath("$.hasLigaModus")
                 .isEqualTo(true)
+                .jsonPath("$.country")
+                .isEqualTo(Country.GERMANY)
                 .jsonPath("$.hasClubs")
                 .isEqualTo(true);
 

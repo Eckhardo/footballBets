@@ -47,7 +47,7 @@ public class TipperRepositoryTest {
     @Autowired
     private CompetitionRepository compRepo;
 
-    CompetitionFamily testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true, Country.GERMANY);
+    CompetitionFamily testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true,  Country.GERMANY);
 
 
     @Before

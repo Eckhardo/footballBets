@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import sportbets.FootballBetsApplication;
+import sportbets.common.Country;
 import sportbets.config.TestProfileLiveTest;
 import sportbets.persistence.entity.community.Community;
 import sportbets.persistence.entity.competition.Competition;
@@ -43,7 +44,7 @@ public class ContractCompMembApiIntegrationTest {
     private static final String TEST_COMM_2 = "My Test Community 2";
     private static final String COMP_FAM = "Premier League";
 
-    final CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, COMP_FAM, "Description of TestLiga", true, true);
+    final CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, COMP_FAM, "Description of TestLiga", true, true,  Country.GERMANY);
     final CommunityDto communityDto = new CommunityDto(null, TEST_COMM, "Description of Community");
     final CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, null, COMP_FAM);
     final CompetitionDto compDto2 = new CompetitionDto(null, TEST_COMP_2, "Description of Competition2", 3, 1, null, COMP_FAM);

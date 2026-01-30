@@ -18,6 +18,7 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
     void deleteByName(String name);
 
     @Query(" select t from Team t where t.hasClub=true")
+    @QueryHints(@QueryHint(name = "org.hibernate.cacheable", value = "true"))
     List<Team> findAllClubTeams();
 
     @Query(" select t from Team t where t.hasClub=false")

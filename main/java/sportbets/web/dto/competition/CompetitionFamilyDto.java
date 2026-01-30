@@ -2,6 +2,7 @@ package sportbets.web.dto.competition;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import sportbets.common.Country;
 import sportbets.persistence.entity.competition.CompetitionFamily;
 
 import java.io.Serializable;
@@ -21,16 +22,18 @@ public class CompetitionFamilyDto implements Serializable {
     private String description;
     private boolean hasLigaModus;
     private boolean hasClubs;
+    private Country country;
 
     public CompetitionFamilyDto() {
     }
 
-    public CompetitionFamilyDto(Long id, String name, String description, boolean hasLigaModus, boolean hasClubs) {
+    public CompetitionFamilyDto(Long id, String name, String description, boolean hasLigaModus, boolean hasClubs, Country country) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.hasLigaModus = hasLigaModus;
         this.hasClubs = hasClubs;
+        this.country = country;
     }
 
     public Long getId() {
@@ -82,6 +85,14 @@ public class CompetitionFamilyDto implements Serializable {
         this.hasClubs = hasClubs;
     }
 
+    public Country getCountry() {
+        return country;
+    }
+
+    public void setCountry(Country country) {
+        this.country = country;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -106,6 +117,7 @@ public class CompetitionFamilyDto implements Serializable {
                 "name = " + name + ", " +
                 "description = " + description + ", " +
                 "hasLigaModus = " + hasLigaModus + ", " +
+                "country = " + country + ", " +
                 "hasClubs = " + hasClubs + ")";
     }
 

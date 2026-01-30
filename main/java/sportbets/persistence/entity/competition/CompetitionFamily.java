@@ -53,6 +53,7 @@ public class CompetitionFamily {
         this.hasLigaModus = ligaModus;
         this.hasClubs = hasClubs;
         this.createdOn = LocalDateTime.now();
+        this.country = country;
 
     }
 
@@ -135,6 +136,7 @@ public class CompetitionFamily {
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", hasLigaModus=" + hasLigaModus +
+                ", country=" + country +
                 ", hasClubs=" + hasClubs +
                 '}';
     }

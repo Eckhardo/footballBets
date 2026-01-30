@@ -4,6 +4,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -26,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class CompetitionFamilyRepositoryTest {
 
+    private static final Logger log = LoggerFactory.getLogger(CompetitionFamilyRepositoryTest.class);
     private CompetitionFamily testFamily;
 
     @Autowired
@@ -35,7 +38,7 @@ public class CompetitionFamilyRepositoryTest {
     @Before
     public void setUp() {
         // Initialize test data before each test method
-        testFamily = new CompetitionFamily("TestLiga", "2. Deutsche Fussball TestLiga", true, true, Country.GERMANY);
+        testFamily = new CompetitionFamily("TestLiga", "2. Deutsche Fussball TestLiga", true, true,  Country.GERMANY);
 
         familyRepo.save(testFamily);
     }
@@ -91,5 +94,7 @@ public class CompetitionFamilyRepositoryTest {
 
         assertNotNull(foundFamily);
         assertEquals(testFamily.getName(), foundFamily.getName());
+        assertEquals(testFamily.getCountry(), foundFamily.getCountry());
+        log.info("found Family by country {}", foundFamily.getCountry());
     }
 }
