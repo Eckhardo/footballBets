@@ -23,4 +23,5 @@ public interface SpieltagService {
     List<Spieltag> getAllForCompetition(Long id);
 
     Optional<Spieltag> findByNumberAndRound(int spieltagNumber, Long id);
+    Optional<Integer> findLastMatchdayForRound(Long id);
 }

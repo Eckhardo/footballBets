@@ -15,6 +15,7 @@ import sportbets.persistence.entity.competition.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -45,7 +46,7 @@ public class SpieltagRepositoryTest {
     public void setUp() {
         // Initialize test data before test methods
         CompetitionFamily testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true,   Country.GERMANY);
-        testComp = new Competition("Saison 2025/26", "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
+        testComp = new Competition("Saison 2025/26", "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily, 18, 17);
         testFamily.addCompetition(testComp);
         testRound = new CompetitionRound(1, "Vorrunde", testComp, false);
         testComp.addCompetitionRound(testRound);
@@ -90,6 +91,25 @@ public class SpieltagRepositoryTest {
         List<Spieltag> sp = spieltagRepo.findAllByCompId(foundRound.getId());
         assertNotNull(sp);
         assertEquals(2, sp.size());
+
+    }
+
+    @Test
+    public void whenFindMaxMatchdayForRoundIsCalled_thenMaxMatchDayIsFound() {
+         Competition foundRound = compRepo.findById(1L).orElse(null);
+
+        assertNotNull(foundRound);
+
+      Optional<Integer> maxMatchdays = spieltagRepo.findLastMatchdayForRound(foundRound.getId());
+      if (maxMatchdays.isPresent()){
+          log.info(maxMatchdays.get().toString());
+          assertNotNull(maxMatchdays.get());
+          assertEquals(17, maxMatchdays.get());
+      }
+      else{
+          throw new RuntimeException("Spieltag not found");
+      }
+
 
 
         // then

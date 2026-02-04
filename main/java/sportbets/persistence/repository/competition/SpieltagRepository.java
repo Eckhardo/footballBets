@@ -31,24 +31,17 @@ public interface SpieltagRepository extends JpaRepository<Spieltag, Long> {
     Optional<Spieltag> findByNumberAndRound(int number, Long roundId);
 
 
-    @Query("select  sp from Spieltag sp join  sp.competitionRound cr" +
+    @Query("select  sp from Spieltag sp join fetch  sp.competitionRound cr" +
             " join cr.competition c"
             + " where  c.id=:id")
     List<Spieltag> findAllByCompId(Long id);
 
 
-    @Query("select  sp from Spieltag sp "
-            + " join fetch sp.competitionRound cr"
-            + " join fetch cr.competition c"
-            + " join fetch c.competitionFamily cf"
-            + " where sp.competitionRound.id = cr.id"
-            + " and cr.competition.id=c.id"
-            + " and c.competitionFamily.id=cf.id "
-            + " and sp.id=:spieltagId")
-    Optional<Spieltag> findByIdWithParents(Long spieltagId);
-
-
-    @Query("select  sp from Spieltag sp join  sp.competitionRound cr"
+    @Query("select  sp from Spieltag sp join fetch  sp.competitionRound cr"
             + " where  cr.id=:id")
     List<Spieltag> findAllByRoundId(Long id);
+
+    @Query("select  max(sp.spieltagNumber) from Spieltag sp join  sp.competitionRound cr"
+            + " where  cr.id=:id")
+    Optional<Integer> findLastMatchdayForRound(Long id);
 }

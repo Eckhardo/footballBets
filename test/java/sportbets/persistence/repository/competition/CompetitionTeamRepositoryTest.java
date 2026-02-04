@@ -46,7 +46,7 @@ public class CompetitionTeamRepositoryTest {
         // Initialize test data before test methods
 
         CompetitionFamily testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true,  Country.GERMANY);
-        testComp = new Competition("Saison 2025/26", "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
+        testComp = new Competition("Saison 2025/26", "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily, 18, 17);
         testFamily.addCompetition(testComp);
         CompetitionRound testRound = new CompetitionRound(1, "Vorrunde", testComp, false);
         testComp.addCompetitionRound(testRound);

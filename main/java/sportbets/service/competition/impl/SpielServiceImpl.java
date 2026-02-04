@@ -14,7 +14,9 @@ import sportbets.persistence.repository.competition.SpieltagRepository;
 import sportbets.persistence.repository.competition.TeamRepository;
 import sportbets.service.competition.SpielService;
 import sportbets.web.dto.competition.SpielDto;
+import sportbets.web.dto.competition.batch.MatchBatchRecord;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,6 +50,20 @@ public class SpielServiceImpl implements SpielService {
     public Optional<Spiel> findById(Long id) {
         return spielRepo.findById(id);
 
+    }
+
+    @Override
+    public List<Spiel> saveAll(MatchBatchRecord matchBatchRecord) {
+        int firstMatchdayNumber= matchBatchRecord.firstMatchdayNumber();
+        int lastMatchdayNumber= matchBatchRecord.lastMatchdayNumber();
+        int numberOfMatches = matchBatchRecord.numberOfMatches();
+         Long compRoundId=matchBatchRecord.compRoundId();
+        int numberOfMatchdays= lastMatchdayNumber-firstMatchdayNumber;
+        for (int i=0;i<=numberOfMatchdays;i++) {
+
+        }
+
+        return null;
     }
 
     @Override

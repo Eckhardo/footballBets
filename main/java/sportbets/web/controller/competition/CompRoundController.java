@@ -1,5 +1,6 @@
 package sportbets.web.controller.competition;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -32,26 +33,9 @@ public class CompRoundController {
         this.spieltagService = spieltagService;
     }
 
-    @GetMapping("/rounds")
-    public List<CompetitionRoundDto> findAll() {
-        log.debug("CompetitionRound findAll:: ");
-        List<CompetitionRound> models = roundService.findAll();
-
-        List<CompetitionRoundDto> dtos = new ArrayList<>();
-        for (CompetitionRound round : models) {
-
-
-            ModelMapper modelMapper = MapperUtil.getModelMapperForCompetition();
-            log.debug("CompetitionRound found with {}", round);
-            dtos.add(modelMapper.map(round, CompetitionRoundDto.class));
-
-        }
-        return dtos;
-    }
-
     @GetMapping("/rounds/{id}")
     public CompetitionRoundDto findOne(@PathVariable Long id) {
-        CompetitionRound model = roundService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        CompetitionRound model = roundService.findById(id).orElseThrow(() -> new EntityNotFoundException("competition round with id " + id + " not found"));
         ModelMapper modelMapper = MapperUtil.getModelMapperForCompetition();
         log.debug("CompetitionRound found with {}", model);
         return modelMapper.map(model, CompetitionRoundDto.class);

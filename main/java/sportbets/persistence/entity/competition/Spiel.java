@@ -39,7 +39,7 @@ public class Spiel implements Comparable<Spiel> {
     @JoinColumn(name = "fk_gast_team_id",foreignKey = @ForeignKey(name = "FK_SPIEL_TO_GAST_TEAM"))
     private Team gastTeam;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_spieltag_id",foreignKey = @ForeignKey(name = "FK_SPIEL_TO_SPIELTAG"))
     private Spieltag spieltag;
 

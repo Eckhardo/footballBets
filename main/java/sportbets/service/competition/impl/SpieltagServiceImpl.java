@@ -113,4 +113,9 @@ public class SpieltagServiceImpl implements SpieltagService {
 
         return base;
     }
+
+    @Override
+    public Optional<Integer> findLastMatchdayForRound(Long id) {
+        return spieltagRepository.findLastMatchdayForRound(id);
+    }
 }

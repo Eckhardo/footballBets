@@ -111,7 +111,7 @@ public class CompServiceImpl implements CompService {
     @Override
     public List<Competition> getAll() {
 
-        return compRepository.findAll();
+        return compRepository.findAllComps();
 
     }
 

@@ -36,16 +36,16 @@ public class ContractMatchApiIntegrationTest {
 
 
     private static final int TEST_MATCH_DAY = 1000;
-    private static final String TEAM_NAME = "Eintracht Braunschweig";
-    private static final String TEAM_NAME_2 = "Holstein Kiel";
-    private static final String TEAM_NAME_3 = "SC Paderborn";
+    private static final String TEAM_NAME = "Eintracht ";
+    private static final String TEAM_NAME_2 = "Holstein";
+    private static final String TEAM_NAME_3 = "Preussen";
     final CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, TEST_COMP_FAM, "Description of TestLiga", true, true,  Country.GERMANY);
-    final CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, null, TEST_COMP_FAM);
+    final CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, null, TEST_COMP_FAM, 18, 17);
     final CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, TEST_COMP_ROUND, false);
     final SpieltagDto matchDayDto = new SpieltagDto(null, TEST_MATCH_DAY, LocalDateTime.now());
-    final TeamDto teamDto = new TeamDto(null, TEAM_NAME, "Braunschweig",true);
-    final TeamDto teamDto1 = new TeamDto(null, TEAM_NAME_2, "Kiel",true);
-    final TeamDto teamDto2 = new TeamDto(null, TEAM_NAME_3, "Paderborn",true);
+    final TeamDto teamDto = new TeamDto(null, TEAM_NAME, "EIN",true);
+    final TeamDto teamDto1 = new TeamDto(null, TEAM_NAME_2, "HOL",true);
+    final TeamDto teamDto2 = new TeamDto(null, TEAM_NAME_3, "PRE",true);
     final SpielDto testSpiel1 = new SpielDto(null, 1, 3, 1, false, LocalDateTime.now(), matchDayDto.getId(), matchDayDto.getSpieltagNumber(), teamDto.getId(), teamDto.getAcronym(), teamDto2.getId(), teamDto2.getAcronym());
     final SpielDto testSpiel2 = new SpielDto(null, 2, 3, 3, false, LocalDateTime.now(), matchDayDto.getId(), matchDayDto.getSpieltagNumber(), teamDto1.getId(), teamDto1.getAcronym(), teamDto.getId(), teamDto.getAcronym());
     @Autowired

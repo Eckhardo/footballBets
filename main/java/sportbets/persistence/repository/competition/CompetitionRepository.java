@@ -54,4 +54,7 @@ public interface CompetitionRepository extends JpaRepository<Competition, Long> 
     @Query("select  c from Competition c join fetch c.competitionRounds r"
             + " join fetch r.spieltage sp where sp.id= :spieltagId")
     Optional<Competition> findBySpieltagId(Long spieltagId);
+
+    @Query(" select c from Competition c join fetch c.competitionFamily   ")
+    List<Competition> findAllComps();
 }

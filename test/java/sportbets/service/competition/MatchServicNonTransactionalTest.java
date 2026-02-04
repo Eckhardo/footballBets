@@ -59,7 +59,7 @@ public class MatchServicNonTransactionalTest {
         CompetitionFamilyDto competitionFamily = new CompetitionFamilyDto(null, TEST_COMP_FAM, "description of testliga", true, true, Country.GERMANY);
 
         CompetitionFamily savedFam = familyService.save(competitionFamily);
-        CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, savedFam.getId(), TEST_COMP_FAM);
+        CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, savedFam.getId(), TEST_COMP_FAM, 18, 17);
 
         myComp = compService.save(compDto);
         CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, TEST_COMP_ROUND, false, myComp.getId(), myComp.getName());

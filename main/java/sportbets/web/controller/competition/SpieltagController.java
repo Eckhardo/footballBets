@@ -1,9 +1,11 @@
 package sportbets.web.controller.competition;
 
+import jakarta.persistence.EntityExistsException;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,9 +17,12 @@ import sportbets.service.competition.SpieltagService;
 import sportbets.web.dto.MapperUtil;
 import sportbets.web.dto.competition.SpielDto;
 import sportbets.web.dto.competition.SpieltagDto;
+import sportbets.web.dto.competition.batch.MatchdayBatchRecord;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class SpieltagController {
@@ -65,7 +70,6 @@ public class SpieltagController {
     }
 
 
-
     @GetMapping("/matchdays/{id}")
     public SpieltagDto findOne(@PathVariable Long id) {
         log.debug("SpieltagDto:findOne::{}", id);
@@ -75,6 +79,35 @@ public class SpieltagController {
         log.debug("CompetitionRound found with {}", model);
         return modelMapper.map(model, SpieltagDto.class);
 
+    }
+
+    @GetMapping("/matchdays/{id}/max")
+    public Integer findMaxMatchday(@PathVariable Long id) {
+        log.debug("findMaxMatchday::{}", id);
+
+        return spieltagService.findLastMatchdayForRound(id).orElseThrow(() -> new  ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
+    @PostMapping("/matchdays/batch")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void postBatch(@RequestBody @Valid MatchdayBatchRecord matchdayBatchRecord) {
+        log.info("New matchday batch {}", matchdayBatchRecord);
+        int firstMatchdayNumber = matchdayBatchRecord.firstMatchdayNumber();
+        int lastMatchdayNumber=matchdayBatchRecord.lastMatchdayNumber();
+        int numberOfMatchdays = lastMatchdayNumber - firstMatchdayNumber;
+        Long compRoundId = matchdayBatchRecord.compRoundId();
+        String compRoundName = matchdayBatchRecord.compRoundName();
+        Optional<Spieltag> firstMatchday= spieltagService.findByNumberAndRound(firstMatchdayNumber,compRoundId);
+        if (firstMatchday.isPresent()) {
+            throw new EntityExistsException("Matchday already exists with number " + firstMatchdayNumber);
+        }
+        for(int index = 0; index <= numberOfMatchdays; index++) {
+            SpieltagDto spieltagDto = new SpieltagDto(null,firstMatchdayNumber, LocalDateTime.now(),compRoundId,compRoundName);
+            spieltagService.save(spieltagDto);
+
+            log.info("New matchday batch {}", firstMatchdayNumber);
+            firstMatchdayNumber++;
+        }
     }
 
 

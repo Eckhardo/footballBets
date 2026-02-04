@@ -37,17 +37,17 @@ public class ContractCompMembApiIntegrationTest {
     private static final Logger log = LoggerFactory.getLogger(ContractCompMembApiIntegrationTest.class);
 
 
-    private static final String TEST_COMP = "PremLegue: Saison 2025";
-    private static final String TEST_COMP_2 = "PremierLiga: Saison 2025";
+    private static final String TEST_COMP = "PremaLegue: Saison 2025";
+    private static final String TEST_COMP_2 = "PremieraLiga: Saison 2025";
 
     private static final String TEST_COMM = "My Test Community";
     private static final String TEST_COMM_2 = "My Test Community 2";
-    private static final String COMP_FAM = "Premier League";
+    private static final String COMP_FAM = "Premiera League";
 
     final CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, COMP_FAM, "Description of TestLiga", true, true,  Country.GERMANY);
     final CommunityDto communityDto = new CommunityDto(null, TEST_COMM, "Description of Community");
-    final CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, null, COMP_FAM);
-    final CompetitionDto compDto2 = new CompetitionDto(null, TEST_COMP_2, "Description of Competition2", 3, 1, null, COMP_FAM);
+    final CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, null, COMP_FAM, 18, 17);
+    final CompetitionDto compDto2 = new CompetitionDto(null, TEST_COMP_2, "Description of Competition2", 3, 1, null, COMP_FAM, 18, 17);
 
     @Autowired
     WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();

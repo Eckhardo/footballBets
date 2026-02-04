@@ -13,6 +13,10 @@ import sportbets.persistence.entity.competition.Spiel;
 import sportbets.service.competition.SpielService;
 import sportbets.web.dto.MapperUtil;
 import sportbets.web.dto.competition.SpielDto;
+import sportbets.web.dto.competition.batch.MatchBatchRecord;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 public class MatchController {
@@ -35,6 +39,15 @@ public class MatchController {
         ModelMapper modelMapper = MapperUtil.getModelMapperForSpiel();
         log.debug("Spiel found with {}", model);
         return modelMapper.map(model, SpielDto.class);
+
+    }
+
+    @PostMapping("/matches/batch")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void postBatch(@RequestBody @Valid MatchBatchRecord matchBatchRecord) {
+        log.info("New matches  {}", matchBatchRecord);
+
+        spielService.saveAll(matchBatchRecord);
 
     }
 

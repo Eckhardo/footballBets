@@ -41,7 +41,7 @@ class ModelMapperEntityDtoTest {
     void checkModelMapper() {
         CompetitionFamily testFamily = new CompetitionFamily(TEST_FAM, TEST_FAM_DESCR, true, true,  Country.GERMANY);
 
-        Competition testComp = new Competition(TEST_COMP, TEST_COMP_DESCR, 3, 1, testFamily);
+        Competition testComp = new Competition(TEST_COMP, TEST_COMP_DESCR, 3, 1, testFamily, 18, 17);
         CompetitionRound testRound = new CompetitionRound(1, COMP_ROUND, testComp, false);
 
 
@@ -74,7 +74,7 @@ class ModelMapperEntityDtoTest {
 
         CompetitionFamily testFamily = new CompetitionFamily(TEST_FAM, TEST_FAM_DESCR, true, true,  Country.GERMANY);
         testFamily.setId(10L);
-        Competition testComp = new Competition(TEST_COMP, TEST_COMP_DESCR, 3, 1, testFamily);
+        Competition testComp = new Competition(TEST_COMP, TEST_COMP_DESCR, 3, 1, testFamily, 18, 17);
         testComp.setId(5L);
         CompetitionDto compDto = modelMapper.map(testComp, CompetitionDto.class);
 
@@ -87,7 +87,7 @@ class ModelMapperEntityDtoTest {
 
         CompetitionFamily testFamily = new CompetitionFamily(TEST_FAM, TEST_FAM_DESCR, true, true,  Country.GERMANY);
         testFamily.setId(10L);
-        Competition testComp = new Competition(TEST_COMP, TEST_COMP_DESCR, 3, 1, testFamily);
+        Competition testComp = new Competition(TEST_COMP, TEST_COMP_DESCR, 3, 1, testFamily, 18, 17);
         testComp.setId(5L);
         CompetitionRound testRound = new CompetitionRound(1, COMP_ROUND, testComp, false);
         CompetitionRoundDto compRoundDto = modelMapper.map(testRound, CompetitionRoundDto.class);
@@ -102,7 +102,7 @@ class ModelMapperEntityDtoTest {
 
         CompetitionFamily testFamily = new CompetitionFamily(TEST_FAM, TEST_FAM_DESCR, true, true,  Country.GERMANY);
         testFamily.setId(10L);
-        Competition testComp = new Competition(TEST_COMP, TEST_COMP_DESCR, 3, 1, testFamily);
+        Competition testComp = new Competition(TEST_COMP, TEST_COMP_DESCR, 3, 1, testFamily, 18, 17);
         testComp.setId(5L);
         CompetitionRound testRound = new CompetitionRound(1, COMP_ROUND, testComp, false);
         testRound.setId(7L);
@@ -123,7 +123,7 @@ class ModelMapperEntityDtoTest {
 
         CompetitionFamily testFamily = new CompetitionFamily(TEST_FAM, TEST_FAM_DESCR, true, true,  Country.GERMANY);
         testFamily.setId(10L);
-        Competition testComp = new Competition(TEST_COMP, TEST_COMP_DESCR, 3, 1, testFamily);
+        Competition testComp = new Competition(TEST_COMP, TEST_COMP_DESCR, 3, 1, testFamily, 18, 17);
         testComp.setId(5L);
         CompetitionRound testRound = new CompetitionRound(1, COMP_ROUND, testComp, false);
         testRound.setId(7L);
@@ -173,7 +173,7 @@ class ModelMapperEntityDtoTest {
 
         CompetitionFamily testFamily = new CompetitionFamily(TEST_FAM, TEST_FAM_DESCR, true, true,  Country.GERMANY);
         testFamily.setId(10L);
-        Competition testComp = new Competition(TEST_COMP, TEST_COMP_DESCR, 3, 1, testFamily);
+        Competition testComp = new Competition(TEST_COMP, TEST_COMP_DESCR, 3, 1, testFamily, 18, 17);
         testComp.setId(5L);
 
         Team team1 = new Team("Test1", "1", true);
@@ -215,7 +215,7 @@ class ModelMapperEntityDtoTest {
         final ModelMapper myMapper = MapperUtil.getModelMapperForTipperRole();
 
         CompetitionFamily testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true,  Country.GERMANY);
-        Competition testComp = new Competition(COMP_NAME, "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
+        Competition testComp = new Competition(COMP_NAME, "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily, 18, 17);
         testComp.setId(4L);
 
         CompetitionRole competitionRole = new CompetitionRole(COMP_NAME, "Meine Test Rolle", testComp);
@@ -259,7 +259,7 @@ class ModelMapperEntityDtoTest {
         final ModelMapper myCompRoleMapper = MapperUtil.getModelMapperForCompetitionRole();
 
         CompetitionFamily testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true,  Country.GERMANY);
-        Competition testComp = new Competition(COMP_NAME, "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
+        Competition testComp = new Competition(COMP_NAME, "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily, 18, 17);
         testComp.setId(4L);
 
         CompetitionRole competitionRole = new CompetitionRole(COMP_NAME, "Meine Test Rolle", testComp);
