@@ -19,6 +19,8 @@ public class CompetitionRound {
     private boolean hasGroups = false;
     @Column(nullable = false)
     private final LocalDateTime createdOn = LocalDateTime.now();
+    private int teamsSize ;
+    private int matchdaysSize;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fk_comp_id", foreignKey = @ForeignKey(name = "FK_ROUND_TO_COMP"))
@@ -39,14 +41,14 @@ public class CompetitionRound {
      * Simple properties constructor.
      */
 
-    public CompetitionRound(int roundNumber, String name, Competition competition, boolean hasGroups) {
+    public CompetitionRound(int roundNumber, String name, Competition competition, boolean hasGroups, int teamsSize, int matchdaysSize) {
         this.roundNumber = roundNumber;
         this.name = name;
         this.competition = competition;
         this.hasGroups = hasGroups;
+        this.teamsSize=teamsSize;
+        this.matchdaysSize=matchdaysSize;
 
-        // guarantee ref integrity
-        //    ;
     }
 //-------- Getter & Setter-------------------
 
@@ -107,6 +109,22 @@ public class CompetitionRound {
 
     public void setRoundNumber(int roundNumber) {
         this.roundNumber = roundNumber;
+    }
+
+    public int getTeamsSize() {
+        return teamsSize;
+    }
+
+    public void setTeamsSize(int teamsSize) {
+        this.teamsSize = teamsSize;
+    }
+
+    public int getMatchdaysSize() {
+        return matchdaysSize;
+    }
+
+    public void setMatchdaysSize(int matchdaysSize) {
+        this.matchdaysSize = matchdaysSize;
     }
 
     @Override

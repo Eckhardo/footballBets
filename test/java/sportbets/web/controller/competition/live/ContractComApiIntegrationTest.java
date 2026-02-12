@@ -38,7 +38,7 @@ public class ContractComApiIntegrationTest {
     private static final String TEST_COMP = "TestLiga: Saison 2025";
     private static final String TEST_COMP_2 = "TestLiga: Saison 2026";
     final CompetitionFamilyDto compFamilyDto = TestConstants.TEST_FAMILY;
-    final CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, null, compFamilyDto.getName(), 18, 17);
+    final CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, null, compFamilyDto.getName());
     @Autowired
     WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();
     @Autowired

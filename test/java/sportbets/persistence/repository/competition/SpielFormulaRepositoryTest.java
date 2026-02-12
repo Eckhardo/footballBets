@@ -14,7 +14,6 @@ import sportbets.persistence.entity.competition.CompetitionRound;
 import sportbets.persistence.rowObject.TeamPositionSummaryRow;
 import sportbets.web.dto.competition.search.TableSearchCriteria;
 
-
 import java.util.Comparator;
 import java.util.List;
 

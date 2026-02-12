@@ -51,10 +51,10 @@ public class MatchdayServiceNonTransactionalTest {
     public void setup() {
         final CompetitionFamilyDto competitionFamily = new CompetitionFamilyDto(null, TEST_COMP_FAM, "description of testliga", true, true,  Country.GERMANY);
         CompetitionFamily savedFam = familyService.save(competitionFamily);
-        CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, savedFam.getId(), TEST_COMP_FAM, 18, 17);
+        CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, savedFam.getId(), TEST_COMP_FAM);
 
         savedComp = compService.save(compDto);
-        CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, TEST_COMP_ROUND, false, savedComp.getId(), savedComp.getName());
+        CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, TEST_COMP_ROUND, false, savedComp.getId(), savedComp.getName(), 18, 17);
         savedCompRound = compRoundService.save(compRoundDto);
 
     }

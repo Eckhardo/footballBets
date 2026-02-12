@@ -23,10 +23,6 @@ public class CompetitionDto implements Serializable {
     private int winMultiplicator;
     @Range(min = 1, max = 9, message = "Remis Multiplicator  must be single-digit number")
     private int remisMultiplicator;
-    @Range(min = 1, max = 30, message = "numberOfTeams  must be less than 31")
-    private int numberOfTeams = 18;
-    @Range(min = 1, max = 30, message = "numberOfMatchdaysPerRound  must be less than 31")
-    private int numberOfMatchdaysPerRound = 17;
     @NotNull(message = " family id cannot be null")
     private Long familyId;
     private String familyName;
@@ -34,14 +30,12 @@ public class CompetitionDto implements Serializable {
     public CompetitionDto() {
     }
 
-    public CompetitionDto(Long id, String name, String description, int winMultiplicator, int remisMultiplicator, Long familyId, String familyName, int numberOfTeams, int numberOfMatchdaysPerRound) {
+    public CompetitionDto(Long id, String name, String description, int winMultiplicator, int remisMultiplicator, Long familyId, String familyName) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.winMultiplicator = winMultiplicator;
         this.remisMultiplicator = remisMultiplicator;
-        this.numberOfTeams = numberOfTeams;
-        this.numberOfMatchdaysPerRound = numberOfMatchdaysPerRound;
         this.familyId = familyId;
         this.familyName = familyName;
 
@@ -88,21 +82,6 @@ public class CompetitionDto implements Serializable {
         this.remisMultiplicator = remisMultiplicator;
     }
 
-    public int getNumberOfTeams() {
-        return numberOfTeams;
-    }
-
-    public void setNumberOfTeams(int numberOfTeams) {
-        this.numberOfTeams = numberOfTeams;
-    }
-
-    public int getNumberOfMatchdaysPerRound() {
-        return numberOfMatchdaysPerRound;
-    }
-
-    public void setNumberOfMatchdaysPerRound(int numberOfMatchdaysPerRound) {
-        this.numberOfMatchdaysPerRound = numberOfMatchdaysPerRound;
-    }
 
     public Long getFamilyId() {
         return familyId;

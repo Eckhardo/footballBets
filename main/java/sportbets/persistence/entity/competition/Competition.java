@@ -26,8 +26,6 @@ public class Competition {
     private String description;
     private int winMultiplicator = 3;
     private int remisMultiplicator = 1;
-    private int numberOfTeams = 18;
-    private int numberOfMatchdaysPerRound = 17;
 
     @Column(nullable = false)
     private final LocalDateTime createdOn = LocalDateTime.now();
@@ -60,15 +58,12 @@ public class Competition {
     /**
      * Full constructor
      */
-    public Competition(String name, String description, int winMultiplicator, int remisMultiplicator, @NotNull CompetitionFamily competitionFamily, int numberOfTeams, int numberOfMatchdaysPerRound) {
+    public Competition(String name, String description, int winMultiplicator, int remisMultiplicator, @NotNull CompetitionFamily competitionFamily) {
         this.name = name;
         this.description = description;
         this.competitionFamily = competitionFamily;
         this.winMultiplicator = winMultiplicator;
         this.remisMultiplicator = remisMultiplicator;
-        this.numberOfTeams = numberOfTeams;
-        this.numberOfMatchdaysPerRound = numberOfMatchdaysPerRound;
-
 
     }
 
@@ -105,22 +100,6 @@ public class Competition {
 
     public String getDescription() {
         return description;
-    }
-
-    public int getNumberOfTeams() {
-        return numberOfTeams;
-    }
-
-    public void setNumberOfTeams(int numberOfTeams) {
-        this.numberOfTeams = numberOfTeams;
-    }
-
-    public int getNumberOfMatchdaysPerRound() {
-        return numberOfMatchdaysPerRound;
-    }
-
-    public void setNumberOfMatchdaysPerRound(int numberOfMatchdaysPerRound) {
-        this.numberOfMatchdaysPerRound = numberOfMatchdaysPerRound;
     }
 
     public void setDescription(String description) {

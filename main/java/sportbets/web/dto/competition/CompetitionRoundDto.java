@@ -17,6 +17,9 @@ public class CompetitionRoundDto implements Serializable {
     @NotBlank(message = "name must not be empty")
     private String name;
     private boolean hasGroups = false;
+    private int teamsSize ;
+    private int matchdaysSize;
+
     @NotNull (message = " competition id cannot be null")
     private Long compId;
     @NotBlank (message = " competition name cannot be empty")
@@ -33,10 +36,12 @@ public class CompetitionRoundDto implements Serializable {
 
     }
 
-    public CompetitionRoundDto(Long id, int roundNumber, String name, boolean hasGroups, Long compId, String compName) {
+    public CompetitionRoundDto(Long id, int roundNumber, String name, boolean hasGroups, Long compId, String compName, int teamsSize, int matchdaysSize) {
         this(id, roundNumber, name, hasGroups);
         this.compId = compId;
         this.compName = compName;
+        this.teamsSize = teamsSize;
+        this.matchdaysSize = matchdaysSize;
     }
 
     public Long getId() {
@@ -89,6 +94,22 @@ public class CompetitionRoundDto implements Serializable {
 
     public void setHasGroups(boolean hasGroups) {
         this.hasGroups = hasGroups;
+    }
+
+    public int getTeamsSize() {
+        return teamsSize;
+    }
+
+    public void setTeamsSize(int teamsSize) {
+        this.teamsSize = teamsSize;
+    }
+
+    public int getMatchdaysSize() {
+        return matchdaysSize;
+    }
+
+    public void setMatchdaysSize(int matchdaysSize) {
+        this.matchdaysSize = matchdaysSize;
     }
 
     @Override

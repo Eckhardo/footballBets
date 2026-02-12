@@ -1,8 +1,6 @@
 package sportbets.persistence.entity.competition;
 
 import jakarta.persistence.*;
-import sportbets.common.Country;
-import sportbets.common.CountryAttributeConverter;
 
 import java.util.HashSet;
 import java.util.Objects;

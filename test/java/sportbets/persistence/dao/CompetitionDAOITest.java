@@ -38,7 +38,7 @@ public class CompetitionDAOITest {
     public void setUp() {
         // Initialize test data before test methods
         testFamily = new CompetitionFamily("3. Bundesliga", "1. Deutsche Fussball Bundesliga", true, true,   Country.GERMANY);
-        testComp = new Competition("Saison 2025/26", "3. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily, 18, 17);
+        testComp = new Competition("Saison 2025/26", "3. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
 
         testFamily.addCompetition(testComp);
         log.debug("Save all cascade");

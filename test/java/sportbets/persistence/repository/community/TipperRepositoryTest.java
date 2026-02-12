@@ -52,7 +52,7 @@ public class TipperRepositoryTest {
 
     @Before
     public void setUp() {
-        Competition testComp = new Competition("TestLiga: Saison 2025/26", "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily, 18, 17);
+        Competition testComp = new Competition("TestLiga: Saison 2025/26", "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
         testFamily.addCompetition(testComp);
         familyRepo.save(testFamily);
         Competition savedComp = compRepo.findByName(testComp.getName()).orElseThrow();

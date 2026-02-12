@@ -77,7 +77,7 @@ public class ContractTipperApiIntegrationTest {
     @BeforeEach
     public void setUp() {
         CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, TEST_COMP_FAM, "Description of TestLiga", true, true,  Country.GERMANY);
-        CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, null, TEST_COMP_FAM, 18, 17);
+        CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, null, TEST_COMP_FAM);
 
         webClient.post()
                 .uri("/families")

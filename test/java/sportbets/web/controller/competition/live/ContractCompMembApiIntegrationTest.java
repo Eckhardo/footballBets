@@ -46,8 +46,8 @@ public class ContractCompMembApiIntegrationTest {
 
     final CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, COMP_FAM, "Description of TestLiga", true, true,  Country.GERMANY);
     final CommunityDto communityDto = new CommunityDto(null, TEST_COMM, "Description of Community");
-    final CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, null, COMP_FAM, 18, 17);
-    final CompetitionDto compDto2 = new CompetitionDto(null, TEST_COMP_2, "Description of Competition2", 3, 1, null, COMP_FAM, 18, 17);
+    final CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, null, COMP_FAM);
+    final CompetitionDto compDto2 = new CompetitionDto(null, TEST_COMP_2, "Description of Competition2", 3, 1, null, COMP_FAM);
 
     @Autowired
     WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();

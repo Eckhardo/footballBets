@@ -47,7 +47,7 @@ public class CompetitionRoleServiceTest {
     public void setup() {
 
         CompetitionFamily savedFam = familyService.save(competitionFamily);
-        CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, savedFam.getId(), TEST_COMP_FAM, 18, 17);
+        CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, savedFam.getId(), TEST_COMP_FAM);
 
         savedComp = compService.save(compDto);
         assertNotNull(savedComp);

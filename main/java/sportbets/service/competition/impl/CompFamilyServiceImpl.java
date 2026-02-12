@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.repository.competition.CompetitionFamilyRepository;
 import sportbets.service.competition.CompFamilyService;
@@ -15,7 +14,6 @@ import sportbets.web.dto.competition.CompetitionFamilyDto;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class CompFamilyServiceImpl implements CompFamilyService {

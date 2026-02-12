@@ -56,7 +56,7 @@ public class CompRoundServiceTest {
     @Test
     void whenValidCompRound_thenCompRoundShouldBeSaved() {
 
-        CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, "TEST Round", false, null, compDto.getName());;
+        CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, "TEST Round", false, null, compDto.getName(), 18, 17);;
         compRoundDto.setCompId(savedComp.getId());
         CompetitionRound savedCompRound = compRoundService.save(compRoundDto);
 
@@ -71,7 +71,7 @@ public class CompRoundServiceTest {
 
     @Test
     void whenValidCompRound_thenCompRoundShouldBeUpdated() {
-        CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, "TEST Round", false, null, compDto.getName());;
+        CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, "TEST Round", false, null, compDto.getName(), 18, 17);;
 
         compRoundDto.setCompId(savedComp.getId());
         savedCompRound = compRoundService.save(compRoundDto);

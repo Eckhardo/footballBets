@@ -22,7 +22,6 @@ import sportbets.service.community.TipperService;
 import sportbets.service.competition.CompFamilyService;
 import sportbets.web.dto.authorization.LoginRequestDto;
 import sportbets.web.dto.authorization.UmsInfoDto;
-import sportbets.web.dto.competition.CompetitionFamilyDto;
 
 import java.util.List;
 import java.util.Optional;

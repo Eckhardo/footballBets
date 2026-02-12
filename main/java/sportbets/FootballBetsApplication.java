@@ -13,14 +13,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import sportbets.common.DateUtil;
-import sportbets.persistence.builder.*;
-import sportbets.persistence.entity.authorization.CommunityRole;
-import sportbets.persistence.entity.authorization.CompetitionRole;
-import sportbets.persistence.entity.authorization.Role;
-import sportbets.persistence.entity.authorization.TipperRole;
-import sportbets.persistence.entity.community.Community;
-import sportbets.persistence.entity.community.CommunityMembership;
-import sportbets.persistence.entity.community.Tipper;
+import sportbets.persistence.builder.CompetitionConstants;
 import sportbets.persistence.entity.competition.*;
 import sportbets.persistence.repository.authorization.RoleRepository;
 import sportbets.persistence.repository.authorization.TipperRoleRepository;
@@ -28,7 +21,6 @@ import sportbets.persistence.repository.community.CommunityMembershipRepository;
 import sportbets.persistence.repository.community.CommunityRepository;
 import sportbets.persistence.repository.community.TipperRepository;
 import sportbets.persistence.repository.competition.*;
-import sportbets.service.competition.TeamService;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -366,7 +358,7 @@ public class FootballBetsApplication {
                 Team gastTeam = teamRepository.findByName(auswärts).orElseThrow();
                 log.info("stop ################################################################");
                 Spiel spiel = new Spiel(spieltag, i, dt, heimTeam, gastTeam, homeGoals, guestGoals, stattgefunden);
-                spiele.add(spiel);
+              //  spiele.add(spiel);
 
                 int heimPoints = SpielFormula.calculatePoints(comp,
                         spiel.getHeimTore(), spiel.getGastTore(), spiel

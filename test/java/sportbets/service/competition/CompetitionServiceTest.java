@@ -58,7 +58,7 @@ public class CompetitionServiceTest {
     @Test
     void whenValidComp_thenCompShouldBeSaved() {
 
-        CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, savedFam.getId(), savedFam.getName(), 18, 17);
+        CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, savedFam.getId(), savedFam.getName());
         Competition savedComp = compService.save(compDto);
 
         assertThat(savedComp.getId()).isNotNull();
@@ -73,7 +73,7 @@ public class CompetitionServiceTest {
     @Test
     void whenValidComp_thenCompShouldBeUpdated() {
 
-        CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, savedFam.getId(), savedFam.getName(), 18, 17);
+        CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, savedFam.getId(), savedFam.getName());
         Competition savedComp = compService.save(compDto);
         compDto.setName(TEST_COMP_2);
         compDto.setWinMultiplicator(5);

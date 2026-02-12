@@ -40,7 +40,7 @@ public class ContractMatchApiIntegrationTest {
     private static final String TEAM_NAME_2 = "Holstein";
     private static final String TEAM_NAME_3 = "Preussen";
     final CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, TEST_COMP_FAM, "Description of TestLiga", true, true,  Country.GERMANY);
-    final CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, null, TEST_COMP_FAM, 18, 17);
+    final CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, null, TEST_COMP_FAM);
     final CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, TEST_COMP_ROUND, false);
     final SpieltagDto matchDayDto = new SpieltagDto(null, TEST_MATCH_DAY, LocalDateTime.now());
     final TeamDto teamDto = new TeamDto(null, TEAM_NAME, "EIN",true);

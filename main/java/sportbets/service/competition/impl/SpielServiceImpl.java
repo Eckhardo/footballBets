@@ -5,18 +5,18 @@ import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 import sportbets.persistence.entity.competition.*;
-import sportbets.persistence.repository.competition.CompetitionRepository;
-import sportbets.persistence.repository.competition.SpielRepository;
-import sportbets.persistence.repository.competition.SpieltagRepository;
-import sportbets.persistence.repository.competition.TeamRepository;
+import sportbets.persistence.repository.competition.*;
 import sportbets.service.competition.SpielService;
 import sportbets.web.dto.competition.SpielDto;
 import sportbets.web.dto.competition.batch.MatchBatchRecord;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,13 +25,15 @@ public class SpielServiceImpl implements SpielService {
     private static final Logger log = LoggerFactory.getLogger(SpielServiceImpl.class);
 
     private final CompetitionRepository competitionRepo;
+    private final CompetitionRoundRepository competitionRoundRepo;
     private final SpielRepository spielRepo;
     private final SpieltagRepository spieltagRepo;
     private final TeamRepository teamRepo;
     private final ModelMapper modelMapper;
 
-    public SpielServiceImpl(CompetitionRepository competitionRepo, SpielRepository spielRepo, SpieltagRepository spieltagRepo, TeamRepository teamRepo, ModelMapper modelMapper) {
+    public SpielServiceImpl(CompetitionRepository competitionRepo, CompetitionRoundRepository competitionRoundRepo, SpielRepository spielRepo, SpieltagRepository spieltagRepo, TeamRepository teamRepo, ModelMapper modelMapper) {
         this.competitionRepo = competitionRepo;
+        this.competitionRoundRepo = competitionRoundRepo;
         this.spielRepo = spielRepo;
         this.spieltagRepo = spieltagRepo;
         this.teamRepo = teamRepo;
@@ -54,16 +56,57 @@ public class SpielServiceImpl implements SpielService {
 
     @Override
     public List<Spiel> saveAll(MatchBatchRecord matchBatchRecord) {
-        int firstMatchdayNumber= matchBatchRecord.firstMatchdayNumber();
-        int lastMatchdayNumber= matchBatchRecord.lastMatchdayNumber();
-        int numberOfMatches = matchBatchRecord.numberOfMatches();
-         Long compRoundId=matchBatchRecord.compRoundId();
-        int numberOfMatchdays= lastMatchdayNumber-firstMatchdayNumber;
-        for (int i=0;i<=numberOfMatchdays;i++) {
-
+        int firstMatchday = matchBatchRecord.firstMatchdayNumber();
+        int lastMatchday = matchBatchRecord.lastMatchdayNumber();
+        Long compRoundId = matchBatchRecord.compRoundId();
+        Optional<Spieltag> spieltag = spieltagRepo.findByNumberAndRound(firstMatchday, compRoundId);
+        if (spieltag.isPresent()) {
+            throw new EntityExistsException("Spieltag already exists");
         }
 
-        return null;
+        Competition comp = competitionRepo.findByRoundId(compRoundId).orElseThrow(() -> new EntityNotFoundException("Competition not found"));
+        CompetitionRound compRound = competitionRoundRepo.findById(compRoundId).orElseThrow(() -> new EntityNotFoundException("CompetitionRound not found"));
+        int numberOfMatches = compRound.getTeamsSize() / 2;
+        int numberOfRequestedMatchdays = lastMatchday - firstMatchday;
+        int numberOfAllowedMatchdays = compRound.getMatchdaysSize();
+        if (numberOfAllowedMatchdays != numberOfRequestedMatchdays) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Number of requested (" + numberOfRequestedMatchdays + ") Matchdays  must be equal to allowed number(" + numberOfAllowedMatchdays + ") of Matchdays per Round");
+        }
+
+        Team heimTeam = teamRepo.findById(matchBatchRecord.heimTeamId()).orElseThrow(() -> new EntityNotFoundException("Team heim not found"));
+        Team gastTeam = teamRepo.findById(matchBatchRecord.gastTeamId()).orElseThrow(() -> new EntityNotFoundException("Team gast not found"));
+
+        List<Spiel> spiele = new ArrayList<>();
+        for (int i = 0; i <= numberOfRequestedMatchdays; i++) {
+            Spieltag matchday = spieltagRepo.findByNumberAndRound(firstMatchday, compRoundId).orElseThrow(() -> new EntityNotFoundException("Spieltag not found"));
+
+            for (int k = 0; k <= numberOfMatches; k++) {
+                Spiel spiel = new Spiel(matchday, i, LocalDateTime.now(), heimTeam, gastTeam, 0, 0, false);
+                //  spiele.add(spiel);
+
+                int heimPoints = SpielFormula.calculatePoints(comp,
+                        spiel.getHeimTore(), spiel.getGastTore(), spiel
+                                .isStattgefunden());
+                SpielFormula heimFormel = new SpielFormula(spiel, heimTeam.getName(), heimTeam.getAcronym(),
+                        true, spiel.getHeimTore(), spiel
+                        .getGastTore(), heimPoints);
+
+                //  spielFormulaRepo.save(heimFormel);
+                int gastPoints = SpielFormula.calculatePoints(comp,
+                        spiel.getGastTore(), spiel.getHeimTore(), spiel
+                                .isStattgefunden());
+                SpielFormula gastFormel = new SpielFormula(spiel, gastTeam.getName(), gastTeam.getAcronym(),
+                        false, spiel.getGastTore(), spiel
+                        .getHeimTore(), gastPoints);
+
+                spiel.addSpielFormula(heimFormel);
+                spiel.addSpielFormula(gastFormel);
+                spiele.add(spiel);
+            }
+            firstMatchday++;
+        }
+
+        return List.of();
     }
 
     @Override

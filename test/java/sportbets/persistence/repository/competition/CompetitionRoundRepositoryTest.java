@@ -43,9 +43,9 @@ public class CompetitionRoundRepositoryTest {
     public void setUp() {
         // Initialize test data before test methods
         CompetitionFamily testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true,  Country.GERMANY);
-        testComp = new Competition("TestLiga: Saison 2025/26", "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily, 18, 17);
+        testComp = new Competition("TestLiga: Saison 2025/26", "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
         testFamily.addCompetition(testComp);
-        testRound = new CompetitionRound(1, "Hinrunde", testComp, false);
+        testRound = new CompetitionRound(1, "Hinrunde", testComp, false, 18, 17);
         testComp.addCompetitionRound(testRound);
         System.out.println("Save all cascade");
         familyRepo.save(testFamily);

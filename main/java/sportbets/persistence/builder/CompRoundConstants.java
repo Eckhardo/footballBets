@@ -7,10 +7,10 @@ public class CompRoundConstants {
 
 
     public static CompetitionRound getHinrunde(Competition comp) {
-        return new CompetitionRound(1, "Hinrunde", comp, false);
+        return new CompetitionRound(1, "Hinrunde", comp, false, 18, 17);
     }
 
     public static CompetitionRound getRueckrunde(Competition comp) {
-        return new CompetitionRound(2, "Rueckrunde", comp, false);
+        return new CompetitionRound(2, "Rueckrunde", comp, false, 18, 17);
     }
 }
