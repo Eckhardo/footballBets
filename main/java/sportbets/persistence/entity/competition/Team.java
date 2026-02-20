@@ -1,0 +1,99 @@
+package sportbets.persistence.entity.competition;
+
+import jakarta.persistence.*;
+
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+
+@Entity
+public class Team {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(unique = true, nullable = false)
+    private String name;
+    @Column(unique = true, nullable = false)
+    private String acronym;
+
+    private boolean hasClub = true;
+
+    @OneToMany(mappedBy = "team", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    private final Set<CompetitionTeam> competitionTeams = new HashSet<>();
+
+
+    public Team() {
+
+    }
+
+    public Team(String name, String acronym, boolean isClub) {
+        this.name = name;
+        this.acronym = acronym;
+        this.hasClub = isClub;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getAcronym() {
+        return acronym;
+    }
+
+    public void setAcronym(String acronym) {
+        this.acronym = acronym;
+    }
+
+    public boolean isHasClub() {
+        return hasClub;
+    }
+
+    public void setHasClub(boolean hasClub) {
+        this.hasClub = hasClub;
+    }
+
+    public Set<CompetitionTeam> getCompetitionTeams() {
+        return competitionTeams;
+    }
+
+    public void addCompetitionTeam(CompetitionTeam competitionTeam) {
+        if (competitionTeam == null)
+            throw new IllegalArgumentException("Can't add a null competitionTeam.");
+        this.getCompetitionTeams().add(competitionTeam);
+
+    }
+
+    @Override
+    public String toString() {
+        return "Team{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", acronym='" + acronym + '\'' +
+                ", isClub=" + hasClub +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Team team = (Team) o;
+        return Objects.equals(id, team.id) && Objects.equals(name, team.name) && Objects.equals(acronym, team.acronym);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, acronym, hasClub);
+    }
+}

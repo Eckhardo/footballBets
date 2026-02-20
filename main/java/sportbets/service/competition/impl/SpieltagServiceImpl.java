@@ -1,0 +1,121 @@
+package sportbets.service.competition.impl;
+
+import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
+import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import sportbets.persistence.entity.competition.CompetitionRound;
+import sportbets.persistence.entity.competition.Spieltag;
+import sportbets.persistence.repository.competition.CompetitionRoundRepository;
+import sportbets.persistence.repository.competition.SpieltagRepository;
+import sportbets.service.competition.SpieltagService;
+import sportbets.web.dto.competition.SpieltagDto;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class SpieltagServiceImpl implements SpieltagService {
+
+    private static final Logger log = LoggerFactory.getLogger(SpieltagServiceImpl.class);
+    private final SpieltagRepository spieltagRepository;
+    private final CompetitionRoundRepository compRoundRepo;
+    private final ModelMapper modelMapper;
+
+    public SpieltagServiceImpl(SpieltagRepository spieltagRepository, CompetitionRoundRepository compRoundRepo, ModelMapper modelMapper) {
+
+        this.spieltagRepository = spieltagRepository;
+
+        this.compRoundRepo = compRoundRepo;
+        this.modelMapper = modelMapper;
+    }
+
+    @Override
+    @Transactional
+    public List<Spieltag> getAll() {
+
+        return spieltagRepository.findAll();
+
+    }
+
+    @Override
+    public Optional<Spieltag> findByNumberAndRound(int spieltagNumber, Long id) {
+        return spieltagRepository.findByNumberAndRound(spieltagNumber, id);
+    }
+
+
+    @Override
+    public Optional<Spieltag> findById(Long id) {
+        return spieltagRepository.findById(id);
+    }
+
+    @Override
+    @Transactional
+    public Spieltag save(SpieltagDto spieltagDto) {
+        log.debug("save :: {}", spieltagDto);
+        Optional<Spieltag> optionalSpieltag = spieltagRepository.findByNumberWithRoundId(spieltagDto.getSpieltagNumber(), spieltagDto.getCompRoundId());
+        if (optionalSpieltag.isPresent()) {
+            throw new EntityExistsException("Spieltag  already exist with given number:" + spieltagDto.getSpieltagNumber());
+        }
+        CompetitionRound competitionRound = compRoundRepo.findById(spieltagDto.getCompRoundId()).orElseThrow(() -> new EntityNotFoundException("round not found "));
+        Spieltag model = modelMapper.map(spieltagDto, Spieltag.class);
+        model.setCompetitionRound(competitionRound);
+
+        return spieltagRepository.save(model);
+
+
+    }
+
+    @Override
+    @Transactional
+    public Optional<Spieltag> updateMatchDay(Long id, SpieltagDto spieltagDto) {
+        log.debug("updateMatchday:: {}", spieltagDto);
+        CompetitionRound competitionRound = compRoundRepo.findById(spieltagDto.getCompRoundId()).orElseThrow(() -> new EntityNotFoundException("round not found "));
+        Spieltag model = modelMapper.map(spieltagDto, Spieltag.class);
+        model.setCompetitionRound(competitionRound);
+
+
+        Optional<Spieltag> updateModel = spieltagRepository.findById(id);
+        if (updateModel.isEmpty()) {
+            throw new EntityNotFoundException("spieltag  does not exits given id:" + spieltagDto.getId());
+        }
+
+
+        Spieltag updatedModel = updateFields(updateModel.get(), model);
+        log.debug("updated matchhday  with {}", model);
+        return Optional.of(spieltagRepository.save(updatedModel));
+
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(Long id) {
+        spieltagRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Spieltag> getAllForCompetition(Long id) {
+        return spieltagRepository.findAllByCompId(id);
+
+    }
+
+    @Override
+    public List<Spieltag> getAllForRound(Long id) {
+        return spieltagRepository.findAllByRoundId(id);
+    }
+
+    private Spieltag updateFields(Spieltag base, Spieltag updatedMatchDay) {
+        base.setSpieltagNumber(updatedMatchDay.getSpieltagNumber());
+        base.setStartDate(updatedMatchDay.getStartDate());
+
+        return base;
+    }
+
+    @Override
+    public Optional<Integer> findLastMatchdayForRound(Long id) {
+        return spieltagRepository.findLastMatchdayForRound(id);
+    }
+}

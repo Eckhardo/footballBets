@@ -1,0 +1,90 @@
+package sportbets.service.authorization;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
+import sportbets.common.Country;
+import sportbets.persistence.entity.authorization.CompetitionRole;
+import sportbets.persistence.entity.competition.Competition;
+import sportbets.persistence.entity.competition.CompetitionFamily;
+import sportbets.service.competition.CompFamilyService;
+import sportbets.service.competition.CompService;
+import sportbets.web.dto.competition.CompetitionDto;
+import sportbets.web.dto.competition.CompetitionFamilyDto;
+
+import java.util.List;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+@SpringBootTest
+@ActiveProfiles("test")
+@Transactional
+public class CompetitionRoleServiceTest {
+
+
+    private static final Logger log = LoggerFactory.getLogger(CompetitionRoleServiceTest.class);
+    private static final String TEST_COMP_FAM = "TestLiga";
+    private static final String TEST_COMP = "TestLiga: Saison 2025";
+    private static final String TEST_USERNAME = "TEST_USER";
+    final CompetitionFamilyDto competitionFamily = new CompetitionFamilyDto(null, TEST_COMP_FAM, "description of testliga", true, true,  Country.GERMANY);
+    Competition savedComp = null;
+    @Autowired
+    private CompFamilyService familyService; // Real service being tested
+    @Autowired
+    private CompService compService; // Real service being tested
+    @Autowired
+    private CompetitionRoleService competitionRoleService;
+
+    @BeforeEach
+    public void setup() {
+
+        CompetitionFamily savedFam = familyService.save(competitionFamily);
+        CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, savedFam.getId(), TEST_COMP_FAM);
+
+        savedComp = compService.save(compDto);
+        assertNotNull(savedComp);
+
+
+    }
+
+    @AfterEach
+    public void tearDown() {
+
+    }
+
+    @Test
+    public void saveCompRole() {
+        log.debug("saveCompRole");
+        CompetitionRole compRole = competitionRoleService.findByCompName(savedComp.getName()).orElseThrow();
+
+        assertEquals(savedComp.getName(), compRole.getName());
+        assertEquals(savedComp.getId(), compRole.getCompetition().getId());
+        assertEquals(savedComp.getName(), compRole.getCompetition().getName());
+        Competition myComp = compService.findByIdTest(savedComp.getId()).orElseThrow();
+        assertThat(myComp.getCompetitionRoles()).isNotNull();
+    }
+
+
+    @Test
+    public void findAllCompRoles() {
+        log.debug("findCompRole");
+
+        List<CompetitionRole> roles = competitionRoleService.getAllCompRoles();
+
+        assertThat(roles).isNotNull();
+        CompetitionRole savedRole= roles.stream().filter( (r) -> r.getName().equals(TEST_COMP)).findFirst().get();
+
+        assertEquals(savedComp.getId(), savedRole.getCompetition().getId());
+        assertEquals(savedComp.getName(), savedRole.getCompetition().getName());
+    }
+
+
+}

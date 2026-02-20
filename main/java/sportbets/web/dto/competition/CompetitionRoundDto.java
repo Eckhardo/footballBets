@@ -1,0 +1,151 @@
+package sportbets.web.dto.competition;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import sportbets.persistence.entity.competition.CompetitionRound;
+
+import java.io.Serializable;
+import java.util.Objects;
+
+/**
+ * DTO for {@link CompetitionRound}
+ */
+public class CompetitionRoundDto implements Serializable {
+    private Long id;
+    @NotNull(message = " round number cannot be null")
+    private int roundNumber;
+    @NotBlank(message = "name must not be empty")
+    private String name;
+    private boolean hasGroups = false;
+    private int teamsSize ;
+    private int matchdaysSize;
+    private int firstMatchday;
+    @NotNull (message = " competition id cannot be null")
+    private Long compId;
+    @NotBlank (message = " competition name cannot be empty")
+    private String compName;
+
+    public CompetitionRoundDto() {
+    }
+
+    public CompetitionRoundDto(Long id, int roundNumber, String name, boolean hasGroups) {
+        this.id = id;
+        this.roundNumber = roundNumber;
+        this.name = name;
+        this.hasGroups = hasGroups;
+
+    }
+
+    public CompetitionRoundDto(Long id, int roundNumber, String name, boolean hasGroups, Long compId, String compName, int teamsSize, int matchdaysSize, int firstMatchday) {
+        this(id, roundNumber, name, hasGroups);
+        this.compId = compId;
+        this.compName = compName;
+        this.teamsSize = teamsSize;
+        this.matchdaysSize = matchdaysSize;
+        this.firstMatchday = firstMatchday;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public int getRoundNumber() {
+        return roundNumber;
+    }
+
+    public void setRoundNumber(int roundNumber) {
+        this.roundNumber = roundNumber;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public boolean getHasGroups() {
+        return hasGroups;
+    }
+
+    public Long getCompId() {
+        return compId;
+    }
+
+    public void setCompId(Long compId) {
+        this.compId = compId;
+    }
+
+    public String getCompName() {
+        return compName;
+    }
+
+    public void setCompName(String compName) {
+        this.compName = compName;
+    }
+
+    public boolean isHasGroups() {
+        return hasGroups;
+    }
+
+    public void setHasGroups(boolean hasGroups) {
+        this.hasGroups = hasGroups;
+    }
+
+    public int getTeamsSize() {
+        return teamsSize;
+    }
+
+    public void setTeamsSize(int teamsSize) {
+        this.teamsSize = teamsSize;
+    }
+
+    public int getMatchdaysSize() {
+        return matchdaysSize;
+    }
+
+    public void setMatchdaysSize(int matchdaysSize) {
+        this.matchdaysSize = matchdaysSize;
+    }
+
+    public int getFirstMatchday() {
+        return firstMatchday;
+    }
+
+    public void setFirstMatchday(int firstMatchday) {
+        this.firstMatchday = firstMatchday;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CompetitionRoundDto dto = (CompetitionRoundDto) o;
+        return Objects.equals(this.id, dto.id) &&
+                Objects.equals(this.roundNumber, dto.roundNumber) &&
+                Objects.equals(this.name, dto.name) &&
+                Objects.equals(this.hasGroups, dto.hasGroups) &&
+                Objects.equals(this.compId, dto.compId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, roundNumber, name, hasGroups);
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" +
+                "id = " + id + ", " +
+                "roundNumber = " + roundNumber + ", " +
+                "name = " + name + ", " +
+                "hasGroups = " + hasGroups + ", " +
+                "compName = " + compName + ", " +
+                "compId = " + compId + ")";
+    }
+}
