@@ -68,13 +68,13 @@ public class CompRoundController {
 
     @PutMapping(value = "/rounds/{id}")
     public CompetitionRoundDto update(@PathVariable Long id, @RequestBody CompetitionRoundDto roundDto) {
-        log.debug("Update round {}", roundDto);
+        log.info("Update round {}", roundDto);
 
         CompetitionRound updatedModel = this.roundService.updateRound(id, roundDto)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         ModelMapper myModelMapper = MapperUtil.getModelMapperForCompetition();
         CompetitionRoundDto updatedDto = myModelMapper.map(updatedModel, CompetitionRoundDto.class);
-        log.debug("Competition RETURN do {}", updatedDto);
+        log.info("round updated RETURN do {}", updatedDto);
         return updatedDto;
     }
 

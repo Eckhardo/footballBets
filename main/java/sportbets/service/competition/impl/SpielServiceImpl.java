@@ -56,33 +56,24 @@ public class SpielServiceImpl implements SpielService {
 
     @Override
     public List<Spiel> saveAll(MatchBatchRecord matchBatchRecord) {
-        int firstMatchday = matchBatchRecord.firstMatchdayNumber();
-        int lastMatchday = matchBatchRecord.lastMatchdayNumber();
+
         Long compRoundId = matchBatchRecord.compRoundId();
-        Optional<Spieltag> spieltag = spieltagRepo.findByNumberAndRound(firstMatchday, compRoundId);
-        if (spieltag.isPresent()) {
-            throw new EntityExistsException("Spieltag already exists");
-        }
 
         Competition comp = competitionRepo.findByRoundId(compRoundId).orElseThrow(() -> new EntityNotFoundException("Competition not found"));
         CompetitionRound compRound = competitionRoundRepo.findById(compRoundId).orElseThrow(() -> new EntityNotFoundException("CompetitionRound not found"));
         int numberOfMatches = compRound.getTeamsSize() / 2;
-        int numberOfRequestedMatchdays = lastMatchday - firstMatchday;
         int numberOfAllowedMatchdays = compRound.getMatchdaysSize();
-        if (numberOfAllowedMatchdays != numberOfRequestedMatchdays) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Number of requested (" + numberOfRequestedMatchdays + ") Matchdays  must be equal to allowed number(" + numberOfAllowedMatchdays + ") of Matchdays per Round");
-        }
+        int firstMatchday= compRound.getFirstMatchday();
 
         Team heimTeam = teamRepo.findById(matchBatchRecord.heimTeamId()).orElseThrow(() -> new EntityNotFoundException("Team heim not found"));
         Team gastTeam = teamRepo.findById(matchBatchRecord.gastTeamId()).orElseThrow(() -> new EntityNotFoundException("Team gast not found"));
 
         List<Spiel> spiele = new ArrayList<>();
-        for (int i = 0; i <= numberOfRequestedMatchdays; i++) {
+        for (int i = 0; i <= numberOfAllowedMatchdays; i++) {
             Spieltag matchday = spieltagRepo.findByNumberAndRound(firstMatchday, compRoundId).orElseThrow(() -> new EntityNotFoundException("Spieltag not found"));
 
-            for (int k = 0; k <= numberOfMatches; k++) {
-                Spiel spiel = new Spiel(matchday, i, LocalDateTime.now(), heimTeam, gastTeam, 0, 0, false);
-                //  spiele.add(spiel);
+            for (int k = 1; k <= numberOfMatches; k++) {
+                Spiel spiel = new Spiel(matchday, k, LocalDateTime.now(), heimTeam, gastTeam, 0, 0, false);
 
                 int heimPoints = SpielFormula.calculatePoints(comp,
                         spiel.getHeimTore(), spiel.getGastTore(), spiel
@@ -106,7 +97,9 @@ public class SpielServiceImpl implements SpielService {
             firstMatchday++;
         }
 
-        return List.of();
+      List<Spiel> saved= spielRepo.saveAll(spiele);
+
+        return saved;
     }
 
     @Override

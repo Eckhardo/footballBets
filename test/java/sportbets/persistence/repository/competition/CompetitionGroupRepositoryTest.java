@@ -44,7 +44,7 @@ public class CompetitionGroupRepositoryTest {
         CompetitionFamily testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true,  Country.GERMANY);
         Competition testComp = new Competition("Saison 2025/26", "1. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
         testFamily.addCompetition(testComp);
-        CompetitionRound testRound = new CompetitionRound(1, "Vorrunde", testComp, false, 18, 17);
+        CompetitionRound testRound = new CompetitionRound(1, "Vorrunde", testComp, false, 18, 17, 1);
         testComp.addCompetitionRound(testRound);
         testGroup = new CompetitionGroup("Gruppe A", 1, testRound);
         testRound.addCompetitionGroup(testGroup);

@@ -60,7 +60,7 @@ public class MatchServiceTest {
         CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, savedFam.getId(), TEST_COMP_FAM);
 
         myComp = compService.save(compDto);
-        CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, TEST_COMP_ROUND, false, myComp.getId(), myComp.getName(), 18, 17);
+        CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, TEST_COMP_ROUND, false, myComp.getId(), myComp.getName(), 18, 17, 1);
 
         compRoundDto.setCompId(myComp.getId());
         CompetitionRound savedCompRound = compRoundService.save(compRoundDto);

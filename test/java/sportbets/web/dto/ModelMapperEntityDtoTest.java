@@ -42,7 +42,7 @@ class ModelMapperEntityDtoTest {
         CompetitionFamily testFamily = new CompetitionFamily(TEST_FAM, TEST_FAM_DESCR, true, true,  Country.GERMANY);
 
         Competition testComp = new Competition(TEST_COMP, TEST_COMP_DESCR, 3, 1, testFamily);
-        CompetitionRound testRound = new CompetitionRound(1, COMP_ROUND, testComp, false, 18, 17);
+        CompetitionRound testRound = new CompetitionRound(1, COMP_ROUND, testComp, false, 18, 17, 1);
 
 
         CompetitionRoundDto compRoundDto = modelMapper.map(testRound, CompetitionRoundDto.class);
@@ -89,7 +89,7 @@ class ModelMapperEntityDtoTest {
         testFamily.setId(10L);
         Competition testComp = new Competition(TEST_COMP, TEST_COMP_DESCR, 3, 1, testFamily);
         testComp.setId(5L);
-        CompetitionRound testRound = new CompetitionRound(1, COMP_ROUND, testComp, false, 18, 17);
+        CompetitionRound testRound = new CompetitionRound(1, COMP_ROUND, testComp, false, 18, 17, 1);
         CompetitionRoundDto compRoundDto = modelMapper.map(testRound, CompetitionRoundDto.class);
         log.debug("Round:: {}", compRoundDto.toString());
 
@@ -104,7 +104,7 @@ class ModelMapperEntityDtoTest {
         testFamily.setId(10L);
         Competition testComp = new Competition(TEST_COMP, TEST_COMP_DESCR, 3, 1, testFamily);
         testComp.setId(5L);
-        CompetitionRound testRound = new CompetitionRound(1, COMP_ROUND, testComp, false, 18, 17);
+        CompetitionRound testRound = new CompetitionRound(1, COMP_ROUND, testComp, false, 18, 17, 1);
         testRound.setId(7L);
         Spieltag testSpieltag = new Spieltag(1, LocalDateTime.now(), testRound);
         Spieltag testSpieltag2 = new Spieltag(2, LocalDateTime.now(), testRound);
@@ -125,7 +125,7 @@ class ModelMapperEntityDtoTest {
         testFamily.setId(10L);
         Competition testComp = new Competition(TEST_COMP, TEST_COMP_DESCR, 3, 1, testFamily);
         testComp.setId(5L);
-        CompetitionRound testRound = new CompetitionRound(1, COMP_ROUND, testComp, false, 18, 17);
+        CompetitionRound testRound = new CompetitionRound(1, COMP_ROUND, testComp, false, 18, 17, 1);
         testRound.setId(7L);
         Spieltag testSpieltag = new Spieltag(1, LocalDateTime.now(), testRound);
         testSpieltag.setId(7L);

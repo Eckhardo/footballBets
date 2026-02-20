@@ -50,7 +50,7 @@ public class CompetitionQueryTest {
         testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true,  Country.GERMANY);
         testComp = new Competition(TEST_LIGA_SAISON_2025_26, "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
         testFamily.addCompetition(testComp);
-        CompetitionRound testRound = new CompetitionRound(1, "Hinrunde", testComp, false, 18, 17);
+        CompetitionRound testRound = new CompetitionRound(1, "Hinrunde", testComp, false, 18, 17, 1);
         testComp.addCompetitionRound(testRound);
         System.out.println("Save all cascade");
         familyRepo.save(testFamily);

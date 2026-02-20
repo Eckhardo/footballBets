@@ -99,6 +99,9 @@ public class CompRoundServiceImpl implements CompRoundService {
         base.setName(updatedRound.getName());
         base.setRoundNumber(updatedRound.getRoundNumber());
         base.setHasGroups(updatedRound.isHasGroups());
+        base.setFirstMatchday(updatedRound.getFirstMatchday());
+        base.setMatchdaysSize(updatedRound.getMatchdaysSize());
+        base.setTeamsSize(updatedRound.getTeamsSize());
 
         return base;
     }

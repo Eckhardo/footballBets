@@ -59,7 +59,7 @@ public class CompRoundServiceNonTransactionalTest {
     @Test
     void whenValidCompRound_thenCompRoundShouldBeSaved() {
 
-        CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, "TEST Round", false, null, compDto.getName(), 18, 17);
+        CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, "TEST Round", false, null, compDto.getName(), 18, 17, 1);
         ;
 
         compRoundDto.setCompId(savedComp.getId());
@@ -77,7 +77,7 @@ public class CompRoundServiceNonTransactionalTest {
     @Test
     void whenValidCompRound_thenCompRoundShouldBeUpdated() {
 
-        CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, "TEST Round", false, null, compDto.getName(), 18, 17);
+        CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, "TEST Round", false, null, compDto.getName(), 18, 17, 1);
         ;
 
         compRoundDto.setCompId(savedComp.getId());
@@ -98,7 +98,7 @@ public class CompRoundServiceNonTransactionalTest {
     @Test
     void whenFamilyIsDeleted_thenCompRoundShouldBeDeleted() {
 
-        CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, "TEST Round", false, null, compDto.getName(), 18, 17);
+        CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, "TEST Round", false, null, compDto.getName(), 18, 17, 1);
         ;
 
         compRoundDto.setCompId(savedComp.getId());
