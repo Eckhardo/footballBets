@@ -28,16 +28,14 @@ public class CompetitionRoundDto implements Serializable {
     public CompetitionRoundDto() {
     }
 
-    public CompetitionRoundDto(Long id, int roundNumber, String name, boolean hasGroups) {
+
+
+    public CompetitionRoundDto(Long id, int roundNumber, String name, boolean hasGroups, Long compId, String compName, int teamsSize, int matchdaysSize, int firstMatchday) {
+
         this.id = id;
         this.roundNumber = roundNumber;
         this.name = name;
         this.hasGroups = hasGroups;
-
-    }
-
-    public CompetitionRoundDto(Long id, int roundNumber, String name, boolean hasGroups, Long compId, String compName, int teamsSize, int matchdaysSize, int firstMatchday) {
-        this(id, roundNumber, name, hasGroups);
         this.compId = compId;
         this.compName = compName;
         this.teamsSize = teamsSize;

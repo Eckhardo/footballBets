@@ -56,15 +56,22 @@ public class SpielServiceImpl implements SpielService {
 
     @Override
     public List<Spiel> saveAll(MatchBatchRecord matchBatchRecord) {
-
+        log.info("saveAll :: {}", matchBatchRecord);
         Long compRoundId = matchBatchRecord.compRoundId();
 
         Competition comp = competitionRepo.findByRoundId(compRoundId).orElseThrow(() -> new EntityNotFoundException("Competition not found"));
         CompetitionRound compRound = competitionRoundRepo.findById(compRoundId).orElseThrow(() -> new EntityNotFoundException("CompetitionRound not found"));
+        Long matchdaysSize=spieltagRepo. countByRoundId(compRoundId);
         int numberOfMatches = compRound.getTeamsSize() / 2;
         int numberOfAllowedMatchdays = compRound.getMatchdaysSize();
         int firstMatchday= compRound.getFirstMatchday();
 
+
+        // assert  size of matchdays is equal to size allowed matchdays (aka all matchdays have to be present)
+        if(matchdaysSize!= numberOfAllowedMatchdays){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Number of allowed matchdays is not eqaul to number of existing matchdays ");
+        }
+        log.info("matchdaysSize :: {}", matchdaysSize);
         Team heimTeam = teamRepo.findById(matchBatchRecord.heimTeamId()).orElseThrow(() -> new EntityNotFoundException("Team heim not found"));
         Team gastTeam = teamRepo.findById(matchBatchRecord.gastTeamId()).orElseThrow(() -> new EntityNotFoundException("Team gast not found"));
 

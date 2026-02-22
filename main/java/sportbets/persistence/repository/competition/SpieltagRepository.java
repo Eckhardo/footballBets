@@ -44,4 +44,8 @@ public interface SpieltagRepository extends JpaRepository<Spieltag, Long> {
     @Query("select  max(sp.spieltagNumber) from Spieltag sp join  sp.competitionRound cr"
             + " where  cr.id=:id")
     Optional<Integer> findLastMatchdayForRound(Long id);
+
+    @Query("select  count(sp) from Spieltag sp join  sp.competitionRound cr"
+            + " where  cr.id=:id")
+    Long countByRoundId(Long id);
 }
