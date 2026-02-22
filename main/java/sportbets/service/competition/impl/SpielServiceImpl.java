@@ -43,20 +43,17 @@ public class SpielServiceImpl implements SpielService {
     @Override
     @Transactional
     public List<Spiel> getAllForMatchday(Long id) {
-
         return spielRepo.findAllForMatchday(id);
-
     }
 
     @Override
     public Optional<Spiel> findById(Long id) {
         return spielRepo.findById(id);
-
     }
 
     @Override
     public List<Spiel> saveAll(MatchBatchRecord matchBatchRecord) {
-        log.info("saveAll :: {}", matchBatchRecord);
+        log.debug("saveAll :: {}", matchBatchRecord);
         Long compRoundId = matchBatchRecord.compRoundId();
 
         Competition comp = competitionRepo.findByRoundId(compRoundId).orElseThrow(() -> new EntityNotFoundException("Competition not found"));
@@ -76,7 +73,7 @@ public class SpielServiceImpl implements SpielService {
         Team gastTeam = teamRepo.findById(matchBatchRecord.gastTeamId()).orElseThrow(() -> new EntityNotFoundException("Team gast not found"));
 
         List<Spiel> spiele = new ArrayList<>();
-        for (int i = 0; i <= numberOfAllowedMatchdays; i++) {
+        for (int i = 0; i < numberOfAllowedMatchdays; i++) {
             Spieltag matchday = spieltagRepo.findByNumberAndRound(firstMatchday, compRoundId).orElseThrow(() -> new EntityNotFoundException("Spieltag not found"));
 
             for (int k = 1; k <= numberOfMatches; k++) {
@@ -105,7 +102,7 @@ public class SpielServiceImpl implements SpielService {
         }
 
       List<Spiel> saved= spielRepo.saveAll(spiele);
-
+        log.debug("savedSize :: {}", saved.size());
         return saved;
     }
 
@@ -145,12 +142,7 @@ public class SpielServiceImpl implements SpielService {
         model.addSpielFormula(heimFormel);
         model.addSpielFormula(gastFormel);
         log.info("finally save Spiel :: {}", model);
-        Spiel savedSpiel = spielRepo.save(model);
-        SpielFormula heimel = savedSpiel.getSpielFormulaForHeim().orElseThrow();
-        SpielFormula gastel = savedSpiel.getSpielFormulaForGast().orElseThrow();
-        log.info("finally saved heimel :: {}", heimel);
-        log.info("finally saved gastel :: {}", gastel);
-        return savedSpiel;
+        return spielRepo.save(model);
 
 
     }

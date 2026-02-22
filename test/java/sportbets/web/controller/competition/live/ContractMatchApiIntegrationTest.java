@@ -36,7 +36,7 @@ public class ContractMatchApiIntegrationTest {
     private static final String TEST_COMP_ROUND = "Saison 2025: Hinrunde";
 
 
-    private static final int TEST_MATCH_DAY = 1000;
+    private static final int TEST_MATCH_DAY = 1;
     private static final String TEAM_NAME = "Eintracht ";
     private static final String TEAM_NAME_2 = "Holstein";
     private static final String TEAM_NAME_3 = "Preussen";
@@ -273,6 +273,7 @@ public class ContractMatchApiIntegrationTest {
     void whenSaverMatchesInBatch_ThenBatchIsSuccessful() {
         CompetitionRound round = competitionRoundRepository.findByName(TEST_COMP_ROUND).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
         assertNotNull(round);
+        log.debug("compRound {}", compRoundDto);
         Spieltag spieltag = spieltagRepository.findByNumberWithRoundId(TEST_MATCH_DAY, round.getId()).orElseThrow(() -> new EntityNotFoundException(String.valueOf(TEST_MATCH_DAY)));
         assertNotNull(spieltag);
 
@@ -291,7 +292,7 @@ public class ContractMatchApiIntegrationTest {
                 .bodyValue(batch)
                 .exchange()
                 .expectStatus()
-                .isOk()
+                .isCreated()
                 .expectBody();
 
     }
