@@ -21,6 +21,8 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 @ControllerAdvice
 public class CustomExceptionsHandler extends ResponseEntityExceptionHandler {
@@ -45,7 +47,16 @@ public class CustomExceptionsHandler extends ResponseEntityExceptionHandler {
         problemDetail.setTitle("duplicate entity");
         return problemDetail;
     }
-
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(
+            MethodArgumentNotValidException ex, HttpHeaders headers,
+            HttpStatusCode status, WebRequest request) {
+        Map<String, String> errors = new HashMap<>();
+        // Extrahiere Fehler (Feldname -> Fehlernachricht)
+        ex.getBindingResult().getFieldErrors().forEach(error ->
+                errors.put(error.getField(), error.getDefaultMessage()));
+        return ResponseEntity.badRequest().body(errors);
+    }
     @ExceptionHandler({ MethodArgumentTypeMismatchException.class})
     public ProblemDetail resolveMethodArgumentTypeMismatchException(Exception ex, ServletRequest request, HttpServletResponse response) {
 
@@ -54,7 +65,6 @@ public class CustomExceptionsHandler extends ResponseEntityExceptionHandler {
         problemDetail.setTitle("wrong method argument type");
         return problemDetail;
     }
-
     @ExceptionHandler({DataIntegrityViolationException.class})
     public ErrorResponse resolveDuplicatedKey(DataIntegrityViolationException ex) {
         ErrorResponseException response = new ErrorResponseException(HttpStatus.BAD_REQUEST);
