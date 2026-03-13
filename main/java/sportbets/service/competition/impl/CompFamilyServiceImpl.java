@@ -85,6 +85,7 @@ public class CompFamilyServiceImpl implements CompFamilyService {
         base.setDescription(updatedFam.getDescription());
         base.setHasClubs(updatedFam.isHasClubs());
         base.setHasLigaModus(updatedFam.isHasLigaModus());
+        base.setCountry(updatedFam.getCountry());
         return base;
     }
 
