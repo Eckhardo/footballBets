@@ -30,7 +30,7 @@ public class Competition {
     @Column(nullable = false)
     private final LocalDateTime createdOn = LocalDateTime.now();
 
-    @OneToMany(mappedBy = "competition", cascade =CascadeType.PERSIST, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "competition", cascade =CascadeType.PERSIST, orphanRemoval = true, fetch = FetchType.EAGER)
     final Set<CompetitionRole> competitionRoles = new HashSet<>();
 
     @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
