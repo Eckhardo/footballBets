@@ -1,5 +1,6 @@
 package sportbets.web.error;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
@@ -23,7 +24,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-
+@Hidden
 @ControllerAdvice
 public class CustomExceptionsHandler extends ResponseEntityExceptionHandler {
     private static final Logger log = LoggerFactory.getLogger(CustomExceptionsHandler.class);
