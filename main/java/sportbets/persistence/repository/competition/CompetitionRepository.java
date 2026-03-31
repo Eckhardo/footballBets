@@ -3,6 +3,7 @@ package sportbets.persistence.repository.competition;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionRound;
@@ -26,39 +27,39 @@ public interface CompetitionRepository extends JpaRepository<Competition, Long> 
 
 
     @Query("select  c from Competition c  join fetch c.competitionRounds"
-            + " where c.id =:id"
+            + " where c.id =:compId"
             + " order by c.name asc")
-    Competition findByIdJoinFetchRounds(Long id);
+    Competition findByIdJoinFetchRounds(@Param("compId") Long id);
 
     @Query("select  t from Team t  "
             + " join fetch t.competitionTeams ct"
             + " join fetch ct.competition c "
             + " where c.id =:compId"
             + " order by t.acronym asc")
-    List<Team> findTeamsForComp(Long compId);
+    List<Team> findTeamsForComp( @Param("compId")Long id);
 
 
     @Query(" select new sportbets.persistence.rowObject.CompRecord ("
             + "  c.name , c.description, cf.id )"
             + "from Competition c join c.competitionFamily cf"
-            + " where c.name = :name and cf.id=:id ")
-    CompRecord findCompByNameAndFamily(String name, Long id);
+            + " where c.name = :name and cf.id=:familyId ")
+    CompRecord findCompByNameAndFamily(String name, @Param("familyId") Long id);
 
     @Query("select cr from CompetitionRound cr join cr.competition c where c.id=:compId")
-    List<CompetitionRound> findAllForComp(Long compId);
+    List<CompetitionRound> findAllForComp(@Param("compId") Long id);
 
     @Query(" select c from Competition c join c.competitionFamily cf   "
-            + " where  cf.id=:id ")
-    List<Competition> findByFamilyId(Long id);
+            + " where  cf.id=:familyId ")
+    List<Competition> findByFamilyId(@Param("familyId") Long id);
 
     @Query("select  c from Competition c join fetch c.competitionRounds r"
             + " join fetch r.spieltage sp where sp.id= :spieltagId")
-    Optional<Competition> findBySpieltagId(Long spieltagId);
+    Optional<Competition> findBySpieltagId(@Param("spieltagId") Long id);
 
 
     @Query("select  c from Competition c join c.competitionRounds r"
             + " where r.id= :roundId")
-    Optional<Competition> findByRoundId(Long roundId);
+    Optional<Competition> findByRoundId( @Param("roundId")Long id);
 
     @Query(" select c from Competition c join fetch c.competitionFamily   ")
     List<Competition> findAllComps();
