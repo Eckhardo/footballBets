@@ -71,6 +71,7 @@ public class ContractComApiIntegrationTest {
                 .expectStatus()
                 .isCreated()
         ;
+        log.debug("setUp");
         CompetitionFamily fam = competitionFamilyRepository.findByName(compFamilyDto.getName()).orElseThrow(() -> new EntityNotFoundException(compFamilyDto.getName()));
         compDto.setFamilyId(fam.getId());
 
@@ -83,10 +84,6 @@ public class ContractComApiIntegrationTest {
                 .isCreated();
 
     }
-
-    // @Test
-    //  @Order(1)
-
 
     @Test
     @Order(1)

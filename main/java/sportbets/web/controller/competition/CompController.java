@@ -14,15 +14,13 @@ import sportbets.persistence.entity.competition.Spieltag;
 import sportbets.service.competition.CompService;
 import sportbets.service.competition.SpieltagService;
 import sportbets.web.dto.MapperUtil;
-import sportbets.web.dto.competition.CompetitionDto;
-import sportbets.web.dto.competition.CompetitionRoundDto;
-import sportbets.web.dto.competition.SpieltagDto;
-import sportbets.web.dto.competition.TeamDto;
+import sportbets.web.dto.competition.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@RequestMapping(value = "/competitions")
 public class CompController {
 
     private static final Logger log = LoggerFactory.getLogger(CompController.class);
@@ -33,7 +31,7 @@ public class CompController {
         this.spieltagService = spieltagService;
     }
 
-    @GetMapping("/competitions")
+    @GetMapping
     public List<CompetitionDto> findAll() {
 
         List<Competition> competitions = compService.getAll();
@@ -46,7 +44,7 @@ public class CompController {
          return competitionDtos;
     }
 
-    @GetMapping("/competitions/{id}")
+    @GetMapping("/{id}")
     public CompetitionDto findOne(@PathVariable Long id) {
         log.debug("CompController:findOne::{}", id);
         Competition model = compService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -56,7 +54,7 @@ public class CompController {
 
     }
 
-    @GetMapping("/competitions/{id}/teams")
+    @GetMapping("/{id}/teams")
     public List<TeamDto> findAllTeams(@PathVariable Long id) {
 
         List<TeamDto> teamDtos = compService.findTeamsForComp(id);
@@ -64,7 +62,7 @@ public class CompController {
         return teamDtos;
     }
 
-    @GetMapping("/competitions/{compId}/matchdays")
+    @GetMapping("/{compId}/matchdays")
     public List<SpieltagDto> findAllForCompetition(@PathVariable Long compId) {
         log.info("SpieltagDto:findAll::{}", compId);
         List<Spieltag> spieltags = spieltagService.getAllForCompetition(compId);
@@ -76,7 +74,7 @@ public class CompController {
         return spieltagDtos;
     }
 
-    @GetMapping("/competitions/{familyId}/competitions")
+    @GetMapping("/{familyId}/competitions")
     public List<CompetitionDto> findAllCompsByFamId(@PathVariable Long familyId) {
         log.info("CompetitionDto:findAllCompsByFamId::{}", familyId);
         List<Competition> comps = compService.findByFamilyId(familyId);
@@ -89,7 +87,7 @@ public class CompController {
     }
 
 
-    @GetMapping("/competitions/{id}/rounds")
+    @GetMapping("/{id}/rounds")
     public List<CompetitionRoundDto> findAllRounds(@PathVariable Long id) {
         log.debug(" CompetitionRoundDto:findAll for comp::");
         List<CompetitionRound> compRounds = compService.getAllFormComp(id);
@@ -101,10 +99,19 @@ public class CompController {
         return roundDtos;
     }
 
-    @PostMapping("/competitions")
+    @PostMapping(produces = "application/vnd.kirschning.new-comp+json", consumes = "application/vnd.kirschning.new-comp+json")
     @ResponseStatus(HttpStatus.CREATED)
-    public CompetitionDto post(@RequestBody @Valid CompetitionDto newComp) {
-        log.debug("New competition {}", newComp);
+    public OldCompetitionDto post(@RequestBody @Valid OldCompetitionDto oldCompetitionDto) {
+        log.error("Example for API Structrual Change without using versioning: content-negotiation mechanism  {}", oldCompetitionDto);
+
+        return oldCompetitionDto;
+    }
+
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public CompetitionDto postNewStructure(@RequestBody @Valid CompetitionDto newComp) {
+        log.debug("New competition with new media type {}", newComp);
 
         Competition createdModel = compService.save(newComp);
 
@@ -113,8 +120,7 @@ public class CompController {
         log.debug("Competition RETURN do {}", createdDto);
         return createdDto;
     }
-
-    @PutMapping(value = "/competitions/{id}")
+    @PutMapping(value = "/{id}")
     public CompetitionDto update(@PathVariable Long id, @RequestBody CompetitionDto compDto) {
 
         Competition updatedComp = this.compService.updateComp(id, compDto).orElseThrow();
@@ -129,7 +135,7 @@ public class CompController {
 
     }
 
-    @DeleteMapping(value = "/competitions/{id}")
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<HttpStatus> delete(@PathVariable Long id) {
         log.debug("CompController.delete::{}", id);
         try {

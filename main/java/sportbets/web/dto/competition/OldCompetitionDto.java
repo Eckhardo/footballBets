@@ -13,11 +13,12 @@ import java.util.Objects;
  * DTO for {@link Competition}
  */
 
-public class CompetitionDto implements Serializable {
+@Deprecated
+@Schema(deprecated = true)
+public class OldCompetitionDto implements Serializable {
     private Long id;
     @NotBlank(message = "name must not be empty")
     private String name;
-    private String description;
     @Range(min = 1, max = 9, message = "Win Multiplicator  must be single-digit number")
     private int winMultiplicator;
     @Range(min = 1, max = 9, message = "Remis Multiplicator  must be single-digit number")
@@ -26,13 +27,12 @@ public class CompetitionDto implements Serializable {
     private Long familyId;
     private String familyName;
 
-    public CompetitionDto() {
+    public OldCompetitionDto() {
     }
 
-    public CompetitionDto(Long id, String name, String description, int winMultiplicator, int remisMultiplicator, Long familyId, String familyName) {
+    public OldCompetitionDto(Long id, String name, int winMultiplicator, int remisMultiplicator, Long familyId, String familyName) {
         this.id = id;
         this.name = name;
-        this.description = description;
         this.winMultiplicator = winMultiplicator;
         this.remisMultiplicator = remisMultiplicator;
         this.familyId = familyId;
@@ -55,14 +55,6 @@ public class CompetitionDto implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public int getWinMultiplicator() {
@@ -102,16 +94,15 @@ public class CompetitionDto implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CompetitionDto entity = (CompetitionDto) o;
+        OldCompetitionDto entity = (OldCompetitionDto) o;
         return Objects.equals(this.id, entity.id) &&
                 Objects.equals(this.name, entity.name) &&
-                Objects.equals(this.description, entity.description) &&
                 Objects.equals(this.winMultiplicator, entity.winMultiplicator);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, winMultiplicator, remisMultiplicator);
+        return Objects.hash(id, name, winMultiplicator, remisMultiplicator);
     }
 
     @Override
@@ -119,7 +110,6 @@ public class CompetitionDto implements Serializable {
         return getClass().getSimpleName() + "(" +
                 "id = " + id + ", " +
                 "name = " + name + ", " +
-                "description = " + description + ", " +
                 "familyId = " + familyId + ", " +
                 "familyName = " + familyName + ", " +
                 "winMultiplicator = " + winMultiplicator + ", " +
