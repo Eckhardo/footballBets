@@ -12,6 +12,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import sportbets.persistence.entity.competition.Team;
 
+import java.util.List;
+
 import static org.junit.Assert.assertNotNull;
 
 
@@ -29,6 +31,8 @@ public class TeamRepositoryTest {
     @Before
     public void setup() {
         teamRepo.save(new Team("TestTeam", "Team", true));
+        teamRepo.save(new Team("TestTeam2", "Team2", true));
+        teamRepo.save(new Team("TestTeam3", "Team3", true));
     }
 
     @After
@@ -40,6 +44,16 @@ public class TeamRepositoryTest {
     public void saveTeam() {
         Team team = teamRepo.findByName("TestTeam").orElseThrow();
         assertNotNull(team);
+    }
+
+
+
+    @Test
+    public void listTeams() {
+        for(int i=0;i<10;i++) {
+            List<Team> teams = teamRepo.findAll();
+            assertNotNull(teams);
+        }
     }
 
 }

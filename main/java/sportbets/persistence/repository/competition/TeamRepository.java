@@ -23,4 +23,10 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
 
     @Query(" select t from Team t where t.hasClub=false")
     List<Team> findAllNationTeams();
+
+    @QueryHints(@QueryHint(name = "org.hibernate.cacheable", value = "true"))
+    @Override
+    @Query("select t from Team t ")
+   List<Team> findAll();
+
 }
