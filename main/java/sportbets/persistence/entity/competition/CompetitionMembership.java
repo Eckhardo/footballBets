@@ -3,6 +3,7 @@ package sportbets.persistence.entity.competition;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import sportbets.persistence.entity.community.Community;
+import sportbets.persistence.entity.tipps.TippConfig;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -18,11 +19,16 @@ public class CompetitionMembership {
     @JoinColumn(name = "fk_comm_id",foreignKey = @ForeignKey(name = "FK_COMP_MEMB_TO_COMMUNITY"))
     @NotNull
     private Community community;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fk_comp_id",foreignKey = @ForeignKey(name = "FK_COMP_MEMB_TO_COMP"))
     @NotNull
     private Competition competition;
 
+    // Owning Side:
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "tipp_config_id")
+    private TippConfig tippConfig;
 
     public Long getId() {
         return id;
@@ -54,6 +60,14 @@ public class CompetitionMembership {
 
     public void setCompetition(Competition competition) {
         this.competition = competition;
+    }
+
+    public TippConfig getTippConfig() {
+        return tippConfig;
+    }
+
+    public void setTippConfig(TippConfig tippConfig) {
+        this.tippConfig = tippConfig;
     }
 
     @Override

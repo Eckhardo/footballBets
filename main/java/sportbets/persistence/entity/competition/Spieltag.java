@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
 import sportbets.common.DateUtil;
+import sportbets.persistence.entity.tipps.TippConfig;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -33,6 +34,12 @@ public class Spieltag {
     @OneToMany(mappedBy = "spieltag", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private final SortedSet<Spiel> spiele = new TreeSet<>();
 
+
+    // Owning Side:
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "tipp_config_id")
+    private TippConfig tippConfig;
+
     public Spieltag() {
 
     }
@@ -41,9 +48,7 @@ public class Spieltag {
         this.spieltagNumber = spieltagNumber;
         this.startDate = startDate;
         this.competitionRound = competitionRound;
-        // guarantee ref integrity
-        // competitionRound.addSpieltag(this);
-    }
+     }
 
 
     public CompetitionRound getCompetitionRound() {
@@ -84,6 +89,14 @@ public class Spieltag {
 
     public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
+    }
+
+    public TippConfig getTippConfig() {
+        return tippConfig;
+    }
+
+    public void setTippConfig(TippConfig tippConfig) {
+        this.tippConfig = tippConfig;
     }
 
     public String getFormattedStartDate() {

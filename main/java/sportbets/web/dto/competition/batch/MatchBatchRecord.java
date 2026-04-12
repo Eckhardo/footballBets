@@ -1,7 +1,6 @@
 package sportbets.web.dto.competition.batch;
 
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 
 public record MatchBatchRecord(
                                @NotNull(message = " round id cannot be null") Long compRoundId,

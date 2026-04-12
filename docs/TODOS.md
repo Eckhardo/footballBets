@@ -1,0 +1,1 @@
+### Add relations for tippConfig and TippModus to parent entities

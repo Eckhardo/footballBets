@@ -33,7 +33,7 @@ public class CompTableServiceImpl implements CompTableService {
     @Override
     public List<TeamPositionSummaryRow> findTableHeimOrGastForLigaModus(TableSearchCriteria searchCriteria) {
         List<TeamPositionSummaryRow> rows = compTableRepository.findTableHeimOrGastForLigaModus(searchCriteria.getCompId(), searchCriteria.getStartSpieltag(), searchCriteria.getEndSpieltag(), searchCriteria.getHeimOrGast());
-        log.info("rows size:" + rows.size());
+        log.info("rows size:" + searchCriteria);
         rows.sort(Collections.reverseOrder());
         return rows;
     }

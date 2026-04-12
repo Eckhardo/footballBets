@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sportbets.persistence.entity.authorization.CommunityRole;
 import sportbets.persistence.entity.competition.CompetitionMembership;
+import sportbets.persistence.entity.tipps.TippModus;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -25,11 +26,16 @@ public class Community {
 
     @OneToMany(mappedBy = "community", cascade = CascadeType.ALL,  orphanRemoval = true, fetch = FetchType.EAGER)
     Set<CommunityRole> communityRoles = new HashSet<>();
+
     @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     final Set<CommunityMembership> communityMemberships = new HashSet<>();
 
-    @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<CompetitionMembership> competitionMemberships = new HashSet<>();
+
+    @OneToMany(mappedBy = "community", cascade = CascadeType.ALL,orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<TippModus> tippModi=new HashSet<>();
+
 
     public Community() {
 
@@ -98,6 +104,14 @@ public class Community {
             throw new IllegalArgumentException("Can't add a null Community role.");
         }
         this.getCommunityRoles().remove(role);
+    }
+
+    public Set<TippModus> getTippModi() {
+        return tippModi;
+    }
+
+    public void addTippModus(TippModus tippModus) {
+        this.tippModi.add(tippModus);
     }
 
     public Set<CommunityMembership> getCommunityMemberships() {

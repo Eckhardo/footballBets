@@ -1,7 +1,6 @@
 package sportbets.web.controller.competition;
 
 
-import jakarta.persistence.EntityExistsException;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -11,14 +10,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import sportbets.persistence.entity.competition.Spiel;
-import sportbets.persistence.entity.competition.Spieltag;
 import sportbets.service.competition.SpielService;
 import sportbets.service.competition.SpieltagService;
 import sportbets.web.dto.MapperUtil;
 import sportbets.web.dto.competition.SpielDto;
 import sportbets.web.dto.competition.batch.MatchBatchRecord;
-
-import java.util.Optional;
 
 @RestController
 public class MatchController {

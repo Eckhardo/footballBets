@@ -11,13 +11,13 @@ import java.util.Set;
 
 @Entity
 public class CompetitionFamily {
-    @OneToMany(mappedBy = "competitionFamily", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private final Set<Competition> competitions = new HashSet<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(nullable = false, unique = true)
     private String name;
+
     private String description;
 
     @Convert(converter = CountryAttributeConverter.class)
@@ -31,6 +31,9 @@ public class CompetitionFamily {
      * has clubs or countries
      */
     private boolean hasClubs;
+
+    @OneToMany(mappedBy = "competitionFamily", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private final Set<Competition> competitions = new HashSet<>();
 
     //	********************** Constructors ********************** //
 
