@@ -6,14 +6,13 @@ import sportbets.common.TippModi;
 import sportbets.common.TippModiAttributeConverter;
 import sportbets.persistence.entity.community.Community;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class TippModus implements Serializable, Comparable<TippModus> {
+public abstract class TippModus  {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
     @Column(name = "id", nullable = false)
@@ -114,14 +113,6 @@ public abstract class TippModus implements Serializable, Comparable<TippModus> {
 
     public void setCommunity(Community community) {
         this.community = community;
-    }
-
-    @Override
-    public int compareTo(TippModus other) {
-        if (this.name == null || other.getName() == null) {
-            return 0; // Oder andere Logik für unvollständige Daten
-        }
-        return this.name.compareTo(other.getName());
     }
 
     public Set<TippConfig> getTippConfigs() {

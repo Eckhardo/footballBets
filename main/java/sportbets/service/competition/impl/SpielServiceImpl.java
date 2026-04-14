@@ -94,9 +94,7 @@ public class SpielServiceImpl implements SpielService {
                         false, spiel.getGastTore(), spiel
                         .getHeimTore(), gastPoints);
 
-                spiel.addSpielFormula(heimFormel);
-                spiel.addSpielFormula(gastFormel);
-                spiele.add(spiel);
+               spiele.add(spiel);
             }
             firstMatchday++;
         }
@@ -109,7 +107,7 @@ public class SpielServiceImpl implements SpielService {
     @Override
     @Transactional
     public Spiel save(SpielDto spielDto) {
-        log.info("save SpielDto :: {}", spielDto);
+        log.debug("save SpielDto :: {}", spielDto);
         Optional<Spiel> optionalSpiel = spielRepo.findByNumberWithSpieltagId(spielDto.getSpielNumber(), spielDto.getSpieltagId());
         if (optionalSpiel.isPresent()) {
             throw new EntityExistsException("Spiel  already exist with given spiel number:" + spielDto.getSpielNumber() + "for spieltag " + spielDto.getSpieltagNumber());
@@ -119,7 +117,7 @@ public class SpielServiceImpl implements SpielService {
         Team heimTeam = teamRepo.findById(spielDto.getHeimTeamId()).orElseThrow(() -> new EntityNotFoundException("Team heim not found"));
         Team gastTeam = teamRepo.findById(spielDto.getGastTeamId()).orElseThrow(() -> new EntityNotFoundException("Team gast not found"));
         Spiel model = modelMapper.map(spielDto, Spiel.class);
-        log.info("model Spiel :: {}", model);
+        log.debug("model Spiel :: {}", model);
         model.setSpieltag(spieltag);
         model.setHeimTeam(heimTeam);
         model.setGastTeam(gastTeam);
@@ -139,9 +137,7 @@ public class SpielServiceImpl implements SpielService {
                 false, model.getGastTore(), model
                 .getHeimTore(), gastPoints);
 
-        model.addSpielFormula(heimFormel);
-        model.addSpielFormula(gastFormel);
-        log.info("finally save Spiel :: {}", model);
+        log.debug("finally save Spiel :: {}", model);
         return spielRepo.save(model);
 
 
@@ -170,41 +166,31 @@ public class SpielServiceImpl implements SpielService {
 
 
         SpielFormula heim = savedSpiel.getSpielFormulaForHeim().orElseThrow();
-
         int heimPoints = SpielFormula.calculatePoints(savedComp,
                 updated.getHeimTore(), updated.getGastTore(), updated
                         .isStattgefunden());
-
         heim.setPoints(heimPoints);
         heim.setHeimTore(updated.getHeimTore());
         heim.setGastTore(updated.getGastTore());
         heim.calculateTrend(heim.getHeimTore(),
                 heim.getGastTore(), updated.isStattgefunden());
-
         log.info("heim formula:: {}", heim);
-
         model.addSpielFormula(heim);
 
 
         SpielFormula gast = savedSpiel.getSpielFormulaForGast().orElseThrow();
-
         int gastPoints = SpielFormula.calculatePoints(savedComp,
                 updated.getGastTore(), updated.getHeimTore(), updated
                         .isStattgefunden());
-
         gast.setPoints(gastPoints);
-
         gast.setHeimTore(updated.getGastTore());
         gast.setGastTore(updated.getHeimTore());
         gast.calculateTrend(gast.getHeimTore(),
                 gast.getGastTore(), updated.isStattgefunden());
         model.addSpielFormula(gast);
+
         log.info("update Soiel  with {}", updated);
         Spiel updatedSpiel = spielRepo.save(model);
-        SpielFormula heimel = updatedSpiel.getSpielFormulaForHeim().orElseThrow();
-        SpielFormula gastel = updatedSpiel.getSpielFormulaForGast().orElseThrow();
-        log.info("finally saved heimel :: {}", heimel);
-        log.info("finally saved gastel :: {}", gastel);
         return Optional.of(updatedSpiel);
 
     }

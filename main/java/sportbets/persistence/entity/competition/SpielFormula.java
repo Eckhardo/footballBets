@@ -57,7 +57,7 @@ public class SpielFormula {
         this.teamNameAcronym = teamNameAcronym;
         this.isHeimTeam = isHeimTeam;
 
-
+        spiel.addSpielFormula(this);
     }
 
     /**

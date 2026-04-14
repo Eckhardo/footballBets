@@ -261,10 +261,8 @@ public class FootballBetsApplication {
 //            log.info("add spielformula ::" + savedSpiele.size());
 
 
-       //     System.out.println("Save all cascade for country" + fam.getCountry().getIsoCode());
-            log.info("Finished server start");
+           log.info("Server started");
         };
-
     }
 
     SortedMap<Integer, LocalDateTime> retrieveSpieltage() {
@@ -402,8 +400,6 @@ public class FootballBetsApplication {
                         false, spiel.getGastTore(), spiel
                         .getHeimTore(), gastPoints);
 
-                spiel.addSpielFormula(heimFormel);
-                spiel.addSpielFormula(gastFormel);
                 spiele.add(spiel);
 
 

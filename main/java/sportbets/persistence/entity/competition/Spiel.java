@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 import sportbets.common.DateUtil;
+import sportbets.persistence.entity.tipps.Tipp;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -45,6 +46,10 @@ public class Spiel implements Comparable<Spiel> {
 
     @ManyToOne(fetch = FetchType.EAGER)
     private CompetitionGroup competitionGroup;
+
+    @OneToMany(mappedBy = "spiel", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<Tipp> tipps = new HashSet<>();
+
 
 
 
@@ -159,10 +164,6 @@ public class Spiel implements Comparable<Spiel> {
         this.anpfiffdate = anpfiffdate;
     }
 
-    public String getFormattedAnpfiffDate() {
-        return DateUtil.formatDate(this.anpfiffdate);
-    }
-
     public Team getHeimTeam() {
         return heimTeam;
     }
@@ -220,6 +221,15 @@ public class Spiel implements Comparable<Spiel> {
         this.getSpielFormulas().add(spielFormula);
 
     }
+
+    public Set<Tipp> getTipps() {
+        return tipps;
+    }
+
+    public void addTipp(Tipp tipp) {
+        this.tipps.add(tipp);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
