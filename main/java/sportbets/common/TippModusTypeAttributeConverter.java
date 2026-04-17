@@ -4,9 +4,9 @@ import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
 @Converter(autoApply = true)
-public class TippModiAttributeConverter implements AttributeConverter<TippModi, String> {
+public class TippModusTypeAttributeConverter implements AttributeConverter<TippModusType, String> {
     @Override
-    public String convertToDatabaseColumn(TippModi attribute) {
+    public String convertToDatabaseColumn(TippModusType attribute) {
 
         if (attribute == null)
             return null;
@@ -21,14 +21,14 @@ public class TippModiAttributeConverter implements AttributeConverter<TippModi, 
     }
 
     @Override
-    public TippModi convertToEntityAttribute(String dbData) {
+    public TippModusType convertToEntityAttribute(String dbData) {
         if (dbData == null)
             return null;
 
         return switch (dbData) {
-            case "TOTO_TIPP" -> TippModi.TIPPMODUS_TOTO;
-            case "RESULT_TIPP" -> TippModi.TIPPMODUS_RESULT;
-            case "POINT_TIPP" -> TippModi.TIPPMODUS_POINT;
+            case "TotoTipp" -> TippModusType.TIPPMODUS_TOTO;
+            case "ResultTipp" -> TippModusType.TIPPMODUS_RESULT;
+            case "PointTipp" -> TippModusType.TIPPMODUS_POINT;
 
             default -> throw new IllegalArgumentException(dbData + " not supported.");
         };

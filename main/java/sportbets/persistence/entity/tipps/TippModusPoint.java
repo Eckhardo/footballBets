@@ -1,7 +1,7 @@
 package sportbets.persistence.entity.tipps;
 
 import jakarta.persistence.Entity;
-import sportbets.common.TippModi;
+import sportbets.common.TippModusType;
 import sportbets.persistence.entity.community.Community;
 
 @Entity
@@ -16,13 +16,13 @@ public class TippModusPoint extends TippModus{
     /**
      * No-arg constructor for JavaBean tools.
      */
-    TippModusPoint() {
+   public TippModusPoint() {
         super();
     }
     /**
      * Full constructor.
      */
-    public TippModusPoint(TippModi name, Integer deadline, Community community, Integer totalPoints) {
+    public TippModusPoint(TippModusType name, Integer deadline, Community community, Integer totalPoints) {
         super(name,deadline, community);
         this.totalPoints = totalPoints;
 

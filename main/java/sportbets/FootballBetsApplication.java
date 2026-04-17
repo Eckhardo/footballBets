@@ -13,7 +13,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import sportbets.common.DateUtil;
-import sportbets.common.TippModi;
+import sportbets.common.TippModusType;
 import sportbets.persistence.builder.*;
 import sportbets.persistence.entity.authorization.CommunityRole;
 import sportbets.persistence.entity.authorization.CompetitionRole;
@@ -118,10 +118,10 @@ public class FootballBetsApplication {
 //            CommunityRole communityRole = new CommunityRole(community.getName(), community.getDescription(), community);
 //            community.addCommunityRole(communityRole);
 //            TippModus buliModus = new TippModusPoint(
-//                    TippModi.TIPPMODUS_POINT, 2, community,
+//                    TippModusType.TIPPMODUS_POINT, 2, community,
 //                    4);
 //
-//            TippModus buliModus2 = new TippModusToto(TippModi.TIPPMODUS_TOTO,
+//            TippModus buliModus2 = new TippModusToto(TippModusType.TIPPMODUS_TOTO,
 //                    2, community);
 //            Community savedCommunity = commRepo.save(community);
 //            ebi.setDefaultCommunityId(savedCommunity.getId());
@@ -259,9 +259,9 @@ public class FootballBetsApplication {
 //
 //            List<Spiel> savedSpiele = retrieveSpiele();
 //            log.info("add spielformula ::" + savedSpiele.size());
+//
 
-
-           log.info("Server started");
+          log.info("Start successful");
         };
     }
 

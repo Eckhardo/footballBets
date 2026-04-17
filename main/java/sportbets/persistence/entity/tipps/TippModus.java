@@ -2,8 +2,8 @@ package sportbets.persistence.entity.tipps;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import sportbets.common.TippModi;
-import sportbets.common.TippModiAttributeConverter;
+import sportbets.common.TippModusType;
+import sportbets.common.TippModusTypeAttributeConverter;
 import sportbets.persistence.entity.community.Community;
 
 import java.time.LocalDateTime;
@@ -18,8 +18,8 @@ public abstract class TippModus  {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Convert(converter = TippModiAttributeConverter.class)
-    private TippModi name;
+    @Convert(converter = TippModusTypeAttributeConverter.class)
+    private TippModusType type;
 
     /**
      * an Integer representation for the time when tipps have to be placed
@@ -27,7 +27,6 @@ public abstract class TippModus  {
      */
     private Integer deadline;
 
-    private String displayName;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fk_comm_id",foreignKey = @ForeignKey(name = "FK_TIPP_MODUS_TO_COMMUNITY"))
@@ -57,9 +56,9 @@ public abstract class TippModus  {
     /**
      * Simple properties constructor .
      */
-    public TippModus(TippModi name, Integer deadline, Community community) {
+    public TippModus(TippModusType type, Integer deadline, Community community) {
         super();
-        this.name = name;
+        this.type = type;
         this.deadline = deadline;
         this.community = community;
         community.addTippModus(this);
@@ -68,9 +67,9 @@ public abstract class TippModus  {
     /**
      * Full constructor .
      */
-    public TippModus(TippModi name, Integer deadline, Community community,
+    public TippModus(TippModusType type, Integer deadline, Community community,
                      Set<TippConfig> tippConfigs) {
-        this(name, deadline, community);
+        this(type, deadline, community);
         this.tippConfigs = tippConfigs;
     }
 
@@ -83,12 +82,12 @@ public abstract class TippModus  {
         this.id = id;
     }
 
-    public TippModi getName() {
-        return name;
+    public TippModusType getType() {
+        return type;
     }
 
-    public void setName(TippModi name) {
-        this.name = name;
+    public void setType(TippModusType name) {
+        this.type = name;
     }
 
     public Integer getDeadline() {
@@ -100,12 +99,9 @@ public abstract class TippModus  {
     }
 
     public String getDisplayName() {
-        return displayName;
+        return this.type.getDisplayName();
     }
 
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
 
     public Community getCommunity() {
         return community;
@@ -121,5 +117,16 @@ public abstract class TippModus  {
 
     public void addTippConfig(TippConfig tippConfig) {
         this.tippConfigs.add(tippConfig);
+    }
+
+    @Override
+    public String toString() {
+        return "TippModus{" +
+                "id=" + id +
+                ", type=" + type +
+                ", deadline=" + deadline +
+                ", createdOn=" + createdOn +
+                ", community=" + community +
+                '}';
     }
 }

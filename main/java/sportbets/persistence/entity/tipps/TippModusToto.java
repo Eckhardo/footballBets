@@ -1,7 +1,7 @@
 package sportbets.persistence.entity.tipps;
 
 import jakarta.persistence.Entity;
-import sportbets.common.TippModi;
+import sportbets.common.TippModusType;
 import sportbets.persistence.entity.community.Community;
 
 
@@ -16,7 +16,7 @@ public class TippModusToto extends TippModus{
 
     }
 
-    public TippModusToto(TippModi name, Integer deadline, Community community) {
+    public TippModusToto(TippModusType name, Integer deadline, Community community) {
         super(name,deadline, community);
     }
 
