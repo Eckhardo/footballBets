@@ -1,4 +1,4 @@
-package sportbets.common;
+package sportbets.persistence.entity.tipps.enums;
 
 public enum TippModusType {
 

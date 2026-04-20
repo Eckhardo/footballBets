@@ -1,7 +1,8 @@
-package sportbets.common;
+package sportbets.persistence.entity.competition.converter;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
+import sportbets.persistence.entity.competition.enums.Country;
 
 @Converter(autoApply = true)
 public class CountryAttributeConverter implements AttributeConverter<Country, String> {

@@ -2,7 +2,6 @@ package sportbets.web.dto.tipps;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import sportbets.common.TippModusType;
 
 import java.io.Serializable;
 import java.util.Objects;

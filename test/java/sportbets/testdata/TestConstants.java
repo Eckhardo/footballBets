@@ -1,7 +1,8 @@
 package sportbets.testdata;
 
-import sportbets.common.Country;
 import sportbets.persistence.entity.competition.CompetitionFamily;
+
+import sportbets.persistence.entity.competition.enums.Country;
 import sportbets.web.dto.competition.CompetitionDto;
 import sportbets.web.dto.competition.CompetitionFamilyDto;
 

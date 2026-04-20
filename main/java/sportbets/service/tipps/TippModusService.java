@@ -1,10 +1,7 @@
 package sportbets.service.tipps;
 
 import org.springframework.stereotype.Service;
-import sportbets.common.TippModusType;
-import sportbets.persistence.entity.competition.CompetitionFamily;
 
-import sportbets.web.dto.competition.CompetitionFamilyDto;
 import sportbets.web.dto.tipps.TippModusDto;
 import sportbets.web.dto.tipps.TippModusPointDto;
 import sportbets.web.dto.tipps.TippModusResultDto;

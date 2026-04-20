@@ -2,7 +2,7 @@ package sportbets.web.dto.authorization;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sportbets.common.Country;
+import sportbets.persistence.entity.competition.enums.Country;
 
 import java.util.HashSet;
 import java.util.Objects;

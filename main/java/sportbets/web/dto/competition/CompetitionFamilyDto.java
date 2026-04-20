@@ -2,7 +2,7 @@ package sportbets.web.dto.competition;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import sportbets.common.Country;
+import sportbets.persistence.entity.competition.enums.Country;
 import sportbets.persistence.entity.competition.CompetitionFamily;
 
 import java.io.Serializable;

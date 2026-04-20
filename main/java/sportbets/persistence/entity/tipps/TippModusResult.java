@@ -1,7 +1,7 @@
 package sportbets.persistence.entity.tipps;
 
 import jakarta.persistence.Entity;
-import sportbets.common.TippModusType;
+import sportbets.persistence.entity.tipps.enums.TippModusType;
 import sportbets.persistence.entity.community.Community;
 
 @Entity

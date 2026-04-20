@@ -1,8 +1,8 @@
 package sportbets.persistence.entity.competition;
 
 import jakarta.persistence.*;
-import sportbets.common.Country;
-import sportbets.common.CountryAttributeConverter;
+import sportbets.persistence.entity.competition.enums.Country;
+import sportbets.persistence.entity.competition.converter.CountryAttributeConverter;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;

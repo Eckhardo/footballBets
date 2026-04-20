@@ -1,7 +1,8 @@
-package sportbets.common;
+package sportbets.persistence.entity.tipps.converter;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
+import sportbets.persistence.entity.tipps.enums.TippModusType;
 
 @Converter(autoApply = true)
 public class TippModusTypeAttributeConverter implements AttributeConverter<TippModusType, String> {

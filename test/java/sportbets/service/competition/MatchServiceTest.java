@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-import sportbets.common.Country;
+import sportbets.persistence.entity.competition.enums.Country;
 import sportbets.persistence.entity.competition.*;
 import sportbets.web.dto.competition.*;
 

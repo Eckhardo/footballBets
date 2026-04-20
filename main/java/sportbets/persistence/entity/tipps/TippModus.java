@@ -2,8 +2,8 @@ package sportbets.persistence.entity.tipps;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import sportbets.common.TippModusType;
-import sportbets.common.TippModusTypeAttributeConverter;
+import sportbets.persistence.entity.tipps.enums.TippModusType;
+import sportbets.persistence.entity.tipps.converter.TippModusTypeAttributeConverter;
 import sportbets.persistence.entity.community.Community;
 
 import java.time.LocalDateTime;

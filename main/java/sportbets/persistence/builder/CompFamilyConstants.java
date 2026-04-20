@@ -1,6 +1,6 @@
 package sportbets.persistence.builder;
 
-import sportbets.common.Country;
+import sportbets.persistence.entity.competition.enums.Country;
 import sportbets.persistence.entity.competition.CompetitionFamily;
 
 public class CompFamilyConstants {

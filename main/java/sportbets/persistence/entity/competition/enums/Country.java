@@ -1,4 +1,4 @@
-package sportbets.common;
+package sportbets.persistence.entity.competition.enums;
 public enum Country {
     ENGLAND("EN", "England"),
     ITALY("IT", "Italy"),

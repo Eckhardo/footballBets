@@ -2,7 +2,7 @@ package sportbets.web.dto;
 
 import org.modelmapper.*;
 import org.springframework.stereotype.Component;
-import sportbets.common.TippModusType;
+import sportbets.persistence.entity.tipps.enums.TippModusType;
 import sportbets.persistence.entity.tipps.TippModusPoint;
 import sportbets.persistence.entity.tipps.TippModusResult;
 import sportbets.persistence.entity.tipps.TippModusToto;
