@@ -22,7 +22,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ModelMapperEntityDtoTest {
+class CompetitionModelMapperTest {
 
 
     public static final String TEST_FAM = "TestFam";
@@ -32,14 +32,14 @@ class ModelMapperEntityDtoTest {
     public static final String COMP_ROUND = "Hinrunde";
     public static final String TEAM_ACR_1 = "Kiel";
     public static final String TEAM_ACR_2 = "Braunschweig";
-    private static final Logger log = LoggerFactory.getLogger(ModelMapperEntityDtoTest.class);
+    private static final Logger log = LoggerFactory.getLogger(CompetitionModelMapperTest.class);
     private static final String TEAM_NAME = "Eintracht Braunschweig";
     private static final String TEAM_NAME_2 = "Holstein Kiel";
     final ModelMapper modelMapper = new ModelMapper();
 
     @Test
     void checkModelMapper() {
-        CompetitionFamily testFamily = new CompetitionFamily(TEST_FAM, TEST_FAM_DESCR, true, true,  Country.GERMANY);
+        CompetitionFamily testFamily = new CompetitionFamily(TEST_FAM, TEST_FAM_DESCR, true, true, Country.GERMANY);
 
         Competition testComp = new Competition(TEST_COMP, TEST_COMP_DESCR, 3, 1, testFamily);
         CompetitionRound testRound = new CompetitionRound(1, COMP_ROUND, testComp, false, 18, 17, 1);
@@ -62,7 +62,7 @@ class ModelMapperEntityDtoTest {
         log.debug("\n validate family");
         modelMapper.createTypeMap(CompetitionFamilyDto.class, CompetitionFamily.class);
         modelMapper.validate();
-        CompetitionFamily testFamily = new CompetitionFamily(TEST_FAM, TEST_FAM_DESCR, true, true,  Country.GERMANY);
+        CompetitionFamily testFamily = new CompetitionFamily(TEST_FAM, TEST_FAM_DESCR, true, true, Country.GERMANY);
         CompetitionFamilyDto famDto = modelMapper.map(testFamily, CompetitionFamilyDto.class);
         log.debug("Family:: {}", famDto.toString());
 
@@ -72,7 +72,7 @@ class ModelMapperEntityDtoTest {
     public void checkComp() {
         log.debug("\n validate competition");
 
-        CompetitionFamily testFamily = new CompetitionFamily(TEST_FAM, TEST_FAM_DESCR, true, true,  Country.GERMANY);
+        CompetitionFamily testFamily = new CompetitionFamily(TEST_FAM, TEST_FAM_DESCR, true, true, Country.GERMANY);
         testFamily.setId(10L);
         Competition testComp = new Competition(TEST_COMP, TEST_COMP_DESCR, 3, 1, testFamily);
         testComp.setId(5L);
@@ -85,7 +85,7 @@ class ModelMapperEntityDtoTest {
     public void checkRound() {
         log.debug("\n validate comp round");
 
-        CompetitionFamily testFamily = new CompetitionFamily(TEST_FAM, TEST_FAM_DESCR, true, true,  Country.GERMANY);
+        CompetitionFamily testFamily = new CompetitionFamily(TEST_FAM, TEST_FAM_DESCR, true, true, Country.GERMANY);
         testFamily.setId(10L);
         Competition testComp = new Competition(TEST_COMP, TEST_COMP_DESCR, 3, 1, testFamily);
         testComp.setId(5L);
@@ -100,7 +100,7 @@ class ModelMapperEntityDtoTest {
         log.debug("\n validate spieltag");
 
 
-        CompetitionFamily testFamily = new CompetitionFamily(TEST_FAM, TEST_FAM_DESCR, true, true,  Country.GERMANY);
+        CompetitionFamily testFamily = new CompetitionFamily(TEST_FAM, TEST_FAM_DESCR, true, true, Country.GERMANY);
         testFamily.setId(10L);
         Competition testComp = new Competition(TEST_COMP, TEST_COMP_DESCR, 3, 1, testFamily);
         testComp.setId(5L);
@@ -121,7 +121,7 @@ class ModelMapperEntityDtoTest {
     public void checkSpiel() {
         log.debug("\n validate spiel");
 
-        CompetitionFamily testFamily = new CompetitionFamily(TEST_FAM, TEST_FAM_DESCR, true, true,  Country.GERMANY);
+        CompetitionFamily testFamily = new CompetitionFamily(TEST_FAM, TEST_FAM_DESCR, true, true, Country.GERMANY);
         testFamily.setId(10L);
         Competition testComp = new Competition(TEST_COMP, TEST_COMP_DESCR, 3, 1, testFamily);
         testComp.setId(5L);
@@ -129,8 +129,8 @@ class ModelMapperEntityDtoTest {
         testRound.setId(7L);
         Spieltag testSpieltag = new Spieltag(1, LocalDateTime.now(), testRound);
         testSpieltag.setId(7L);
-        Team team1 = new Team("Test1", "1",true );
-        Team team2 = new Team("Test2", "2",true );
+        Team team1 = new Team("Test1", "1", true);
+        Team team2 = new Team("Test2", "2", true);
         Team team3 = new Team("Test3", "3", true);
         Team team4 = new Team("Test4", "4", true);
         team1.setId(4L);
@@ -171,7 +171,7 @@ class ModelMapperEntityDtoTest {
     public void checkCompTeam() {
         log.debug("\n validate spiel");
 
-        CompetitionFamily testFamily = new CompetitionFamily(TEST_FAM, TEST_FAM_DESCR, true, true,  Country.GERMANY);
+        CompetitionFamily testFamily = new CompetitionFamily(TEST_FAM, TEST_FAM_DESCR, true, true, Country.GERMANY);
         testFamily.setId(10L);
         Competition testComp = new Competition(TEST_COMP, TEST_COMP_DESCR, 3, 1, testFamily);
         testComp.setId(5L);
@@ -214,7 +214,7 @@ class ModelMapperEntityDtoTest {
 
         final ModelMapper myMapper = MapperUtil.getModelMapperForTipperRole();
 
-        CompetitionFamily testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true,  Country.GERMANY);
+        CompetitionFamily testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true, Country.GERMANY);
         Competition testComp = new Competition(COMP_NAME, "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
         testComp.setId(4L);
 
@@ -258,7 +258,7 @@ class ModelMapperEntityDtoTest {
 
         final ModelMapper myCompRoleMapper = MapperUtil.getModelMapperForCompetitionRole();
 
-        CompetitionFamily testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true,  Country.GERMANY);
+        CompetitionFamily testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true, Country.GERMANY);
         Competition testComp = new Competition(COMP_NAME, "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
         testComp.setId(4L);
 

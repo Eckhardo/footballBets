@@ -1,9 +1,14 @@
 package sportbets.service.tipps;
 
 import org.springframework.stereotype.Service;
+import sportbets.common.TippModusType;
 import sportbets.persistence.entity.competition.CompetitionFamily;
-import sportbets.persistence.entity.tipps.TippModus;
+
 import sportbets.web.dto.competition.CompetitionFamilyDto;
+import sportbets.web.dto.tipps.TippModusDto;
+import sportbets.web.dto.tipps.TippModusPointDto;
+import sportbets.web.dto.tipps.TippModusResultDto;
+import sportbets.web.dto.tipps.TippModusTotoDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,20 +17,22 @@ import java.util.Optional;
 public interface TippModusService {
 
 
-    Optional<TippModus> findById(Long id);
+    Optional<TippModusDto> findById(Long id);
 
-    TippModus save(TippModus tippModus);
+    TippModusDto save(TippModusDto dto);
 
-    Optional<TippModus> update(Long id,TippModus tippModus);
-
-    void deleteByName(String name);
+    Optional<TippModusDto> update(Long id,TippModusDto dto);
 
     void deleteById(Long id);
 
-    List<TippModus> getAll();
+    List<TippModusDto> getAllForCommunity(Long id);
 
-    Optional<TippModus> findByByName(String name);
+   List<TippModusTotoDto> findTotoTypesForCommunity(Long id);
 
-    Optional<CompetitionFamily> findByByCompId(Long id);
+    List<TippModusResultDto> findResultTypesForCommunity(Long id);
+
+
+    List<TippModusPointDto> findPointTypesForCommunity(Long id);
+
 
 }

@@ -50,7 +50,7 @@ public abstract class TippModus  {
      * No-arg constructor for JavaBean tools.
      */
    public TippModus() {
-        super();
+
     }
 
     /**

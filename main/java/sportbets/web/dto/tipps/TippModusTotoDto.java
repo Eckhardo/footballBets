@@ -22,17 +22,15 @@ public class TippModusTotoDto extends TippModusDto implements Serializable {
     }
 
     @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
-
-    @Override
     public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
         return super.equals(o);
+
     }
 
     @Override
-    public String toString() {
-        return super.toString();
+    public int hashCode() {
+        return Objects.hash(super.hashCode());
     }
+
 }
