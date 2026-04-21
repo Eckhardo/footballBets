@@ -9,12 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-import sportbets.persistence.entity.competition.enums.Country;
 import sportbets.persistence.entity.authorization.CompetitionRole;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
+import sportbets.persistence.entity.competition.enums.Country;
+import sportbets.service.community.CommunityService;
 import sportbets.service.competition.CompFamilyService;
 import sportbets.service.competition.CompService;
+import sportbets.testdata.TestConstants;
 import sportbets.web.dto.competition.CompetitionDto;
 import sportbets.web.dto.competition.CompetitionFamilyDto;
 
@@ -23,40 +25,45 @@ import java.util.List;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static sportbets.testdata.TestConstants.COMP_TEST;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ActiveProfiles("test")
-@Transactional
+
 public class CompetitionRoleServiceTest {
 
 
     private static final Logger log = LoggerFactory.getLogger(CompetitionRoleServiceTest.class);
-    private static final String TEST_COMP_FAM = "TestLiga";
-    private static final String TEST_COMP = "TestLiga: Saison 2025";
+    private static final String TEST_COMP_FAM = TestConstants.COMP_FAM_TEST;
     private static final String TEST_USERNAME = "TEST_USER";
-    final CompetitionFamilyDto competitionFamily = new CompetitionFamilyDto(null, TEST_COMP_FAM, "description of testliga", true, true,  Country.GERMANY);
+    final CompetitionFamilyDto competitionFamily = new CompetitionFamilyDto(null, TEST_COMP_FAM, "description of testliga", true, true, Country.GERMANY);
     Competition savedComp = null;
+    CompetitionFamily savedFam;
     @Autowired
     private CompFamilyService familyService; // Real service being tested
     @Autowired
     private CompService compService; // Real service being tested
     @Autowired
     private CompetitionRoleService competitionRoleService;
+    @Autowired
+    private CommunityService communityService; // Real service being tested
 
-    @BeforeEach
+       @BeforeEach
     public void setup() {
 
-        CompetitionFamily savedFam = familyService.save(competitionFamily);
-        CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, savedFam.getId(), TEST_COMP_FAM);
-
+        savedFam = familyService.save(competitionFamily);
+        CompetitionDto compDto = TestConstants.TEST_COMP;
+        compDto.setFamilyId(savedFam.getId());
         savedComp = compService.save(compDto);
         assertNotNull(savedComp);
 
 
     }
 
+
     @AfterEach
     public void tearDown() {
+        familyService.deleteByName(TEST_COMP_FAM);
 
     }
 
@@ -73,14 +80,14 @@ public class CompetitionRoleServiceTest {
     }
 
 
-    @Test
+   @Test
     public void findAllCompRoles() {
         log.debug("findCompRole");
 
         List<CompetitionRole> roles = competitionRoleService.getAllCompRoles();
 
         assertThat(roles).isNotNull();
-        CompetitionRole savedRole= roles.stream().filter( (r) -> r.getName().equals(TEST_COMP)).findFirst().get();
+        CompetitionRole savedRole = roles.stream().filter((r) -> r.getName().equals(TestConstants.TEST_COMP.getName())).findFirst().get();
 
         assertEquals(savedComp.getId(), savedRole.getCompetition().getId());
         assertEquals(savedComp.getName(), savedRole.getCompetition().getName());

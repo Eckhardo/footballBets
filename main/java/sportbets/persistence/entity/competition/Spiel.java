@@ -2,8 +2,8 @@ package sportbets.persistence.entity.competition;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.format.annotation.DateTimeFormat;
-import sportbets.common.DateUtil;
 import sportbets.persistence.entity.tipps.Tipp;
 
 import java.time.LocalDateTime;
@@ -13,19 +13,26 @@ import java.util.Optional;
 import java.util.Set;
 
 @Entity
-public class Spiel implements Comparable<Spiel> {
+public class Spiel  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private int spielNumber;
-
+    @PositiveOrZero
+    @Column(nullable = false)
+    private int spielNumber ;
+    @PositiveOrZero
+    @Column(nullable = false)
     private int heimTore;
-
+    @PositiveOrZero
+    @Column(nullable = false)
     private int gastTore;
 
 
-    private boolean stattgefunden;
+    private boolean stattgefunden = false;
+
+    @Column(nullable = false)
+    private final LocalDateTime createdOn = LocalDateTime.now();
 
     @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
     // Specifies the format for JSON serialization (when the entity is returned as a response)
@@ -33,15 +40,15 @@ public class Spiel implements Comparable<Spiel> {
     private LocalDateTime anpfiffdate;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "fk_heim_team_id",foreignKey = @ForeignKey(name = "FK_SPIEL_TO_HEIM_TEAM"))
+    @JoinColumn(name = "fk_heim_team_id", foreignKey = @ForeignKey(name = "FK_SPIEL_TO_HEIM_TEAM"))
     private Team heimTeam;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "fk_gast_team_id",foreignKey = @ForeignKey(name = "FK_SPIEL_TO_GAST_TEAM"))
+    @JoinColumn(name = "fk_gast_team_id", foreignKey = @ForeignKey(name = "FK_SPIEL_TO_GAST_TEAM"))
     private Team gastTeam;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_spieltag_id",foreignKey = @ForeignKey(name = "FK_SPIEL_TO_SPIELTAG"))
+    @JoinColumn(name = "fk_spieltag_id", foreignKey = @ForeignKey(name = "FK_SPIEL_TO_SPIELTAG"))
     private Spieltag spieltag;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -49,10 +56,6 @@ public class Spiel implements Comparable<Spiel> {
 
     @OneToMany(mappedBy = "spiel", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<Tipp> tipps = new HashSet<>();
-
-
-
-
 
     @OneToMany(mappedBy = "spiel", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private final Set<SpielFormula> spielFormulas = new HashSet<>();
@@ -195,9 +198,11 @@ public class Spiel implements Comparable<Spiel> {
     public void setCompetitionGroup(CompetitionGroup competitionGroup) {
         this.competitionGroup = competitionGroup;
     }
+
     public Set<SpielFormula> getSpielFormulas() {
         return spielFormulas;
     }
+
     public Optional<SpielFormula> getSpielFormulaForHeim() {
         for (SpielFormula spielFormula : spielFormulas) {
             if (spielFormula.isHeimTeam()) {
@@ -206,9 +211,10 @@ public class Spiel implements Comparable<Spiel> {
         }
         return Optional.empty();
     }
+
     public Optional<SpielFormula> getSpielFormulaForGast() {
         for (SpielFormula spielFormula : spielFormulas) {
-            if (! spielFormula.isHeimTeam()) {
+            if (!spielFormula.isHeimTeam()) {
                 return Optional.of(spielFormula);
             }
         }
@@ -234,12 +240,12 @@ public class Spiel implements Comparable<Spiel> {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Spiel spiel = (Spiel) o;
-        return Objects.equals(id, spiel.id) && spielNumber == spiel.spielNumber && stattgefunden == spiel.stattgefunden && Objects.equals(anpfiffdate, spiel.anpfiffdate) && Objects.equals(heimTeam, spiel.heimTeam) && Objects.equals(gastTeam, spiel.gastTeam);
+        return spielNumber == spiel.spielNumber && Objects.equals(id, spiel.id) && Objects.equals(createdOn, spiel.createdOn);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, spielNumber, stattgefunden, anpfiffdate, heimTeam, gastTeam);
+        return Objects.hash(id, spielNumber, createdOn);
     }
 
     @Override
@@ -260,8 +266,4 @@ public class Spiel implements Comparable<Spiel> {
                 '}';
     }
 
-    @Override
-    public int compareTo(Spiel o) {
-        return o.getSpielNumber() - this.getSpielNumber();
-    }
 }

@@ -79,8 +79,6 @@ public class SpielRepositoryTest {
 
         testSpiel1 = new Spiel(testSpieltag, 1, LocalDateTime.now(), team1, team2, 3, 1, false);
         testSpiel2 = new Spiel(testSpieltag, 2, LocalDateTime.now(), team3, team4, 2, 2, false);
-        testSpieltag.addSpiel(testSpiel1);
-        testSpieltag.addSpiel(testSpiel2);
         return testFamily;
     }
 

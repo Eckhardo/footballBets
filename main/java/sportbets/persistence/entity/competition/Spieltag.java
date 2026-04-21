@@ -3,6 +3,7 @@ package sportbets.persistence.entity.competition;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -10,9 +11,10 @@ import sportbets.common.DateUtil;
 import sportbets.persistence.entity.tipps.TippConfig;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Objects;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.Set;
+
 
 @Entity
 public class Spieltag {
@@ -20,7 +22,13 @@ public class Spieltag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @PositiveOrZero
+    @Column(nullable = false)
     private int spieltagNumber;
+    @Column(nullable = false)
+    private final LocalDateTime createdOn = LocalDateTime.now();
+
     @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
     // Specifies the format for JSON serialization (when the entity is returned as a response)
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
@@ -32,7 +40,7 @@ public class Spieltag {
     private CompetitionRound competitionRound;
 
     @OneToMany(mappedBy = "spieltag", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private final SortedSet<Spiel> spiele = new TreeSet<>();
+    private final Set<Spiel> spiele = new HashSet<>();
 
 
     // Owning Side:
@@ -59,7 +67,7 @@ public class Spieltag {
         this.competitionRound = competitionRound;
     }
 
-    public SortedSet<Spiel> getSpiele() {
+    public Set<Spiel> getSpiele() {
         return spiele;
     }
 
@@ -109,12 +117,12 @@ public class Spieltag {
         log.debug(" call equals::");
         if (o == null || getClass() != o.getClass()) return false;
         Spieltag spieltag = (Spieltag) o;
-        return spieltagNumber == spieltag.spieltagNumber && Objects.equals(id, spieltag.id) && Objects.equals(startDate, spieltag.startDate) && Objects.equals(competitionRound, spieltag.competitionRound);
+        return spieltagNumber == spieltag.spieltagNumber && Objects.equals(id, spieltag.id) && Objects.equals(createdOn, spieltag.createdOn) ;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, spieltagNumber, startDate);
+        return Objects.hash(id, spieltagNumber, createdOn);
     }
 
     @Override

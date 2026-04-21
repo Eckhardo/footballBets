@@ -21,16 +21,15 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static sportbets.testdata.TestConstants.TEST_COMP_2;
 
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ActiveProfiles("test")
-@Transactional
+
 public class CompetitionServiceTest {
     private static final Logger log = LoggerFactory.getLogger(CompetitionServiceTest.class);
 
-    private static final String TEST_COMP = "TestLiga: Saison 2025";
-    private static final String TEST_COMP_2 = "TestLiga2: Saison 2025";
 
     final CompetitionFamilyDto competitionFamily = TestConstants.TEST_FAMILY;
     CompetitionFamily savedFam = null;
@@ -52,20 +51,20 @@ public class CompetitionServiceTest {
 
     @AfterEach
     public void tearDown() {
-
+     familyService.deleteByName(savedFam.getName());
     }
 
     @Test
     void whenValidComp_thenCompShouldBeSaved() {
 
-        CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, savedFam.getId(), savedFam.getName());
+        CompetitionDto compDto = TestConstants.TEST_COMP;
+        compDto.setFamilyId(savedFam.getId());
         Competition savedComp = compService.save(compDto);
 
         assertThat(savedComp.getId()).isNotNull();
-        assertThat(savedComp.getName()).isEqualTo(TEST_COMP);
+        assertThat(compDto.getName()).isEqualTo(savedComp.getName());
         assertThat(savedComp.getCompetitionFamily().getName()).isEqualTo(savedFam.getName());
         assertThat(savedComp.getCompetitionFamily().getId()).isEqualTo(savedFam.getId());
-
 
 
     }
@@ -73,19 +72,20 @@ public class CompetitionServiceTest {
     @Test
     void whenValidComp_thenCompShouldBeUpdated() {
 
-        CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, savedFam.getId(), savedFam.getName());
+        CompetitionDto compDto =TestConstants.TEST_COMP;
+        compDto.setFamilyId(savedFam.getId());
         Competition savedComp = compService.save(compDto);
-        compDto.setName(TEST_COMP_2);
+        compDto.setName(TEST_COMP_2.getName());
         compDto.setWinMultiplicator(5);
         compDto.setId(savedComp.getId());
         Competition updatedComp = compService.updateComp(savedComp.getId(), compDto).orElseThrow();
 
         assertThat(updatedComp.getId()).isNotNull();
-        assertThat(updatedComp.getName()).isEqualTo(TEST_COMP_2);
+        assertThat(updatedComp.getName()).isEqualTo(TEST_COMP_2.getName());
         assertThat(updatedComp.getWinMultiplicator()).isEqualTo(5);
         List<CompetitionRole> roles = competitionRoleService.getAllCompRoles();
         assertThat(roles).isNotNull();
-        CompetitionRole savedRole= roles.stream().filter( (r) -> r.getName().equals(TEST_COMP_2)).findFirst().get();
+        CompetitionRole savedRole = roles.stream().filter((r) -> r.getName().equals(TEST_COMP_2.getName())).findFirst().get();
 
         assertEquals(savedComp.getId(), savedRole.getCompetition().getId());
         assertEquals(savedComp.getName(), savedRole.getCompetition().getName());

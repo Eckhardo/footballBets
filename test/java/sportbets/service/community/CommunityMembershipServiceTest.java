@@ -16,6 +16,7 @@ import sportbets.persistence.entity.community.CommunityMembership;
 import sportbets.persistence.entity.community.Tipper;
 import sportbets.service.authorization.CommunityRoleService;
 import sportbets.service.authorization.TipperRoleService;
+import sportbets.testdata.TestConstants;
 import sportbets.web.dto.authorization.TipperRoleDto;
 import sportbets.web.dto.community.CommunityDto;
 import sportbets.web.dto.community.CommunityMembershipDto;
@@ -25,16 +26,16 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ActiveProfiles("test")
-
 public class CommunityMembershipServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(CommunityMembershipServiceTest.class);
-    private static final String TEST_COMM = "Test Community";
+
     private static final String TEST_COMM_2 = "My Test Community 2";
     private static final String TEST_USERNAME = "TEST_USER";
     private static final String TEST_USERNAME_2 = "TEST_USER 2";
+    private final CommunityDto communityDto = TestConstants.TEST_COMMUNITY;
 
     @Autowired
     CommunityMembershipService membershipService;
@@ -54,7 +55,6 @@ public class CommunityMembershipServiceTest {
 
     TipperDto testTipper2 = new TipperDto(null, "Werner", "Wernersen", TEST_USERNAME_2, "root", "hint", "werner@gmx.de");
 
-    CommunityDto communityDto = new CommunityDto(null, TEST_COMM, "Description of Community");
     CommunityDto communityDto2 = new CommunityDto(null, TEST_COMM_2, "Description of Community2");
 
     Tipper savedTipper = null;

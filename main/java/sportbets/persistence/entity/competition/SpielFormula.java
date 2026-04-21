@@ -2,6 +2,7 @@ package sportbets.persistence.entity.competition;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -12,25 +13,33 @@ public class SpielFormula {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private int won;
-
-    private int remis;
-
-    private int lost;
-
-
     private boolean isHeimTeam;
+    @Column(nullable = false)
+    private final LocalDateTime createdOn = LocalDateTime.now();
 
+    @PositiveOrZero
+    @Column(nullable = false)
+    private int won;
+    @PositiveOrZero
+    @Column(nullable = false)
+    private int remis;
+    @PositiveOrZero
+    @Column(nullable = false)
+    private int lost;
+    @PositiveOrZero
+    @Column(nullable = false)
     private int points;
-
+    @PositiveOrZero
+    @Column(nullable = false)
     private int heimTore;
-
+    @PositiveOrZero
+    @Column(nullable = false)
     private int gastTore;
 
+    @Column(nullable = false)
     private int diffTore;
 
     @Column(nullable = false)
-    private final LocalDateTime createdOn = LocalDateTime.now();
 
     private String teamName;
     private String teamNameAcronym;
@@ -174,12 +183,12 @@ public class SpielFormula {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         SpielFormula that = (SpielFormula) o;
-        return won == that.won && remis == that.remis && lost == that.lost && isHeimTeam == that.isHeimTeam && points == that.points && Objects.equals(id, that.id) && Objects.equals(createdOn, that.createdOn) && Objects.equals(teamNameAcronym, that.teamNameAcronym) && Objects.equals(spiel.getSpielNumber(), that.spiel.getSpielNumber());
+        return Objects.equals(id, that.id) && Objects.equals(createdOn, that.createdOn) && Objects.equals(teamName, that.teamName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, won, remis, lost, isHeimTeam, points, createdOn, teamNameAcronym, spiel);
+        return Objects.hash(id, createdOn, teamName);
     }
 
     @Override

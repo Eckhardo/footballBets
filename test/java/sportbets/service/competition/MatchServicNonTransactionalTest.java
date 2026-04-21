@@ -8,9 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import sportbets.persistence.entity.competition.enums.Country;
 import sportbets.persistence.entity.competition.*;
 import sportbets.persistence.rowObject.TeamPositionSummaryRow;
+import sportbets.testdata.TestConstants;
 import sportbets.web.dto.competition.*;
 import sportbets.web.dto.competition.search.TableSearchCriteria;
 
@@ -21,17 +21,15 @@ import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ActiveProfiles("test")
 
 public class MatchServicNonTransactionalTest {
 
-    private static final Logger log = LoggerFactory.getLogger(MatchServicNonTransactionalTest.class);
-    private static final String TEST_COMP_FAM = "TestLiga";
-    private static final String TEST_COMP = "TestLiga: Saison 2025";
-    private static final String TEST_COMP_ROUND = "Saison 2025: Hinrunde";
     private static final String TEAM_NAME = "Eintracht Braunschweig";
     private static final String TEAM_NAME_2 = "Holstein Kiel";
+    private static final Logger log = LoggerFactory.getLogger(MatchServicNonTransactionalTest.class);
+
     Team savedTeam1 = null;
     Team savedTeam2 = null;
     Spieltag savedMatchday = null;
@@ -52,20 +50,20 @@ public class MatchServicNonTransactionalTest {
     @Autowired
     private CompTableService compTableService;
 
-    Competition myComp = null;
-
+    Competition savedComp = null;
+    CompetitionRound savedCompRound = null;
     @BeforeEach
     public void setup() {
-        CompetitionFamilyDto competitionFamily = new CompetitionFamilyDto(null, TEST_COMP_FAM, "description of testliga", true, true, Country.GERMANY);
-
+        CompetitionFamilyDto competitionFamily = TestConstants.TEST_FAMILY;
         CompetitionFamily savedFam = familyService.save(competitionFamily);
-        CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, savedFam.getId(), TEST_COMP_FAM);
-
-        myComp = compService.save(compDto);
-        CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, TEST_COMP_ROUND, false, myComp.getId(), myComp.getName(), 18, 17, 1);
-
-        compRoundDto.setCompId(myComp.getId());
-        CompetitionRound savedCompRound = compRoundService.save(compRoundDto);
+        CompetitionDto compDto = TestConstants.TEST_COMP;
+        compDto.setFamilyId(savedFam.getId());
+        savedComp = compService.save(compDto);
+        CompetitionRoundDto compRoundDto = TestConstants.TEST_COMP_ROUND;
+        compRoundDto.setCompId(savedComp.getId());
+        log.info("save round " + compRoundDto.getCompId());
+        savedCompRound = compRoundService.save(compRoundDto);
+        log.info("round saved D: " + savedCompRound.getId());
         SpieltagDto matchDayDto = new SpieltagDto(null, 1, LocalDateTime.now(), savedCompRound.getId(), savedCompRound.getName());
         SpieltagDto matchDayDto2 = new SpieltagDto(null, 2, LocalDateTime.now(), savedCompRound.getId(), savedCompRound.getName());
         savedMatchday = spieltagService.save(matchDayDto);
@@ -81,7 +79,7 @@ public class MatchServicNonTransactionalTest {
     public void tearDown() {
         log.debug("\n");
         log.debug("Delete All Test data");
-        familyService.deleteByName(TEST_COMP_FAM);
+        familyService.deleteByName(TestConstants.TEST_FAMILY.getName());
         teamService.deleteByName(TEAM_NAME);
         teamService.deleteByName(TEAM_NAME_2);
 
@@ -105,7 +103,7 @@ public class MatchServicNonTransactionalTest {
         assertThat(savedMatch.getHeimTeam().getAcronym()).isEqualTo(savedTeam1.getAcronym());
         assertThat(savedMatch.getGastTeam().getId()).isEqualTo(savedTeam2.getId());
         assertThat(savedMatch.getGastTeam().getAcronym()).isEqualTo(savedTeam2.getAcronym());
-        TableSearchCriteria searchCriteria = new TableSearchCriteria(myComp.getId(), 1, 2,null);
+        TableSearchCriteria searchCriteria = new TableSearchCriteria(savedComp.getId(), 1, 2, null);
 
         List<TeamPositionSummaryRow> rows = compTableService.findTableForLigaModus(searchCriteria);
         assertThat(rows.size()).isEqualTo(2);
@@ -137,7 +135,7 @@ public class MatchServicNonTransactionalTest {
         assertThat(updatedMatch.getGastTeam().getAcronym()).isEqualTo(savedTeam2.getAcronym());
         assertThat(updatedMatch.getSpieltag().getSpieltagNumber()).isEqualTo(savedMatchday.getSpieltagNumber());
         assertThat(updatedMatch.getSpieltag().getId()).isEqualTo(savedMatchday.getId());
-        TableSearchCriteria searchCriteria = new TableSearchCriteria(myComp.getId(), 1, 2,null);
+        TableSearchCriteria searchCriteria = new TableSearchCriteria(savedComp.getId(), 1, 2, null);
 
         List<TeamPositionSummaryRow> rows = compTableService.findTableForLigaModus(searchCriteria);
         assertThat(rows.size()).isEqualTo(2);
@@ -170,7 +168,7 @@ public class MatchServicNonTransactionalTest {
             assertThat(savedMatch.getHeimTeam().getId()).isEqualTo(savedTeam1.getId());
 
         }
-        TableSearchCriteria searchCriteria = new TableSearchCriteria(myComp.getId(), 1, 2,null);
+        TableSearchCriteria searchCriteria = new TableSearchCriteria(savedComp.getId(), 1, 2, null);
 
         List<TeamPositionSummaryRow> rows = compTableService.findTableForLigaModus(searchCriteria);
         assertThat(rows.size()).isEqualTo(2);
@@ -196,8 +194,8 @@ public class MatchServicNonTransactionalTest {
         assertThat(savedMatch.getGastTeam().getId()).isEqualTo(savedTeam2.getId());
         assertThat(savedMatch.getGastTeam().getAcronym()).isEqualTo(savedTeam2.getAcronym());
         log.debug("\n");
-        familyService.deleteByName(TEST_COMP_FAM);
-        Optional<Competition> deletedComp = compService.findByName(TEST_COMP);
+        familyService.deleteByName(TestConstants.TEST_FAMILY.getName());
+        Optional<Competition> deletedComp = compService.findByName(TestConstants.TEST_FAMILY.getName());
         assertThat(deletedComp.isEmpty());
         Optional<Spieltag> deletedMatchday = spieltagService.findById(savedMatchday.getId());
         assertThat(deletedMatchday.isEmpty());

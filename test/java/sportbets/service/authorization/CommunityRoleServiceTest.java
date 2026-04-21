@@ -8,10 +8,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.authorization.CommunityRole;
 import sportbets.persistence.entity.community.Community;
 import sportbets.service.community.CommunityService;
+import sportbets.testdata.TestConstants;
 import sportbets.web.dto.community.CommunityDto;
 
 import java.util.List;
@@ -20,13 +20,12 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ActiveProfiles("test")
-@Transactional
 public class CommunityRoleServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(CommunityRoleServiceTest.class);
-    private static final String TEST_COMM = "Test Community";
+    private static final String TEST_COMM = TestConstants.COMM_TEST;
     Community savedCommunity = null;
 
     @Autowired
@@ -35,20 +34,19 @@ public class CommunityRoleServiceTest {
     private CommunityRoleService communityRoleService;
 
 
-
     @BeforeEach
     public void setup() {
-
-        CommunityDto compDto = new CommunityDto(null, TEST_COMM, "Description of Community");
-
+        communityService.deleteByName(TEST_COMM);
+        CommunityDto compDto = TestConstants.TEST_COMMUNITY;
         savedCommunity = communityService.save(compDto);
         assertNotNull(savedCommunity);
 
 
     }
+
     @AfterEach
     public void tearDown() {
-
+        communityService.deleteById(savedCommunity.getId());
     }
 
     @Test
@@ -70,7 +68,7 @@ public class CommunityRoleServiceTest {
 
         List<CommunityRole> roles = communityRoleService.getAllCommunityRoles();
         assertThat(roles).isNotNull();
-        CommunityRole savedRole= roles.stream().filter( (r) -> r.getName().equals(TEST_COMM)).findFirst().get();
+        CommunityRole savedRole = roles.stream().filter((r) -> r.getName().equals(TEST_COMM)).findFirst().get();
 
         assertEquals(savedCommunity.getId(), savedRole.getCommunity().getId());
         assertEquals(savedCommunity.getName(), savedRole.getCommunity().getName());

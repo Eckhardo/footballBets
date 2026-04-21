@@ -12,6 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
 import sportbets.persistence.entity.tipps.enums.TippModusType;
 import sportbets.persistence.entity.community.Community;
 import sportbets.service.community.CommunityService;
+import sportbets.testdata.TestConstants;
 import sportbets.web.dto.community.CommunityDto;
 import sportbets.web.dto.tipps.TippModusDto;
 import sportbets.web.dto.tipps.TippModusPointDto;
@@ -27,10 +28,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @ActiveProfiles("test")
 public class TippModusServiceTest {
 
-    private static final String TEST_COMM = "Test Community";
     private static final Logger log = LoggerFactory.getLogger(TippModusServiceTest.class);
 
-    CommunityDto communityDto = new CommunityDto(null, TEST_COMM, "Description of Community");
+    CommunityDto communityDto = TestConstants.TEST_COMMUNITY;
     Community savedCommunity = null;
 
     TippModusDto tippModusTotoDto;

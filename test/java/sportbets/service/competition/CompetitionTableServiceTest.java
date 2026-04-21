@@ -22,19 +22,19 @@ import java.util.List;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ActiveProfiles("test")
-@Transactional
+
+/**
+ * Needs Bundesliga data
+ */
 public class CompetitionTableServiceTest {
 
 
     private static final Logger log = LoggerFactory.getLogger(CompetitionTableServiceTest.class);
 
 
-    private static final String COMP_BL_2025 = "1. Bundesliga Saison 2025/26";
     private static final String TEST_COMP = "1. Bundesliga Saison 2025";
-    @Autowired
-    private CompFamilyService familyService; // Real service being tested
     @Autowired
     private CompService compService; // Real service being tested
 
@@ -68,7 +68,7 @@ public class CompetitionTableServiceTest {
         TableSearchCriteria searchCriteria = new TableSearchCriteria(myComp.getId(), 1, 18,null);
 
         List<TeamPositionSummaryRow> rows = compTableService.findTableForLigaModus(searchCriteria);
-        assertThat(rows.size()).isEqualTo(18);
+        assertThat(18).isEqualTo(rows.size());
         rows.sort(Comparator.comparing(TeamPositionSummaryRow::getPoints).reversed());
         rows.forEach(row -> System.out.println(row.getTeamName() + " " + row.getPoints()));
     }
@@ -78,7 +78,7 @@ public class CompetitionTableServiceTest {
         TableSearchCriteria searchCriteria = new TableSearchCriteria(myComp.getId(), 1, 18,true);
 
         List<TeamPositionSummaryRow> rows = compTableService.findTableHeimOrGastForLigaModus(searchCriteria);
-        assertThat(rows.size()).isEqualTo(18);
+        assertThat(18).isEqualTo(rows.size());
         rows.sort(Comparator.comparing(TeamPositionSummaryRow::getPoints).reversed());
         rows.forEach(row -> System.out.println(row.getTeamName() + " " + row.getPoints()));
     }
@@ -91,7 +91,7 @@ public class CompetitionTableServiceTest {
         TableSearchCriteria searchCriteria = new TableSearchCriteria(myComp.getId(), 18, 34,true);
 
         List<TeamPositionSummaryRow> rows = compTableService.findTableHeimOrGastForLigaModus(searchCriteria);
-        assertThat(rows.size()).isEqualTo(18);
+        assertThat(18).isEqualTo(rows.size());
         rows.sort(Comparator.comparing(TeamPositionSummaryRow::getPoints).reversed());
         rows.forEach(row -> System.out.println(row.getTeamName() + " " + row.getPoints()));
 

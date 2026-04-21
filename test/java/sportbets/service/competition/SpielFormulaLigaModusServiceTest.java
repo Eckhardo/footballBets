@@ -16,9 +16,8 @@ import java.util.Set;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ActiveProfiles("test")
-@Transactional
 public class SpielFormulaLigaModusServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(SpielFormulaLigaModusServiceTest.class);
@@ -50,12 +49,9 @@ public class SpielFormulaLigaModusServiceTest {
         log.info("setup");
         savedComp = compService.findByNameJoinFetchRounds(TEST_COMP).orElseThrow();
         assertNotNull(savedComp);
-        log.info("competition found");
         Set<CompetitionRound> rounds = savedComp.getCompetitionRounds();
-        log.info("competitionRounds found");
         assertNotNull(rounds);
         assertThat(rounds.size()).isEqualTo(2);
-        log.info("competitionRounds evaluated");
         savedRound = rounds.stream().filter((round) -> round.getName().equals(TEST_COMP_ROUND)).findFirst().orElseThrow();
 
         Spieltag spieltag = spieltagService.findByNumberAndRound(11, savedRound.getId()).orElseThrow();
@@ -65,7 +61,6 @@ public class SpielFormulaLigaModusServiceTest {
         savedSpiel = spiele.stream().filter((spiel -> spiel.getId().equals(91L))).findFirst().orElseThrow();
         assertNotNull(savedSpiel);
         log.info("spiel evaluated {}", savedSpiel);
-        // Mainz(15)-Hoffenheim(12) 1:1 SpielId=91, spielNumber=91
 
         ;
 

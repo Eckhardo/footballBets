@@ -6,6 +6,7 @@ import sportbets.persistence.entity.competition.CompetitionMembership;
 import sportbets.persistence.entity.competition.Spieltag;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 public class TippConfig {
@@ -57,4 +58,15 @@ public class TippConfig {
         return competitionMembership;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        TippConfig that = (TippConfig) o;
+        return Objects.equals(id, that.id) && Objects.equals(createdOn, that.createdOn);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, createdOn);
+    }
 }

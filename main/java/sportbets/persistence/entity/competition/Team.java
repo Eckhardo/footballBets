@@ -3,6 +3,7 @@ package sportbets.persistence.entity.competition;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -14,6 +15,9 @@ public class Team  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
+    private final LocalDateTime createdOn = LocalDateTime.now();
+
     @Column(unique = true, nullable = false)
     private String name;
     @Column(unique = true, nullable = false)

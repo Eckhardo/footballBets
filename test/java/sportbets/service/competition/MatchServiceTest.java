@@ -11,6 +11,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.competition.enums.Country;
 import sportbets.persistence.entity.competition.*;
+import sportbets.testdata.TestConstants;
 import sportbets.web.dto.competition.*;
 
 import java.time.LocalDateTime;
@@ -18,16 +19,13 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ActiveProfiles("test")
-@Transactional
+
 public class MatchServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(MatchServiceTest.class);
-    private static final String TEST_COMP_FAM = "TestLiga";
-    private static final String TEST_COMP = "TestLiga: Saison 2025";
-    private static final String TEST_COMP_ROUND = "Saison 2025: Hinrunde";
-    private static final String TEAM_NAME = "Eintracht Braunschweig";
+     private static final String TEAM_NAME = "Eintracht Braunschweig";
     private static final String TEAM_NAME_2 = "Holstein Kiel";
     Team savedTeam1 = null;
     Team savedTeam2 = null;
@@ -50,20 +48,19 @@ public class MatchServiceTest {
     @Autowired
     private CompTableService compTableService;
 
-    Competition myComp =null;
+    Competition savedComp = null;
+    CompetitionRound savedCompRound = null;
 
     @BeforeEach
     public void setup() {
-       CompetitionFamilyDto competitionFamily = new CompetitionFamilyDto(null, TEST_COMP_FAM, "description of testliga", true, true,  Country.GERMANY);
-
+        CompetitionFamilyDto competitionFamily = TestConstants.TEST_FAMILY;
         CompetitionFamily savedFam = familyService.save(competitionFamily);
-        CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, savedFam.getId(), TEST_COMP_FAM);
-
-        myComp = compService.save(compDto);
-        CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, TEST_COMP_ROUND, false, myComp.getId(), myComp.getName(), 18, 17, 1);
-
-        compRoundDto.setCompId(myComp.getId());
-        CompetitionRound savedCompRound = compRoundService.save(compRoundDto);
+        CompetitionDto compDto = TestConstants.TEST_COMP;
+        compDto.setFamilyId(savedFam.getId());
+        savedComp = compService.save(compDto);
+        CompetitionRoundDto compRoundDto = TestConstants.TEST_COMP_ROUND;
+        compRoundDto.setCompId(savedComp.getId());
+        savedCompRound = compRoundService.save(compRoundDto);
         SpieltagDto matchDayDto = new SpieltagDto(null, 1, LocalDateTime.now(),savedCompRound.getId(),savedCompRound.getName());
         savedMatchday = spieltagService.save(matchDayDto);
         Team team = new Team(TEAM_NAME, "Braunschweig", true);
@@ -77,6 +74,9 @@ public class MatchServiceTest {
     public void tearDown() {
 
         log.debug("Delete All Test data");
+        familyService.deleteByName(TestConstants.TEST_FAMILY.getName());
+        teamService.deleteByName(TEAM_NAME);
+        teamService.deleteByName(TEAM_NAME_2);
 
 
     }

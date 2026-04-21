@@ -22,12 +22,11 @@ import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ActiveProfiles("test")
 
 public class CompTeamServiceNonTransactionalTest {
     private static final Logger log = LoggerFactory.getLogger(CompTeamServiceTest.class);
-    private static final String TEST_COMP = "TestLiga: Saison 2025";
     private static final String TEAM_NAME = "Eintracht Braunschweig";
     private static final String TEAM_NAME_2 = "Holstein Kiel";
     final CompetitionFamilyDto competitionFamily = TestConstants.TEST_FAMILY;

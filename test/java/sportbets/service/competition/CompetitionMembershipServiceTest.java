@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import sportbets.persistence.entity.competition.enums.Country;
 import sportbets.persistence.entity.authorization.CommunityRole;
 import sportbets.persistence.entity.authorization.CompetitionRole;
 import sportbets.persistence.entity.community.Community;
@@ -18,6 +17,7 @@ import sportbets.persistence.entity.competition.CompetitionMembership;
 import sportbets.service.authorization.CommunityRoleService;
 import sportbets.service.authorization.CompetitionRoleService;
 import sportbets.service.community.CommunityService;
+import sportbets.testdata.TestConstants;
 import sportbets.web.dto.community.CommunityDto;
 import sportbets.web.dto.competition.CompetitionDto;
 import sportbets.web.dto.competition.CompetitionFamilyDto;
@@ -27,9 +27,8 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ActiveProfiles("test")
-
 public class CompetitionMembershipServiceTest {
 
 
@@ -51,12 +50,9 @@ public class CompetitionMembershipServiceTest {
     CompService compService;
 
 
-    private static final String TEST_COMP_FAM = "TestLiga";
-    private static final String TEST_COMM = "Test Community";
-    private static final String TEST_COMM_2 = "My Test Community 2";
-    private static final String TEST_COMP = "TestLiga: Saison 2025";
-    private static final String TEST_COMP_2 = "TestLiga 2: Saison 2025";
-    final CompetitionFamilyDto competitionFamily = new CompetitionFamilyDto(null, TEST_COMP_FAM, "description of testliga", true, true, Country.GERMANY);
+    final CompetitionFamilyDto testFamily = TestConstants.TEST_FAMILY;
+    CommunityDto communityDto = TestConstants.TEST_COMMUNITY;
+    CommunityDto communityDto2 =TestConstants.TEST_COMMUNITY_2;
 
     Competition savedComp = null;
     Competition savedComp2 = null;
@@ -65,24 +61,24 @@ public class CompetitionMembershipServiceTest {
 
     @BeforeEach
     public void setup() {
-        CompetitionFamily savedFam = familyService.save(competitionFamily);
+        CompetitionFamily savedFam = familyService.save(testFamily);
 
-        CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, savedFam.getId(), TEST_COMP_FAM);
-        CompetitionDto compDto2 = new CompetitionDto(null, TEST_COMP_2, "Description of Competition", 3, 1, savedFam.getId(), TEST_COMP_FAM);
+        CompetitionDto compDto =TestConstants.TEST_COMP;
+        compDto.setFamilyId(savedFam.getId());
+        CompetitionDto compDto2 = TestConstants.TEST_COMP_2;
+        compDto2.setFamilyId(savedFam.getId());
         savedComp = compService.save(compDto);
         savedComp2 = compService.save(compDto2);
 
-        CommunityDto communityDto = new CommunityDto(null, TEST_COMM, "Description of Community");
-        CommunityDto communityDto2 = new CommunityDto(null, TEST_COMM_2, "Description of Community2");
-        savedCommunity = communityService.save(communityDto);
+         savedCommunity = communityService.save(communityDto);
         savedCommunity2 = communityService.save(communityDto2);
     }
 
     @AfterEach
     public void tearDown() {
-        familyService.deleteByName(TEST_COMP_FAM);
-        communityService.deleteByName(TEST_COMM);
-        communityService.deleteByName(TEST_COMM_2);
+        familyService.deleteByName(testFamily.getName());
+        communityService.deleteByName(communityDto.getName());
+        communityService.deleteByName(communityDto2.getName());
 
     }
 

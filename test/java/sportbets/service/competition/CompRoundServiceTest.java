@@ -19,14 +19,15 @@ import sportbets.web.dto.competition.CompetitionRoundDto;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ActiveProfiles("test")
-@Transactional
 public class CompRoundServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(CompRoundServiceTest.class);
     final CompetitionFamilyDto competitionFamily = TestConstants.TEST_FAMILY;
     CompetitionDto compDto = TestConstants.TEST_COMP;
+    CompetitionRoundDto compRoundDto = TestConstants.TEST_COMP_ROUND;
+
     Competition savedComp = null;
 
     CompetitionRound savedCompRound = null;
@@ -50,13 +51,13 @@ public class CompRoundServiceTest {
     public void tearDown() {
 
         log.debug("Delete All Test data");
+        familyService.deleteByName(competitionFamily.getName());
 
     }
 
     @Test
     void whenValidCompRound_thenCompRoundShouldBeSaved() {
 
-        CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, "TEST Round", false, null, compDto.getName(), 18, 17, 1);;
         compRoundDto.setCompId(savedComp.getId());
         CompetitionRound savedCompRound = compRoundService.save(compRoundDto);
 
@@ -71,8 +72,6 @@ public class CompRoundServiceTest {
 
     @Test
     void whenValidCompRound_thenCompRoundShouldBeUpdated() {
-        CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, "TEST Round", false, null, compDto.getName(), 18, 17, 1);;
-
         compRoundDto.setCompId(savedComp.getId());
         savedCompRound = compRoundService.save(compRoundDto);
         compRoundDto.setRoundNumber(2);

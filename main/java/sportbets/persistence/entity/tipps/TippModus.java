@@ -8,6 +8,7 @@ import sportbets.persistence.entity.community.Community;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -117,6 +118,18 @@ public abstract class TippModus  {
 
     public void addTippConfig(TippConfig tippConfig) {
         this.tippConfigs.add(tippConfig);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        TippModus tippModus = (TippModus) o;
+        return Objects.equals(id, tippModus.id) && type == tippModus.type && Objects.equals(deadline, tippModus.deadline) && Objects.equals(createdOn, tippModus.createdOn);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, type, deadline, createdOn);
     }
 
     @Override

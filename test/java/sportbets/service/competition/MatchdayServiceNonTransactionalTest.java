@@ -7,12 +7,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
-import sportbets.persistence.entity.competition.enums.Country;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.entity.competition.CompetitionRound;
 import sportbets.persistence.entity.competition.Spieltag;
+import sportbets.testdata.TestConstants;
 import sportbets.web.dto.competition.CompetitionDto;
 import sportbets.web.dto.competition.CompetitionFamilyDto;
 import sportbets.web.dto.competition.CompetitionRoundDto;
@@ -24,14 +25,13 @@ import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ActiveProfiles("test")
-
 public class MatchdayServiceNonTransactionalTest {
 
     private static final Logger log = LoggerFactory.getLogger(MatchdayServiceNonTransactionalTest.class);
 
-     @Autowired
+    @Autowired
     private CompFamilyService familyService; // Real service being tested
     @Autowired
     private CompService compService; // Real service being tested
@@ -39,23 +39,24 @@ public class MatchdayServiceNonTransactionalTest {
     private CompRoundService compRoundService;
     @Autowired
     private SpieltagService spieltagService;
-    private static final String TEST_COMP_FAM = "TestLiga";
-    private static final String TEST_COMP = "TestLiga: Saison 2025";
     private static final String TEST_COMP_ROUND = "Saison 2025: Hinrunde";
     private static final int TEST_MATCH_DAY = 1;
 
     CompetitionRound savedCompRound = null;
-    Competition savedComp=null;
+    Competition savedComp = null;
 
     @BeforeEach
     public void setup() {
-        final CompetitionFamilyDto competitionFamily = new CompetitionFamilyDto(null, TEST_COMP_FAM, "description of testliga", true, true,  Country.GERMANY);
+        CompetitionFamilyDto competitionFamily = TestConstants.TEST_FAMILY;
         CompetitionFamily savedFam = familyService.save(competitionFamily);
-        CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, savedFam.getId(), TEST_COMP_FAM);
-
+        CompetitionDto compDto = TestConstants.TEST_COMP;
+        compDto.setFamilyId(savedFam.getId());
         savedComp = compService.save(compDto);
-        CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, TEST_COMP_ROUND, false, savedComp.getId(), savedComp.getName(), 18, 17, 1);
+        CompetitionRoundDto compRoundDto = TestConstants.TEST_COMP_ROUND;
+        compRoundDto.setCompId(savedComp.getId());
+        log.info("save round " + compRoundDto.getCompId());
         savedCompRound = compRoundService.save(compRoundDto);
+        log.info("round saved D: " + savedCompRound.getId());
 
     }
 
@@ -63,21 +64,22 @@ public class MatchdayServiceNonTransactionalTest {
     public void tearDown() {
         log.debug("\n");
         log.debug("Delete All Test data");
-        familyService.deleteByName(TEST_COMP_FAM);
+        familyService.deleteByName(TestConstants.TEST_FAMILY.getName());
     }
 
     @Test
     void whenValidMatchday_thenMatchdayShouldBeSaved() {
-
+        log.info("whenValidMatchday_thenMatchdayShouldBeSaved");
         SpieltagDto matchDayDto = new SpieltagDto(null, TEST_MATCH_DAY, LocalDateTime.now(), savedCompRound.getId(), savedCompRound.getName());
         Spieltag savedMatchday = spieltagService.save(matchDayDto);
-
+        log.info("save spieltag " + savedMatchday.getCompetitionRound().getName());
         assertThat(savedMatchday.getId()).isNotNull();
         assertThat(savedMatchday.getSpieltagNumber()).isEqualTo(TEST_MATCH_DAY);
         assertThat(savedMatchday.getCompetitionRound().getName()).isEqualTo(savedCompRound.getName());
         assertThat(savedMatchday.getCompetitionRound().getId()).isEqualTo(savedCompRound.getId());
         assertThat(savedMatchday.getStartDate()).isEqualTo(matchDayDto.getStartDate());
         spieltagService.deleteById(savedMatchday.getId());
+        log.info("delete spieltag " + savedMatchday.getId());
     }
 
     @Test
@@ -114,6 +116,7 @@ public class MatchdayServiceNonTransactionalTest {
             spieltagService.deleteById(matchday.getId());
         }
     }
+
     @Test
     void whenFamilyIsDeleted_thenMatchdayShouldBeDeleted() {
 
@@ -126,8 +129,8 @@ public class MatchdayServiceNonTransactionalTest {
         assertThat(savedMatchday.getCompetitionRound().getId()).isEqualTo(savedCompRound.getId());
         assertThat(savedMatchday.getStartDate()).isEqualTo(matchDayDto.getStartDate());
         log.debug("\n");
-        familyService.deleteByName(TEST_COMP_FAM);
-        Optional<Competition> deletedComp = compService.findByName(TEST_COMP);
+        familyService.deleteByName(TestConstants.TEST_FAMILY.getName());
+        Optional<Competition> deletedComp = compService.findByName(TestConstants.TEST_COMP.getName());
         assertThat(deletedComp.isEmpty());
         Optional<CompetitionRound> deletedRound = compRoundService.findById(savedCompRound.getId());
         assertThat(deletedRound.isEmpty());
