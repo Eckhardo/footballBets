@@ -19,25 +19,26 @@ import java.util.List;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static sportbets.testdata.TestConstants.COMM_TEST;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ActiveProfiles("test")
 public class CommunityRoleServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(CommunityRoleServiceTest.class);
-    private static final String TEST_COMM = TestConstants.COMM_TEST;
+
     Community savedCommunity = null;
 
     @Autowired
     private CommunityService communityService; // Real service being tested
     @Autowired
     private CommunityRoleService communityRoleService;
-
+    CommunityDto compDto =  new CommunityDto(null, COMM_TEST, "Description of Community");;
 
     @BeforeEach
     public void setup() {
-        communityService.deleteByName(TEST_COMM);
-        CommunityDto compDto = TestConstants.TEST_COMMUNITY;
+        communityService.deleteByName(compDto.getName());
+
         savedCommunity = communityService.save(compDto);
         assertNotNull(savedCommunity);
 
@@ -68,7 +69,7 @@ public class CommunityRoleServiceTest {
 
         List<CommunityRole> roles = communityRoleService.getAllCommunityRoles();
         assertThat(roles).isNotNull();
-        CommunityRole savedRole = roles.stream().filter((r) -> r.getName().equals(TEST_COMM)).findFirst().get();
+        CommunityRole savedRole = roles.stream().filter((r) -> r.getName().equals(compDto.getName())).findFirst().get();
 
         assertEquals(savedCommunity.getId(), savedRole.getCommunity().getId());
         assertEquals(savedCommunity.getName(), savedRole.getCommunity().getName());

@@ -16,7 +16,6 @@ import sportbets.persistence.entity.community.CommunityMembership;
 import sportbets.persistence.entity.community.Tipper;
 import sportbets.service.authorization.CommunityRoleService;
 import sportbets.service.authorization.TipperRoleService;
-import sportbets.testdata.TestConstants;
 import sportbets.web.dto.authorization.TipperRoleDto;
 import sportbets.web.dto.community.CommunityDto;
 import sportbets.web.dto.community.CommunityMembershipDto;
@@ -32,11 +31,10 @@ public class CommunityMembershipServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(CommunityMembershipServiceTest.class);
 
+    private static final String TEST_COMM_1 = "My Test Community 1";
     private static final String TEST_COMM_2 = "My Test Community 2";
     private static final String TEST_USERNAME = "TEST_USER";
     private static final String TEST_USERNAME_2 = "TEST_USER 2";
-    private final CommunityDto communityDto = TestConstants.TEST_COMMUNITY;
-
     @Autowired
     CommunityMembershipService membershipService;
     @Autowired
@@ -55,7 +53,8 @@ public class CommunityMembershipServiceTest {
 
     TipperDto testTipper2 = new TipperDto(null, "Werner", "Wernersen", TEST_USERNAME_2, "root", "hint", "werner@gmx.de");
 
-    CommunityDto communityDto2 = new CommunityDto(null, TEST_COMM_2, "Description of Community2");
+    private final CommunityDto communityDto = new CommunityDto(null, TEST_COMM_1, "Description of Community");
+    private final CommunityDto communityDto2 = new CommunityDto(null, TEST_COMM_2, "Description of Community2");
 
     Tipper savedTipper = null;
     Tipper savedTipper2 = null;
@@ -64,9 +63,13 @@ public class CommunityMembershipServiceTest {
 
     @BeforeEach
     public void setup() {
+        log.debug("setup tipper {}", testTipper);
         savedTipper = tipperService.save(testTipper);
+        log.debug("setup tipper2 {}", testTipper2);
         savedTipper2 = tipperService.save(testTipper2);
+        log.debug("setup community 1: {}", communityDto);
         savedCommunity = communityService.save(communityDto);
+        log.debug("setup community 2: {}", communityDto2);
         savedCommunity2 = communityService.save(communityDto2);
     }
 

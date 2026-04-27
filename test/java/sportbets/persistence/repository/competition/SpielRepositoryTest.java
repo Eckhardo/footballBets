@@ -4,6 +4,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -11,20 +13,23 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import sportbets.persistence.entity.competition.enums.Country;
 import sportbets.persistence.entity.competition.*;
+import sportbets.service.competition.CompFamilyService;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.function.Predicate;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest()
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class SpielRepositoryTest {
+
+
+    private static final Logger log = LoggerFactory.getLogger(SpielRepositoryTest.class);
     private Competition testComp;
 
 
@@ -41,15 +46,14 @@ public class SpielRepositoryTest {
     @Autowired
     private TeamRepository teamRepo;
 
+    @Autowired
+    private CompetitionFamilyRepository competitionFamilyRepository;
+    CompetitionFamily testFamily;
     @Before
     public void setUp() {
-        CompetitionFamily testFamily = getCompFamily();
-        familyRepo.save(testFamily);
-    }
 
-    private CompetitionFamily getCompFamily() {
         // Initialize test data before test methods
-        CompetitionFamily testFamily = new CompetitionFamily("TestLiga", "2. Deutsche Fussball Bundesliga", true, true,  Country.GERMANY);
+        testFamily = new CompetitionFamily("TestLiga", "2. Deutsche Fussball Bundesliga", true, true,  Country.GERMANY);
         testComp = new Competition("TestLiga: Saison 2025/26", "1. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
         testFamily.addCompetition(testComp);
         CompetitionRound testRound = new CompetitionRound(1, "Hinrunde", testComp, false, 18, 17, 1);
@@ -79,14 +83,17 @@ public class SpielRepositoryTest {
 
         testSpiel1 = new Spiel(testSpieltag, 1, LocalDateTime.now(), team1, team2, 3, 1, false);
         testSpiel2 = new Spiel(testSpieltag, 2, LocalDateTime.now(), team3, team4, 2, 2, false);
-        return testFamily;
+        testSpieltag.addSpiel(testSpiel1);
+        testSpieltag.addSpiel(testSpiel2);
+        competitionFamilyRepository.save(testFamily);
+
     }
 
     @After
     public void tearDown() {
 
 
-        //   familyRepo.deleteAll();
+    familyRepo.deleteByName(testFamily.getName());
     }
 
     @Test
@@ -118,10 +125,12 @@ public class SpielRepositoryTest {
         assertNotNull(foundComp);
         for (CompetitionRound round : foundComp.getCompetitionRounds()) {
             Set<Spieltag> spieltage = round.getSpieltage();
+            assertNotEquals(0, spieltage.size());
             for (Spieltag sp : spieltage) {
 
                 Set<Spiel> found = sp.getSpiele();
-                assertNotNull(found);
+                assertNotEquals(0, found.size());
+                log.debug(found.toString());
                 assertTrue(found.stream().anyMatch(p1));
                 assertTrue(found.stream().anyMatch(p2));
                 assertTrue(found.stream().noneMatch(p3));

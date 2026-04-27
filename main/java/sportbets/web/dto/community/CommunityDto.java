@@ -12,7 +12,7 @@ import java.util.Objects;
  * DTO for {@link Community}
  */
 public class CommunityDto implements Serializable {
-    private Long id;
+    private  Long id;
     @Size(message = "Name must be at least 5 chars long", min = 5, max = 20)
     private String name;
     @NotNull

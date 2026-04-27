@@ -30,7 +30,11 @@ public class TippModusServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(TippModusServiceTest.class);
 
-    CommunityDto communityDto = TestConstants.TEST_COMMUNITY;
+    private static final String TEST_COMM_1 = "My Test Community 1";
+    private static final String TEST_COMM_2 = "My Test Community 2";
+    private final CommunityDto communityDto = new CommunityDto(null, TEST_COMM_1, "Description of Community");
+    private final CommunityDto communityDto2 = new CommunityDto(null, TEST_COMM_2, "Description of Community2");
+
     Community savedCommunity = null;
 
     TippModusDto tippModusTotoDto;
@@ -44,6 +48,7 @@ public class TippModusServiceTest {
 
     @BeforeEach
     public void setup() {
+        log.debug("setup: {}", communityDto);
         savedCommunity = communityService.save(communityDto);
         tippModusTotoDto = new TippModusTotoDto(null, TippModusType.TIPPMODUS_TOTO.getDisplayName(), 1, savedCommunity.getId(), savedCommunity.getName());
         tippModusResultDto = new TippModusResultDto(null, TippModusType.TIPPMODUS_RESULT.getDisplayName(), 1, savedCommunity.getId(), savedCommunity.getName(), 3, 1);

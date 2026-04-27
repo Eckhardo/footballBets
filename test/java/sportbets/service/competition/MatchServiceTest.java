@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static sportbets.testdata.TestConstants.COMP_TEST;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ActiveProfiles("test")
@@ -56,10 +57,11 @@ public class MatchServiceTest {
     public void setup() {
         CompetitionFamilyDto competitionFamily = TestConstants.TEST_FAMILY;
         CompetitionFamily savedFam = familyService.save(competitionFamily);
-        CompetitionDto compDto = TestConstants.TEST_COMP;
+        CompetitionDto compDto = new CompetitionDto(null, COMP_TEST, "Description of Competition", 3, 1, null, competitionFamily.getName());
         compDto.setFamilyId(savedFam.getId());
         savedComp = compService.save(compDto);
-        CompetitionRoundDto compRoundDto = TestConstants.TEST_COMP_ROUND;
+        CompetitionRoundDto compRoundDto =new CompetitionRoundDto(null, 1, "TEST_COMP_ROUND", false, null, compDto.getName(), 18, 17, 1);
+        ;
         compRoundDto.setCompId(savedComp.getId());
         savedCompRound = compRoundService.save(compRoundDto);
         SpieltagDto matchDayDto = new SpieltagDto(null, 1, LocalDateTime.now(),savedCompRound.getId(),savedCompRound.getName());
