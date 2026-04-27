@@ -2,6 +2,8 @@ package sportbets.persistence.entity.competition;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -9,9 +11,9 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Cacheable
-@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Team  {
+
+    private static final Logger log = LoggerFactory.getLogger(Team.class);
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,7 +27,7 @@ public class Team  {
 
     private boolean hasClub = true;
 
-    @OneToMany(mappedBy = "team", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private final Set<CompetitionTeam> competitionTeams = new HashSet<>();
 
 
@@ -44,6 +46,7 @@ public class Team  {
     }
 
     public void setId(Long id) {
+        log.info("setId {}",id);
         this.id = id;
     }
 
@@ -96,11 +99,11 @@ public class Team  {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Team team = (Team) o;
-        return Objects.equals(id, team.id) && Objects.equals(name, team.name) && Objects.equals(acronym, team.acronym);
+        return hasClub == team.hasClub && Objects.equals(createdOn, team.createdOn) && Objects.equals(name, team.name) && Objects.equals(acronym, team.acronym);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, acronym, hasClub);
+        return Objects.hash(createdOn, name, acronym, hasClub);
     }
 }

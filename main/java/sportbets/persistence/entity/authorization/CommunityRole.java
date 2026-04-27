@@ -7,6 +7,7 @@ import sportbets.persistence.entity.community.Community;
 import java.util.Objects;
 
 @Entity
+@DiscriminatorValue("COMM")
 public class CommunityRole extends Role {
 
 

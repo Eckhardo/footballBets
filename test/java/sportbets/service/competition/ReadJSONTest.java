@@ -17,6 +17,8 @@ import sportbets.persistence.entity.competition.Spieltag;
 import sportbets.persistence.entity.competition.Team;
 import sportbets.persistence.repository.competition.SpielRepository;
 import sportbets.persistence.repository.competition.SpieltagRepository;
+import sportbets.persistence.repository.competition.TeamRepository;
+import sportbets.web.dto.competition.TeamDto;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -30,7 +32,7 @@ public class ReadJSONTest {
     private static final Logger log = LoggerFactory.getLogger(ReadJSONTest.class);
     final String filePath = "src/test/java/sportbets/testdata/bl.json";
     @Autowired
-    private TeamService teamService;
+    private TeamRepository teamRepository;
     @Autowired
 
 
@@ -75,7 +77,7 @@ public class ReadJSONTest {
 
                 String auswärts = (String) nestedObj.get("team2");
                 System.out.println(heim + " - " + auswärts);
-                Team team = teamService.findByName(heim).orElseThrow();
+                Team team = teamRepository.findByName(heim).orElseThrow();
                 teams.add(team);
                 System.out.println("##" + team);
                 i++;
@@ -154,8 +156,8 @@ public class ReadJSONTest {
 
                 Spieltag spieltag = spieltagRepo.findByNumber(k);
 
-                Team heimTeam = teamService.findByName(heim).orElseThrow();
-                Team gastTeam = teamService.findByName(auswärts).orElseThrow();
+                Team heimTeam = teamRepository.findByName(heim).orElseThrow();
+                Team gastTeam = teamRepository.findByName(auswärts).orElseThrow();
                 Long ID = (long) i;
                 spiele.add(new Spiel(spieltag, i, dt, heimTeam, gastTeam, homeGoals, guestGoals, stattgefunden));
 

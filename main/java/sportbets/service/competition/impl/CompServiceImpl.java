@@ -67,7 +67,7 @@ public class CompServiceImpl implements CompService {
         Competition model = modelMapper.map(compDto, Competition.class);
         CompetitionFamily fam = compFamilyRepo.findById(compDto.getFamilyId()).orElseThrow(() -> new EntityNotFoundException("compFam not found "));
         model.setCompetitionFamily(fam);
-        CompetitionRole compRole= new CompetitionRole(model.getName(), model.getDescription() ,model);
+        CompetitionRole compRole = new CompetitionRole(model.getName(), model.getDescription(), model);
         model.addCompetitionRole(compRole);
         return compRepository.save(model);
 
@@ -79,25 +79,25 @@ public class CompServiceImpl implements CompService {
 
 
         log.debug("updateComp  with {}", compDto);
-        Optional<Competition> updateModel = compRepository.findById(id);
-        if (updateModel.isEmpty()) {
-            throw new EntityNotFoundException("spiel  does not exits given name:" + compDto.getName());
-        }
+        Competition updateModel = compRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("competition  does not exist given id:" + compDto.getId()));
 
 
-        Optional<CompetitionRole> oldRole = updateModel.get().getCompetitionRoleByName(updateModel.get().getName());
+        Optional<CompetitionRole> oldRole = updateModel.getCompetitionRoleByName(updateModel.getName());
         if (oldRole.isPresent()) {
-            log.debug("old {}",oldRole.get().getName());
+            log.debug("old {}", oldRole.get().getName());
 
             oldRole.get().setName(compDto.getName());
             oldRole.get().setDescription(compDto.getDescription());
         }
-        updateModel.get().setName(compDto.getName());
-        updateModel.get().setDescription(compDto.getDescription());
-        updateModel.get().setWinMultiplicator(compDto.getWinMultiplicator());
-        updateModel.get().setRemisMultiplicator(compDto.getRemisMultiplicator());
-        log.debug("updated Comp  with {}", updateModel);
-        return  Optional.of(compRepository.save(updateModel.get()));
+        updateModel.setName(compDto.getName());
+        updateModel.setDescription(compDto.getDescription());
+        updateModel.setWinMultiplicator(compDto.getWinMultiplicator());
+        updateModel.setRemisMultiplicator(compDto.getRemisMultiplicator());
+
+        Competition updated = compRepository.save(updateModel);
+        ;
+        log.debug("updated Comp  with {}", updated);
+        return Optional.of(updated);
 
     }
 

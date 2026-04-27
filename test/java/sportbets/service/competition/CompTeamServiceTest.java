@@ -17,6 +17,7 @@ import sportbets.testdata.TestConstants;
 import sportbets.web.dto.competition.CompetitionDto;
 import sportbets.web.dto.competition.CompetitionFamilyDto;
 import sportbets.web.dto.competition.CompetitionTeamDto;
+import sportbets.web.dto.competition.TeamDto;
 
 import java.util.List;
 
@@ -28,15 +29,13 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 public class CompTeamServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(CompTeamServiceTest.class);
-    private static final String TEAM_NAME = "Eintracht Braunschweig";
-    private static final String TEAM_NAME_2 = "Holstein Kiel";
     final CompetitionFamilyDto competitionFamily = TestConstants.TEST_FAMILY;
-    final Team team = new Team(TEAM_NAME, "Braunschweig",true );
-    final Team team1 = new Team(TEAM_NAME_2, "Kiel", true);
+    final TeamDto team = TestConstants.TEAM_DTO_1;
+    final TeamDto team1 =TestConstants.TEAM_DTO_2;
 
     Competition savedComp = null;
-    Team savedTeam1 = null;
-    Team savedTeam2 = null;
+    TeamDto savedTeam1 = null;
+    TeamDto savedTeam2 = null;
     @Autowired
     private CompFamilyService familyService; // Real service being tested
     @Autowired
@@ -54,12 +53,15 @@ public class CompTeamServiceTest {
         CompetitionDto compDto = TestConstants.TEST_COMP;
         compDto.setFamilyId(savedFam.getId());
         savedComp = compService.save(compDto);
+        log.info("comp saved finished");
         savedTeam1 = teamService.save(team);
         savedTeam2 = teamService.save(team1);
+        log.info("setup finished");
     }
 
     @AfterEach
     public void tearDown() {
+        log.debug("tear down All Test data");
         familyService.deleteByName(competitionFamily.getName());
         teamService.deleteByName(team.getName());
         teamService.deleteByName(team1.getName());
@@ -112,6 +114,7 @@ public class CompTeamServiceTest {
                 assertThat(compTeam.getCompetition().getName()).isEqualTo(savedComp.getName());
                 assertThat(compTeam.getTeam().getAcronym()).isIn(savedTeam1.getAcronym(), savedTeam2.getAcronym());
                 assertThat(compTeam.getTeam().getId()).isIn(savedTeam1.getId(), savedTeam2.getId());
+                compTeamService.deleteById(compTeam.getId());
 
             }
         }
@@ -149,7 +152,7 @@ public class CompTeamServiceTest {
             assertThat(compTeam.getCompetition().getName()).isEqualTo(savedComp.getName());
             assertThat(compTeam.getTeam().getAcronym()).isIn(savedTeam1.getAcronym(), savedTeam2.getAcronym());
             assertThat(compTeam.getTeam().getId()).isIn(savedTeam1.getId(), savedTeam2.getId());
-
+            compTeamService.deleteById(compTeam.getId());
         }
     }
 }

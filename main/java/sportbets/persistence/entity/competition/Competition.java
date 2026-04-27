@@ -33,14 +33,14 @@ public class Competition {
     @OneToMany(mappedBy = "competition", cascade =CascadeType.PERSIST, orphanRemoval = true, fetch = FetchType.EAGER)
     final Set<CompetitionRole> competitionRoles = new HashSet<>();
 
-    @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private final Set<CompetitionRound> competitionRounds = new HashSet<>();
 
-    @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private final Set<CompetitionTeam> competitionTeams = new HashSet<>();
 
 
-    @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<CompetitionMembership> competitionMemberships = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -141,7 +141,6 @@ public class Competition {
         for (CompetitionRole role : competitionRoles) {
             log.debug("competitionRole:: {}", role.getName());
             if (role.getName().equals(roleName)) {
-                log.debug("treffer");
                 return Optional.of(role);
             }
         }

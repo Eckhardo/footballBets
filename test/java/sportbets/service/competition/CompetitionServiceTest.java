@@ -81,15 +81,19 @@ public class CompetitionServiceTest {
         Competition updatedComp = compService.updateComp(savedComp.getId(), compDto).orElseThrow();
 
         assertThat(updatedComp.getId()).isNotNull();
-        assertThat(updatedComp.getName()).isEqualTo(TEST_COMP_2.getName());
-        assertThat(updatedComp.getWinMultiplicator()).isEqualTo(5);
+        assertThat(TEST_COMP_2.getName()).isEqualTo(updatedComp.getName());
+        assertThat(5).isEqualTo(updatedComp.getWinMultiplicator());
         List<CompetitionRole> roles = competitionRoleService.getAllCompRoles();
         assertThat(roles).isNotNull();
-        CompetitionRole savedRole = roles.stream().filter((r) -> r.getName().equals(TEST_COMP_2.getName())).findFirst().get();
+        for (CompetitionRole role : roles) {
+            System.out.println(role.toString());
+        }
+        CompetitionRole updatedRole = roles.stream().filter((r) -> r.getName().equals(TEST_COMP_2.getName())).findFirst().orElseThrow();
+        assertThat(updatedRole).isNotNull();
+        assertEquals(updatedComp.getId(), updatedRole.getCompetition().getId());
+        assertThat(updatedComp.getName()).isEqualTo(updatedRole.getName());
+        assertEquals(updatedComp.getName(), updatedRole.getCompetition().getName());
 
-        assertEquals(savedComp.getId(), savedRole.getCompetition().getId());
-        assertEquals(savedComp.getName(), savedRole.getCompetition().getName());
-        assertThat(savedComp.getName()).isEqualTo(savedRole.getName());
         // assertThat(updatedComp.getCompetitionFamily()).isNotNull();
 
     }

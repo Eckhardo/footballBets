@@ -2,6 +2,7 @@ package sportbets.service.competition.impl;
 
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -9,7 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.competition.Team;
 import sportbets.persistence.repository.competition.TeamRepository;
 import sportbets.service.competition.TeamService;
+import sportbets.web.dto.competition.TeamDto;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,14 +23,18 @@ public class TeamServiceImpl implements TeamService {
     private static final Logger log = LoggerFactory.getLogger(TeamServiceImpl.class);
 
     private final TeamRepository teamRepository;
+    private final ModelMapper modelMapper;
 
-    public TeamServiceImpl(TeamRepository teamRepository) {
+    public TeamServiceImpl(TeamRepository teamRepository, ModelMapper modelMapper) {
         this.teamRepository = teamRepository;
+        this.modelMapper = modelMapper;
     }
 
     @Override
-    public Optional<Team> findById(Long id) {
-        return teamRepository.findById(id);
+    public Optional<TeamDto> findById(Long id) {
+
+        Team model = teamRepository.findById(id).orElseThrow(() -> new RuntimeException("Team not found"));
+        return Optional.of(this.modelMapper.map(model, TeamDto.class));
 
     }
 
@@ -37,40 +44,44 @@ public class TeamServiceImpl implements TeamService {
      */
     @Override
     @Transactional
-    public Optional<Team> findByName(String name) {
-        return teamRepository.findByName(name);
-
+    public Optional<TeamDto> findByName(String name) {
+        Team model = teamRepository.findByName(name).orElseThrow(() -> new RuntimeException("Team not found"));
+        ;
+        return Optional.of(this.modelMapper.map(model, TeamDto.class));
     }
 
     @Override
     @Transactional
-    public Team save(Team team) {
-        Optional<Team> savedTeam = teamRepository.findByName(team.getName());
-        if (savedTeam.isPresent()) {
-            throw new EntityExistsException("Team already exist with given name:" + team.getName());
-        }
+    public TeamDto save(TeamDto teamDto) {
 
-        return teamRepository.save(team);
+        log.info("Saving team {}", teamDto);
+        Optional<Team> entity = teamRepository.findByName(teamDto.getName());
+        if (entity.isPresent()) {
+            throw new EntityExistsException("Team already exist with given name:" + teamDto.getName());
+        }
+        log.info("Now: Save team {}", teamDto);
+        Team model = this.modelMapper.map(teamDto, Team.class);
+        Team savedEntity = teamRepository.save(model);
+        log.info(" Saved team {}", savedEntity);
+        return this.modelMapper.map(savedEntity, TeamDto.class);
     }
 
     @Override
     @Transactional
-    public Optional<Team> updateTeam(Long id, Team team) {
-        log.debug("updateDto:: {}", team);
-        Optional<Team> updateModel = teamRepository.findById(id);
+    public Optional<TeamDto> updateTeam(Long id, TeamDto teamDto) {
+        log.debug("updateDto:: {}", teamDto);
+        Team entity = teamRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Team not found"));
+        ;
 
 
-        if (updateModel.isEmpty()) {
-            throw new EntityNotFoundException("spiel  does not exits given name:" + team.getName());
-        }
-
-        Team updated = updateFields(updateModel.get(), team);
-        log.debug("updated Team  with {}", updated);
-        return Optional.of(teamRepository.save(updated));
+        Team updatedEntity = updateFields(entity, teamDto);
+        Team savedEntity = teamRepository.save(updatedEntity);
+        log.debug("updated Team  with {}", savedEntity);
+        return Optional.of(this.modelMapper.map(savedEntity, TeamDto.class));
 
     }
 
-    private Team updateFields(Team base, Team updatedTeam) {
+    private Team updateFields(Team base, TeamDto updatedTeam) {
         base.setName(updatedTeam.getName());
         base.setAcronym(updatedTeam.getAcronym());
         base.setHasClub(updatedTeam.isHasClub());
@@ -90,22 +101,38 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public List<Team> getAll() {
+    public List<TeamDto> getAll() {
 
         log.info("getAll");
 
         List<Team> teams = teamRepository.findAll();
-        teams.forEach(System.out::println);
-        return teams;
+        List<TeamDto> teamDtos = new ArrayList<>();
+        for (Team team : teams) {
+            TeamDto teamDto = this.modelMapper.map(team, TeamDto.class);
+            teamDtos.add(teamDto);
+        }
+        return teamDtos;
     }
 
     @Override
-    public List<Team> getAllClubTeams() {
-        return teamRepository.findAllClubTeams();
+    public List<TeamDto> getAllClubTeams() {
+        List<Team> teams = teamRepository.findAllClubTeams();
+        List<TeamDto> teamDtos = new ArrayList<>();
+        for (Team team : teams) {
+            TeamDto teamDto = this.modelMapper.map(team, TeamDto.class);
+            teamDtos.add(teamDto);
+        }
+        return teamDtos;
     }
 
     @Override
-    public List<Team> getAllNationTeams() {
-        return teamRepository.findAllNationTeams();
+    public List<TeamDto> getAllNationTeams() {
+        List<Team> teams = teamRepository.findAllNationTeams();
+        List<TeamDto> teamDtos = new ArrayList<>();
+        for (Team team : teams) {
+            TeamDto teamDto = this.modelMapper.map(team, TeamDto.class);
+            teamDtos.add(teamDto);
+        }
+        return teamDtos;
     }
 }

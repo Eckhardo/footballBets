@@ -25,10 +25,11 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 public class MatchServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(MatchServiceTest.class);
-     private static final String TEAM_NAME = "Eintracht Braunschweig";
-    private static final String TEAM_NAME_2 = "Holstein Kiel";
-    Team savedTeam1 = null;
-    Team savedTeam2 = null;
+    TeamDto savedTeam1 = null;
+    TeamDto savedTeam2 = null;
+    TeamDto team = TestConstants.TEAM_DTO_1;
+    TeamDto team1 =TestConstants.TEAM_DTO_2;
+
     Spieltag savedMatchday = null;
     @Autowired
     private CompFamilyService familyService; // Real service being tested
@@ -63,9 +64,7 @@ public class MatchServiceTest {
         savedCompRound = compRoundService.save(compRoundDto);
         SpieltagDto matchDayDto = new SpieltagDto(null, 1, LocalDateTime.now(),savedCompRound.getId(),savedCompRound.getName());
         savedMatchday = spieltagService.save(matchDayDto);
-        Team team = new Team(TEAM_NAME, "Braunschweig", true);
-        Team team1 = new Team(TEAM_NAME_2, "Kiel",true );
-        savedTeam1 = teamService.save(team);
+         savedTeam1 = teamService.save(team);
         savedTeam2 = teamService.save(team1);
 
     }
@@ -75,8 +74,8 @@ public class MatchServiceTest {
 
         log.debug("Delete All Test data");
         familyService.deleteByName(TestConstants.TEST_FAMILY.getName());
-        teamService.deleteByName(TEAM_NAME);
-        teamService.deleteByName(TEAM_NAME_2);
+        teamService.deleteByName(TestConstants.TEAM_1.getName() );
+        teamService.deleteByName(TestConstants.TEAM_2.getName());
 
 
     }

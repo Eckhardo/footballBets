@@ -33,6 +33,7 @@ public class MatchdayServiceTest {
     private static final Logger log = LoggerFactory.getLogger(MatchdayServiceTest.class);
     private static final String TEST_COMP_ROUND = "Saison 2025: Hinrunde";
     private static final int TEST_MATCH_DAY = 1;
+    final CompetitionFamilyDto competitionFamily = TestConstants.TEST_FAMILY;
     Competition savedComp = null;
     CompetitionRound savedCompRound = null;
     @Autowired
@@ -47,14 +48,16 @@ public class MatchdayServiceTest {
 
     @BeforeEach
     public void setup() {
-        CompetitionFamilyDto competitionFamily = TestConstants.TEST_FAMILY;
+        log.debug("set up Test data");
         CompetitionFamily savedFam = familyService.save(competitionFamily);
         CompetitionDto compDto = TestConstants.TEST_COMP;
         compDto.setFamilyId(savedFam.getId());
         savedComp = compService.save(compDto);
+        log.debug("set up Test data: saved competition ");
         CompetitionRoundDto compRoundDto = TestConstants.TEST_COMP_ROUND;
         compRoundDto.setCompId(savedComp.getId());
         savedCompRound = compRoundService.save(compRoundDto);
+        log.debug("set up Test data: saved competitionRound ");
 
 
     }
@@ -68,7 +71,7 @@ public class MatchdayServiceTest {
 
     @Test
     void whenValidMatchday_thenMatchdayShouldBeSaved() {
-
+        log.debug("whenValidMatchday_thenMatchdayShouldBeSaved");
         SpieltagDto matchDayDto = new SpieltagDto(null, TEST_MATCH_DAY, LocalDateTime.now(), savedCompRound.getId(), savedCompRound.getName());
         Spieltag savedMatchday = spieltagService.save(matchDayDto);
 

@@ -8,9 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
+import sportbets.persistence.builder.CompetitionConstants;
 import sportbets.persistence.entity.competition.*;
 import sportbets.persistence.repository.competition.SpielRepository;
 
+import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -22,7 +24,7 @@ public class SpielFormulaLigaModusServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(SpielFormulaLigaModusServiceTest.class);
 
-    private static final String TEST_COMP = "1. Bundesliga Saison 2025";
+    private static final String TEST_COMP = CompetitionConstants.BUNDESLIGA_NAME_2025;
     private static final String TEST_COMP_ROUND = "Hinrunde";
 
 
@@ -37,6 +39,9 @@ public class SpielFormulaLigaModusServiceTest {
     private SpieltagService spieltagService;
     @Autowired
     private SpielRepository spielRepository;
+
+    @Autowired
+    private SpielService spielService;
 
     Competition savedComp = null;
 
@@ -57,8 +62,9 @@ public class SpielFormulaLigaModusServiceTest {
         Spieltag spieltag = spieltagService.findByNumberAndRound(11, savedRound.getId()).orElseThrow();
         assertNotNull(spieltag);
         log.info("spieltag evaluated");
-        Set<Spiel> spiele = spieltag.getSpiele();
-        savedSpiel = spiele.stream().filter((spiel -> spiel.getId().equals(91L))).findFirst().orElseThrow();
+        List<Spiel> spiele = spielService.getAllForMatchday(spieltag.getId());
+        assertThat(spiele.isEmpty()).isFalse();
+        savedSpiel =spiele.get(0);
         assertNotNull(savedSpiel);
         log.info("spiel evaluated {}", savedSpiel);
 

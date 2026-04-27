@@ -19,77 +19,56 @@ import java.util.List;
 public class TeamController {
     private static final Logger log = LoggerFactory.getLogger(TeamController.class);
     private final TeamService teamService;
-    private final ModelMapper modelMapper;
 
 
-    public TeamController(TeamService teamService, ModelMapper modelMapper) {
+    public TeamController(TeamService teamService) {
         this.teamService = teamService;
-        this.modelMapper = modelMapper;
+
     }
 
     @GetMapping("/teams/{id}")
     public TeamDto findOne(@PathVariable Long id) {
         log.debug("TeamDto:findOne::{}", id);
-        Team model = teamService.findById(id)
+        TeamDto teamDto = teamService.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        return modelMapper.map(model, TeamDto.class);
+        return teamDto;
     }
 
     @GetMapping("/teams")
     public List<TeamDto> findAllTeams() {
 
-        List<Team> teams = teamService.getAll();
-        List<TeamDto> teamDtos = new ArrayList<>();
-        teams.forEach(team -> {
-            teamDtos.add(modelMapper.map(team, TeamDto.class));
-            log.info("TeamDto:findAllTeams::{}", team);
-        });
-        return teamDtos;
+     return teamService.getAll();
+
     }
 
     @GetMapping("/teams/clubs")
     public List<TeamDto> findAllClubTeams() {
 
-        List<Team> teams = teamService.getAllClubTeams();
-        List<TeamDto> teamDtos = new ArrayList<>();
-        teams.forEach(team -> {
-            teamDtos.add(modelMapper.map(team, TeamDto.class));
-            log.info("TeamDto:findAllClubTeams::{}", team);
-        });
-        return teamDtos;
+       return teamService.getAllClubTeams();
+
     }
     @GetMapping("/teams/nations")
     public List<TeamDto> findAllNationTeams() {
 
-        List<Team> teams = teamService.getAllNationTeams();
-        List<TeamDto> teamDtos = new ArrayList<>();
-        teams.forEach(team -> {
-            teamDtos.add(modelMapper.map(team, TeamDto.class));
-        });
-        return teamDtos;
+       return teamService.getAllNationTeams();
+
     }
     @PostMapping("/teams")
     @ResponseStatus(HttpStatus.CREATED)
     public TeamDto post(@RequestBody TeamDto teamDto) {
         log.info("New team {}", teamDto);
-        Team model =new Team(teamDto.getName(),teamDto.getAcronym(),teamDto.isHasClub());
-        Team createdModel = teamService.save(model);
-        TeamDto saved = modelMapper.map(createdModel, TeamDto.class);
-        log.info("return save::{}", saved);
-        return saved;
+
+      return teamService.save(teamDto);
+
     }
 
     @PutMapping(value = "/teams/{id}")
     public TeamDto update(@PathVariable Long id, @RequestBody  @Valid TeamDto teamDto) {
         log.info("Update teamDTO  {}", teamDto);
 
-        Team model = modelMapper.map(teamDto, Team.class);
-        log.info("Update team  {}", model);
-        Team updatedModel = teamService.updateTeam(id, model).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        TeamDto updated = modelMapper.map(updatedModel, TeamDto.class);
-        log.info("return save::{}", updated);
-        return updated;
+       return teamService.updateTeam(id, teamDto).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
     }
 
     @DeleteMapping(value = "/teams/{id}")
