@@ -25,7 +25,6 @@ public class TestConstants {
     public static final CompetitionDto TEST_COMP_2 = new CompetitionDto(null, COMP_TEST_2, "Description of Competition 2", 3, 1, null, TEST_FAMILY.getName());
 
     public static final CompetitionRoundDto TEST_COMP_ROUND = new CompetitionRoundDto(null, 1, "TEST_COMP_ROUND", false, null, TEST_COMP.getName(), 18, 17, 1);
-    ;
 
     public static final CommunityDto TEST_COMMUNITY = new CommunityDto(null, COMM_TEST, "Description of Community");
     public static final CommunityDto TEST_COMMUNITY_2 = new CommunityDto(null, COMM_TEST_2, "Description of Community 2");

@@ -6,7 +6,9 @@ import sportbets.persistence.entity.community.Community;
 import sportbets.persistence.entity.tipps.TippConfig;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 public class CompetitionMembership {
@@ -26,9 +28,9 @@ public class CompetitionMembership {
     private Competition competition;
 
     // Owning Side:
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "tipp_config_id")
-    private TippConfig tippConfig;
+    @OneToMany(mappedBy = "competitionMembership", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<TippConfig> tippConfigs = new HashSet();
+
 
     public Long getId() {
         return id;
@@ -62,12 +64,12 @@ public class CompetitionMembership {
         this.competition = competition;
     }
 
-    public TippConfig getTippConfig() {
-        return tippConfig;
+    public Set<TippConfig> getTippConfigs() {
+        return tippConfigs;
     }
 
-    public void setTippConfig(TippConfig tippConfig) {
-        this.tippConfig = tippConfig;
+    public void setTippConfigs(Set<TippConfig> tippConfigs) {
+        this.tippConfigs = tippConfigs;
     }
 
     @Override
@@ -89,5 +91,9 @@ public class CompetitionMembership {
                 ", community=" + community.getName() +
                 ", competition=" + competition.getName() +
                 '}';
+    }
+
+    public void addTippConfig(TippConfig tippConfig) {
+        this.getTippConfigs().add(tippConfig);
     }
 }

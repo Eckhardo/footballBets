@@ -24,7 +24,7 @@ public class MapperUtilTipps {
                             mapper.map(src -> src.getCommunity().getName(), TippModusResultDto::setCommName);
                             mapper.map(src -> src.getCommunity().getId(), TippModusResultDto::setCommId);
                             mapper.using(tippModusToString).map(TippModusResult::getType, TippModusResultDto::setType);
-                        }); ;
+                        });
         return modelMapper;
     }
 

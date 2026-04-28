@@ -46,7 +46,6 @@ public class TeamServiceImpl implements TeamService {
     @Transactional
     public Optional<TeamDto> findByName(String name) {
         Team model = teamRepository.findByName(name).orElseThrow(() -> new RuntimeException("Team not found"));
-        ;
         return Optional.of(this.modelMapper.map(model, TeamDto.class));
     }
 
@@ -71,7 +70,6 @@ public class TeamServiceImpl implements TeamService {
     public Optional<TeamDto> updateTeam(Long id, TeamDto teamDto) {
         log.debug("updateDto:: {}", teamDto);
         Team entity = teamRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Team not found"));
-        ;
 
 
         Team updatedEntity = updateFields(entity, teamDto);

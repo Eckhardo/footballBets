@@ -33,5 +33,4 @@ public enum TippModusType {
         return type.getDisplayName();
     }
 
-    ;
 }

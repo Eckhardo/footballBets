@@ -44,7 +44,7 @@ public class Spieltag {
 
 
     // Owning Side:
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "tipp_config_id")
     private TippConfig tippConfig;
 

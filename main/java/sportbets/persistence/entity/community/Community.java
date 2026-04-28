@@ -34,7 +34,7 @@ public class Community {
     private Set<CompetitionMembership> competitionMemberships = new HashSet<>();
 
     @OneToMany(mappedBy = "community", cascade = CascadeType.ALL,orphanRemoval = true, fetch = FetchType.LAZY)
-    private Set<TippModus> tippModi=new HashSet<>();
+    private final Set<TippModus> tippModi=new HashSet<>();
 
 
     public Community() {

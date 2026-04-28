@@ -61,7 +61,6 @@ public class MatchServiceTest {
         compDto.setFamilyId(savedFam.getId());
         savedComp = compService.save(compDto);
         CompetitionRoundDto compRoundDto =new CompetitionRoundDto(null, 1, "TEST_COMP_ROUND", false, null, compDto.getName(), 18, 17, 1);
-        ;
         compRoundDto.setCompId(savedComp.getId());
         savedCompRound = compRoundService.save(compRoundDto);
         SpieltagDto matchDayDto = new SpieltagDto(null, 1, LocalDateTime.now(),savedCompRound.getId(),savedCompRound.getName());

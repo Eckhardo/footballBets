@@ -18,14 +18,16 @@ public class TippConfig {
     private final LocalDateTime createdOn = LocalDateTime.now();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_tippModus_id",foreignKey = @ForeignKey(name = "FK_SPIELTAG_TO_ROUND"))
+    @JoinColumn(name = "fk_tippModus_id",foreignKey = @ForeignKey(name = "FK_TIPP_CONFIG_TO_MODUS"))
     @NotNull
     TippModus tippModus;
 
     @OneToOne(mappedBy = "tippConfig")
     private Spieltag spieltag;
 
-    @OneToOne(mappedBy = "tippConfig")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fk_comp_memb_id",foreignKey = @ForeignKey(name = "FK_TIPP_CONFIG_TO_COMP_MEMB"))
+    @NotNull
     private CompetitionMembership competitionMembership;
 
     public TippConfig() {
@@ -34,11 +36,10 @@ public class TippConfig {
 
     public TippConfig(Spieltag spieltag, CompetitionMembership competitionMembership, TippModus tippModus   ) {
         this.spieltag = spieltag;
-        spieltag.setTippConfig(this);
         this.competitionMembership = competitionMembership;
-        competitionMembership.setTippConfig(this);
+        this.competitionMembership.addTippConfig(this);
         this.tippModus = tippModus;
-        tippModus.addTippConfig(this);
+        this.tippModus.addTippConfig(this);
 
     }
 

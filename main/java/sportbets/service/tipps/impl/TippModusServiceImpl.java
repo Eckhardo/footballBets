@@ -4,12 +4,12 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import sportbets.persistence.entity.tipps.enums.TippModusType;
 import sportbets.persistence.entity.community.Community;
 import sportbets.persistence.entity.tipps.TippModus;
 import sportbets.persistence.entity.tipps.TippModusPoint;
 import sportbets.persistence.entity.tipps.TippModusResult;
 import sportbets.persistence.entity.tipps.TippModusToto;
+import sportbets.persistence.entity.tipps.enums.TippModusType;
 import sportbets.persistence.repository.community.CommunityRepository;
 import sportbets.persistence.repository.tipps.TippModusRepository;
 import sportbets.service.tipps.TippModusService;
@@ -43,7 +43,7 @@ public class TippModusServiceImpl implements TippModusService {
     public Optional<TippModusDto> findById(Long id) {
         TippModus entity = repo.findById(id).orElseThrow(() -> new RuntimeException("TippModus not found"));
 
-        return Optional.of(getTippModusDto(entity));
+        return Optional.of(convertToDto(entity));
     }
 
 
@@ -52,27 +52,31 @@ public class TippModusServiceImpl implements TippModusService {
         log.info("save tippModus");
 
         Community community = commRepo.findById(dto.getCommId()).orElseThrow(() -> new RuntimeException("Community not found"));
-        TippModus entity;
-        if (dto instanceof TippModusTotoDto totoDto) {
-            entity = modelMapper.map(totoDto, TippModusToto.class);
-        } else if (dto instanceof TippModusPointDto pointDto) {
-            entity = modelMapper.map(pointDto, TippModusPoint.class);
-        } else if (dto instanceof TippModusResultDto resultDto) {
-            entity = modelMapper.map(resultDto, TippModusResult.class);
-        } else {
-            throw new RuntimeException("Unknown tippModus type " + dto.getClass());
-        }
+        final TippModus entity = convertToEntity(dto);
 
         entity.setType(TippModusType.fromString(dto.getType()));
         entity.setCommunity(community);
         TippModus saved = repo.save(entity);
-        return getTippModusDto(saved);
+        return convertToDto(saved);
 
     }
 
+
     @Override
     public Optional<TippModusDto> update(Long id, TippModusDto dto) {
-        return Optional.empty();
+        log.info("update tippModus: {}", dto);
+
+        Community community = commRepo.findById(dto.getCommId()).orElseThrow(() -> new RuntimeException("Community not found"));
+        TippModus tippModus = repo.findById(id).orElseThrow(() -> new RuntimeException("TippModus not found"));
+        final TippModus entity = convertToEntity(dto);
+        log.info("converted entity class:{}", entity.getClass().getName());
+        entity.setCommunity(community);
+        entity.setType(TippModusType.fromString(dto.getType()));
+        log.info("converted entity:{}", entity);
+        TippModus updated = repo.save(entity);
+        log.info("updated entity:{}", updated);
+        return Optional.of(convertToDto(updated));
+
     }
 
     @Override
@@ -85,7 +89,7 @@ public class TippModusServiceImpl implements TippModusService {
         List<TippModus> entities = repo.findAllForCommunity(id);
         List<TippModusDto> dtos = new ArrayList<>();
         for (TippModus entity : entities) {
-            dtos.add(getTippModusDto(entity));
+            dtos.add(convertToDto(entity));
         }
         return dtos;
     }
@@ -127,7 +131,7 @@ public class TippModusServiceImpl implements TippModusService {
         return dtos;
     }
 
-    private TippModusDto getTippModusDto(TippModus entity) {
+    private TippModusDto convertToDto(TippModus entity) {
         MapperUtilTipps mapperUtilTipps = new MapperUtilTipps();
         if (entity instanceof TippModusToto) {
             ModelMapper myMapper = mapperUtilTipps.modelMapperForTotoTipp();
@@ -140,6 +144,19 @@ public class TippModusServiceImpl implements TippModusService {
             return myMapper.map(entity, TippModusResultDto.class);
         } else throw new RuntimeException("TippModus not found");
 
+    }
 
+    private TippModus convertToEntity(TippModusDto dto) {
+        TippModus entity;
+        if (dto instanceof TippModusTotoDto totoDto) {
+            entity = modelMapper.map(totoDto, TippModusToto.class);
+        } else if (dto instanceof TippModusPointDto pointDto) {
+            entity = modelMapper.map(pointDto, TippModusPoint.class);
+        } else if (dto instanceof TippModusResultDto resultDto) {
+            entity = modelMapper.map(resultDto, TippModusResult.class);
+        } else {
+            throw new RuntimeException("Unknown tippModus type " + dto.getClass());
+        }
+        return entity;
     }
 }

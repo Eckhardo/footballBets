@@ -95,7 +95,6 @@ public class CompServiceImpl implements CompService {
         updateModel.setRemisMultiplicator(compDto.getRemisMultiplicator());
 
         Competition updated = compRepository.save(updateModel);
-        ;
         log.debug("updated Comp  with {}", updated);
         return Optional.of(updated);
 

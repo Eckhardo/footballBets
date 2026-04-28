@@ -149,7 +149,6 @@ public class SpielServiceImpl implements SpielService {
 
         log.info("update Match dto:: {}", spielDto);
         Spiel savedSpiel = spielRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("spiel  does not exist given id:" + spielDto.getId()));
-        ;
 
         Competition savedComp = competitionRepo.findBySpieltagId(spielDto.getSpieltagId()).orElseThrow(() -> new EntityNotFoundException("Competition not found"));
 

@@ -68,8 +68,6 @@ public class SpielFormulaLigaModusServiceTest {
         assertNotNull(savedSpiel);
         log.info("spiel evaluated {}", savedSpiel);
 
-        ;
-
 
     }
 

@@ -27,7 +27,6 @@ public class MatchController {
     public MatchController(SpielService spielService, SpieltagService spieltagService) {
         this.spielService = spielService;
         this.spieltagService = spieltagService;
-        ;
     }
 
     @GetMapping("/matches/{id}")

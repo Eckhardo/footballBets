@@ -41,7 +41,7 @@ public class Competition {
 
 
     @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Set<CompetitionMembership> competitionMemberships = new HashSet<>();
+    private final Set<CompetitionMembership> competitionMemberships = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "competitionFamily_id", foreignKey = @ForeignKey(name = "FK_COMP_TO_FAM"))

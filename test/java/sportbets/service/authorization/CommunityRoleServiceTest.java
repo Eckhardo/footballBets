@@ -33,7 +33,7 @@ public class CommunityRoleServiceTest {
     private CommunityService communityService; // Real service being tested
     @Autowired
     private CommunityRoleService communityRoleService;
-    CommunityDto compDto =  new CommunityDto(null, COMM_TEST, "Description of Community");;
+    CommunityDto compDto =  new CommunityDto(null, COMM_TEST, "Description of Community");
 
     @BeforeEach
     public void setup() {

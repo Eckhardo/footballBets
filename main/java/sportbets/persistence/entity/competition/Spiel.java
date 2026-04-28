@@ -55,7 +55,7 @@ public class Spiel  {
     private CompetitionGroup competitionGroup;
 
     @OneToMany(mappedBy = "spiel", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Set<Tipp> tipps = new HashSet<>();
+    private final Set<Tipp> tipps = new HashSet<>();
 
     @OneToMany(mappedBy = "spiel", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private final Set<SpielFormula> spielFormulas = new HashSet<>();
