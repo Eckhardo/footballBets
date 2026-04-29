@@ -27,9 +27,6 @@ public class ContractCommunityApiIntegrationTest {
     private static final String TEST_COMM = "My Test Community";
     private static final String TEST_COMM_2 = "My Test Community 2";
 
-    CommunityDto communityDto2 = new CommunityDto(null, null, "Description of Community");
-
-
     CommunityDto communityDto = new CommunityDto(null, TEST_COMM, "Description of Community");
 
     @Autowired

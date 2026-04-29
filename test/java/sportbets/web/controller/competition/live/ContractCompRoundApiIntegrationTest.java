@@ -19,6 +19,7 @@ import sportbets.persistence.entity.competition.CompetitionRound;
 import sportbets.persistence.repository.competition.CompetitionFamilyRepository;
 import sportbets.persistence.repository.competition.CompetitionRepository;
 import sportbets.persistence.repository.competition.CompetitionRoundRepository;
+import sportbets.testdata.TestConstants;
 import sportbets.web.dto.competition.CompetitionDto;
 import sportbets.web.dto.competition.CompetitionFamilyDto;
 import sportbets.web.dto.competition.CompetitionRoundDto;
@@ -34,8 +35,8 @@ import java.time.LocalDateTime;
 public class ContractCompRoundApiIntegrationTest {
 
     private static final Logger log = LoggerFactory.getLogger(ContractCompRoundApiIntegrationTest.class);
-    private static final String TEST_COMP_FAM = "TestLiga";
-    private static final String TEST_COMP = "TestLiga: Saison 2025";
+    private static final String TEST_COMP_FAM = TestConstants.COMP_FAM_TEST;
+    private static final String TEST_COMP = TestConstants.COMP_TEST;
     private static final String TEST_COMP_ROUND = "Saison 2025: Hinrunde";
     private static final String TEST_COMP_ROUND_2 = "Saison 2025: Rueckrunde";
     private static final int TEST_MATCH_DAY = 1;

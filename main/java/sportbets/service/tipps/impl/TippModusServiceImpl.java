@@ -1,5 +1,6 @@
 package sportbets.service.tipps.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +42,7 @@ public class TippModusServiceImpl implements TippModusService {
 
     @Override
     public Optional<TippModusDto> findById(Long id) {
-        TippModus entity = repo.findById(id).orElseThrow(() -> new RuntimeException("TippModus not found"));
+        TippModus entity = repo.findById(id).orElseThrow(() -> new EntityNotFoundException("TippModus not found"));
 
         return Optional.of(convertToDto(entity));
     }
@@ -51,7 +52,7 @@ public class TippModusServiceImpl implements TippModusService {
     public TippModusDto save(TippModusDto dto) {
         log.info("save tippModus");
 
-        Community community = commRepo.findById(dto.getCommId()).orElseThrow(() -> new RuntimeException("Community not found"));
+        Community community = commRepo.findById(dto.getCommId()).orElseThrow(() -> new EntityNotFoundException("Community not found"));
         final TippModus entity = convertToEntity(dto);
 
         entity.setType(TippModusType.fromString(dto.getType()));
@@ -66,7 +67,7 @@ public class TippModusServiceImpl implements TippModusService {
     public Optional<TippModusDto> update(Long id, TippModusDto dto) {
         log.info("update tippModus: {}", dto);
 
-        Community community = commRepo.findById(dto.getCommId()).orElseThrow(() -> new RuntimeException("Community not found"));
+        Community community = commRepo.findById(dto.getCommId()).orElseThrow(() -> new EntityNotFoundException("Community not found"));
         TippModus tippModus = repo.findById(id).orElseThrow(() -> new RuntimeException("TippModus not found"));
         final TippModus entity = convertToEntity(dto);
         log.info("converted entity class:{}", entity.getClass().getName());
@@ -142,7 +143,7 @@ public class TippModusServiceImpl implements TippModusService {
         } else if (entity instanceof TippModusResult) {
             ModelMapper myMapper = mapperUtilTipps.modelMapperForResultTipp();
             return myMapper.map(entity, TippModusResultDto.class);
-        } else throw new RuntimeException("TippModus not found");
+        } else    throw new RuntimeException("Unknown tippModus type " + entity.getClass());
 
     }
 

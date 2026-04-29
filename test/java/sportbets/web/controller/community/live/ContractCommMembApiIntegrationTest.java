@@ -130,7 +130,6 @@ public class ContractCommMembApiIntegrationTest {
     void createNewCommunityMembership_withValidDtoInput_thenSuccess() {
         Tipper tipper = tipperRepo.findByUsername(TEST_USERNAME).orElseThrow();
         Community community = communityRepository.findByName(TEST_COMM).orElseThrow();
-
         CommunityMembershipDto dto = new CommunityMembershipDto(null, tipper.getId(), tipper.getUsername(), community.getId(), community.getName());
 
         webClient.post()
@@ -151,20 +150,14 @@ public class ContractCommMembApiIntegrationTest {
                 .isEqualTo(TEST_USERNAME)
                 .jsonPath("$.tipperId")
                 .exists();
-
-
     }
-
 
     @Test
     @Order(2)
     void updateNewCommunityMembership_withValidDtoInput_thenSuccess() {
 
-
-
         Tipper tipper = tipperRepo.findByUsername(TEST_USERNAME).orElseThrow();
         Community community = communityRepository.findByName(TEST_COMM).orElseThrow();
-
         CommunityMembershipDto dto = new CommunityMembershipDto(null, tipper.getId(), tipper.getUsername(), community.getId(), community.getName());
 
         webClient.post()
@@ -209,7 +202,6 @@ public class ContractCommMembApiIntegrationTest {
                 .isEqualTo(TEST_USERNAME2)
                 .jsonPath("$.tipperId")
                 .exists();
-
     }
 
 
@@ -247,8 +239,6 @@ public class ContractCommMembApiIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isNoContent();
-
-
     }
     @Test
     @Order(4)
@@ -278,7 +268,6 @@ public class ContractCommMembApiIntegrationTest {
                 .exists();
 
         CommunityMembership commMemb=commMembRepo.findByCommIdAndTipperId(community.getId(), tipper.getId()).orElseThrow();
-
         webClient.get()
                 .uri("/commMembs/" + commMemb.getId())
                 .exchange()
@@ -295,9 +284,5 @@ public class ContractCommMembApiIntegrationTest {
                 .isEqualTo(TEST_USERNAME)
                 .jsonPath("$.tipperId")
                 .exists();
-
-
     }
-
-
 }
