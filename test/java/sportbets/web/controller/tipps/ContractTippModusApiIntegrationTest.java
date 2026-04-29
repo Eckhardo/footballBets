@@ -20,6 +20,8 @@ import sportbets.persistence.entity.tipps.enums.TippModusType;
 import sportbets.persistence.repository.community.CommunityRepository;
 import sportbets.persistence.repository.tipps.TippModusRepository;
 import sportbets.web.dto.community.CommunityDto;
+import sportbets.web.dto.competition.CompetitionRoundDto;
+import sportbets.web.dto.tipps.TippModusDto;
 import sportbets.web.dto.tipps.TippModusPointDto;
 import sportbets.web.dto.tipps.TippModusResultDto;
 import sportbets.web.dto.tipps.TippModusTotoDto;
@@ -340,4 +342,119 @@ public class ContractTippModusApiIntegrationTest {
                 });
 
     }
+
+
+    @Test
+    @Order(5)
+    void retrieveTippModusTotoListForCommunity_withValidInput_thenSuccess() {
+
+        Community community = communityRepository.findByName(TEST_COMM).orElseThrow();
+        totoTest.setCommId(community.getId());
+
+        webClient.post()
+                .uri("/tippModus/toto")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(totoTest)
+                .exchange()
+                .expectStatus()
+                .isCreated()
+                .expectBody()
+                .jsonPath("$.id")
+                .exists()
+                .jsonPath("$.commName")
+                .isEqualTo(TEST_COMM)
+                .jsonPath("$.type")
+                .isEqualTo(TippModusType.TIPPMODUS_TOTO.getDisplayName());
+
+
+        webClient.post()
+                .uri("/tippModus/toto")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(totoTest)
+                .exchange()
+                .expectStatus()
+                .isCreated()
+                .expectBody()
+                .jsonPath("$.id")
+                .exists()
+                .jsonPath("$.commName")
+                .isEqualTo(TEST_COMM)
+                .jsonPath("$.type")
+                .isEqualTo(TippModusType.TIPPMODUS_TOTO.getDisplayName());
+
+        webClient.get()
+                .uri("/tippModus/toto/community/" +community.getId())
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBodyList(TippModusTotoDto.class).hasSize(2);
+
+    }
+
+
+
+    @Test
+    @Order(6)
+    void retrieveTippModusListForCommunity_withValidInput_thenSuccess() {
+
+        Community community = communityRepository.findByName(TEST_COMM).orElseThrow();
+        totoTest.setCommId(community.getId());
+
+        webClient.post()
+                .uri("/tippModus/toto")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(totoTest)
+                .exchange()
+                .expectStatus()
+                .isCreated()
+                .expectBody()
+                .jsonPath("$.id")
+                .exists()
+                .jsonPath("$.commName")
+                .isEqualTo(TEST_COMM)
+                .jsonPath("$.type")
+                .isEqualTo(TippModusType.TIPPMODUS_TOTO.getDisplayName());
+
+        pointTest.setCommId(community.getId());
+        webClient.post()
+                .uri("/tippModus/point")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(pointTest)
+                .exchange()
+                .expectStatus()
+                .isCreated()
+                .expectBody()
+                .jsonPath("$.id")
+                .exists()
+                .jsonPath("$.commName")
+                .isEqualTo(TEST_COMM)
+                .jsonPath("$.type")
+                .isEqualTo(TippModusType.TIPPMODUS_POINT.getDisplayName());
+        resultTest.setCommId(community.getId());
+        webClient.post()
+                .uri("/tippModus/result")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(resultTest)
+                .exchange()
+                .expectStatus()
+                .isCreated()
+                .expectBody()
+                .jsonPath("$.id")
+                .exists()
+                .jsonPath("$.commName")
+                .isEqualTo(TEST_COMM)
+                .jsonPath("$.type")
+                .isEqualTo(TippModusType.TIPPMODUS_RESULT.getDisplayName());
+
+
+        webClient.get()
+                .uri("/tippModus/community/" +community.getId())
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBodyList(TippModusDto.class).hasSize(3);
+
+    }
+
+
 }
