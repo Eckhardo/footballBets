@@ -1,10 +1,14 @@
 package sportbets.persistence.entity.tipps;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import sportbets.persistence.entity.tipps.enums.TippModusType;
 import sportbets.persistence.entity.community.Community;
 
 @Entity
+@Table(uniqueConstraints =
+        {@UniqueConstraint(name = "UniqueNameAndCommunity", columnNames = { "name", "fk_comm_id" })})
 public class TippModusResult extends TippModus{
     //	 ********************** Fields ********************** //
     private Integer tendencyPoints;
@@ -22,8 +26,8 @@ public class TippModusResult extends TippModus{
     /**
      * Full constructor
      */
-    public TippModusResult(TippModusType name, Integer deadline, Community community, Integer tendencyPoints, Integer bonusPoints) {
-        super(name,deadline, community);
+    public TippModusResult(String name, TippModusType type, Integer deadline, Community community, Integer tendencyPoints, Integer bonusPoints) {
+        super( name,type, deadline, community);
         this.tendencyPoints = tendencyPoints;
         this.bonusPoints = bonusPoints;
     }

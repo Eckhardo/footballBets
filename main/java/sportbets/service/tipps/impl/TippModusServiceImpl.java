@@ -1,5 +1,6 @@
 package sportbets.service.tipps.impl;
 
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -51,7 +52,10 @@ public class TippModusServiceImpl implements TippModusService {
     @Override
     public TippModusDto save(TippModusDto dto) {
         log.info("save tippModus");
-
+        Optional<TippModus> tippModus = repo.findByName(dto.getCommId(), dto.getName());
+        if(tippModus.isPresent()) {
+            throw new EntityExistsException("TippModus  already exists with name " + dto.getName());
+        }
         Community community = commRepo.findById(dto.getCommId()).orElseThrow(() -> new EntityNotFoundException("Community not found"));
         final TippModus entity = convertToEntity(dto);
 
@@ -70,10 +74,11 @@ public class TippModusServiceImpl implements TippModusService {
         Community community = commRepo.findById(dto.getCommId()).orElseThrow(() -> new EntityNotFoundException("Community not found"));
         TippModus tippModus = repo.findById(id).orElseThrow(() -> new RuntimeException("TippModus not found"));
         final TippModus entity = convertToEntity(dto);
-        log.info("converted entity class:{}", entity.getClass().getName());
+        log.info("converted dto to entity:{}", entity);
         entity.setCommunity(community);
         entity.setType(TippModusType.fromString(dto.getType()));
-        log.info("converted entity:{}", entity);
+      //  entity.setId(id);
+
         TippModus updated = repo.save(entity);
         log.info("updated entity:{}", updated);
         return Optional.of(convertToDto(updated));

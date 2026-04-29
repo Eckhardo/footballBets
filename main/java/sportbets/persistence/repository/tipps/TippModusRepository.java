@@ -9,6 +9,7 @@ import sportbets.persistence.entity.tipps.TippModusResult;
 import sportbets.persistence.entity.tipps.TippModusToto;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TippModusRepository extends JpaRepository<TippModus, Long> {
 
@@ -23,4 +24,6 @@ public interface TippModusRepository extends JpaRepository<TippModus, Long> {
 
     @Query("select  tm from TippModus tm join tm.community c where c.id=:id")
     List<TippModus> findAllForCommunity(Long id);
+    @Query("select  tm from TippModus tm join tm.community c where c.id=:commId and tm.name=:name")
+    Optional<TippModus> findByName(Long commId, String name);
 }

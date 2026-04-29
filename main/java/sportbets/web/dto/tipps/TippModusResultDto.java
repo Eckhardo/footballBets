@@ -20,8 +20,8 @@ public class TippModusResultDto extends TippModusDto implements Serializable {
         super();
     }
 
-    public TippModusResultDto(Long id, String type, Integer deadline, Long commId, String commName, Integer tendencyPoints, Integer bonusPoints) {
-        super(id, type, deadline, commId, commName);
+    public TippModusResultDto(Long id, String name, String type, Integer deadline, Long commId, String commName, Integer tendencyPoints, Integer bonusPoints) {
+        super(id,name, type, deadline, commId, commName);
         this.tendencyPoints = tendencyPoints;
         this.bonusPoints = bonusPoints;
     }

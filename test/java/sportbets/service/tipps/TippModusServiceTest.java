@@ -49,9 +49,9 @@ public class TippModusServiceTest {
     public void setup() {
         log.debug("setup: {}", communityDto);
         savedCommunity = communityService.save(communityDto);
-        tippModusTotoDto = new TippModusTotoDto(null, TippModusType.TIPPMODUS_TOTO.getDisplayName(), 1, savedCommunity.getId(), savedCommunity.getName());
-        tippModusResultDto = new TippModusResultDto(null, TippModusType.TIPPMODUS_RESULT.getDisplayName(), 1, savedCommunity.getId(), savedCommunity.getName(), 3, 1);
-        tippModusPointDto = new TippModusPointDto(null, TippModusType.TIPPMODUS_POINT.getDisplayName(), 1, savedCommunity.getId(), savedCommunity.getName(), 4);
+        tippModusTotoDto = new TippModusTotoDto(null, "TotoTest",TippModusType.TIPPMODUS_TOTO.getDisplayName(), 1, savedCommunity.getId(), savedCommunity.getName());
+        tippModusResultDto = new TippModusResultDto(null,"ErgebnisTest", TippModusType.TIPPMODUS_RESULT.getDisplayName(), 1, savedCommunity.getId(), savedCommunity.getName(), 3, 1);
+        tippModusPointDto = new TippModusPointDto(null,"PunkteTest", TippModusType.TIPPMODUS_POINT.getDisplayName() , 1, savedCommunity.getId(), savedCommunity.getName(), 4);
 
     }
 

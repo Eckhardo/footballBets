@@ -2,9 +2,9 @@ package sportbets.persistence.entity.tipps;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import sportbets.persistence.entity.tipps.enums.TippModusType;
-import sportbets.persistence.entity.tipps.converter.TippModusTypeAttributeConverter;
 import sportbets.persistence.entity.community.Community;
+import sportbets.persistence.entity.tipps.converter.TippModusTypeAttributeConverter;
+import sportbets.persistence.entity.tipps.enums.TippModusType;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -13,12 +13,14 @@ import java.util.Set;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class TippModus  {
+public abstract class TippModus {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @NotNull
+    private String name;
     @Convert(converter = TippModusTypeAttributeConverter.class)
     private TippModusType type;
 
@@ -30,7 +32,7 @@ public abstract class TippModus  {
 
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "fk_comm_id",foreignKey = @ForeignKey(name = "FK_TIPP_MODUS_TO_COMMUNITY"))
+    @JoinColumn(name = "fk_comm_id", foreignKey = @ForeignKey(name = "FK_TIPP_MODUS_TO_COMMUNITY"))
     @NotNull
     private Community community;
 
@@ -50,15 +52,16 @@ public abstract class TippModus  {
     /**
      * No-arg constructor for JavaBean tools.
      */
-   public TippModus() {
+    public TippModus() {
 
     }
 
     /**
      * Simple properties constructor .
      */
-    public TippModus(TippModusType type, Integer deadline, Community community) {
+    public TippModus(String name, TippModusType type, Integer deadline, Community community) {
         super();
+        this.name = name;
         this.type = type;
         this.deadline = deadline;
         this.community = community;
@@ -68,9 +71,9 @@ public abstract class TippModus  {
     /**
      * Full constructor .
      */
-    public TippModus(TippModusType type, Integer deadline, Community community,
+    public TippModus(String name, TippModusType type, Integer deadline, Community community,
                      Set<TippConfig> tippConfigs) {
-        this(type, deadline, community);
+        this(name, type, deadline, community);
         this.tippConfigs = tippConfigs;
     }
 
@@ -81,6 +84,14 @@ public abstract class TippModus  {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public TippModusType getType() {
@@ -124,18 +135,19 @@ public abstract class TippModus  {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         TippModus tippModus = (TippModus) o;
-        return Objects.equals(id, tippModus.id) && type == tippModus.type && Objects.equals(deadline, tippModus.deadline) && Objects.equals(createdOn, tippModus.createdOn);
+        return Objects.equals(name, tippModus.name) && type == tippModus.type && Objects.equals(createdOn, tippModus.createdOn);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, type, deadline, createdOn);
+        return Objects.hash(name, type, createdOn);
     }
 
     @Override
     public String toString() {
         return "TippModus{" +
                 "id=" + id +
+                ", name=" + name +
                 ", type=" + type +
                 ", deadline=" + deadline +
                 ", createdOn=" + createdOn +

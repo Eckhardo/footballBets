@@ -125,11 +125,11 @@ public class FootballBetsApplication {
         Community community = new Community("Bulitipper", "Die Dinos des Tippens");
         CommunityRole communityRole = new CommunityRole(community.getName(), community.getDescription(), community);
         community.addCommunityRole(communityRole);
-        TippModus buliModus = new TippModusPoint(
+        TippModus buliModus = new TippModusPoint("PunkteTipp",
                 TippModusType.TIPPMODUS_POINT, 2, community,
                 4);
 
-        TippModus buliModus2 = new TippModusToto(TippModusType.TIPPMODUS_TOTO,
+        TippModus buliModus2 = new TippModusToto("TotoTipp",TippModusType.TIPPMODUS_TOTO,
                 2, community);
         Community savedCommunity = commRepo.save(community);
         ebi.setDefaultCommunityId(savedCommunity.getId());

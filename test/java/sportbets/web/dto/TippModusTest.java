@@ -37,7 +37,7 @@ public class TippModusTest {
     public void convertTippModusTotoToDTO() {
         log.info("\n convert tippmodus toto");
         TEST_COMMUNITY.setId(10L);
-        TippModusToto entity = new TippModusToto(TippModusType.TIPPMODUS_TOTO, 1, TEST_COMMUNITY);
+        TippModusToto entity = new TippModusToto("myNameToto", TippModusType.TIPPMODUS_TOTO, 1, TEST_COMMUNITY);
         entity.setId(20L);
         ModelMapper myMapper = new MapperUtilTippsNew().getModelMapperForTippModus();
         Collection<TypeMap<?, ?>> typeMaps = myMapper.getTypeMaps();
@@ -63,7 +63,7 @@ public class TippModusTest {
         TEST_COMMUNITY.setId(10L);
         ModelMapper myMapper = new MapperUtilTippsNew().getModelMapperForTippModus();
 
-        TippModusResult entity = new TippModusResult(TippModusType.TIPPMODUS_RESULT, 1, TEST_COMMUNITY, 3, 1);
+        TippModusResult entity = new TippModusResult("myNameResult",TippModusType.TIPPMODUS_RESULT, 1, TEST_COMMUNITY, 3, 1);
         entity.setId(20L);
         TippModusResultDto dto = myMapper.map(entity, TippModusResultDto.class);
         assertEquals(entity.getId(), dto.getId());
@@ -83,7 +83,7 @@ public class TippModusTest {
         ModelMapper myMapper = new MapperUtilTippsNew().getModelMapperForTippModus();
 
 
-        TippModusPoint entity = new TippModusPoint(TippModusType.TIPPMODUS_POINT, 1, TEST_COMMUNITY, 4);
+        TippModusPoint entity = new TippModusPoint("myNamePoint",TippModusType.TIPPMODUS_POINT, 1, TEST_COMMUNITY, 4);
         entity.setId(20L);
         TippModusPointDto dto = myMapper.map(entity, TippModusPointDto.class);
         assertEquals(entity.getId(), dto.getId());

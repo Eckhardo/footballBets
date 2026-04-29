@@ -11,7 +11,9 @@ import java.util.Objects;
  */
 public class TippModusDto implements Serializable {
     private Long id;
-    @NotNull
+    @NotNull(message = " name cannot be null")
+    String name;
+    @NotNull(message = " type cannot be null")
     private String type;
     @NotNull
     @Positive(message = "Must be positive value")
@@ -27,8 +29,9 @@ public class TippModusDto implements Serializable {
 
     }
 
-    public TippModusDto(Long id, String type, Integer deadline, Long commId, String commName) {
+    public TippModusDto(Long id, String name, String type, Integer deadline, Long commId, String commName) {
         this.id = id;
+        this.name = name;
         this.type = type;
         this.deadline = deadline;
         this.commId = commId;
@@ -42,6 +45,15 @@ public class TippModusDto implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getType() {
         return type;
     }
@@ -79,12 +91,12 @@ public class TippModusDto implements Serializable {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         TippModusDto that = (TippModusDto) o;
-        return Objects.equals(id, that.id) && Objects.equals(type, that.type) && Objects.equals(deadline, that.deadline) && Objects.equals(commId, that.commId) && Objects.equals(commName, that.commName);
+        return Objects.equals(name, that.name) && Objects.equals(type, that.type) && Objects.equals(commId, that.commId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, type, deadline, commId, commName);
+        return Objects.hash(name, type, commId);
     }
 
     @Override
@@ -94,7 +106,7 @@ public class TippModusDto implements Serializable {
                 ", type='" + type + '\'' +
                 ", deadline=" + deadline +
                 ", commId=" + commId +
-                ", commName='" + commName + '\'' +
+                ", name='" + name + '\'' +
                 '}';
     }
 }
