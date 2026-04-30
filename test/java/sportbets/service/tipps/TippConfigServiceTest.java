@@ -20,7 +20,6 @@ import sportbets.testdata.TestConstants;
 import sportbets.web.dto.community.CommunityDto;
 import sportbets.web.dto.competition.*;
 import sportbets.web.dto.tipps.TippConfigDto;
-import sportbets.web.dto.tipps.TippModusDto;
 import sportbets.web.dto.tipps.TippModusTotoDto;
 
 import java.time.LocalDateTime;
@@ -61,6 +60,7 @@ public class TippConfigServiceTest {
     static Spieltag savedMatchday;
     static CompetitionMembership savedCompMemb;
     static TippModusTotoDto savedTippModus;
+    static CompetitionRound savedCompRound;
 
     @Autowired
     public void setRepos(CompFamilyService familyService, CompService compService,
@@ -88,7 +88,7 @@ public class TippConfigServiceTest {
         Competition savedComp = compService.save(compDto);
         CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, "TEST_COMP_ROUND", false, null, compDto.getName(), 18, 17, 1);
         compRoundDto.setCompId(savedComp.getId());
-        CompetitionRound savedCompRound = compRoundService.save(compRoundDto);
+        savedCompRound = compRoundService.save(compRoundDto);
         SpieltagDto matchDayDto = new SpieltagDto(null, 1, LocalDateTime.now(), savedCompRound.getId(), savedCompRound.getName());
         savedMatchday = spieltagService.save(matchDayDto);
         CommunityDto commDto = new CommunityDto(null, COMM_TEST, "Description of Community");
@@ -114,27 +114,26 @@ public class TippConfigServiceTest {
     @Order(1)
     public void ifCompMembIdIsProvided_ThenAllTippConfigsAreRetrieved() {
         log.debug("ifCompMembIdIsProvided_ThenAllTippConfigsAreRetrieved");
-        Long compMembId = 1L;
-        List<TippConfigRow> configRows = tippConfigService.findTippConfigRows(compMembId);
-        assertNotNull(configRows);
-        assertEquals(34, configRows.size());
-        for (TippConfigRow row : configRows) {
-            log.debug("row: {}", row);
-        }
+        TippConfigDto tippConfigDto = new TippConfigDto(null, savedCompMemb.getId(), savedMatchday.getId(), savedMatchday.getSpieltagNumber(), savedTippModus.getId());
+        log.debug("tippConfigDto: {}", tippConfigDto);
+        TippConfigDto savedTippConfig = tippConfigService.save(tippConfigDto);
+        assertNotNull(savedTippConfig.getId());
+        List<TippConfigRow> configRows = tippConfigService.findTippConfigRows(savedCompMemb.getId());
+        assertEquals(1, configRows.size());
+
     }
 
     @Test
     @Order(2)
     public void ifCompMembIdAndRoundIdIsProvided_ThenAllTippConfigsAreRetrieved() {
         log.debug("ifCompMembIdIsProvided_ThenAllTippConfigsAreRetrieved");
-        Long compMembId = 1L;
-        List<TippConfigRow> configRows = tippConfigService.findAllForRound(compMembId, 1L);
+        TippConfigDto tippConfigDto = new TippConfigDto(null, savedCompMemb.getId(), savedMatchday.getId(), savedMatchday.getSpieltagNumber(), savedTippModus.getId());
+        log.debug("tippConfigDto: {}", tippConfigDto);
+        TippConfigDto savedTippConfig = tippConfigService.save(tippConfigDto);
+        assertNotNull(savedTippConfig.getId());
+        List<TippConfigRow> configRows = tippConfigService.findAllForRound(savedCompRound.getId(),savedCompMemb.getId());
         assertNotNull(configRows);
-        assertEquals(17, configRows.size());
-        for (TippConfigRow row : configRows) {
-            log.debug("row: {}", row);
-        }
-
+        assertEquals(1, configRows.size());
     }
 
     @Test
@@ -157,12 +156,12 @@ public class TippConfigServiceTest {
         TippConfig config = configs.stream().findFirst().orElseThrow();
         assertEquals(savedTippConfig.getId(), config.getId());
 
-        Spieltag sp=spieltagService.findById(savedMatchday.getId()).orElseThrow();
-        TippConfig spConfigs=sp.getTippConfig();
+        Spieltag sp = spieltagService.findById(savedMatchday.getId()).orElseThrow();
+        TippConfig spConfigs = sp.getTippConfig();
         assertEquals(savedTippConfig.getId(), spConfigs.getId());
 
-        TippModus modus=tippModusRepository.findById(savedTippModus.getId()).orElseThrow();
-        Set<TippConfig> tmConfigs=modus.getTippConfigs();
+        TippModus modus = tippModusRepository.findById(savedTippModus.getId()).orElseThrow();
+        Set<TippConfig> tmConfigs = modus.getTippConfigs();
         TippConfig tmConfig = tmConfigs.stream().findFirst().orElseThrow();
         assertEquals(savedTippConfig.getId(), tmConfig.getId());
     }

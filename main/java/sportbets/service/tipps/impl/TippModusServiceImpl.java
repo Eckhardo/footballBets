@@ -33,13 +33,15 @@ public class TippModusServiceImpl implements TippModusService {
     private final TippModusRepository repo;
     private final CommunityRepository commRepo;
     private final ModelMapper modelMapper;
+    private final MapperUtilTipps mapperUtilTipp;
 
 
-    public TippModusServiceImpl(TippModusRepository repo, CommunityRepository commRepo, ModelMapper modelMapper) {
+    public TippModusServiceImpl(TippModusRepository repo, CommunityRepository commRepo, ModelMapper modelMapper, MapperUtilTipps mapperUtilTipp) {
         this.repo = repo;
         this.commRepo = commRepo;
         this.modelMapper = modelMapper;
 
+        this.mapperUtilTipp = mapperUtilTipp;
     }
 
     @Override
@@ -133,15 +135,15 @@ public class TippModusServiceImpl implements TippModusService {
     }
 
     private TippModusDto convertToDto(TippModus entity) {
-        MapperUtilTipps myMapperUtilTipps = new MapperUtilTipps();
+
         if (entity instanceof TippModusToto) {
-            ModelMapper myMapper = myMapperUtilTipps.modelMapperForTotoTipp();
+            ModelMapper myMapper = mapperUtilTipp.modelMapperForTotoTipp();
             return myMapper.map(entity, TippModusTotoDto.class);
         } else if (entity instanceof TippModusPoint) {
-            ModelMapper myMapper = myMapperUtilTipps.modelMapperForPointTipp();
+            ModelMapper myMapper = mapperUtilTipp.modelMapperForPointTipp();
             return myMapper.map(entity, TippModusPointDto.class);
         } else if (entity instanceof TippModusResult) {
-            ModelMapper myMapper = myMapperUtilTipps.modelMapperForResultTipp();
+            ModelMapper myMapper = mapperUtilTipp.modelMapperForResultTipp();
             return myMapper.map(entity, TippModusResultDto.class);
         } else throw new RuntimeException("Unknown tippModus type " + entity.getClass());
 

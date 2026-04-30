@@ -169,6 +169,8 @@ public class ContractTippModusApiIntegrationTest {
                 .expectBody()
                 .jsonPath("$.id")
                 .exists()
+                .jsonPath("$.bonusPoints")
+                .isEqualTo(resultTest.getBonusPoints())
                 .jsonPath("$.commName")
                 .isEqualTo(TEST_COMM)
                 .jsonPath("$.type")
@@ -234,6 +236,8 @@ public class ContractTippModusApiIntegrationTest {
                 .expectBody()
                 .jsonPath("$.id")
                 .exists()
+                .jsonPath("$.totalPoints")
+                .isEqualTo(pointTest.getTotalPoints())
                 .jsonPath("$.commName")
                 .isEqualTo(TEST_COMM)
                 .jsonPath("$.type")
@@ -457,8 +461,5 @@ public class ContractTippModusApiIntegrationTest {
                 .expectStatus()
                 .isOk()
                 .expectBodyList(TippModusDto.class).hasSize(3);
-
     }
-
-
 }

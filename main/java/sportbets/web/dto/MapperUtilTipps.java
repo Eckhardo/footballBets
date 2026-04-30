@@ -3,10 +3,10 @@ package sportbets.web.dto;
 import org.modelmapper.*;
 import org.springframework.stereotype.Component;
 import sportbets.persistence.entity.tipps.TippConfig;
-import sportbets.persistence.entity.tipps.enums.TippModusType;
 import sportbets.persistence.entity.tipps.TippModusPoint;
 import sportbets.persistence.entity.tipps.TippModusResult;
 import sportbets.persistence.entity.tipps.TippModusToto;
+import sportbets.persistence.entity.tipps.enums.TippModusType;
 import sportbets.web.dto.tipps.TippConfigDto;
 import sportbets.web.dto.tipps.TippModusPointDto;
 import sportbets.web.dto.tipps.TippModusResultDto;
@@ -16,81 +16,84 @@ import sportbets.web.dto.tipps.TippModusTotoDto;
 public class MapperUtilTipps {
     private final ModelMapper modelMapper = new ModelMapper();
 
-    public  ModelMapper modelMapperForResultTipp() {
+    public ModelMapper modelMapperForResultTipp() {
         // setup
-        TypeMap<TippModusResult, TippModusResultDto> typeMap = modelMapper.createTypeMap(TippModusResult.class, TippModusResultDto.class);
-        // add deep mapping to flatten source
-        typeMap
-                .addMappings(
-                        mapper -> {
-                            mapper.map(src -> src.getCommunity().getName(), TippModusResultDto::setCommName);
-                            mapper.map(src -> src.getCommunity().getId(), TippModusResultDto::setCommId);
-                            mapper.using(tippModusToString).map(TippModusResult::getType, TippModusResultDto::setType);
-                        });
+        TypeMap<TippModusResult, TippModusResultDto> typeMap = modelMapper.getTypeMap(TippModusResult.class, TippModusResultDto.class);
+        if (typeMap == null) {// add deep mapping to flatten source
+            modelMapper.addMappings(new PropertyMap<TippModusResult, TippModusResultDto>() {
+                @Override
+                protected void configure() {
+                    // Map the 'id' of the 'parent' object in the source
+                    // to the 'parentId' field in the destination
+                    map(source.getCommunity().getName()).setCommName(null);
+                    map(source.getCommunity().getId()).setCommId(null);
+                    using(tippModusToString).map(source.getType()).setType(null);
+
+                }
+            });
+        }
         return modelMapper;
     }
 
 
     public ModelMapper modelMapperForTotoTipp() {
 
+        TypeMap<TippModusToto, TippModusTotoDto> typeMap = modelMapper.getTypeMap(TippModusToto.class, TippModusTotoDto.class);
+        if (typeMap == null) {// add deep mapping to flatten source
+            modelMapper.addMappings(new PropertyMap<TippModusToto, TippModusTotoDto>() {
+                @Override
+                protected void configure() {
+                    // Map the 'id' of the 'parent' object in the source
+                    // to the 'parentId' field in the destination
+                    map(source.getCommunity().getName()).setCommName(null);
+                    map(source.getCommunity().getId()).setCommId(null);
+                 using(tippModusToString).map(source.getType()).setType(null);
 
-        // Convert enum to string
-        modelMapper.typeMap(TippModusToto.class, TippModusTotoDto.class).addMappings(mapper -> {
-            mapper.using(tippModusToString).map(TippModusToto::getType, TippModusTotoDto::setType);
-        });
-        // Define the custom mapping for ChildEntity -> ChildDTO
-        modelMapper.addMappings(new PropertyMap<TippModusToto, TippModusTotoDto>() {
-            @Override
-            protected void configure() {
-                // Map the 'id' of the 'parent' object in the source
-                // to the 'parentId' field in the destination
-                map(source.getCommunity().getId()).setCommId(null);
-                map(source.getCommunity().getName()).setCommName(null);
-
-            }
-        });
-
+                }
+            });
+        }
         return modelMapper;
+
     }
 
     public ModelMapper modelMapperForPointTipp() {
 
+        TypeMap<TippModusPoint, TippModusPointDto> typeMap = modelMapper.getTypeMap(TippModusPoint.class, TippModusPointDto.class);
+        if (typeMap == null) {// add deep mapping to flatten source
+            modelMapper.addMappings(new PropertyMap<TippModusPoint, TippModusPointDto>() {
+                @Override
+                protected void configure() {
+                    // Map the 'id' of the 'parent' object in the source
+                    // to the 'parentId' field in the destination
+                    map(source.getCommunity().getName()).setCommName(null);
+                    map(source.getCommunity().getId()).setCommId(null);
+                   using(tippModusToString).map(source.getType()).setType(null);
 
-        // Convert enum to string
-        modelMapper.typeMap(TippModusPoint.class, TippModusPointDto.class).addMappings(mapper -> {
-            mapper.using(tippModusToString).map(TippModusPoint::getType, TippModusPointDto::setType);
-        });
-        // Define the custom mapping for ChildEntity -> ChildDTO
-        modelMapper.addMappings(new PropertyMap<TippModusPoint, TippModusPointDto>() {
-            @Override
-            protected void configure() {
-                // Map the 'id' of the 'parent' object in the source
-                // to the 'parentId' field in the destination
-                map(source.getCommunity().getId()).setCommId(null);
-                map(source.getCommunity().getName()).setCommName(null);
-
-            }
-        });
-
+                }
+            });
+        }
         return modelMapper;
     }
 
     public ModelMapper modelMapperForTippConfig() {
+        TypeMap<TippConfig, TippConfigDto> typeMap = modelMapper.getTypeMap(TippConfig.class, TippConfigDto.class);
+        // add deep mapping to flatten source
 
+        if (typeMap == null) {
+            // Define the custom mapping for ChildEntity -> ChildDTO
+            modelMapper.addMappings(new PropertyMap<TippConfig, TippConfigDto>() {
+                @Override
+                protected void configure() {
+                    // Map the 'id' of the 'parent' object in the source
+                    // to the 'parentId' field in the destination
+                    map(source.getCompetitionMembership().getId()).setCompMembId(null);
+                    map(source.getSpieltag().getId()).setSpieltagId(null);
+                    map(source.getSpieltag().getSpieltagNumber()).setSpieltagNumber(1);
+                    map(source.getTippModus().getId()).setTippModusId(null);
 
-        // Define the custom mapping for ChildEntity -> ChildDTO
-        modelMapper.addMappings(new PropertyMap<TippConfig, TippConfigDto>() {
-            @Override
-            protected void configure() {
-                // Map the 'id' of the 'parent' object in the source
-                // to the 'parentId' field in the destination
-                map(source.getCompetitionMembership().getId()).setCompMembId(null);
-                map(source.getSpieltag().getId()).setSpieltagId(null);
-                map(source.getSpieltag().getSpieltagNumber()).setSpieltagNumber(1);
-                map(source.getTippModus().getId()).setTippModusId(null);
-
-            }
-        });
+                }
+            });
+        }
 
         return modelMapper;
     }
