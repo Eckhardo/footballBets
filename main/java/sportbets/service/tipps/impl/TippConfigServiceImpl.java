@@ -3,6 +3,8 @@ package sportbets.service.tipps.impl;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import sportbets.persistence.entity.competition.CompetitionMembership;
 import sportbets.persistence.entity.competition.Spieltag;
@@ -23,16 +25,16 @@ import java.util.Optional;
 @Service
 public class TippConfigServiceImpl implements TippConfigService {
 
+    private static final Logger log = LoggerFactory.getLogger(TippConfigServiceImpl.class);
+
     private final TippConfigRepository tippConfigRepo;
-    private final ModelMapper modelMapper;
-    private final   MapperUtilTipps mapperUtilTipp;
+    private final MapperUtilTipps mapperUtilTipp;
     private final CompetitionMembershipRepository compMembRepo;
     private final SpieltagRepository spieltagRepo;
     private final TippModusRepository tippModusRepo;
 
-    public TippConfigServiceImpl(TippConfigRepository tippConfigRepo, ModelMapper modelMapper, MapperUtilTipps mapperUtilTipp, CompetitionMembershipRepository compMembRepo, SpieltagRepository spieltagRepo, TippModusRepository tippModusRepo) {
+    public TippConfigServiceImpl(TippConfigRepository tippConfigRepo,  MapperUtilTipps mapperUtilTipp, CompetitionMembershipRepository compMembRepo, SpieltagRepository spieltagRepo, TippModusRepository tippModusRepo) {
         this.tippConfigRepo = tippConfigRepo;
-        this.modelMapper = modelMapper;
         this.mapperUtilTipp = mapperUtilTipp;
         this.compMembRepo = compMembRepo;
         this.spieltagRepo = spieltagRepo;
@@ -49,23 +51,25 @@ public class TippConfigServiceImpl implements TippConfigService {
 
     @Override
     public TippConfigDto save(TippConfigDto dto) {
+        log.debug("save dto: {}", dto);
 
-        Optional<TippConfig> entity= tippConfigRepo.findById(dto.getId());
+        Optional<TippConfig> entity = tippConfigRepo.findByParents(dto.getCompMembId(), dto.getTippModusId(), dto.getSpieltagId());
         if (entity.isPresent()) {
             throw new EntityExistsException("Entity with id:" + dto.getId() + " already exists");
         }
+        log.debug("entity not yet present: {}", dto);
 
-        CompetitionMembership compMemb=compMembRepo.findById(dto.getCompMembId()).orElseThrow(() -> new EntityNotFoundException("CompMemb not found with id:" + dto.getCompMembId()));
-        Spieltag spieltag = spieltagRepo.findById(dto.getSpieltagId()).orElseThrow(()-> new EntityNotFoundException("Spieltag not found with id:" + dto.getSpieltagId()));
-        TippModus tippMModus=tippModusRepo.findById(dto.getTippModusId()).orElseThrow(()-> new EntityNotFoundException("TippModus not found with id:" + dto.getTippModusId()));
+        CompetitionMembership compMemb = compMembRepo.findById(dto.getCompMembId()).orElseThrow(() -> new EntityNotFoundException("CompMemb not found with id:" + dto.getCompMembId()));
+        Spieltag spieltag = spieltagRepo.findById(dto.getSpieltagId()).orElseThrow(() -> new EntityNotFoundException("Spieltag not found with id:" + dto.getSpieltagId()));
+        TippModus tippModus = tippModusRepo.findById(dto.getTippModusId()).orElseThrow(() -> new EntityNotFoundException("TippModus not found with id:" + dto.getTippModusId()));
 
-        TippConfig toSave= modelMapper.map(dto, TippConfig.class);
-        toSave.setCompetitionMembership(compMemb);
-        toSave.setSpieltag(spieltag);
-        toSave.setTippModus(tippMModus);
+        log.debug("parents retrievable: {}", dto);
+        TippConfig toSave = new TippConfig(spieltag, compMemb, tippModus);
+        spieltag.setTippConfig(toSave);
 
-        TippConfig saved= tippConfigRepo.save(toSave);
-
+        log.debug("before persist: {}", toSave);
+        TippConfig saved = tippConfigRepo.save(toSave);
+        log.debug("after persist: {}", toSave);
         return convertToDto(saved);
 
     }
@@ -78,7 +82,7 @@ public class TippConfigServiceImpl implements TippConfigService {
 
     @Override
     public List<TippConfigRow> findAllForRound(Long compRoundId, Long compMembId) {
-        return tippConfigRepo.findAllForRound(compRoundId,compMembId);
+        return tippConfigRepo.findAllForRound(compRoundId, compMembId);
     }
 
     @Override
@@ -88,13 +92,12 @@ public class TippConfigServiceImpl implements TippConfigService {
 
     @Override
     public Optional<TippConfigRow> findTippConfig(Long spieltagId, Long compMembId) {
-        return tippConfigRepo.findTippConfig(spieltagId,compMembId);
+        return tippConfigRepo.findTippConfig(spieltagId, compMembId);
     }
 
 
-
     private TippConfigDto convertToDto(TippConfig entity) {
-     ModelMapper myMapper=   mapperUtilTipp.modelMapperForTippConfig();
-     return myMapper.map(entity, TippConfigDto.class);
+        ModelMapper myMapper = mapperUtilTipp.modelMapperForTippConfig();
+        return myMapper.map(entity, TippConfigDto.class);
     }
 }

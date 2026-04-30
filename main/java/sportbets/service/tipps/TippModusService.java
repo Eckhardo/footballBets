@@ -24,12 +24,12 @@ public interface TippModusService {
 
     List<TippModusDto> getAllForCommunity(Long id);
 
-   List<TippModusTotoDto> findTotoTypesForCommunity(Long id);
+   List<TippModusDto> findTotoTypesForCommunity(Long id);
 
-    List<TippModusResultDto> findResultTypesForCommunity(Long id);
+    List<TippModusDto> findResultTypesForCommunity(Long id);
 
 
-    List<TippModusPointDto> findPointTypesForCommunity(Long id);
+    List<TippModusDto> findPointTypesForCommunity(Long id);
 
 
 }

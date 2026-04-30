@@ -1,9 +1,7 @@
 package sportbets.service.tipps;
 
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +25,7 @@ import static sportbets.testdata.TestConstants.COMM_TEST_2;
 
 @SpringBootTest
 @ActiveProfiles("test")
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TippModusServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(TippModusServiceTest.class);
@@ -36,9 +35,6 @@ public class TippModusServiceTest {
 
     Community savedCommunity = null;
 
-    TippModusDto tippModusTotoDto;
-    TippModusDto tippModusResultDto;
-    TippModusDto tippModusPointDto;
 
     @Autowired
     CommunityService communityService;
@@ -49,9 +45,6 @@ public class TippModusServiceTest {
     public void setup() {
         log.debug("setup: {}", communityDto);
         savedCommunity = communityService.save(communityDto);
-        tippModusTotoDto = new TippModusTotoDto(null, "TotoTest",TippModusType.TIPPMODUS_TOTO.getDisplayName(), 1, savedCommunity.getId(), savedCommunity.getName());
-        tippModusResultDto = new TippModusResultDto(null,"ErgebnisTest", TippModusType.TIPPMODUS_RESULT.getDisplayName(), 1, savedCommunity.getId(), savedCommunity.getName(), 3, 1);
-        tippModusPointDto = new TippModusPointDto(null,"PunkteTest", TippModusType.TIPPMODUS_POINT.getDisplayName() , 1, savedCommunity.getId(), savedCommunity.getName(), 4);
 
     }
 
@@ -62,14 +55,19 @@ public class TippModusServiceTest {
     }
 
     @Test
+    @Order(1)
     public void ifTippModusDtosAreSaved_then_ReturningDtosAreEqual() {
         log.debug("ifTippModusDtosAreSaved_then_RetruningDtosAreEqual");
+        TippModusTotoDto tippModusTotoDto = new TippModusTotoDto(null, "TotoTest", TippModusType.TIPPMODUS_TOTO.getDisplayName(), 1, savedCommunity.getId(), savedCommunity.getName());
+        TippModusResultDto tippModusResultDto = new TippModusResultDto(null, "ErgebnisTest", TippModusType.TIPPMODUS_RESULT.getDisplayName(), 1, savedCommunity.getId(), savedCommunity.getName(), 3, 1);
+        TippModusPointDto tippModusPointDto = new TippModusPointDto(null, "PunkteTest", TippModusType.TIPPMODUS_POINT.getDisplayName(), 1, savedCommunity.getId(), savedCommunity.getName(), 4);
 
         assertNotNull(savedCommunity);
 
         TippModusTotoDto dto = (TippModusTotoDto) tippModusService.save(tippModusTotoDto);
         assertEquals(tippModusTotoDto.getCommName(), dto.getCommName());
         assertEquals(tippModusTotoDto.getType(), dto.getType());
+        assertEquals(tippModusTotoDto.getName(), dto.getName());
         assertNotNull(dto.getId());
         log.info("totoType:{}", dto);
 
@@ -77,6 +75,7 @@ public class TippModusServiceTest {
         TippModusResultDto dtoResult = (TippModusResultDto) tippModusService.save(tippModusResultDto);
         assertEquals(tippModusResultDto.getCommName(), dtoResult.getCommName());
         assertEquals(tippModusResultDto.getType(), dtoResult.getType());
+        assertEquals(tippModusResultDto.getName(), dtoResult.getName());
         assertNotNull(dtoResult.getId());
         assertEquals(tippModusResultDto.getDeadline(), dtoResult.getDeadline());
 
@@ -89,6 +88,7 @@ public class TippModusServiceTest {
         TippModusPointDto pointDto = (TippModusPointDto) tippModusService.save(tippModusPointDto);
         assertEquals(tippModusPointDto.getCommName(), pointDto.getCommName());
         assertEquals(tippModusPointDto.getType(), pointDto.getType());
+        assertEquals(tippModusPointDto.getName(), pointDto.getName());
         assertNotNull(pointDto.getId());
         assertNotNull(pointDto.getTotalPoints());
         log.info("pointType:{}", dto);
@@ -96,10 +96,15 @@ public class TippModusServiceTest {
 
 
     @Test
+    @Order(2)
     public void ifTippModusDtosAreUpdated_then_ReturningDtosAreEqual() {
         log.debug("ifTippModusDtosAreUpdated_then_ReturningDtosAreModified");
 
         assertNotNull(savedCommunity);
+        TippModusTotoDto tippModusTotoDto = new TippModusTotoDto(null, "TotoTest", TippModusType.TIPPMODUS_TOTO.getDisplayName(), 1, savedCommunity.getId(), savedCommunity.getName());
+        TippModusResultDto tippModusResultDto = new TippModusResultDto(null, "ErgebnisTest", TippModusType.TIPPMODUS_RESULT.getDisplayName(), 1, savedCommunity.getId(), savedCommunity.getName(), 3, 1);
+        TippModusPointDto tippModusPointDto = new TippModusPointDto(null, "PunkteTest", TippModusType.TIPPMODUS_POINT.getDisplayName(), 1, savedCommunity.getId(), savedCommunity.getName(), 4);
+
 
         TippModusTotoDto savedTotoDto = (TippModusTotoDto) tippModusService.save(tippModusTotoDto);
         assertEquals(tippModusTotoDto.getCommName(), savedTotoDto.getCommName());
@@ -126,45 +131,50 @@ public class TippModusServiceTest {
         assertEquals(resultDto.getTendencyPoints(), dtoResult.getTendencyPoints());
 
         dtoResult.setTendencyPoints(5);
-        TippModusResultDto updatedResult =(TippModusResultDto) tippModusService.update(dtoResult.getId(), dtoResult).orElseThrow(() -> new RuntimeException("update failed"));
+        TippModusResultDto updatedResult = (TippModusResultDto) tippModusService.update(dtoResult.getId(), dtoResult).orElseThrow(() -> new RuntimeException("update failed"));
         assertEquals(dtoResult.getTendencyPoints(), updatedResult.getTendencyPoints());
 
         log.info("resultType:{}", dtoResult);
     }
 
     @Test
+    @Order(3)
     public void ifTippModusDtosAreSaved_then_RetrievingThemSucceeds() {
         log.debug("ifTippModusDtosAreSaved_then_RetrievingThemSucceeds");
+        TippModusTotoDto tippModusTotoDto = new TippModusTotoDto(null, "TotoTest", TippModusType.TIPPMODUS_TOTO.getDisplayName(), 1, savedCommunity.getId(), savedCommunity.getName());
+        TippModusResultDto tippModusResultDto = new TippModusResultDto(null, "ErgebnisTest", TippModusType.TIPPMODUS_RESULT.getDisplayName(), 1, savedCommunity.getId(), savedCommunity.getName(), 3, 1);
+        TippModusPointDto tippModusPointDto = new TippModusPointDto(null, "PunkteTest", TippModusType.TIPPMODUS_POINT.getDisplayName(), 1, savedCommunity.getId(), savedCommunity.getName(), 4);
 
 
+
+
+        tippModusService.save(tippModusPointDto);
         tippModusService.save(tippModusTotoDto);
         tippModusService.save(tippModusResultDto);
-        tippModusService.save(tippModusPointDto);
-
         List<TippModusDto> dtos = tippModusService.getAllForCommunity(savedCommunity.getId());
         assertEquals(3, dtos.size());
-
-
     }
 
     @Test
+    @Order(4)
     public void ifTippModusDtosAreSaved_then_RetrievingTypesSelectivelySucceeds() {
         log.debug("ifTippModusDtosAreSaved_then_RetrievingTypesSelectivelySucceeds");
+        TippModusTotoDto tippModusTotoDto = new TippModusTotoDto(null, "TotoTest", TippModusType.TIPPMODUS_TOTO.getDisplayName(), 1, savedCommunity.getId(), savedCommunity.getName());
+        TippModusResultDto tippModusResultDto = new TippModusResultDto(null, "ErgebnisTest", TippModusType.TIPPMODUS_RESULT.getDisplayName(), 1, savedCommunity.getId(), savedCommunity.getName(), 3, 1);
+        TippModusPointDto tippModusPointDto = new TippModusPointDto(null, "PunkteTest", TippModusType.TIPPMODUS_POINT.getDisplayName(), 1, savedCommunity.getId(), savedCommunity.getName(), 4);
 
         //given
         tippModusService.save(tippModusTotoDto);
         tippModusService.save(tippModusResultDto);
         tippModusService.save(tippModusPointDto);
 
-        List<TippModusTotoDto> totos = tippModusService.findTotoTypesForCommunity(savedCommunity.getId());
+        List<TippModusDto> totos = tippModusService.findTotoTypesForCommunity(savedCommunity.getId());
         assertEquals(1, totos.size());
 
-        List<TippModusResultDto> resultDtos = tippModusService.findResultTypesForCommunity(savedCommunity.getId());
+        List<TippModusDto> resultDtos = tippModusService.findResultTypesForCommunity(savedCommunity.getId());
         assertEquals(1, resultDtos.size());
 
-        List<TippModusPointDto> pointDtos = tippModusService.findPointTypesForCommunity(savedCommunity.getId());
+        List<TippModusDto> pointDtos = tippModusService.findPointTypesForCommunity(savedCommunity.getId());
         assertEquals(1, pointDtos.size());
-
-
     }
 }

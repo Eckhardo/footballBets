@@ -19,7 +19,7 @@ public class MapperUtilTipps {
     public  ModelMapper modelMapperForResultTipp() {
         // setup
         TypeMap<TippModusResult, TippModusResultDto> typeMap = modelMapper.createTypeMap(TippModusResult.class, TippModusResultDto.class);
-        // add deep mapping to flatten source's Community object into a single field in destination
+        // add deep mapping to flatten source
         typeMap
                 .addMappings(
                         mapper -> {

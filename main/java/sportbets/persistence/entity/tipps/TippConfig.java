@@ -37,10 +37,7 @@ public class TippConfig {
     public TippConfig(Spieltag spieltag, CompetitionMembership competitionMembership, TippModus tippModus   ) {
         this.spieltag = spieltag;
         this.competitionMembership = competitionMembership;
-        this.competitionMembership.addTippConfig(this);
         this.tippModus = tippModus;
-        this.tippModus.addTippConfig(this);
-
     }
 
     public Long getId() {

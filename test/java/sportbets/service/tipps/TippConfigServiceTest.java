@@ -6,19 +6,26 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.community.Community;
 import sportbets.persistence.entity.competition.*;
+import sportbets.persistence.entity.tipps.TippConfig;
+import sportbets.persistence.entity.tipps.TippModus;
 import sportbets.persistence.entity.tipps.enums.TippModusType;
+import sportbets.persistence.repository.tipps.TippModusRepository;
 import sportbets.persistence.rowObject.TippConfigRow;
 import sportbets.service.community.CommunityService;
 import sportbets.service.competition.*;
 import sportbets.testdata.TestConstants;
 import sportbets.web.dto.community.CommunityDto;
 import sportbets.web.dto.competition.*;
+import sportbets.web.dto.tipps.TippConfigDto;
+import sportbets.web.dto.tipps.TippModusDto;
 import sportbets.web.dto.tipps.TippModusTotoDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -29,6 +36,7 @@ import static sportbets.testdata.TestConstants.COMP_TEST;
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@Transactional // mandatory to check ref integrity
 public class TippConfigServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(TippConfigServiceTest.class);
@@ -37,6 +45,9 @@ public class TippConfigServiceTest {
 
     @Autowired
     TippConfigService tippConfigService;
+    @Autowired
+    TippModusRepository tippModusRepository;
+
 
     private static CompFamilyService familyService;
     private static CompService compService; // Real service being tested
@@ -47,6 +58,9 @@ public class TippConfigServiceTest {
     private static TippModusService tippModusService;
     private static CompetitionMembershipService membershipService;
 
+    static Spieltag savedMatchday;
+    static CompetitionMembership savedCompMemb;
+    static TippModusTotoDto savedTippModus;
 
     @Autowired
     public void setRepos(CompFamilyService familyService, CompService compService,
@@ -76,13 +90,15 @@ public class TippConfigServiceTest {
         compRoundDto.setCompId(savedComp.getId());
         CompetitionRound savedCompRound = compRoundService.save(compRoundDto);
         SpieltagDto matchDayDto = new SpieltagDto(null, 1, LocalDateTime.now(), savedCompRound.getId(), savedCompRound.getName());
-        Spieltag savedMatchday = spieltagService.save(matchDayDto);
+        savedMatchday = spieltagService.save(matchDayDto);
         CommunityDto commDto = new CommunityDto(null, COMM_TEST, "Description of Community");
         Community savedComm = communityService.save(commDto);
         CompetitionMembershipDto competitionMembershipDto = new CompetitionMembershipDto(savedComp.getId(), savedComp.getName(), savedComm.getId(), savedComm.getName());
-        CompetitionMembership savedCommunityMembership = membershipService.save(competitionMembershipDto);
+        savedCompMemb = membershipService.save(competitionMembershipDto);
         TippModusTotoDto tippModusTotoDto = new TippModusTotoDto(null, "TotoTest", TippModusType.TIPPMODUS_TOTO.getDisplayName(), 1, savedComm.getId(), savedComm.getName());
-        TippModusTotoDto dto = (TippModusTotoDto) tippModusService.save(tippModusTotoDto);
+        savedTippModus = (TippModusTotoDto) tippModusService.save(tippModusTotoDto);
+
+
     }
 
     @AfterAll
@@ -105,8 +121,6 @@ public class TippConfigServiceTest {
         for (TippConfigRow row : configRows) {
             log.debug("row: {}", row);
         }
-
-
     }
 
     @Test
@@ -121,8 +135,35 @@ public class TippConfigServiceTest {
             log.debug("row: {}", row);
         }
 
-
     }
 
+    @Test
+    @Order(3)
+    public void ifTippConfigIsSaved_ThenRetrievalSucceeds() {
+        log.debug("ifTippConfigIsSaved_ThenRetrievalSucceeds");
+        TippConfigDto tippConfigDto = new TippConfigDto(null, savedCompMemb.getId(), savedMatchday.getId(), savedMatchday.getSpieltagNumber(), savedTippModus.getId());
+        log.debug("tippConfigDto: {}", tippConfigDto);
+        TippConfigDto savedTippConfig = tippConfigService.save(tippConfigDto);
+        assertNotNull(savedTippConfig.getId());
+        assertEquals(tippConfigDto.getSpieltagNumber(), savedTippConfig.getSpieltagNumber());
+        assertEquals(tippConfigDto.getSpieltagId(), savedTippConfig.getSpieltagId());
+        assertEquals(tippConfigDto.getTippModusId(), savedTippConfig.getTippModusId());
+        assertEquals(tippConfigDto.getCompMembId(), savedTippConfig.getCompMembId());
 
+
+        //Check that ref integrity is provided (parents keep the TippConfig entity)
+        CompetitionMembership cm = membershipService.findById(savedCompMemb.getId()).orElseThrow();
+        Set<TippConfig> configs = cm.getTippConfigs();
+        TippConfig config = configs.stream().findFirst().orElseThrow();
+        assertEquals(savedTippConfig.getId(), config.getId());
+
+        Spieltag sp=spieltagService.findById(savedMatchday.getId()).orElseThrow();
+        TippConfig spConfigs=sp.getTippConfig();
+        assertEquals(savedTippConfig.getId(), spConfigs.getId());
+
+        TippModus modus=tippModusRepository.findById(savedTippModus.getId()).orElseThrow();
+        Set<TippConfig> tmConfigs=modus.getTippConfigs();
+        TippConfig tmConfig = tmConfigs.stream().findFirst().orElseThrow();
+        assertEquals(savedTippConfig.getId(), tmConfig.getId());
+    }
 }

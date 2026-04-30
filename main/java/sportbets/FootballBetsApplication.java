@@ -100,7 +100,7 @@ public class FootballBetsApplication {
     public CommandLineRunner run() {
         return runner -> {
 
-      //  execute();
+          // execute();
 
 
             log.info("Start successful");
@@ -129,7 +129,7 @@ public class FootballBetsApplication {
                 TippModusType.TIPPMODUS_POINT, 2, community,
                 4);
 
-        TippModus buliModus2 = new TippModusToto("TotoTipp",TippModusType.TIPPMODUS_TOTO,
+        TippModus buliModus2 = new TippModusToto("TotoTipp", TippModusType.TIPPMODUS_TOTO,
                 2, community);
         Community savedCommunity = commRepo.save(community);
         ebi.setDefaultCommunityId(savedCommunity.getId());

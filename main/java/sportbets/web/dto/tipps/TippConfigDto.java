@@ -20,8 +20,10 @@ public class TippConfigDto implements Serializable {
     @NotNull(message = " tipp modus id cannot be null")
     private  Long tippModusId;
 
+    public TippConfigDto() {
+    }
 
-    public TippConfigDto(Long id,  Long compMembId, Long spieltagId, int spieltagNumber,Long tippModusId) {
+    public TippConfigDto(Long id, Long compMembId, Long spieltagId, int spieltagNumber, Long tippModusId) {
         this.id = id;
         this.compMembId = compMembId;
         this.spieltagId = spieltagId;
