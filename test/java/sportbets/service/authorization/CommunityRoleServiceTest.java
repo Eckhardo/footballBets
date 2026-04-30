@@ -11,7 +11,6 @@ import org.springframework.test.context.ActiveProfiles;
 import sportbets.persistence.entity.authorization.CommunityRole;
 import sportbets.persistence.entity.community.Community;
 import sportbets.service.community.CommunityService;
-import sportbets.testdata.TestConstants;
 import sportbets.web.dto.community.CommunityDto;
 
 import java.util.List;
@@ -33,13 +32,12 @@ public class CommunityRoleServiceTest {
     private CommunityService communityService; // Real service being tested
     @Autowired
     private CommunityRoleService communityRoleService;
-    CommunityDto compDto =  new CommunityDto(null, COMM_TEST, "Description of Community");
+    CommunityDto communityDto =  new CommunityDto(null, COMM_TEST, "Description of Community");
 
     @BeforeEach
     public void setup() {
-        communityService.deleteByName(compDto.getName());
 
-        savedCommunity = communityService.save(compDto);
+        savedCommunity = communityService.save(communityDto);
         assertNotNull(savedCommunity);
 
 
@@ -69,7 +67,7 @@ public class CommunityRoleServiceTest {
 
         List<CommunityRole> roles = communityRoleService.getAllCommunityRoles();
         assertThat(roles).isNotNull();
-        CommunityRole savedRole = roles.stream().filter((r) -> r.getName().equals(compDto.getName())).findFirst().get();
+        CommunityRole savedRole = roles.stream().filter((r) -> r.getName().equals(communityDto.getName())).findFirst().get();
 
         assertEquals(savedCommunity.getId(), savedRole.getCommunity().getId());
         assertEquals(savedCommunity.getName(), savedRole.getCommunity().getName());

@@ -138,15 +138,15 @@ public class TippModusServiceImpl implements TippModusService {
     }
 
     private TippModusDto convertToDto(TippModus entity) {
-        MapperUtilTipps mapperUtilTipps = new MapperUtilTipps();
+MapperUtilTipps myMapperUtilTipps = new MapperUtilTipps();
         if (entity instanceof TippModusToto) {
-            ModelMapper myMapper = mapperUtilTipps.modelMapperForTotoTipp();
+            ModelMapper myMapper = myMapperUtilTipps.modelMapperForTotoTipp();
             return myMapper.map(entity, TippModusTotoDto.class);
         } else if (entity instanceof TippModusPoint) {
-            ModelMapper myMapper = mapperUtilTipps.modelMapperForPointTipp();
+            ModelMapper myMapper = myMapperUtilTipps.modelMapperForPointTipp();
             return myMapper.map(entity, TippModusPointDto.class);
         } else if (entity instanceof TippModusResult) {
-            ModelMapper myMapper = mapperUtilTipps.modelMapperForResultTipp();
+            ModelMapper myMapper = myMapperUtilTipps.modelMapperForResultTipp();
             return myMapper.map(entity, TippModusResultDto.class);
         } else    throw new RuntimeException("Unknown tippModus type " + entity.getClass());
 

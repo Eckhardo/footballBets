@@ -10,7 +10,7 @@ import sportbets.web.dto.tipps.TippModusTotoDto;
 import java.util.List;
 import java.util.Optional;
 
-@Service
+
 public interface TippModusService {
 
 

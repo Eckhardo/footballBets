@@ -2,10 +2,12 @@ package sportbets.web.dto;
 
 import org.modelmapper.*;
 import org.springframework.stereotype.Component;
+import sportbets.persistence.entity.tipps.TippConfig;
 import sportbets.persistence.entity.tipps.enums.TippModusType;
 import sportbets.persistence.entity.tipps.TippModusPoint;
 import sportbets.persistence.entity.tipps.TippModusResult;
 import sportbets.persistence.entity.tipps.TippModusToto;
+import sportbets.web.dto.tipps.TippConfigDto;
 import sportbets.web.dto.tipps.TippModusPointDto;
 import sportbets.web.dto.tipps.TippModusResultDto;
 import sportbets.web.dto.tipps.TippModusTotoDto;
@@ -66,6 +68,26 @@ public class MapperUtilTipps {
                 // to the 'parentId' field in the destination
                 map(source.getCommunity().getId()).setCommId(null);
                 map(source.getCommunity().getName()).setCommName(null);
+
+            }
+        });
+
+        return modelMapper;
+    }
+
+    public ModelMapper modelMapperForTippConfig() {
+
+
+        // Define the custom mapping for ChildEntity -> ChildDTO
+        modelMapper.addMappings(new PropertyMap<TippConfig, TippConfigDto>() {
+            @Override
+            protected void configure() {
+                // Map the 'id' of the 'parent' object in the source
+                // to the 'parentId' field in the destination
+                map(source.getCompetitionMembership().getId()).setCompMembId(null);
+                map(source.getSpieltag().getId()).setSpieltagId(null);
+                map(source.getSpieltag().getSpieltagNumber()).setSpieltagNumber(1);
+                map(source.getTippModus().getId()).setTippModusId(null);
 
             }
         });

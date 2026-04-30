@@ -1,12 +1,12 @@
 package sportbets.persistence.rowObject;
 
-public class CompRecord {
+public class CompRow {
 
     private final String name;
     private final String description;
     private final Long familyId;
 
-    public CompRecord(String name, String description, Long familyId) {
+    public CompRow(String name, String description, Long familyId) {
         this.name = name;
         this.description = description;
         this.familyId = familyId;
@@ -26,7 +26,7 @@ public class CompRecord {
 
     @Override
     public String toString() {
-        return "CompRecord{" +
+        return "CompRow{" +
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", familyId=" + familyId +

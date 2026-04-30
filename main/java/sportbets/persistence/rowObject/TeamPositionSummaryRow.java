@@ -5,32 +5,32 @@ import java.util.Comparator;
 
 public class TeamPositionSummaryRow implements Serializable, Comparable<TeamPositionSummaryRow> {
 
-    private String teamName;
+    private final String teamName;
 
-    private String teamNameAcronym;
+    private final String teamNameAcronym;
 
-    private long spieltage;
+    private final long spieltage;
 
-    private long points;
+    private final long points;
 
-    private long heimtore;
+    private final long heimtore;
 
-    private long gasttore;
+    private final long gasttore;
 
-    private long difftore;
+    private final long difftore;
 
-    private long gamesWon;
+    private final long gamesWon;
 
-    private long gamesRemis;
+    private final long gamesRemis;
 
-    private long gamesLost;
+    private final long gamesLost;
 
-    public TeamPositionSummaryRow() {
 
-    }
 
-    public TeamPositionSummaryRow(String name, long spieltage, long points, long heimtore, long gasttore, long difftore, long gamesWon, long gamesRemis, long gamesLost) {
-        this.teamName = name;
+    public TeamPositionSummaryRow(String teamName, String teamNameAcronym, long spieltage, long points, long heimtore, long gasttore, long difftore, long gamesWon, long gamesRemis, long gamesLost) {
+      super();
+        this.teamName = teamName;
+        this.teamNameAcronym = teamNameAcronym;
         this.spieltage = spieltage;
         this.points = points;
         this.heimtore = heimtore;
@@ -39,23 +39,8 @@ public class TeamPositionSummaryRow implements Serializable, Comparable<TeamPosi
         this.gamesWon = gamesWon;
         this.gamesRemis = gamesRemis;
         this.gamesLost = gamesLost;
-
     }
-
-    public TeamPositionSummaryRow(String name, String acro, long spieltage, long polongs, long heimtore, long gasttore, long difftore, long gamesWon, long gamesRemis, long gamesLost) {
-        this.teamName = name;
-        this.teamNameAcronym = acro;
-        this.spieltage = spieltage;
-        this.points = polongs;
-        this.heimtore = heimtore;
-        this.gasttore = gasttore;
-        this.difftore = difftore;
-        this.gamesWon = gamesWon;
-        this.gamesRemis = gamesRemis;
-        this.gamesLost = gamesLost;
-
-    }
-    /**
+/**
      * @param position The position to set.
      */
     /**

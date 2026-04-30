@@ -59,6 +59,22 @@ public class TippConfig {
         return competitionMembership;
     }
 
+    public TippModus getTippModus() {
+        return tippModus;
+    }
+
+    public void setTippModus(TippModus tippModus) {
+        this.tippModus = tippModus;
+    }
+
+    public void setSpieltag(Spieltag spieltag) {
+        this.spieltag = spieltag;
+    }
+
+    public void setCompetitionMembership(CompetitionMembership competitionMembership) {
+        this.competitionMembership = competitionMembership;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
