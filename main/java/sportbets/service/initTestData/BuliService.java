@@ -1,17 +1,13 @@
-package sportbets;
+package sportbets.service.initTestData;
+
 
 import com.github.cliftonlabs.json_simple.JsonArray;
 import com.github.cliftonlabs.json_simple.JsonException;
 import com.github.cliftonlabs.json_simple.JsonObject;
 import com.github.cliftonlabs.json_simple.Jsoner;
-import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sportbets.common.DateUtil;
@@ -43,22 +39,10 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 
-@SpringBootApplication
+@Service
+public class BuliService {
 
-public class FootballBetsApplication {
-
-    private static final Logger log = LoggerFactory.getLogger(FootballBetsApplication.class);
-
-    public static void main(String[] args) {
-
-        SpringApplication.run(FootballBetsApplication.class, args);
-    }
-
-    @Bean
-    public ModelMapper getModelMapper() {
-        return new ModelMapper();
-    }
-
+    private static final Logger log = LoggerFactory.getLogger(BuliService.class);
     @Autowired
     private CompetitionFamilyRepository familyRepo;
     @Autowired
@@ -99,20 +83,8 @@ public class FootballBetsApplication {
     @Autowired
     TippConfigRepository tippConfigRepository;
 
-    @Bean
-
-    public CommandLineRunner run() {
-        return runner -> {
-
-          //  execute();
-
-
-            log.info("Start successful");
-        };
-    }
-
-
-    private void execute() {
+    @Transactional
+    public void execute() {
         CompetitionFamily fam = familyRepo.save(CompFamilyConstants.BUNDESLIGA);
         Competition comp = compRepo.save(CompetitionConstants.getBundesliga2025(fam));
         CompetitionRole competitionRole = new CompetitionRole(comp.getName(), comp.getDescription(), comp);
@@ -160,7 +132,7 @@ public class FootballBetsApplication {
         CompetitionRound rueckRunde = compRoundRepo.save(CompRoundConstants.getRueckrunde(comp));
         comp.addCompetitionRound(hinRunde);
         comp.addCompetitionRound(rueckRunde);
-
+        log.debug("save comTeams");
         saveCompTeams(comp);
 
 
@@ -177,33 +149,38 @@ public class FootballBetsApplication {
             }
         }
 
-        List<Spieltag> spieltagHin =  spieltagRepo.saveAll(SpieltagConstants.getSpieltageHinrunde(hinRunde, hinDates));
-        List<Spieltag> spieltagRueck =  spieltagRepo.saveAll(SpieltagConstants.getSpieltageRueckrunde(rueckRunde, rueckDates));
+        List<Spieltag> spieltagHin = spieltagRepo.saveAll(SpieltagConstants.getSpieltageHinrunde(hinRunde, hinDates));
+        List<Spieltag> spieltagRueck = spieltagRepo.saveAll(SpieltagConstants.getSpieltageRueckrunde(rueckRunde, rueckDates));
 
         for (Spieltag spTagHin : spieltagHin) {
-            log.debug("xxxxxxxxxxx");
-            Spieltag mySp= spieltagRepo.findByNumberWithRoundId(spTagHin.getSpieltagNumber(),hinRunde.getId()).orElseThrow();
+            Spieltag mySp = spieltagRepo.findByNumberWithRoundId(spTagHin.getSpieltagNumber(), hinRunde.getId()).orElseThrow();
             TippConfig tippConfig = new TippConfig(mySp, compMemb, buliModus);
-            log.debug("#################");
             tippConfigRepository.save(tippConfig);
 
 
         }
         for (Spieltag sptagRueck : spieltagRueck) {
-            log.debug("xxxxxxxxxxx");
-            Spieltag mySp= spieltagRepo.findByNumberWithRoundId(sptagRueck.getSpieltagNumber(),rueckRunde.getId()).orElseThrow();
+            Spieltag mySp = spieltagRepo.findByNumberWithRoundId(sptagRueck.getSpieltagNumber(), rueckRunde.getId()).orElseThrow();
             TippConfig tippConfig = new TippConfig(mySp, compMemb, buliModus2);
-            log.debug("#################");
             tippConfigRepository.save(tippConfig);
 
 
         }
         log.debug("save spiele:");
         List<Spiel> savedSpiele = retrieveSpiele();
-        log.info("add spielformula ::" + savedSpiele.size());
+        log.debug("add spielformula ::" + savedSpiele.size());
     }
-
     private void saveCompTeams(Competition comp) {
+
+        List<Team> teams=TeamConstants.getBuliTeams();
+        for (Team team : teams) {
+            CompetitionTeam ct=new CompetitionTeam(team, comp);
+            comp.addCompetitionTeam(ct);
+            teamRepository.saveAndFlush(team);
+        }
+
+    }
+    private void saveCompTeamsOLD(Competition comp) {
         Team bay = TeamConstants.BAY;
         Team hsv = TeamConstants.HSV;
         Team pauli = TeamConstants.PAULI;
@@ -419,7 +396,7 @@ public class FootballBetsApplication {
                         false, spiel.getGastTore(), spiel
                         .getHeimTore(), gastPoints);
 
-                spiele.add(spiel);
+              //  spiele.add(spiel);
 
 
                 if (i % 9 == 0) {

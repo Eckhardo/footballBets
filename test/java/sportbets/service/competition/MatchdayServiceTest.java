@@ -33,7 +33,7 @@ public class MatchdayServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(MatchdayServiceTest.class);
     private static final String TEST_COMP_ROUND = "Saison 2025: Hinrunde";
-    private static final int TEST_MATCH_DAY = 1;
+    private static final int TEST_MATCH_DAY = 5;
     final CompetitionFamilyDto competitionFamily = TestConstants.TEST_FAMILY;
     Competition savedComp = null;
     CompetitionRound savedCompRound = null;

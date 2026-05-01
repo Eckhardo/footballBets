@@ -22,7 +22,9 @@ public class TippConfig {
     @NotNull
     TippModus tippModus;
 
-    @OneToOne(mappedBy = "tippConfig")
+    // Owning Side:
+    @OneToOne(cascade = CascadeType.MERGE,  fetch = FetchType.EAGER)
+    @JoinColumn(name = "fk_spieltag_id")
     private Spieltag spieltag;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -38,6 +40,9 @@ public class TippConfig {
         this.spieltag = spieltag;
         this.competitionMembership = competitionMembership;
         this.tippModus = tippModus;
+        spieltag.setTippConfig(this);
+        competitionMembership.addTippConfig(this);
+        tippModus.addTippConfig(this);
     }
 
     public Long getId() {
@@ -75,12 +80,21 @@ public class TippConfig {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        TippConfig that = (TippConfig) o;
-        return Objects.equals(id, that.id) && Objects.equals(createdOn, that.createdOn);
+        TippConfig config = (TippConfig) o;
+        return Objects.equals(createdOn, config.createdOn) && Objects.equals(spieltag.getSpieltagNumber(), config.spieltag.getSpieltagNumber());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, createdOn);
+        return Objects.hash(createdOn, spieltag.getSpieltagNumber());
+    }
+
+    @Override
+    public String toString() {
+        return "TippConfig{" +
+                "createdOn=" + createdOn +
+                ", spieltagNumber=" + spieltag.getSpieltagNumber() +
+                ", competition=" + competitionMembership.getCompetition().getName() +
+                '}';
     }
 }

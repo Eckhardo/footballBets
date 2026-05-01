@@ -43,9 +43,8 @@ public class Spieltag {
     private final Set<Spiel> spiele = new HashSet<>();
 
 
-    // Owning Side:
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "tipp_config_id")
+
+    @OneToOne(mappedBy = "spieltag")
     private TippConfig tippConfig;
 
     public Spieltag() {

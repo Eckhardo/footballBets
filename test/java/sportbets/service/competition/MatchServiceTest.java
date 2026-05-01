@@ -22,7 +22,6 @@ import static sportbets.testdata.TestConstants.COMP_TEST;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ActiveProfiles("test")
-
 public class MatchServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(MatchServiceTest.class);

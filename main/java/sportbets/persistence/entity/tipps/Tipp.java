@@ -2,6 +2,7 @@ package sportbets.persistence.entity.tipps;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import sportbets.persistence.entity.community.CommunityMembership;
 import sportbets.persistence.entity.competition.Spiel;
 
 import java.time.LocalDateTime;
@@ -21,6 +22,19 @@ public class Tipp {
     @NotNull
     public Spiel spiel;
 
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fk_commMemb_id", foreignKey = @ForeignKey(name = "FK_TIPP_TO_COMP_MEMB"))
+    @NotNull
+    private CommunityMembership communityMembership;
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fk_tippModus_id", foreignKey = @ForeignKey(name = "FK_TIPP_TO_TIPPMODUS"))
+    @NotNull
+    private TippModus tippModus;
+
+
     @Column(nullable = false)
     private final LocalDateTime createdOn = LocalDateTime.now();
 
@@ -38,9 +52,18 @@ public class Tipp {
     public Tipp() {
     }
 
-    public Tipp(Spiel spiel, Integer heimTipp, Integer remisTipp, Integer gastTipp, Integer winPoints) {
+    public Tipp(Spiel spiel, CommunityMembership commMemb, TippModus tippModus) {
         this.spiel = spiel;
         spiel.addTipp(this);
+        this.communityMembership = commMemb;
+        communityMembership.addTipp(this);
+        this.tippModus = tippModus;
+        tippModus.addTipp(this);
+
+    }
+
+    public Tipp(Spiel spiel, CommunityMembership commMemb, TippModus tippModus, Integer heimTipp, Integer remisTipp, Integer gastTipp, Integer winPoints) {
+        this(spiel, commMemb, tippModus);
         this.heimTipp = heimTipp;
         this.remisTipp = remisTipp;
         this.gastTipp = gastTipp;

@@ -36,6 +36,10 @@ public abstract class TippModus {
     @NotNull
     private Community community;
 
+
+    @OneToMany(mappedBy = "tippModus", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    Set<Tipp> tipps = new HashSet<>();
+
     @OneToMany(mappedBy = "tippModus", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<TippConfig> tippConfigs = new HashSet();
 
@@ -123,6 +127,13 @@ public abstract class TippModus {
         this.community = community;
     }
 
+    public Set<Tipp> getTipps() {
+        return tipps;
+    }
+
+    public void addTipp(Tipp tipp) {
+        this.tipps.add(tipp);
+    }
     public Set<TippConfig> getTippConfigs() {
         return tippConfigs;
     }

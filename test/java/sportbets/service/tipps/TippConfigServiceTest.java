@@ -52,7 +52,7 @@ public class TippConfigServiceTest {
     private static CompService compService; // Real service being tested
     private static CompRoundService compRoundService;
     private static SpieltagService spieltagService;
-    private static TeamService teamService;
+
     private static CommunityService communityService;
     private static TippModusService tippModusService;
     private static CompetitionMembershipService membershipService;
@@ -65,14 +65,14 @@ public class TippConfigServiceTest {
     @Autowired
     public void setRepos(CompFamilyService familyService, CompService compService,
                          CompRoundService compRoundService, SpieltagService spieltagService,
-                         TeamService teamService, CommunityService communityService,
+                         CommunityService communityService,
                          CompetitionMembershipService membershipService,
                          TippModusService tippModusService) {
         TippConfigServiceTest.familyService = familyService;
         TippConfigServiceTest.compService = compService;
         TippConfigServiceTest.compRoundService = compRoundService;
         TippConfigServiceTest.spieltagService = spieltagService;
-        TippConfigServiceTest.teamService = teamService;
+
         TippConfigServiceTest.communityService = communityService;
         TippConfigServiceTest.membershipService = membershipService;
         TippConfigServiceTest.tippModusService = tippModusService;
@@ -89,7 +89,7 @@ public class TippConfigServiceTest {
         CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, "TEST_COMP_ROUND", false, null, compDto.getName(), 18, 17, 1);
         compRoundDto.setCompId(savedComp.getId());
         savedCompRound = compRoundService.save(compRoundDto);
-        SpieltagDto matchDayDto = new SpieltagDto(null, 1, LocalDateTime.now(), savedCompRound.getId(), savedCompRound.getName());
+        SpieltagDto matchDayDto = new SpieltagDto(null, 66, LocalDateTime.now(), savedCompRound.getId(), savedCompRound.getName());
         savedMatchday = spieltagService.save(matchDayDto);
         CommunityDto commDto = new CommunityDto(null, COMM_TEST, "Description of Community");
         Community savedComm = communityService.save(commDto);
@@ -98,16 +98,13 @@ public class TippConfigServiceTest {
         TippModusTotoDto tippModusTotoDto = new TippModusTotoDto(null, "TotoTest", TippModusType.TIPPMODUS_TOTO.getDisplayName(), 1, savedComm.getId(), savedComm.getName());
         savedTippModus = (TippModusTotoDto) tippModusService.save(tippModusTotoDto);
 
-
     }
 
     @AfterAll
     static void tearDownOnce() {
         log.debug("tearDownOnce");
-        familyService.deleteByName(competitionFamily.getName());
-        teamService.deleteByName(TestConstants.TEAM_1.getName());
-        teamService.deleteByName(TestConstants.TEAM_2.getName());
-        communityService.deleteByName(communityDto.getName());
+       familyService.deleteByName(competitionFamily.getName());
+       communityService.deleteByName(communityDto.getName());
     }
 
     @Test
@@ -164,5 +161,18 @@ public class TippConfigServiceTest {
         Set<TippConfig> tmConfigs = modus.getTippConfigs();
         TippConfig tmConfig = tmConfigs.stream().findFirst().orElseThrow();
         assertEquals(savedTippConfig.getId(), tmConfig.getId());
+    }
+
+    @Test
+    @Order(4)
+    public void ifTippConfigIsSaved_ThenRetrievalByParentIdsSucceeds() {
+        log.debug("ifTippConfigIsSaved_ThenRetrievalByParentIdsSucceeds");
+        TippConfigDto tippConfigDto = new TippConfigDto(null, savedCompMemb.getId(), savedMatchday.getId(), savedMatchday.getSpieltagNumber(), savedTippModus.getId());
+
+        TippConfigDto savedTippConfig = tippConfigService.save(tippConfigDto);
+        assertNotNull(savedTippConfig.getId());
+        TippConfigDto retrievedByParents= tippConfigService.findByParents(savedCompMemb.getId(),savedTippModus.getId(),savedMatchday.getId()).orElseThrow();
+        assertNotNull(retrievedByParents);
+        assertEquals(savedTippConfig.getId(), retrievedByParents.getId());
     }
 }

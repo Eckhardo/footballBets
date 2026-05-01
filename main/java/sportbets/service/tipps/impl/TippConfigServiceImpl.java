@@ -6,6 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.competition.CompetitionMembership;
 import sportbets.persistence.entity.competition.Spieltag;
 import sportbets.persistence.entity.tipps.TippConfig;
@@ -33,7 +34,7 @@ public class TippConfigServiceImpl implements TippConfigService {
     private final SpieltagRepository spieltagRepo;
     private final TippModusRepository tippModusRepo;
 
-    public TippConfigServiceImpl(TippConfigRepository tippConfigRepo,  MapperUtilTipps mapperUtilTipp, CompetitionMembershipRepository compMembRepo, SpieltagRepository spieltagRepo, TippModusRepository tippModusRepo) {
+    public TippConfigServiceImpl(TippConfigRepository tippConfigRepo, MapperUtilTipps mapperUtilTipp, CompetitionMembershipRepository compMembRepo, SpieltagRepository spieltagRepo, TippModusRepository tippModusRepo) {
         this.tippConfigRepo = tippConfigRepo;
         this.mapperUtilTipp = mapperUtilTipp;
         this.compMembRepo = compMembRepo;
@@ -50,6 +51,7 @@ public class TippConfigServiceImpl implements TippConfigService {
 
 
     @Override
+    @Transactional
     public TippConfigDto save(TippConfigDto dto) {
         log.debug("save dto: {}", dto);
 
@@ -65,17 +67,28 @@ public class TippConfigServiceImpl implements TippConfigService {
 
         log.debug("parents retrievable: {}", dto);
         TippConfig toSave = new TippConfig(spieltag, compMemb, tippModus);
-        spieltag.setTippConfig(toSave);
+//        spieltag.setTippConfig(toSave);
+//        compMemb.addTippConfig(toSave);
+//        tippModus.addTippConfig(toSave);
+
 
         log.debug("before persist: {}", toSave);
         TippConfig saved = tippConfigRepo.save(toSave);
+        spieltagRepo.save(spieltag);
         log.debug("after persist: {}", toSave);
         return convertToDto(saved);
 
     }
 
+    @Override
+    public Optional<TippConfigDto> findByParents(Long compMembId,  Long tippModusId, Long spieltagId) {
+        TippConfig entity = tippConfigRepo.findByParents(compMembId, tippModusId, spieltagId).orElseThrow(()-> new EntityNotFoundException("tipp config not found"));
+        return Optional.of(convertToDto(entity));
+
+    }
 
     @Override
+    @Transactional
     public void deleteById(Long id) {
         tippConfigRepo.deleteById(id);
     }
@@ -100,4 +113,6 @@ public class TippConfigServiceImpl implements TippConfigService {
         ModelMapper myMapper = mapperUtilTipp.modelMapperForTippConfig();
         return myMapper.map(entity, TippConfigDto.class);
     }
+
+
 }

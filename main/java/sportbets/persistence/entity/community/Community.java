@@ -46,13 +46,6 @@ public class Community {
         this.description = description;
     }
 
-    public Community(String name, String description, Set<CommunityRole> communityRoles, Set<CompetitionMembership> competitionMemberships) {
-        this(name, description);
-        this.description = description;
-        this.communityRoles = communityRoles;
-        this.competitionMemberships = competitionMemberships;
-    }
-
     public Long getId() {
         return id;
     }

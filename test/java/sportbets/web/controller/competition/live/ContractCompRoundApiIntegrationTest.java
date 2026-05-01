@@ -39,7 +39,7 @@ public class ContractCompRoundApiIntegrationTest {
     private static final String TEST_COMP = TestConstants.COMP_TEST;
     private static final String TEST_COMP_ROUND = "Saison 2025: Hinrunde";
     private static final String TEST_COMP_ROUND_2 = "Saison 2025: Rueckrunde";
-    private static final int TEST_MATCH_DAY = 1;
+    private static final int TEST_MATCH_DAY = 12;
     final CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, TEST_COMP_FAM, "Description of TestLiga", true, true,  Country.GERMANY);
     final CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, null, TEST_COMP_FAM);
     final CompetitionRoundDto compRoundDto =  new CompetitionRoundDto(null, 1, TEST_COMP_ROUND, false, compDto.getId(), compDto.getName(), 18, 17, 1);
@@ -55,7 +55,7 @@ public class ContractCompRoundApiIntegrationTest {
 
     @AfterEach
     public void cleanup() {
-        // Clean up all books created during tests
+        // Clean up all entities created during tests
         log.debug("cleanup");
 
         CompetitionFamily fam = competitionFamilyRepository.findByName(TEST_COMP_FAM).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_FAM));

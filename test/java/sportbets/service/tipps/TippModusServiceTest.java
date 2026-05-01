@@ -126,6 +126,7 @@ public class TippModusServiceTest {
         assertNotNull(dtoResult.getId());
         assertEquals(tippModusResultDto.getDeadline(), dtoResult.getDeadline());
 
+        // prepare for update
         TippModusResultDto resultDto = (TippModusResultDto) tippModusResultDto;
         assertEquals(resultDto.getBonusPoints(), dtoResult.getBonusPoints());
         assertEquals(resultDto.getTendencyPoints(), dtoResult.getTendencyPoints());
@@ -144,9 +145,6 @@ public class TippModusServiceTest {
         TippModusTotoDto tippModusTotoDto = new TippModusTotoDto(null, "TotoTest", TippModusType.TIPPMODUS_TOTO.getDisplayName(), 1, savedCommunity.getId(), savedCommunity.getName());
         TippModusResultDto tippModusResultDto = new TippModusResultDto(null, "ErgebnisTest", TippModusType.TIPPMODUS_RESULT.getDisplayName(), 1, savedCommunity.getId(), savedCommunity.getName(), 3, 1);
         TippModusPointDto tippModusPointDto = new TippModusPointDto(null, "PunkteTest", TippModusType.TIPPMODUS_POINT.getDisplayName(), 1, savedCommunity.getId(), savedCommunity.getName(), 4);
-
-
-
 
         tippModusService.save(tippModusPointDto);
         tippModusService.save(tippModusTotoDto);

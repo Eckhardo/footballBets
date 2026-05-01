@@ -18,7 +18,7 @@ public class TestProfileUnitTest {
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
 
-        dataSource.setUrl("jdbc:mysql://localhost:3306/bulitippertest?createDatabaseIfNotExist=true");
+        dataSource.setUrl("jdbc:mysql://localhost:3306/bulitipper2");
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
 
         dataSource.setUsername("root");

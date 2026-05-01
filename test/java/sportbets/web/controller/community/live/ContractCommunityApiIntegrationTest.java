@@ -37,7 +37,7 @@ public class ContractCommunityApiIntegrationTest {
 
     @AfterEach
     public void cleanup() {
-        // Clean up all books created during tests
+        // Clean up all entities created during tests
         log.debug("cleanup");
         Community savedComm = communityRepository.findByName(TEST_COMM).orElseThrow();
         webClient.delete()

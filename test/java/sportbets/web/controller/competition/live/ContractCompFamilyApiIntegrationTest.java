@@ -38,7 +38,7 @@ public class ContractCompFamilyApiIntegrationTest {
 
     @AfterEach
     public void cleanup() {
-        // Clean up all books created during tests
+        // Clean up all entities created during tests
         log.debug("cleanup");
         CompetitionFamily fam = competitionFamilyRepository.findByName(COMP_FAM).orElseThrow(() -> new EntityNotFoundException(COMP_FAM));
         Long id = fam.getId();

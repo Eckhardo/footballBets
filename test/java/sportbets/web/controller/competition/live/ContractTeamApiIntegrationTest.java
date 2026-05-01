@@ -67,7 +67,7 @@ public class ContractTeamApiIntegrationTest {
 
     @AfterEach
     public void cleanup() {
-        // Clean up all books created during tests
+        // Clean up all entities created during tests
         log.debug("cleanup");
         Team team = teamRepository.findByName(TEAM_NAME).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME));
         Long id = team.getId();

@@ -50,6 +50,11 @@ public class TippModusServiceImpl implements TippModusService {
         return Optional.of(convertToDto(entity));
     }
 
+    @Override
+    public Optional<TippModusDto> findByNameAndCommunity(String name, Long commId) {
+        TippModus entity = repo.findByNameAndCommunity(name,commId).orElseThrow(() -> new EntityNotFoundException("TippModus not found"));
+        return Optional.of(convertToDto(entity));
+    }
 
     @Override
     public TippModusDto save(TippModusDto dto) {

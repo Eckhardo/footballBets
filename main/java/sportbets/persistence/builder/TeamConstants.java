@@ -2,7 +2,39 @@ package sportbets.persistence.builder;
 
 import sportbets.persistence.entity.competition.Team;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 public class TeamConstants {
+
+
+    public static List<Team> getBuliTeams(){
+
+      List<Team> teams=new ArrayList<>();
+        teams.add(BAY);
+        teams.add(HSV);
+        teams.add(PAULI);
+        teams.add(FRANKFURT);
+        teams.add(BVB);
+        teams.add(WERDER);
+        teams.add(WOLFSBURG);
+        teams.add(KOELN);
+        teams.add(LEVERKUSEN);
+        teams.add(FREIBURG);
+        teams.add(HOFFENHEIM);
+        teams.add(HEIDENHEIM);
+        teams.add(UNION);
+        teams.add(GLADBACH);
+        teams.add(MAINZ);
+        teams.add(LEIPZIG);
+        teams.add(AUGSBURG);
+        teams.add(STUTTGART);
+        return teams;
+
+
+    }
 
 
     public static Team BAY = new Team("FC Bayern München", "Bayern", true );

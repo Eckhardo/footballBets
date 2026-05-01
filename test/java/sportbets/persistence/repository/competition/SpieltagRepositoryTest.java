@@ -55,7 +55,7 @@ public class SpieltagRepositoryTest {
         testRound.addSpieltag(testSpieltag);
         testRound.addSpieltag(testSpieltag2);
         System.out.println("Save all cascade");
-        familyRepo.save(testFamily);
+        CompetitionFamily savedFam=  familyRepo.save(testFamily);
         //  competitionDAO.save(testComp);
     }
 
