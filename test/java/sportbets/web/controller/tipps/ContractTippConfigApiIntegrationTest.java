@@ -68,7 +68,7 @@ public class ContractTippConfigApiIntegrationTest {
     private static final String TEST_COMP_FAM = TestConstants.COMP_FAM_TEST;
     private static final String TEST_COMP = TestConstants.COMP_TEST;
     private static final String TEST_COMP_ROUND = TestConstants.TEST_COMP_ROUND.getName();
-    private static final int TEST_MATCH_DAY = 7;
+    private static final int TEST_MATCH_DAY = 1;
 
 
     private static final String TEST_COMM = TestConstants.COMM_TEST;

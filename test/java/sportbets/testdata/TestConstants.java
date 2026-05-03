@@ -16,6 +16,11 @@ public class TestConstants {
     public static final String COMP_FAM_TEST = "TEST Liga";
     public static final String COMP_TEST = "TEST Liga Saison 2026";
     public static final  String COMP_TEST_2 = "TEST Liga Saison 2027";
+    public  static final  String COMP_ROUND_TEST= "Test Comp Round";
+    public static final  String TEAM_NAME_TEST1 = "TestName";
+
+    public static final  String TEAM_NAME_TEST2 = "TestName2";
+    public static final  String TEAM_NAME_TEST3 = "TestName3";
 
     public static final  CompetitionFamily BUNDESLIGA = new CompetitionFamily(COMP_FAM_TEST, "1. Deutsche Fussball Bundesliga", true, true, Country.GERMANY);
     public static final CompetitionFamily FIFA_WM = new CompetitionFamily(COMP_TEST, "Fussball Weltmeisterschaft", false, false, Country.GERMANY);
@@ -29,10 +34,10 @@ public class TestConstants {
     public static final CommunityDto TEST_COMMUNITY = new CommunityDto(null, COMM_TEST, "Description of Community");
     public static final CommunityDto TEST_COMMUNITY_2 = new CommunityDto(null, COMM_TEST_2, "Description of Community 2");
 
-    public static final TeamDto TEAM_DTO_1 = new TeamDto(null,"Zacel", "ZAC", true);
-    public static final TeamDto TEAM_DTO_2 = new TeamDto(null,"Razel", "RAZ", true);
+    public static final TeamDto TEAM_DTO_1 = new TeamDto(null, TEAM_NAME_TEST1, "ZAC", true);
+    public static final TeamDto TEAM_DTO_2 = new TeamDto(null,TEAM_NAME_TEST2, "RAZ", true);
 
-    public static final  Team TEAM_1 = new Team("Zacel", "ZAC", true);
-    public static final Team TEAM_2 = new Team("Razel", "RAZ", true);
+    public static final  Team TEAM_1 = new Team(TEAM_NAME_TEST1, "ZAC", true);
+    public static final Team TEAM_2 = new Team(TEAM_NAME_TEST2, "RAZ", true);
 
 }

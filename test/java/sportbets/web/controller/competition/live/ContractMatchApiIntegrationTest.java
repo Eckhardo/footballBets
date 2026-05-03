@@ -11,9 +11,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import sportbets.FootballBetsApplication;
-import sportbets.persistence.entity.competition.enums.Country;
 import sportbets.config.TestProfileLiveTest;
 import sportbets.persistence.entity.competition.*;
+import sportbets.persistence.entity.competition.enums.Country;
 import sportbets.persistence.repository.competition.*;
 import sportbets.web.dto.competition.*;
 import sportbets.web.dto.competition.batch.MatchBatchRecord;
@@ -22,6 +22,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static sportbets.testdata.TestConstants.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         classes = {FootballBetsApplication.class, TestProfileLiveTest.class})
@@ -31,15 +32,15 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class ContractMatchApiIntegrationTest {
 
     private static final Logger log = LoggerFactory.getLogger(ContractMatchApiIntegrationTest.class);
-    private static final String TEST_COMP_FAM = "TestLiga";
-    private static final String TEST_COMP = "TestLiga: Saison 2025";
-    private static final String TEST_COMP_ROUND = "Saison 2025: Hinrunde";
+    private static final String TEST_COMP_FAM = COMP_FAM_TEST;
+    private static final String TEST_COMP = COMP_TEST;
+    private static final String TEST_COMP_ROUND = COMP_ROUND_TEST;
 
 
-    private static final int TEST_MATCH_DAY = 23;
-    private static final String TEAM_NAME = "Eintracht ";
-    private static final String TEAM_NAME_2 = "Holstein";
-    private static final String TEAM_NAME_3 = "Preussen";
+    private static final int TEST_MATCH_DAY = 1;
+    private static final String TEAM_NAME = TEAM_NAME_TEST1;
+    private static final String TEAM_NAME_2 = TEAM_NAME_TEST2;
+    private static final String TEAM_NAME_3 = TEAM_NAME_TEST3;
     final CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, TEST_COMP_FAM, "Description of TestLiga", true, true, Country.GERMANY);
     final CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, null, TEST_COMP_FAM);
     final CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, TEST_COMP_ROUND, false, compDto.getId(), compDto.getName(), 18, 1, 1);
@@ -276,7 +277,7 @@ public class ContractMatchApiIntegrationTest {
         log.debug("compRound {}", compRoundDto);
         Spieltag spieltag = spieltagRepository.findByNumberWithRoundId(TEST_MATCH_DAY, round.getId()).orElseThrow(() -> new EntityNotFoundException(String.valueOf(TEST_MATCH_DAY)));
         assertNotNull(spieltag);
-
+        log.debug("spieltag {}", spieltag);
         List<Spiel> spiele = spielRepository.findAllForMatchday(spieltag.getId());
         assertNotNull(spiele);
         for (Spiel spiel : spiele) {

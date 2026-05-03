@@ -68,6 +68,8 @@ public class SpielServiceImpl implements SpielService {
         if(matchdaysSize!= numberOfAllowedMatchdays){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Number of allowed matchdays is not eqaul to number of existing matchdays ");
         }
+        log.debug("firstMatchday :: {}", firstMatchday);
+
         log.debug("matchdaysSize :: {}", matchdaysSize);
         Team heimTeam = teamRepo.findById(matchBatchRecord.heimTeamId()).orElseThrow(() -> new EntityNotFoundException("Team heim not found"));
         Team gastTeam = teamRepo.findById(matchBatchRecord.gastTeamId()).orElseThrow(() -> new EntityNotFoundException("Team gast not found"));

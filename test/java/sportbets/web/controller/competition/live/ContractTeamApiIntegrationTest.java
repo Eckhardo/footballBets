@@ -20,6 +20,8 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static sportbets.testdata.TestConstants.TEAM_NAME_TEST1;
+import static sportbets.testdata.TestConstants.TEAM_NAME_TEST2;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         classes = {FootballBetsApplication.class, TestProfileLiveTest.class})
@@ -28,8 +30,8 @@ import static org.hamcrest.CoreMatchers.equalTo;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ContractTeamApiIntegrationTest {
     private static final Logger log = LoggerFactory.getLogger(ContractTeamApiIntegrationTest.class);
-    private static final String TEAM_NAME = "TestTeam 1";
-    private static final String TEAM_NAME_2 = "TestTeam 2";
+    private static final String TEAM_NAME = TEAM_NAME_TEST1;
+    private static final String TEAM_NAME_2 = TEAM_NAME_TEST2;
     final TeamDto teamDto = new TeamDto(null, TEAM_NAME, "Team 1",true);
     final TeamDto teamDto1 = new TeamDto(null, TEAM_NAME_2, "Team 2",true);
     final TeamDto FRANCE = new TeamDto(null, "TestCountry", "TEST",false);
