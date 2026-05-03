@@ -23,6 +23,7 @@ public class CompetitionRole extends Role {
                            Competition competition) {
         super(name, description);
         this.competition = competition;
+        competition.addCompetitionRole(this);
     }
 
     public Competition getCompetition() {

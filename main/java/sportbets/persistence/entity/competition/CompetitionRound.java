@@ -50,6 +50,7 @@ public class CompetitionRound {
         this.teamsSize=teamsSize;
         this.matchdaysSize=matchdaysSize;
         this.firstMatchday=firstMatchday;
+        competition.addCompetitionRound(this);
 
     }
 //-------- Getter & Setter-------------------

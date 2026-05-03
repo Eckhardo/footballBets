@@ -30,6 +30,7 @@ public class TipperRole {
     public TipperRole(Role role, Tipper tipper) {
         this.role = role;
         this.tipper = tipper;
+        tipper.addTipperRole(this);
     }
 
     public Long getId() {

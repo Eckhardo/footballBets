@@ -39,6 +39,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import static sportbets.persistence.builder.CompetitionConstants.BUNDESLIGA_NAME_2025;
+
 @Service
 public class BuliService {
 
@@ -83,57 +85,40 @@ public class BuliService {
     @Autowired
     TippConfigRepository tippConfigRepository;
 
+
+    Competition savedComp = null;
+
+    CompetitionRound savedHinrunde = null;
+    CompetitionRound savedRückrunde = null;
+    Community savedCommunity =null;
     @Transactional
     public void execute() {
         CompetitionFamily fam = familyRepo.save(CompFamilyConstants.BUNDESLIGA);
-        Competition comp = compRepo.save(CompetitionConstants.getBundesliga2025(fam));
-        CompetitionRole competitionRole = new CompetitionRole(comp.getName(), comp.getDescription(), comp);
-        fam.addCompetition(comp);
-        comp.addCompetitionRole(competitionRole);
-        Role savedCompetitionRole = roleRepo.save(competitionRole);
+        savedComp = compRepo.save(new Competition(BUNDESLIGA_NAME_2025, "1. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, fam));
 
+        savedHinrunde = compRoundRepo.save(new CompetitionRound(1, "Hinrunde", savedComp, false, 18, 17, 1));
+        savedRückrunde = compRoundRepo.save(new CompetitionRound(2, "Rueckrunde", savedComp, false, 18, 17, 18));
 
-        Tipper ebi = TipperConstants.ECKHARD;
-        ebi.setDefaultCompetitionId(comp.getId());
-        tipperRepo.save(ebi);
-        TipperRole tipperCompRole = new TipperRole(savedCompetitionRole, ebi);
-        ebi.addTipperRole(tipperCompRole);
-        tipperRoleRepo.save(tipperCompRole);
-        Community community = new Community("Bulitipper", "Die Dinos des Tippens");
-        CommunityRole communityRole = new CommunityRole(community.getName(), community.getDescription(), community);
-        community.addCommunityRole(communityRole);
-        TippModus buliModus = new TippModusPoint("PunkteTipp",
-                TippModusType.TIPPMODUS_POINT, 2, community,
-                4);
-
-        TippModus buliModus2 = new TippModusToto("TotoTipp", TippModusType.TIPPMODUS_TOTO,
-                2, community);
-        Community savedCommunity = commRepo.save(community);
-        ebi.setDefaultCommunityId(savedCommunity.getId());
-        tipperRepo.save(ebi);
-        Role savedCommmunityRole = roleRepo.save(communityRole);
-        TipperRole tipperCommRole = new TipperRole(savedCommmunityRole, ebi);
-        tipperRoleRepo.save(tipperCommRole);
-
-        CompetitionMembership compMemb = new CompetitionMembership(savedCommunity, comp);
-        comp.addCompetitionMembership(compMemb);
-        savedCommunity.addCompetitionMembership(compMemb);
-        compMembRepo.save(compMemb);
-        compRepo.save(comp);
-
-        CommunityMembership commMemb = new CommunityMembership(savedCommunity, ebi);
-        ebi.addCommunityMembership(commMemb);
-        savedCommunity.addCommunityMembership(commMemb);
-        commMembRepo.save(commMemb);
-        commRepo.save(community);
-
-
-        CompetitionRound hinRunde = compRoundRepo.save(CompRoundConstants.getHinrunde(comp));
-        CompetitionRound rueckRunde = compRoundRepo.save(CompRoundConstants.getRueckrunde(comp));
-        comp.addCompetitionRound(hinRunde);
-        comp.addCompetitionRound(rueckRunde);
         log.debug("save comTeams");
-        saveCompTeams(comp);
+        compRepo.save(savedComp);
+
+        Community community = new Community("Bulitipper", "Die Dinos des Tippens");
+
+        savedCommunity = commRepo.save(community);
+        Tipper ebi = TipperConstants.ECKHARD;
+        ebi.setDefaultCompetitionId(savedComp.getId());
+        ebi.setDefaultCommunityId(savedCommunity.getId());
+
+        tipperRepo.save(ebi);
+
+        saveRoles( ebi);
+
+        CompetitionMembership compMemb = new CompetitionMembership(savedCommunity, savedComp);
+        compMembRepo.save(compMemb);
+        CommunityMembership commMemb = new CommunityMembership(savedCommunity, ebi);
+        commMembRepo.save(commMemb);
+
+        saveCompTeams();
 
 
         SortedMap<Integer, LocalDateTime> sortedMap = retrieveSpieltage();
@@ -149,121 +134,56 @@ public class BuliService {
             }
         }
 
-        List<Spieltag> spieltagHin = spieltagRepo.saveAll(SpieltagConstants.getSpieltageHinrunde(hinRunde, hinDates));
-        List<Spieltag> spieltagRueck = spieltagRepo.saveAll(SpieltagConstants.getSpieltageRueckrunde(rueckRunde, rueckDates));
+        List<Spieltag> spieltagHin = spieltagRepo.saveAll(SpieltagConstants.getSpieltageHinrunde(savedHinrunde, hinDates));
+        List<Spieltag> spieltagRueck = spieltagRepo.saveAll(SpieltagConstants.getSpieltageRueckrunde(savedRückrunde, rueckDates));
 
+        TippModus buliModus = new TippModusPoint("PunkteTipp",
+                TippModusType.TIPPMODUS_POINT, 2, community,
+                4);
+
+        TippModus buliModus2 = new TippModusToto("TotoTipp", TippModusType.TIPPMODUS_TOTO,
+                2, community);
         for (Spieltag spTagHin : spieltagHin) {
-            Spieltag mySp = spieltagRepo.findByNumberWithRoundId(spTagHin.getSpieltagNumber(), hinRunde.getId()).orElseThrow();
+            Spieltag mySp = spieltagRepo.findByNumberWithRoundId(spTagHin.getSpieltagNumber(), savedHinrunde.getId()).orElseThrow();
             TippConfig tippConfig = new TippConfig(mySp, compMemb, buliModus);
             tippConfigRepository.save(tippConfig);
 
 
         }
         for (Spieltag sptagRueck : spieltagRueck) {
-            Spieltag mySp = spieltagRepo.findByNumberWithRoundId(sptagRueck.getSpieltagNumber(), rueckRunde.getId()).orElseThrow();
+            Spieltag mySp = spieltagRepo.findByNumberWithRoundId(sptagRueck.getSpieltagNumber(), savedRückrunde.getId()).orElseThrow();
             TippConfig tippConfig = new TippConfig(mySp, compMemb, buliModus2);
             tippConfigRepository.save(tippConfig);
-
-
         }
         log.debug("save spiele:");
         List<Spiel> savedSpiele = retrieveSpiele();
         log.debug("add spielformula ::" + savedSpiele.size());
     }
-    private void saveCompTeams(Competition comp) {
 
-        List<Team> teams=TeamConstants.getBuliTeams();
+    private void saveRoles(  Tipper ebi) {
+        CompetitionRole competitionRole = new CompetitionRole(savedComp.getName(), savedComp.getDescription(), savedComp);
+        CommunityRole communityRole = new CommunityRole(savedCommunity.getName(), savedCommunity.getDescription(), savedCommunity);
+
+        Role savedCompetitionRole = roleRepo.save(competitionRole);
+        Role savedCommmunityRole = roleRepo.save(communityRole);
+        TipperRole tipperCompRole = new TipperRole(savedCompetitionRole, ebi);
+        TipperRole tipperCommRole = new TipperRole(savedCommmunityRole, ebi);
+        tipperRoleRepo.save(tipperCommRole);
+        tipperRoleRepo.save(tipperCompRole);
+    }
+
+
+    private void saveCompTeams() {
+
+        List<Team> teams = TeamConstants.getBuliTeams();
         for (Team team : teams) {
-            CompetitionTeam ct=new CompetitionTeam(team, comp);
-            comp.addCompetitionTeam(ct);
+            CompetitionTeam ct = new CompetitionTeam(team, savedComp);
+            savedComp.addCompetitionTeam(ct);
             teamRepository.saveAndFlush(team);
         }
 
     }
-    private void saveCompTeamsOLD(Competition comp) {
-        Team bay = TeamConstants.BAY;
-        Team hsv = TeamConstants.HSV;
-        Team pauli = TeamConstants.PAULI;
-        Team werder = TeamConstants.WERDER;
-        Team bvb = TeamConstants.BVB;
-        Team koe = TeamConstants.KOELN;
-        Team wob = TeamConstants.WOLFSBURG;
-        Team lev = TeamConstants.LEVERKUSEN;
-        Team vfb = TeamConstants.STUTTGART;
-        Team freiburg = TeamConstants.FREIBURG;
-        Team frankfurt = TeamConstants.FRANKFURT;
-        Team hoffenheim = TeamConstants.HOFFENHEIM;
-        Team augsburg = TeamConstants.AUGSBURG;
-        Team union = TeamConstants.UNION;
-        Team mainz = TeamConstants.MAINZ;
-        Team heidenheim = TeamConstants.HEIDENHEIM;
-        Team leipzig = TeamConstants.LEIPZIG;
-        Team gladbach = TeamConstants.GLADBACH;
 
-        //  testGroup = new CompetitionGroup("Gruppe A", 1, testRound);
-
-        CompetitionTeam ct1 = new CompetitionTeam(bay, comp);
-        bay.addCompetitionTeam(ct1);
-        CompetitionTeam ct2 = new CompetitionTeam(hsv, comp);
-        hsv.addCompetitionTeam(ct2);
-        CompetitionTeam ct3 = new CompetitionTeam(pauli, comp);
-        pauli.addCompetitionTeam(ct3);
-        CompetitionTeam ct4 = new CompetitionTeam(werder, comp);
-        werder.addCompetitionTeam(ct4);
-        CompetitionTeam ct5 = new CompetitionTeam(bvb, comp);
-        bvb.addCompetitionTeam(ct5);
-        CompetitionTeam ct6 = new CompetitionTeam(koe, comp);
-        koe.addCompetitionTeam(ct6);
-        CompetitionTeam ct7 = new CompetitionTeam(wob, comp);
-        wob.addCompetitionTeam(ct7);
-        CompetitionTeam ct8 = new CompetitionTeam(lev, comp);
-        lev.addCompetitionTeam(ct8);
-        CompetitionTeam ct9 = new CompetitionTeam(vfb, comp);
-        vfb.addCompetitionTeam(ct9);
-        CompetitionTeam ct10 = new CompetitionTeam(freiburg, comp);
-        freiburg.addCompetitionTeam(ct10);
-        CompetitionTeam ct11 = new CompetitionTeam(frankfurt, comp);
-        frankfurt.addCompetitionTeam(ct11);
-        CompetitionTeam ct12 = new CompetitionTeam(hoffenheim, comp);
-        hoffenheim.addCompetitionTeam(ct12);
-        CompetitionTeam ct13 = new CompetitionTeam(augsburg, comp);
-        augsburg.addCompetitionTeam(ct13);
-        CompetitionTeam ct14 = new CompetitionTeam(union, comp);
-        union.addCompetitionTeam(ct14);
-        CompetitionTeam ct15 = new CompetitionTeam(mainz, comp);
-        mainz.addCompetitionTeam(ct15);
-        CompetitionTeam ct16 = new CompetitionTeam(heidenheim, comp);
-        heidenheim.addCompetitionTeam(ct16);
-        CompetitionTeam ct17 = new CompetitionTeam(leipzig, comp);
-        leipzig.addCompetitionTeam(ct17);
-        CompetitionTeam ct18 = new CompetitionTeam(gladbach, comp);
-        gladbach.addCompetitionTeam(ct18);
-
-        comp.addCompetitionTeam(ct1);
-        comp.addCompetitionTeam(ct2);
-        comp.addCompetitionTeam(ct3);
-        comp.addCompetitionTeam(ct4);
-
-        comp.addCompetitionTeam(ct5);
-        comp.addCompetitionTeam(ct6);
-        comp.addCompetitionTeam(ct7);
-        comp.addCompetitionTeam(ct8);
-
-        comp.addCompetitionTeam(ct9);
-        comp.addCompetitionTeam(ct10);
-        comp.addCompetitionTeam(ct11);
-        comp.addCompetitionTeam(ct12);
-
-        comp.addCompetitionTeam(ct13);
-        comp.addCompetitionTeam(ct14);
-        comp.addCompetitionTeam(ct15);
-        comp.addCompetitionTeam(ct16);
-        comp.addCompetitionTeam(ct17);
-        comp.addCompetitionTeam(ct18);
-
-
-        compTeamRepo.saveAllAndFlush(List.of(ct1, ct2, ct3, ct4, ct5, ct6, ct7, ct8, ct9, ct10, ct11, ct12, ct13, ct14, ct15, ct16, ct17, ct18));
-    }
 
     SortedMap<Integer, LocalDateTime> retrieveSpieltage() {
         String filePath = "src/test/java/sportbets/testdata/bl.json";
@@ -321,7 +241,7 @@ public class BuliService {
 
     List<Spiel> retrieveSpiele() {
         String filePath = "src/test/java/sportbets/testdata/bl.json";
-        Competition comp = compRepo.findByName(CompetitionConstants.BUNDESLIGA_NAME_2025).orElseThrow();
+        Competition comp = compRepo.findByName(BUNDESLIGA_NAME_2025).orElseThrow();
 
         List<Spiel> spiele = new ArrayList<>();
         try (FileReader reader = new FileReader(filePath)) {
@@ -396,7 +316,7 @@ public class BuliService {
                         false, spiel.getGastTore(), spiel
                         .getHeimTore(), gastPoints);
 
-              //  spiele.add(spiel);
+                //  spiele.add(spiel);
 
 
                 if (i % 9 == 0) {

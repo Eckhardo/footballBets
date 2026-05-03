@@ -46,6 +46,8 @@ public class CompetitionMembership {
     public CompetitionMembership(Community community, Competition competition) {
         this.community = community;
         this.competition = competition;
+        competition.addCompetitionMembership(this);
+        community.addCompetitionMembership(this);
     }
 
     public Community getCommunity() {

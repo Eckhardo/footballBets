@@ -64,6 +64,7 @@ public class Competition {
         this.competitionFamily = competitionFamily;
         this.winMultiplicator = winMultiplicator;
         this.remisMultiplicator = remisMultiplicator;
+        competitionFamily.addCompetition(this);
 
     }
 

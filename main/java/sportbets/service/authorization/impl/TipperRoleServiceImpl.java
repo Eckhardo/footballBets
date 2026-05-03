@@ -4,6 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.authorization.Role;
 import sportbets.persistence.entity.authorization.TipperRole;
 import sportbets.persistence.entity.community.Tipper;
@@ -33,6 +34,7 @@ class TipperRoleServiceImpl implements TipperRoleService {
 
 
     @Override
+    @Transactional
     public Optional<TipperRole> save(TipperRoleDto dto) {
         log.debug("\n");
         log.debug("TipperRoleServiceImpl.save {}", dto);

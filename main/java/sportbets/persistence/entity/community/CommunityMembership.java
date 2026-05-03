@@ -38,6 +38,8 @@ public class CommunityMembership {
     public CommunityMembership(Community community, Tipper tipper) {
         this.community = community;
         this.tipper = tipper;
+        tipper.addCommunityMembership(this);
+        community.addCommunityMembership(this);
     }
 
 

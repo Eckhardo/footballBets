@@ -23,6 +23,7 @@ public class CommunityRole extends Role {
     public CommunityRole(String name, String description, Community community) {
         super(name, description);
         this.community = community;
+        community.addCommunityRole(this);
     }
 
 
