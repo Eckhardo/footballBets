@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.authorization.CompetitionRole;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
@@ -25,7 +24,6 @@ import java.util.List;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static sportbets.testdata.TestConstants.COMP_TEST;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ActiveProfiles("test")
@@ -52,7 +50,7 @@ public class CompetitionRoleServiceTest {
     public void setup() {
 
         savedFam = familyService.save(competitionFamily);
-        CompetitionDto compDto = TestConstants.TEST_COMP;
+        CompetitionDto compDto = TestConstants.TEST_COMP_DTO;
         compDto.setFamilyId(savedFam.getId());
         savedComp = compService.save(compDto);
         assertNotNull(savedComp);
@@ -87,7 +85,7 @@ public class CompetitionRoleServiceTest {
         List<CompetitionRole> roles = competitionRoleService.getAllCompRoles();
 
         assertThat(roles).isNotNull();
-        CompetitionRole savedRole = roles.stream().filter((r) -> r.getName().equals(TestConstants.TEST_COMP.getName())).findFirst().get();
+        CompetitionRole savedRole = roles.stream().filter((r) -> r.getName().equals(TestConstants.TEST_COMP_DTO.getName())).findFirst().get();
 
         assertEquals(savedComp.getId(), savedRole.getCompetition().getId());
         assertEquals(savedComp.getName(), savedRole.getCompetition().getName());

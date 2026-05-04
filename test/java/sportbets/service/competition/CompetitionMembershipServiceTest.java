@@ -64,9 +64,9 @@ public class CompetitionMembershipServiceTest {
     public void setup() {
         CompetitionFamily savedFam = familyService.save(testFamily);
 
-        CompetitionDto compDto =TestConstants.TEST_COMP;
+        CompetitionDto compDto =TestConstants.TEST_COMP_DTO;
         compDto.setFamilyId(savedFam.getId());
-        CompetitionDto compDto2 = TestConstants.TEST_COMP_2;
+        CompetitionDto compDto2 = TestConstants.TEST_COMP_DTO_2;
         compDto2.setFamilyId(savedFam.getId());
         savedComp = compService.save(compDto);
         savedComp2 = compService.save(compDto2);

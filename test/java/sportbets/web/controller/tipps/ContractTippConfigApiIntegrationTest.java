@@ -17,7 +17,6 @@ import sportbets.config.TestProfileLiveTest;
 import sportbets.persistence.entity.community.Community;
 import sportbets.persistence.entity.competition.*;
 import sportbets.persistence.entity.competition.enums.Country;
-import sportbets.persistence.entity.tipps.TippConfig;
 import sportbets.persistence.entity.tipps.TippModus;
 import sportbets.persistence.entity.tipps.enums.TippModusType;
 import sportbets.persistence.repository.community.CommunityRepository;
@@ -67,7 +66,7 @@ public class ContractTippConfigApiIntegrationTest {
 
     private static final String TEST_COMP_FAM = TestConstants.COMP_FAM_TEST;
     private static final String TEST_COMP = TestConstants.COMP_TEST;
-    private static final String TEST_COMP_ROUND = TestConstants.TEST_COMP_ROUND.getName();
+    private static final String TEST_COMP_ROUND = TestConstants.TEST_COMP_ROUND_DTO.getName();
     private static final int TEST_MATCH_DAY = 1;
 
 

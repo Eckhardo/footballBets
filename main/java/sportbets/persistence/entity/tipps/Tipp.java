@@ -56,7 +56,7 @@ public class Tipp {
         this.spiel = spiel;
         spiel.addTipp(this);
         this.communityMembership = commMemb;
-        communityMembership.addTipp(this);
+        commMemb.addTipp(this);
         this.tippModus = tippModus;
         tippModus.addTipp(this);
 
@@ -118,7 +118,26 @@ public class Tipp {
         this.winPoints = winPoints;
     }
 
-    // override methods
+    public CommunityMembership getCommunityMembership() {
+        return communityMembership;
+    }
+
+    public void setCommunityMembership(CommunityMembership communityMembership) {
+        this.communityMembership = communityMembership;
+    }
+
+    public TippModus getTippModus() {
+        return tippModus;
+    }
+
+    public void setTippModus(TippModus tippModus) {
+        this.tippModus = tippModus;
+    }
+
+    public LocalDateTime getCreatedOn() {
+        return createdOn;
+    }
+// override methods
 
 
     @Override

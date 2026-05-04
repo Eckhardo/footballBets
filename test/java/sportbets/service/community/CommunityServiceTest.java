@@ -38,13 +38,13 @@ public class CommunityServiceTest {
 
     @AfterEach
     public void tearDown() {
-        communityService.deleteByName(TestConstants.TEST_COMMUNITY.getName());
+        communityService.deleteByName(TestConstants.TEST_COMMUNITY_DTO.getName());
     }
 
     @Test
     @Order(1)
     void whenValidComm_thenCommShouldBeSaved() {
-        CommunityDto communityDto = TestConstants.TEST_COMMUNITY;
+        CommunityDto communityDto = TestConstants.TEST_COMMUNITY_DTO;
 
 
         Community saved = communityService.save(communityDto);
@@ -64,7 +64,7 @@ public class CommunityServiceTest {
     @Test
     @Order(2)
     void whenValidComm_thenCommShouldBeUpdated() {
-        CommunityDto communityDto = TestConstants.TEST_COMMUNITY;
+        CommunityDto communityDto = TestConstants.TEST_COMMUNITY_DTO;
 
         Community saved = communityService.save(communityDto);
 

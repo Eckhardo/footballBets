@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.entity.competition.CompetitionRound;
@@ -27,7 +26,7 @@ public class CompRoundServiceTest {
     private static final Logger log = LoggerFactory.getLogger(CompRoundServiceTest.class);
     final CompetitionFamilyDto competitionFamily = TestConstants.TEST_FAMILY;
     CompetitionDto compDto =  new CompetitionDto(null, COMP_TEST, "Description of Competition", 3, 1, null, competitionFamily.getName());
-    CompetitionRoundDto compRoundDto = TestConstants.TEST_COMP_ROUND;
+    CompetitionRoundDto compRoundDto = TestConstants.TEST_COMP_ROUND_DTO;
 
     Competition savedComp = null;
 

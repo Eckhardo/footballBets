@@ -67,7 +67,7 @@ class TipperRoleServiceTest {
     @BeforeEach
     public void setup() {
         savedFam = familyService.save(competitionFamily);
-        CompetitionDto compDto = TestConstants.TEST_COMP;
+        CompetitionDto compDto = TestConstants.TEST_COMP_DTO;
         compDto.setFamilyId(savedFam.getId());
         savedComp = compService.save(compDto);
         assertNotNull(savedComp);

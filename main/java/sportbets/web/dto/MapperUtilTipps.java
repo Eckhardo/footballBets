@@ -2,15 +2,9 @@ package sportbets.web.dto;
 
 import org.modelmapper.*;
 import org.springframework.stereotype.Component;
-import sportbets.persistence.entity.tipps.TippConfig;
-import sportbets.persistence.entity.tipps.TippModusPoint;
-import sportbets.persistence.entity.tipps.TippModusResult;
-import sportbets.persistence.entity.tipps.TippModusToto;
+import sportbets.persistence.entity.tipps.*;
 import sportbets.persistence.entity.tipps.enums.TippModusType;
-import sportbets.web.dto.tipps.TippConfigDto;
-import sportbets.web.dto.tipps.TippModusPointDto;
-import sportbets.web.dto.tipps.TippModusResultDto;
-import sportbets.web.dto.tipps.TippModusTotoDto;
+import sportbets.web.dto.tipps.*;
 
 @Component
 public class MapperUtilTipps {
@@ -91,6 +85,28 @@ public class MapperUtilTipps {
                     map(source.getSpieltag().getSpieltagNumber()).setSpieltagNumber(1);
                     map(source.getTippModus().getId()).setTippModusId(null);
 
+                }
+            });
+        }
+
+        return modelMapper;
+    }
+    public ModelMapper modelMapperForTipp() {
+        TypeMap<Tipp, TippDto> typeMap = modelMapper.getTypeMap(Tipp.class, TippDto.class);
+        // add deep mapping to flatten source
+
+        if (typeMap == null) {
+            // Define the custom mapping for ChildEntity -> ChildDTO
+            modelMapper.addMappings(new PropertyMap<Tipp, TippDto>() {
+                @Override
+                protected void configure() {
+                    // Map the 'id' of the 'parent' object in the source
+                    // to the 'parentId' field in the destination
+                    map(source.getCommunityMembership().getId()).setCommMembId(null);
+                    map(source.getSpiel().getId()).setSpielId(null);
+                    map(source.getSpiel().getSpielNumber()).setSpielNumber(null);
+                    map(source.getTippModus().getId()).setTippModusId(null);
+                    using(tippModusToString).map(source.getTippModus().getType()).setTippModusType(null);
                 }
             });
         }
