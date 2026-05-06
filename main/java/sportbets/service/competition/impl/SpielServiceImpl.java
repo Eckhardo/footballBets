@@ -58,15 +58,15 @@ public class SpielServiceImpl implements SpielService {
 
         Competition comp = competitionRepo.findByRoundId(compRoundId).orElseThrow(() -> new EntityNotFoundException("Competition not found"));
         CompetitionRound compRound = competitionRoundRepo.findById(compRoundId).orElseThrow(() -> new EntityNotFoundException("CompetitionRound not found"));
-        Long matchdaysSize=spieltagRepo. countByRoundId(compRoundId);
+        Long matchdaysSize = spieltagRepo.countByRoundId(compRoundId);
         int numberOfMatches = compRound.getTeamsSize() / 2;
         int numberOfAllowedMatchdays = compRound.getMatchdaysSize();
-        int firstMatchday= compRound.getFirstMatchday();
+        int firstMatchday = compRound.getFirstMatchday();
 
 
         // assert  size of matchdays is equal to size allowed matchdays (aka all matchdays have to be present)
-        if(matchdaysSize!= numberOfAllowedMatchdays){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Number of allowed matchdays is not eqaul to number of existing matchdays ");
+        if (matchdaysSize != numberOfAllowedMatchdays) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Number of allowed matchdays is not eqaul to number of existing matchdays ");
         }
         log.debug("firstMatchday :: {}", firstMatchday);
 
@@ -96,12 +96,12 @@ public class SpielServiceImpl implements SpielService {
                         false, spiel.getGastTore(), spiel
                         .getHeimTore(), gastPoints);
 
-               spiele.add(spiel);
+                spiele.add(spiel);
             }
             firstMatchday++;
         }
 
-      List<Spiel> saved= spielRepo.saveAll(spiele);
+        List<Spiel> saved = spielRepo.saveAll(spiele);
         log.debug("savedSize :: {}", saved.size());
         return saved;
     }
@@ -142,7 +142,51 @@ public class SpielServiceImpl implements SpielService {
         log.debug("finally save Spiel :: {}", model);
         return spielRepo.save(model);
 
+    }
 
+    @Override
+    @Transactional
+    public List<Spiel> saveForSpieltag(Long spieltagId, List<SpielDto> dtos) {
+
+        log.debug("saveForSpieltag :: {}", dtos);
+        Spieltag spieltag = spieltagRepo.findById(spieltagId).orElseThrow(() -> new EntityNotFoundException("Matchday not found"));
+        Competition comp = competitionRepo.findBySpieltagId(spieltagId).orElseThrow(() -> new EntityNotFoundException("Competition not found"));
+
+        List<Spiel> toSaveList = new ArrayList<>();
+
+        int numberOfSpiele = spieltag.getSpiele().size();
+       // assert numberOfSpiele == dtos.size();
+        for (SpielDto spielDto : dtos) {
+            Optional<Spiel> optionalSpiel = spielRepo.findByNumberWithSpieltagId(spielDto.getSpielNumber(), spielDto.getSpieltagId());
+            if (optionalSpiel.isPresent()) {
+                throw new EntityExistsException("Spiel  already exist with given spiel number:" + spielDto.getSpielNumber() + "for spieltag " + spielDto.getSpieltagId());
+            }
+            Team heimTeam = teamRepo.findById(spielDto.getHeimTeamId()).orElseThrow(() -> new EntityNotFoundException("Team heim not found"));
+            Team gastTeam = teamRepo.findById(spielDto.getGastTeamId()).orElseThrow(() -> new EntityNotFoundException("Team gast not found"));
+            Spiel model = modelMapper.map(spielDto, Spiel.class);
+            log.debug("model Spiel :: {}", model);
+            model.setSpieltag(spieltag);
+            model.setHeimTeam(heimTeam);
+            model.setGastTeam(gastTeam);
+
+            int heimPoints = SpielFormula.calculatePoints(comp,
+                    model.getHeimTore(), model.getGastTore(), model
+                            .isStattgefunden());
+            SpielFormula heimFormel = new SpielFormula(model, heimTeam.getName(), heimTeam.getAcronym(),
+                    true, model.getHeimTore(), model
+                    .getGastTore(), heimPoints);
+
+            //  spielFormulaRepo.save(heimFormel);
+            int gastPoints = SpielFormula.calculatePoints(comp,
+                    model.getGastTore(), model.getHeimTore(), model
+                            .isStattgefunden());
+            SpielFormula gastFormel = new SpielFormula(model, gastTeam.getName(), gastTeam.getAcronym(),
+                    false, model.getGastTore(), model
+                    .getHeimTore(), gastPoints);
+
+            toSaveList.add(model);
+        }
+        return spielRepo.saveAll(toSaveList);
     }
 
     @Override

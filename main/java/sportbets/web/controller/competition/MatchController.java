@@ -16,6 +16,9 @@ import sportbets.web.dto.MapperUtil;
 import sportbets.web.dto.competition.SpielDto;
 import sportbets.web.dto.competition.batch.MatchBatchRecord;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 public class MatchController {
 
@@ -47,7 +50,6 @@ public class MatchController {
         log.info("New matches  {}", matchBatchRecord);
 
 
-
         spielService.saveAll(matchBatchRecord);
 
     }
@@ -56,18 +58,37 @@ public class MatchController {
     @PostMapping("/matches")
     @ResponseStatus(HttpStatus.CREATED)
     public SpielDto post(@RequestBody @Valid SpielDto spielDto) {
-        log.debug("New match day {}", spielDto);
+        log.debug("New match {}", spielDto);
 
         Spiel createdModel = spielService.save(spielDto);
         ModelMapper myModelMapper = MapperUtil.getModelMapperForSpiel();
-        SpielDto updatedDto = myModelMapper.map(createdModel, SpielDto.class);
-        log.debug("Spiel RETURN do {}", updatedDto);
-        return updatedDto;
+        SpielDto createdDto = myModelMapper.map(createdModel, SpielDto.class);
+        log.debug("Spiel RETURN do {}", createdDto);
+        return createdDto;
     }
+
+    @PostMapping("/matches/batch2")
+    @ResponseStatus(HttpStatus.CREATED)
+    public List<SpielDto> postList( @RequestBody @Valid List<SpielDto> spielDtos) {
+        log.debug("Save New matches");
+        assert spielDtos != null;
+       Long spieltagId= spielDtos.get(0).getSpieltagId();
+        log.debug("New match day list for spieltag id {}", spieltagId);
+        List<SpielDto> createdDtos = new ArrayList<>();
+        List<Spiel> createdModels = spielService.saveForSpieltag(spieltagId, spielDtos);
+
+        for (Spiel model : createdModels) {
+        ModelMapper myModelMapper = MapperUtil.getModelMapperForSpiel();
+            SpielDto createdDto = myModelMapper.map(model, SpielDto.class);
+            log.debug("SpielDto saved {}", createdDto);
+        }
+        return createdDtos;
+    }
+
 
     @PutMapping(value = "/matches/{id}")
     public SpielDto update(@PathVariable Long id, @RequestBody SpielDto spielDto) {
-        log.debug("Update match day {}", spielDto);
+        log.debug("Update match  {}", spielDto);
 
 
         Spiel updatedModel = spielService.updateSpiel(id, spielDto)

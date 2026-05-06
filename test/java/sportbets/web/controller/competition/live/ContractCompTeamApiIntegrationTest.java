@@ -244,24 +244,18 @@ public class ContractCompTeamApiIntegrationTest {
         Competition entity = competitionRepository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP));
         Long id = entity.getId();
 
-        EntityExchangeResult<List<List>> result =   webClient.get()
+        EntityExchangeResult<List<CompetitionTeamDto>> result =   webClient.get()
                 .uri("/compTeams/" +id+"/teams")
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBodyList(List.class).hasSize(1)
+                .expectBodyList(CompetitionTeamDto.class)
                 .returnResult();
 
-        List<List> actualBody = result.getResponseBody();
+        List<CompetitionTeamDto> actualBody = result.getResponseBody();
 
         assertNotNull(actualBody);
-        assertEquals( 1,actualBody.size());
-
-            log.info("unregistered competition team: " + actualBody);
-
-        for (List<CompetitionTeamDto> o : actualBody) {
-            log.info("competition team: " + o.getClass().getSimpleName());
-        }
+        assertEquals( 0,actualBody.size());
 
 
     }

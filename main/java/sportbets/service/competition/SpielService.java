@@ -12,6 +12,7 @@ public interface SpielService {
 
     Spiel save(SpielDto spiel);
     List<Spiel> saveAll(MatchBatchRecord matchBatchRecord);
+    List<Spiel> saveForSpieltag(Long spieltagId,List<SpielDto> spiele);
 
 
     Optional<Spiel> updateSpiel(Long id, SpielDto spiel);

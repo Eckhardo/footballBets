@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import sportbets.FootballBetsApplication;
 import sportbets.config.TestProfileLiveTest;
@@ -19,8 +20,12 @@ import sportbets.web.dto.competition.*;
 import sportbets.web.dto.competition.batch.MatchBatchRecord;
 
 import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static sportbets.testdata.TestConstants.*;
 
@@ -64,6 +69,12 @@ public class ContractMatchApiIntegrationTest {
     TeamRepository teamRepository;
     @Autowired
     SpielRepository spielRepository;
+
+
+    Spieltag savedSpieltag;
+    Team savedTeam1;
+    Team savedTeam2;
+    Team savedTeam3;
 
     @AfterEach
     public void cleanup() {
@@ -178,19 +189,26 @@ public class ContractMatchApiIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isCreated();
-        Spieltag spieltag = spieltagRepository.findByNumberWithRoundId(TEST_MATCH_DAY, round.getId()).orElseThrow(() -> new EntityNotFoundException(String.valueOf(TEST_MATCH_DAY)));
-        assertNotNull(spieltag);
-        Team team1 = teamRepository.findByName(TEAM_NAME).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
-        assertNotNull(team1);
+        savedSpieltag = spieltagRepository.findByNumberWithRoundId(TEST_MATCH_DAY, round.getId()).orElseThrow(() -> new EntityNotFoundException(String.valueOf(TEST_MATCH_DAY)));
+        assertNotNull(savedSpieltag);
+        savedTeam1 = teamRepository.findByName(TEAM_NAME).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
+        assertNotNull(savedTeam1);
 
-        Team team2 = teamRepository.findByName(TEAM_NAME_2).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
-        assertNotNull(team2);
-        Team team3 = teamRepository.findByName(TEAM_NAME_3).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
-        assertNotNull(team3);
+        savedTeam2 = teamRepository.findByName(TEAM_NAME_2).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
+        assertNotNull(savedTeam2);
+        savedTeam3 = teamRepository.findByName(TEAM_NAME_3).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
+        assertNotNull(savedTeam3);
 
-        testSpiel1.setHeimTeamId(team1.getId());
-        testSpiel1.setGastTeamId(team2.getId());
-        testSpiel1.setSpieltagId(spieltag.getId());
+
+    }
+
+
+    @Test
+    @Order(1)
+    void whenMatchdayIdProvided_ThenFetchMatches() {
+        testSpiel1.setHeimTeamId(savedTeam1.getId());
+        testSpiel1.setGastTeamId(savedTeam2.getId());
+        testSpiel1.setSpieltagId(savedSpieltag.getId());
         log.debug("post match 1  {}", testSpiel1);
         webClient.post()
                 .uri("/matches")
@@ -201,9 +219,9 @@ public class ContractMatchApiIntegrationTest {
                 .isCreated();
 
 
-        testSpiel2.setHeimTeamId(team2.getId());
-        testSpiel2.setGastTeamId(team3.getId());
-        testSpiel2.setSpieltagId(spieltag.getId());
+        testSpiel2.setHeimTeamId(savedTeam2.getId());
+        testSpiel2.setGastTeamId(savedTeam3.getId());
+        testSpiel2.setSpieltagId(savedSpieltag.getId());
         log.debug("post match 2 {}", testSpiel2);
         webClient.post()
                 .uri("/matches")
@@ -212,13 +230,6 @@ public class ContractMatchApiIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isCreated();
-
-    }
-
-
-    @Test
-    @Order(1)
-    void whenMatchdayIdProvided_ThenFetchMatches() {
 
         CompetitionRound round = competitionRoundRepository.findByName(TEST_COMP_ROUND).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
         assertNotNull(round);
@@ -239,6 +250,31 @@ public class ContractMatchApiIntegrationTest {
     @Test
     @Order(2)
     void whenMatchIsUpdated_ThenDetailsHaveChanged() {
+        testSpiel1.setHeimTeamId(savedTeam1.getId());
+        testSpiel1.setGastTeamId(savedTeam2.getId());
+        testSpiel1.setSpieltagId(savedSpieltag.getId());
+        log.debug("post match 1  {}", testSpiel1);
+        webClient.post()
+                .uri("/matches")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(testSpiel1)
+                .exchange()
+                .expectStatus()
+                .isCreated();
+
+
+        testSpiel2.setHeimTeamId(savedTeam2.getId());
+        testSpiel2.setGastTeamId(savedTeam3.getId());
+        testSpiel2.setSpieltagId(savedSpieltag.getId());
+        log.debug("post match 2 {}", testSpiel2);
+        webClient.post()
+                .uri("/matches")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(testSpiel2)
+                .exchange()
+                .expectStatus()
+                .isCreated();
+
         CompetitionRound round = competitionRoundRepository.findByName(TEST_COMP_ROUND).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
         assertNotNull(round);
         Spieltag spieltag = spieltagRepository.findByNumberWithRoundId(TEST_MATCH_DAY, round.getId()).orElseThrow(() -> new EntityNotFoundException(String.valueOf(TEST_MATCH_DAY)));
@@ -271,7 +307,32 @@ public class ContractMatchApiIntegrationTest {
 
     @Test
     @Order(3)
-    void whenSaverMatchesInBatch_ThenBatchIsSuccessful() {
+    void whenSaveMatchesInBatch_ThenBatchIsSuccessful() {
+        testSpiel1.setHeimTeamId(savedTeam1.getId());
+        testSpiel1.setGastTeamId(savedTeam2.getId());
+        testSpiel1.setSpieltagId(savedSpieltag.getId());
+        log.debug("post match 1  {}", testSpiel1);
+        webClient.post()
+                .uri("/matches")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(testSpiel1)
+                .exchange()
+                .expectStatus()
+                .isCreated();
+
+
+        testSpiel2.setHeimTeamId(savedTeam2.getId());
+        testSpiel2.setGastTeamId(savedTeam3.getId());
+        testSpiel2.setSpieltagId(savedSpieltag.getId());
+        log.debug("post match 2 {}", testSpiel2);
+        webClient.post()
+                .uri("/matches")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(testSpiel2)
+                .exchange()
+                .expectStatus()
+                .isCreated();
+
         CompetitionRound round = competitionRoundRepository.findByName(TEST_COMP_ROUND).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
         assertNotNull(round);
         log.debug("compRound {}", compRoundDto);
@@ -297,4 +358,57 @@ public class ContractMatchApiIntegrationTest {
                 .expectBody();
 
     }
+
+    @Test
+    @Order(1)
+    void whenMatchesAreProvided_ThenSaveMatchesInBatch() {
+        testSpiel1.setHeimTeamId(savedTeam1.getId());
+        testSpiel1.setGastTeamId(savedTeam2.getId());
+        testSpiel1.setSpieltagId(savedSpieltag.getId());
+
+
+        testSpiel2.setHeimTeamId(savedTeam2.getId());
+        testSpiel2.setGastTeamId(savedTeam3.getId());
+        testSpiel2.setSpieltagId(savedSpieltag.getId());
+
+        webClient.post()
+                .uri("/matches/batch2")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(List.of(testSpiel1, testSpiel2))
+                .exchange()
+                .expectStatus()
+                .isCreated();
+
+
+        CompetitionRound round = competitionRoundRepository.findByName(TEST_COMP_ROUND).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
+        assertNotNull(round);
+        Spieltag spieltag = spieltagRepository.findByNumberWithRoundId(TEST_MATCH_DAY, round.getId()).orElseThrow(() -> new EntityNotFoundException(String.valueOf(TEST_MATCH_DAY)));
+        assertNotNull(spieltag);
+
+        EntityExchangeResult<List<SpielDto>> result = webClient.get()
+                .uri("/matchdays/" + spieltag.getId() + "/matches")
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBodyList(SpielDto.class)
+                .returnResult();
+        List<SpielDto> actualBody = result.getResponseBody();
+
+        assertNotNull(actualBody);
+        assertEquals(2, actualBody.size());
+        for(SpielDto spielDto : actualBody) {
+            assertEquals(spieltag.getId(), spielDto.getSpieltagId());
+            assertThat(spielDto.getHeimTeamAcronym()).isIn(List.of(teamDto.getAcronym(),teamDto1.getAcronym(), teamDto2.getAcronym()));
+            assertThat(spielDto.getGastTeamAcronym()).isIn(List.of(teamDto.getAcronym(),teamDto1.getAcronym(), teamDto2.getAcronym()));
+            assertEquals(3,spielDto.getHeimTore());
+            assertThat(spielDto.getGastTore()).isIn(List.of(testSpiel1.getGastTore(),testSpiel2.getGastTore()));
+
+        }
+
+
+
+
+
+    }
+
 }
