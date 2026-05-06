@@ -1,12 +1,6 @@
 package sportbets.service.tipps;
 
-import org.springframework.stereotype.Service;
-
-import sportbets.persistence.entity.tipps.TippModus;
 import sportbets.web.dto.tipps.TippModusDto;
-import sportbets.web.dto.tipps.TippModusPointDto;
-import sportbets.web.dto.tipps.TippModusResultDto;
-import sportbets.web.dto.tipps.TippModusTotoDto;
 
 import java.util.List;
 import java.util.Optional;

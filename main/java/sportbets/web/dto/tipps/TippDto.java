@@ -30,13 +30,18 @@ public class TippDto implements Serializable {
 
     public TippDto() {
     }
-
-    public TippDto(Long id, Integer heimTipp, Integer remisTipp, Integer gastTipp, Integer winPoints, Long spielId, Integer spielNumber, Long tippModusIdId, String tippModusType, Long commMembId) {
+    public TippDto(Long id, Integer heimTipp, Integer remisTipp, Integer gastTipp, Integer winPoints) {
         this.id = id;
         this.heimTipp = heimTipp;
         this.remisTipp = remisTipp;
         this.gastTipp = gastTipp;
         this.winPoints = winPoints;
+
+    }
+
+
+    public TippDto(Long id, Integer heimTipp, Integer remisTipp, Integer gastTipp, Integer winPoints, Long spielId, Integer spielNumber, Long tippModusIdId, String tippModusType, Long commMembId) {
+        this(id, heimTipp, remisTipp, gastTipp, winPoints);
         this.spielId = spielId;
         this.spielNumber = spielNumber;
         this.tippModusId = tippModusIdId;

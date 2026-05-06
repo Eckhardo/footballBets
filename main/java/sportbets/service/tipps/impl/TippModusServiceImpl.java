@@ -6,6 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.community.Community;
 import sportbets.persistence.entity.tipps.TippModus;
 import sportbets.persistence.entity.tipps.TippModusPoint;
@@ -45,6 +46,7 @@ public class TippModusServiceImpl implements TippModusService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<TippModusDto> findById(Long id) {
         TippModus entity = repo.findById(id).orElseThrow(() -> new EntityNotFoundException("TippModus not found"));
         return Optional.of(convertToDto(entity));
@@ -57,6 +59,7 @@ public class TippModusServiceImpl implements TippModusService {
     }
 
     @Override
+    @Transactional
     public TippModusDto save(TippModusDto dto) {
         log.info("save tippModus");
         Optional<TippModus> tippModus = repo.findByName(dto.getCommId(), dto.getName());
@@ -75,6 +78,7 @@ public class TippModusServiceImpl implements TippModusService {
 
 
     @Override
+    @Transactional
     public Optional<TippModusDto> update(Long id, TippModusDto dto) {
         log.info("update tippModus: {}", dto);
 
@@ -92,11 +96,13 @@ public class TippModusServiceImpl implements TippModusService {
     }
 
     @Override
+    @Transactional
     public void deleteById(Long id) {
         repo.deleteById(id);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<TippModusDto> getAllForCommunity(Long id) {
         List<TippModus> entities = repo.findAllForCommunity(id);
         List<TippModusDto> dtos = new ArrayList<>();
@@ -108,6 +114,7 @@ public class TippModusServiceImpl implements TippModusService {
 
 
     @Override
+    @Transactional(readOnly = true)
     public List<TippModusDto> findTotoTypesForCommunity(Long id) {
         List<TippModusToto> entities = repo.findTippModusToto(id);
         List<TippModusDto> dtos = new ArrayList<>();
@@ -119,6 +126,7 @@ public class TippModusServiceImpl implements TippModusService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<TippModusDto> findResultTypesForCommunity(Long id) {
         List<TippModusResult> entities = repo.findTippModusResult(id);
         List<TippModusDto> dtos = new ArrayList<>();
@@ -130,6 +138,7 @@ public class TippModusServiceImpl implements TippModusService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<TippModusDto> findPointTypesForCommunity(Long id) {
         List<TippModusPoint> entities = repo.findTippModusPoint(id);
         List<TippModusDto> dtos = new ArrayList<>();

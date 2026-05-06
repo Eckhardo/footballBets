@@ -1,7 +1,6 @@
 package sportbets.service.tipps;
 
-import org.springframework.stereotype.Service;
-import sportbets.web.dto.tipps.TippModusDto;
+import sportbets.web.dto.tipps.TippDto;
 
 import java.util.Optional;
 
@@ -10,11 +9,11 @@ public interface TippService {
 
 
 
-    Optional<TippModusDto> findById(Long id);
+    Optional<TippDto> findById(Long id);
 
-    TippModusDto save(TippModusDto dto);
+    TippDto save(TippDto dto);
 
-    Optional<TippModusDto> update(Long id,TippModusDto dto);
+    Optional<TippDto> update(Long id,TippDto dto);
 
     void deleteById(Long id);
 

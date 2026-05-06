@@ -86,7 +86,7 @@ public class TippModelMapperTest {
 
     @Test
     public void convertTippToDTO() {
-        log.info("\n convert tipp point");
+        log.info("\n convert tipp entity to dto");
         final ModelMapper myMapper = new MapperUtilTipps().modelMapperForTipp();
 
         Tipp entity= TestConstants.TEST_TIPP_ENTITY;

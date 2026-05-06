@@ -2,9 +2,11 @@ package sportbets.persistence.entity.competition;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.format.annotation.DateTimeFormat;
 import sportbets.persistence.entity.tipps.Tipp;
+import sportbets.persistence.entity.tipps.enums.TotoTrend;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -13,19 +15,16 @@ import java.util.Optional;
 import java.util.Set;
 
 @Entity
-public class Spiel  {
+public class Spiel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Positive
+    private int spielNumber;
     @PositiveOrZero
-    @Column(nullable = false)
-    private int spielNumber ;
-    @PositiveOrZero
-    @Column(nullable = false)
     private int heimTore;
     @PositiveOrZero
-    @Column(nullable = false)
     private int gastTore;
 
 
@@ -117,6 +116,21 @@ public class Spiel  {
         this.gastTore = gastTore;
 
     }
+
+    //------- busines methods -------------------------
+
+    public TotoTrend retrieveTotoTrend() {
+        if (heimTore > gastTore) {
+            return TotoTrend.HOME_VICTORY;
+        } else if (gastTore > heimTore) {
+            return TotoTrend.GUEST_VICTORY;
+        } else {
+            return TotoTrend.DRAW;
+        }
+    }
+
+
+    //-------- getter and setter------------------------
 
 
     public Long getId() {

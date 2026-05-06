@@ -3,8 +3,10 @@ package sportbets.persistence.entity.tipps;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import sportbets.persistence.entity.community.Community;
+import sportbets.persistence.entity.competition.Spiel;
 import sportbets.persistence.entity.tipps.converter.TippModusTypeAttributeConverter;
 import sportbets.persistence.entity.tipps.enums.TippModusType;
+import sportbets.web.dto.tipps.TippDto;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -80,8 +82,14 @@ public abstract class TippModus {
         this(name, type, deadline, community);
         this.tippConfigs = tippConfigs;
     }
+//--------------- abstract methods ----------------------------------
+    public abstract boolean isTippValid(@NotNull TippDto tipp);
+
+    public abstract int calculateWinPoints(TippDto tipp, Spiel spiel);
 
 
+
+    //-------------- getter and setter-------------------------------
     public Long getId() {
         return id;
     }

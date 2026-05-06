@@ -43,6 +43,7 @@ public class TippConfigServiceImpl implements TippConfigService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<TippConfigDto> findById(Long id) {
 
         TippConfig tippConfig = tippConfigRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("Entity not found with id:" + id));
@@ -59,7 +60,6 @@ public class TippConfigServiceImpl implements TippConfigService {
         if (entity.isPresent()) {
             throw new EntityExistsException("Entity with id:" + dto.getId() + " already exists");
         }
-        log.debug("entity not yet present: {}", dto);
 
         CompetitionMembership compMemb = compMembRepo.findById(dto.getCompMembId()).orElseThrow(() -> new EntityNotFoundException("CompMemb not found with id:" + dto.getCompMembId()));
         Spieltag spieltag = spieltagRepo.findById(dto.getSpieltagId()).orElseThrow(() -> new EntityNotFoundException("Spieltag not found with id:" + dto.getSpieltagId()));
@@ -67,10 +67,6 @@ public class TippConfigServiceImpl implements TippConfigService {
 
         log.debug("parents retrievable: {}", dto);
         TippConfig toSave = new TippConfig(spieltag, compMemb, tippModus);
-//        spieltag.setTippConfig(toSave);
-//        compMemb.addTippConfig(toSave);
-//        tippModus.addTippConfig(toSave);
-
 
         log.debug("before persist: {}", toSave);
         TippConfig saved = tippConfigRepo.save(toSave);
@@ -81,6 +77,7 @@ public class TippConfigServiceImpl implements TippConfigService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<TippConfigDto> findByParents(Long compMembId,  Long tippModusId, Long spieltagId) {
         TippConfig entity = tippConfigRepo.findByParents(compMembId, tippModusId, spieltagId).orElseThrow(()-> new EntityNotFoundException("tipp config not found"));
         return Optional.of(convertToDto(entity));
