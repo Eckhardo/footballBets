@@ -344,9 +344,7 @@ public class ContractMatchApiIntegrationTest {
         for (Spiel spiel : spiele) {
             spielRepository.deleteById(spiel.getId());
         }
-        Team team1 = teamRepository.findByName(TEAM_NAME).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME));
-        Team team2 = teamRepository.findByName(TEAM_NAME_2).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME_2));
-        MatchBatchRecord batch = new MatchBatchRecord(round.getId(), team1.getId(), team2.getId());
+        MatchBatchRecord batch = new MatchBatchRecord(round.getId(), savedTeam1.getId(), savedTeam2.getId());
 
 
         webClient.post()

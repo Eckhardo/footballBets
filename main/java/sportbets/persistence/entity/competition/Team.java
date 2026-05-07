@@ -46,8 +46,7 @@ public class Team  {
     }
 
     public void setId(Long id) {
-        log.info("setId {}",id);
-        this.id = id;
+          this.id = id;
     }
 
     public String getName() {

@@ -51,7 +51,6 @@ public class SpielFormula {
     private Spiel spiel;
 
 
-
     public SpielFormula() {
 
     }
@@ -208,32 +207,46 @@ public class SpielFormula {
 
     public void calculateTrend(int tore1, int tore2,
                                boolean stattgefunden) {
+        diffTore = lost = remis = won = 0;
         if (stattgefunden) {
-
+            diffTore = tore1 - tore2;
             if (tore1 == tore2) {
                 remis = 1;
             } else if (tore1 > tore2) {
                 won = 1;
             } else {
                 lost = 1;
-
             }
-        } else {
-            remis = won = lost = 0;
         }
     }
 
 
     public static int calculatePoints(Competition competition,
-                                          int heimTor, int gastTor, boolean stattgefunden) {
+                                      int heimTor, int gastTor, boolean stattgefunden) {
 
         if (stattgefunden) {
             if (heimTor == gastTor) {
-               return competition.getRemisMultiplicator();
+                return competition.getRemisMultiplicator();
             } else if (heimTor < gastTor) {
                 return 0;
             } else {
                 return competition.getWinMultiplicator();
+            }
+        }
+        return 0;
+    }
+
+
+    public int calculatePoints2(boolean stattgefunden, int winMultiplicator,
+                                int remisMultiplicator) {
+
+        if (stattgefunden) {
+            if (heimTore == gastTore) {
+                return remisMultiplicator;
+            } else if (heimTore < gastTore) {
+                return 0;
+            } else {
+                return winMultiplicator;
             }
         }
         return 0;

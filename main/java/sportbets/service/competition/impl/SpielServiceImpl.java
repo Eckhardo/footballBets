@@ -62,18 +62,17 @@ public class SpielServiceImpl implements SpielService {
         int numberOfMatches = compRound.getTeamsSize() / 2;
         int numberOfAllowedMatchdays = compRound.getMatchdaysSize();
         int firstMatchday = compRound.getFirstMatchday();
-
-
+        log.debug("compRound.getTeamsSize() :: {}", compRound.getTeamsSize());
+        log.debug("matchdaysSize :: {}", matchdaysSize);
+        log.debug("numberOfMatches :: {}", numberOfMatches);
+        log.debug("numberOfAllowedMatchdays :: {}", numberOfAllowedMatchdays);
         // assert  size of matchdays is equal to size allowed matchdays (aka all matchdays have to be present)
         if (matchdaysSize != numberOfAllowedMatchdays) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Number of allowed matchdays is not eqaul to number of existing matchdays ");
         }
-        log.debug("firstMatchday :: {}", firstMatchday);
 
-        log.debug("matchdaysSize :: {}", matchdaysSize);
-        Team heimTeam = teamRepo.findById(matchBatchRecord.heimTeamId()).orElseThrow(() -> new EntityNotFoundException("Team heim not found"));
-        Team gastTeam = teamRepo.findById(matchBatchRecord.gastTeamId()).orElseThrow(() -> new EntityNotFoundException("Team gast not found"));
-
+        Team heimTeam = retrieveTeam(matchBatchRecord.heimTeamId());
+        Team gastTeam = retrieveTeam(matchBatchRecord.gastTeamId());
         List<Spiel> spiele = new ArrayList<>();
         for (int i = 0; i < numberOfAllowedMatchdays; i++) {
             Spieltag matchday = spieltagRepo.findByNumberAndRound(firstMatchday, compRoundId).orElseThrow(() -> new EntityNotFoundException("Spieltag not found"));
@@ -116,8 +115,8 @@ public class SpielServiceImpl implements SpielService {
         }
         Competition comp = competitionRepo.findBySpieltagId(spielDto.getSpieltagId()).orElseThrow(() -> new EntityNotFoundException("Competition not found"));
         Spieltag spieltag = spieltagRepo.findById(spielDto.getSpieltagId()).orElseThrow(() -> new EntityNotFoundException("Matchday not found"));
-        Team heimTeam = teamRepo.findById(spielDto.getHeimTeamId()).orElseThrow(() -> new EntityNotFoundException("Team heim not found"));
-        Team gastTeam = teamRepo.findById(spielDto.getGastTeamId()).orElseThrow(() -> new EntityNotFoundException("Team gast not found"));
+        Team heimTeam = retrieveTeam(spielDto.getHeimTeamId());
+        Team gastTeam = retrieveTeam(spielDto.getGastTeamId());
         Spiel model = modelMapper.map(spielDto, Spiel.class);
         log.debug("model Spiel :: {}", model);
         model.setSpieltag(spieltag);
@@ -153,16 +152,13 @@ public class SpielServiceImpl implements SpielService {
         Competition comp = competitionRepo.findBySpieltagId(spieltagId).orElseThrow(() -> new EntityNotFoundException("Competition not found"));
 
         List<Spiel> toSaveList = new ArrayList<>();
-
-        int numberOfSpiele = spieltag.getSpiele().size();
-       // assert numberOfSpiele == dtos.size();
         for (SpielDto spielDto : dtos) {
             Optional<Spiel> optionalSpiel = spielRepo.findByNumberWithSpieltagId(spielDto.getSpielNumber(), spielDto.getSpieltagId());
             if (optionalSpiel.isPresent()) {
                 throw new EntityExistsException("Spiel  already exist with given spiel number:" + spielDto.getSpielNumber() + "for spieltag " + spielDto.getSpieltagId());
             }
-            Team heimTeam = teamRepo.findById(spielDto.getHeimTeamId()).orElseThrow(() -> new EntityNotFoundException("Team heim not found"));
-            Team gastTeam = teamRepo.findById(spielDto.getGastTeamId()).orElseThrow(() -> new EntityNotFoundException("Team gast not found"));
+            Team heimTeam = retrieveTeam(spielDto.getHeimTeamId());
+            Team gastTeam = retrieveTeam(spielDto.getGastTeamId());
             Spiel model = modelMapper.map(spielDto, Spiel.class);
             log.debug("model Spiel :: {}", model);
             model.setSpieltag(spieltag);
@@ -193,51 +189,102 @@ public class SpielServiceImpl implements SpielService {
     @Transactional
     public Optional<Spiel> updateSpiel(Long id, SpielDto spielDto) {
 
-        log.info("update Match dto:: {}", spielDto);
+        log.debug("update Match dto:: {}", spielDto);
         Spiel savedSpiel = spielRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("spiel  does not exist given id:" + spielDto.getId()));
 
         Competition savedComp = competitionRepo.findBySpieltagId(spielDto.getSpieltagId()).orElseThrow(() -> new EntityNotFoundException("Competition not found"));
 
         Spieltag spieltag = spieltagRepo.findById(spielDto.getSpieltagId()).orElseThrow(() -> new EntityNotFoundException("Matchday not found"));
-        Team heimTeam = teamRepo.findById(spielDto.getHeimTeamId()).orElseThrow(() -> new EntityNotFoundException("Team heim not found"));
-        Team gastTeam = teamRepo.findById(spielDto.getGastTeamId()).orElseThrow(() -> new EntityNotFoundException("Team gast not found"));
+        Team heimTeam = retrieveTeam(spielDto.getHeimTeamId());
+        Team gastTeam = retrieveTeam(spielDto.getGastTeamId());
         Spiel model = modelMapper.map(spielDto, Spiel.class);
         model.setSpieltag(spieltag);
         model.setHeimTeam(heimTeam);
         model.setGastTeam(gastTeam);
 
         Spiel updated = updateFields(savedSpiel, model);
-        log.info("updated Match dto:: {}", updated);
+        log.debug("updated Match dto:: {}", updated);
 
 
         SpielFormula heim = savedSpiel.getSpielFormulaForHeim().orElseThrow();
-        int heimPoints = SpielFormula.calculatePoints(savedComp,
-                updated.getHeimTore(), updated.getGastTore(), updated
-                        .isStattgefunden());
-        heim.setPoints(heimPoints);
         heim.setHeimTore(updated.getHeimTore());
         heim.setGastTore(updated.getGastTore());
+        int heimPoints = heim.calculatePoints2( updated.isStattgefunden(),savedComp.getWinMultiplicator(),savedComp.getRemisMultiplicator());
+        heim.setPoints(heimPoints);
         heim.calculateTrend(heim.getHeimTore(),
                 heim.getGastTore(), updated.isStattgefunden());
-        log.info("heim formula:: {}", heim);
+        log.debug("heim formula:: {}", heim);
         model.addSpielFormula(heim);
 
 
         SpielFormula gast = savedSpiel.getSpielFormulaForGast().orElseThrow();
-        int gastPoints = SpielFormula.calculatePoints(savedComp,
-                updated.getGastTore(), updated.getHeimTore(), updated
-                        .isStattgefunden());
-        gast.setPoints(gastPoints);
         gast.setHeimTore(updated.getGastTore());
         gast.setGastTore(updated.getHeimTore());
+        int gastPoints = gast.calculatePoints2(updated.isStattgefunden(),savedComp.getWinMultiplicator(),savedComp.getRemisMultiplicator());
+        gast.setPoints(gastPoints);
+
         gast.calculateTrend(gast.getHeimTore(),
                 gast.getGastTore(), updated.isStattgefunden());
+        log.debug("gast formula:: {}", gast);
         model.addSpielFormula(gast);
 
-        log.info("update Soiel  with {}", updated);
+        log.debug("update Spiel  with {}", updated);
         Spiel updatedSpiel = spielRepo.save(model);
         return Optional.of(updatedSpiel);
 
+    }
+
+    @Override
+    @Transactional
+    public List<Spiel> updateForSpieltag(Long spieltagId, List<SpielDto> spielDtos) {
+        log.debug("updateForSpieltag");
+
+        List<Spiel> spieleToSave = new ArrayList<>();
+
+        Competition savedComp = competitionRepo.findBySpieltagId(spieltagId).orElseThrow(() -> new EntityNotFoundException("Competition not found"));
+        Spieltag spieltag = spieltagRepo.findById(spieltagId).orElseThrow(() -> new EntityNotFoundException("Matchday not found"));
+        for (SpielDto spielDto : spielDtos) {
+
+            log.debug("update Match dto:: {}", spielDto);
+            Spiel savedSpiel = spielRepo.findById(spielDto.getId()).orElseThrow(() -> new EntityNotFoundException("spiel  does not exist given id:" + spielDto.getId()));
+
+            Team heimTeam = retrieveTeam(spielDto.getHeimTeamId());
+            Team gastTeam = retrieveTeam(spielDto.getGastTeamId());    Spiel model = modelMapper.map(spielDto, Spiel.class);
+            model.setSpieltag(spieltag);
+            model.setHeimTeam(heimTeam);
+            model.setGastTeam(gastTeam);
+
+            Spiel updated = updateFields(savedSpiel, model);
+            log.debug("updated Match dto:: {}", updated);
+
+
+            SpielFormula heim = savedSpiel.getSpielFormulaForHeim().orElseThrow();
+            int heimPoints = SpielFormula.calculatePoints(savedComp,
+                    updated.getHeimTore(), updated.getGastTore(), updated
+                            .isStattgefunden());
+            heim.setPoints(heimPoints);
+            heim.setHeimTore(updated.getHeimTore());
+            heim.setGastTore(updated.getGastTore());
+            heim.calculateTrend(heim.getHeimTore(),
+                    heim.getGastTore(), updated.isStattgefunden());
+            log.debug("heim formula:: {}", heim);
+            model.addSpielFormula(heim);
+
+
+            SpielFormula gast = savedSpiel.getSpielFormulaForGast().orElseThrow();
+            int gastPoints = SpielFormula.calculatePoints(savedComp,
+                    updated.getGastTore(), updated.getHeimTore(), updated
+                            .isStattgefunden());
+            gast.setPoints(gastPoints);
+            gast.setHeimTore(updated.getGastTore());
+            gast.setGastTore(updated.getHeimTore());
+            gast.calculateTrend(gast.getHeimTore(),
+                    gast.getGastTore(), updated.isStattgefunden());
+            log.debug("gast formula:: {}", gast);
+            model.addSpielFormula(gast);
+            spieleToSave.add(model);
+        }
+        return spielRepo.saveAll(spieleToSave);
     }
 
     private Spiel updateFields(Spiel base, Spiel updatedMatch) {
@@ -262,5 +309,9 @@ public class SpielServiceImpl implements SpielService {
     public List<Spiel> getAll() {
         return spielRepo.findAll();
 
+    }
+    @Transactional
+    public Team  retrieveTeam(Long id) {
+        return  teamRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("Team heim not found"));
     }
 }
