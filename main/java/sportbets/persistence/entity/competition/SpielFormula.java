@@ -76,7 +76,7 @@ public class SpielFormula {
         this(spiel, teamName, teamNameAcronym, isHeimTeam);
         this.heimTore = heimTore;
         this.gastTore = gastTore;
-        calculateTrend(heimTore, gastTore, spiel.isStattgefunden());
+        calcTrend(heimTore, gastTore, spiel.isStattgefunden());
         this.points = points;
 
 
@@ -205,8 +205,8 @@ public class SpielFormula {
                 '}';
     }
 
-    public void calculateTrend(int tore1, int tore2,
-                               boolean stattgefunden) {
+    public void calcTrend(int tore1, int tore2,
+                          boolean stattgefunden) {
         diffTore = lost = remis = won = 0;
         if (stattgefunden) {
             diffTore = tore1 - tore2;
@@ -220,36 +220,17 @@ public class SpielFormula {
         }
     }
 
-
-    public static int calculatePoints(Competition competition,
-                                      int heimTor, int gastTor, boolean stattgefunden) {
-
-        if (stattgefunden) {
-            if (heimTor == gastTor) {
-                return competition.getRemisMultiplicator();
-            } else if (heimTor < gastTor) {
-                return 0;
-            } else {
-                return competition.getWinMultiplicator();
-            }
-        }
-        return 0;
-    }
-
-
-    public int calculatePoints2(boolean stattgefunden, int winMultiplicator,
-                                int remisMultiplicator) {
+    public void calcWinPoints(boolean stattgefunden, int winMultiplicator,
+                             int remisMultiplicator) {
 
         if (stattgefunden) {
             if (heimTore == gastTore) {
-                return remisMultiplicator;
+                points= remisMultiplicator;
             } else if (heimTore < gastTore) {
-                return 0;
+                points= 0;
             } else {
-                return winMultiplicator;
+                points= winMultiplicator;
             }
         }
-        return 0;
     }
-
 }

@@ -80,20 +80,19 @@ public class SpielServiceImpl implements SpielService {
             for (int k = 1; k <= numberOfMatches; k++) {
                 Spiel spiel = new Spiel(matchday, k, LocalDateTime.now(), heimTeam, gastTeam, 0, 0, false);
 
-                int heimPoints = SpielFormula.calculatePoints(comp,
-                        spiel.getHeimTore(), spiel.getGastTore(), spiel
-                                .isStattgefunden());
                 SpielFormula heimFormel = new SpielFormula(spiel, heimTeam.getName(), heimTeam.getAcronym(),
                         true, spiel.getHeimTore(), spiel
-                        .getGastTore(), heimPoints);
+                        .getGastTore(), 0);
+                heimFormel.calcWinPoints(spiel.isStattgefunden(), comp.getWinMultiplicator(), comp.getRemisMultiplicator());
+                heimFormel.calcTrend(heimFormel.getHeimTore(), heimFormel.getGastTore(), spiel.isStattgefunden());
 
                 //  spielFormulaRepo.save(heimFormel);
-                int gastPoints = SpielFormula.calculatePoints(comp,
-                        spiel.getGastTore(), spiel.getHeimTore(), spiel
-                                .isStattgefunden());
+
                 SpielFormula gastFormel = new SpielFormula(spiel, gastTeam.getName(), gastTeam.getAcronym(),
                         false, spiel.getGastTore(), spiel
-                        .getHeimTore(), gastPoints);
+                        .getHeimTore(), 0);
+                gastFormel.calcWinPoints(spiel.isStattgefunden(), comp.getWinMultiplicator(), comp.getRemisMultiplicator());
+                gastFormel.calcTrend(gastFormel.getHeimTore(), gastFormel.getGastTore(), spiel.isStattgefunden());
 
                 spiele.add(spiel);
             }
@@ -123,20 +122,20 @@ public class SpielServiceImpl implements SpielService {
         model.setHeimTeam(heimTeam);
         model.setGastTeam(gastTeam);
 
-        int heimPoints = SpielFormula.calculatePoints(comp,
-                model.getHeimTore(), model.getGastTore(), model
-                        .isStattgefunden());
+
         SpielFormula heimFormel = new SpielFormula(model, heimTeam.getName(), heimTeam.getAcronym(),
                 true, model.getHeimTore(), model
-                .getGastTore(), heimPoints);
+                .getGastTore(), 0);
+        heimFormel.calcWinPoints(model.isStattgefunden(), comp.getWinMultiplicator(), comp.getRemisMultiplicator());
+        heimFormel.calcTrend(heimFormel.getHeimTore(), heimFormel.getGastTore(), model.isStattgefunden());
 
         //  spielFormulaRepo.save(heimFormel);
-        int gastPoints = SpielFormula.calculatePoints(comp,
-                model.getGastTore(), model.getHeimTore(), model
-                        .isStattgefunden());
+
         SpielFormula gastFormel = new SpielFormula(model, gastTeam.getName(), gastTeam.getAcronym(),
                 false, model.getGastTore(), model
-                .getHeimTore(), gastPoints);
+                .getHeimTore(), 0);
+        gastFormel.calcWinPoints(model.isStattgefunden(), comp.getWinMultiplicator(), comp.getRemisMultiplicator());
+        gastFormel.calcTrend(gastFormel.getHeimTore(), gastFormel.getGastTore(), model.isStattgefunden());
 
         log.debug("finally save Spiel :: {}", model);
         return spielRepo.save(model);
@@ -165,20 +164,19 @@ public class SpielServiceImpl implements SpielService {
             model.setHeimTeam(heimTeam);
             model.setGastTeam(gastTeam);
 
-            int heimPoints = SpielFormula.calculatePoints(comp,
-                    model.getHeimTore(), model.getGastTore(), model
-                            .isStattgefunden());
-            SpielFormula heimFormel = new SpielFormula(model, heimTeam.getName(), heimTeam.getAcronym(),
+             SpielFormula heimFormel = new SpielFormula(model, heimTeam.getName(), heimTeam.getAcronym(),
                     true, model.getHeimTore(), model
-                    .getGastTore(), heimPoints);
+                    .getGastTore(), 0);
+            heimFormel.calcWinPoints(model.isStattgefunden(), comp.getWinMultiplicator(), comp.getRemisMultiplicator());
+            heimFormel.calcTrend(heimFormel.getHeimTore(), heimFormel.getGastTore(), model.isStattgefunden());
 
             //  spielFormulaRepo.save(heimFormel);
-            int gastPoints = SpielFormula.calculatePoints(comp,
-                    model.getGastTore(), model.getHeimTore(), model
-                            .isStattgefunden());
+
             SpielFormula gastFormel = new SpielFormula(model, gastTeam.getName(), gastTeam.getAcronym(),
                     false, model.getGastTore(), model
-                    .getHeimTore(), gastPoints);
+                    .getHeimTore(), 0);
+            gastFormel.calcWinPoints(model.isStattgefunden(), comp.getWinMultiplicator(), comp.getRemisMultiplicator());
+            gastFormel.calcTrend(gastFormel.getHeimTore(), gastFormel.getGastTore(), model.isStattgefunden());
 
             toSaveList.add(model);
         }
@@ -209,10 +207,8 @@ public class SpielServiceImpl implements SpielService {
         SpielFormula heim = savedSpiel.getSpielFormulaForHeim().orElseThrow();
         heim.setHeimTore(updated.getHeimTore());
         heim.setGastTore(updated.getGastTore());
-        int heimPoints = heim.calculatePoints2( updated.isStattgefunden(),savedComp.getWinMultiplicator(),savedComp.getRemisMultiplicator());
-        heim.setPoints(heimPoints);
-        heim.calculateTrend(heim.getHeimTore(),
-                heim.getGastTore(), updated.isStattgefunden());
+        heim.calcWinPoints(updated.isStattgefunden(), savedComp.getWinMultiplicator(), savedComp.getRemisMultiplicator());
+        heim.calcTrend(heim.getHeimTore(), heim.getGastTore(), updated.isStattgefunden());
         log.debug("heim formula:: {}", heim);
         model.addSpielFormula(heim);
 
@@ -220,11 +216,8 @@ public class SpielServiceImpl implements SpielService {
         SpielFormula gast = savedSpiel.getSpielFormulaForGast().orElseThrow();
         gast.setHeimTore(updated.getGastTore());
         gast.setGastTore(updated.getHeimTore());
-        int gastPoints = gast.calculatePoints2(updated.isStattgefunden(),savedComp.getWinMultiplicator(),savedComp.getRemisMultiplicator());
-        gast.setPoints(gastPoints);
-
-        gast.calculateTrend(gast.getHeimTore(),
-                gast.getGastTore(), updated.isStattgefunden());
+        gast.calcWinPoints(updated.isStattgefunden(), savedComp.getWinMultiplicator(), savedComp.getRemisMultiplicator());
+        gast.calcTrend(gast.getHeimTore(), gast.getGastTore(), updated.isStattgefunden());
         log.debug("gast formula:: {}", gast);
         model.addSpielFormula(gast);
 
@@ -249,7 +242,8 @@ public class SpielServiceImpl implements SpielService {
             Spiel savedSpiel = spielRepo.findById(spielDto.getId()).orElseThrow(() -> new EntityNotFoundException("spiel  does not exist given id:" + spielDto.getId()));
 
             Team heimTeam = retrieveTeam(spielDto.getHeimTeamId());
-            Team gastTeam = retrieveTeam(spielDto.getGastTeamId());    Spiel model = modelMapper.map(spielDto, Spiel.class);
+            Team gastTeam = retrieveTeam(spielDto.getGastTeamId());
+            Spiel model = modelMapper.map(spielDto, Spiel.class);
             model.setSpieltag(spieltag);
             model.setHeimTeam(heimTeam);
             model.setGastTeam(gastTeam);
@@ -259,27 +253,21 @@ public class SpielServiceImpl implements SpielService {
 
 
             SpielFormula heim = savedSpiel.getSpielFormulaForHeim().orElseThrow();
-            int heimPoints = SpielFormula.calculatePoints(savedComp,
-                    updated.getHeimTore(), updated.getGastTore(), updated
-                            .isStattgefunden());
-            heim.setPoints(heimPoints);
             heim.setHeimTore(updated.getHeimTore());
             heim.setGastTore(updated.getGastTore());
-            heim.calculateTrend(heim.getHeimTore(),
-                    heim.getGastTore(), updated.isStattgefunden());
+            heim.calcWinPoints(updated.isStattgefunden(), savedComp.getWinMultiplicator(), savedComp.getRemisMultiplicator());
+            heim.calcTrend(heim.getHeimTore(), heim.getGastTore(), updated.isStattgefunden());
+
             log.debug("heim formula:: {}", heim);
             model.addSpielFormula(heim);
 
 
             SpielFormula gast = savedSpiel.getSpielFormulaForGast().orElseThrow();
-            int gastPoints = SpielFormula.calculatePoints(savedComp,
-                    updated.getGastTore(), updated.getHeimTore(), updated
-                            .isStattgefunden());
-            gast.setPoints(gastPoints);
+
             gast.setHeimTore(updated.getGastTore());
             gast.setGastTore(updated.getHeimTore());
-            gast.calculateTrend(gast.getHeimTore(),
-                    gast.getGastTore(), updated.isStattgefunden());
+            gast.calcWinPoints(updated.isStattgefunden(), savedComp.getWinMultiplicator(), savedComp.getRemisMultiplicator());
+            gast.calcTrend(gast.getHeimTore(), gast.getGastTore(), updated.isStattgefunden());
             log.debug("gast formula:: {}", gast);
             model.addSpielFormula(gast);
             spieleToSave.add(model);
@@ -310,8 +298,9 @@ public class SpielServiceImpl implements SpielService {
         return spielRepo.findAll();
 
     }
+
     @Transactional
-    public Team  retrieveTeam(Long id) {
-        return  teamRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("Team heim not found"));
+    public Team retrieveTeam(Long id) {
+        return teamRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("Team heim not found"));
     }
 }

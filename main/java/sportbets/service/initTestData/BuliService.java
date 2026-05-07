@@ -296,20 +296,20 @@ public class BuliService {
                 Spiel spiel = new Spiel(spieltag, i, dt, heimTeam, gastTeam, homeGoals, guestGoals, stattgefunden);
                 spiele.add(spiel);
 
-                int heimPoints = SpielFormula.calculatePoints(comp,
-                        spiel.getHeimTore(), spiel.getGastTore(), spiel
-                                .isStattgefunden());
+
                 SpielFormula heimFormel = new SpielFormula(spiel, heimTeam.getName(), heimTeam.getAcronym(),
                         true, spiel.getHeimTore(), spiel
-                        .getGastTore(), heimPoints);
+                        .getGastTore(), 0);
+                heimFormel.calcWinPoints(spiel.isStattgefunden(), comp.getWinMultiplicator(), comp.getRemisMultiplicator());
+                heimFormel.calcTrend(heimFormel.getHeimTore(), heimFormel.getGastTore(), spiel.isStattgefunden());
 
                 //  spielFormulaRepo.save(heimFormel);
-                int gastPoints = SpielFormula.calculatePoints(comp,
-                        spiel.getGastTore(), spiel.getHeimTore(), spiel
-                                .isStattgefunden());
+
                 SpielFormula gastFormel = new SpielFormula(spiel, gastTeam.getName(), gastTeam.getAcronym(),
                         false, spiel.getGastTore(), spiel
-                        .getHeimTore(), gastPoints);
+                        .getHeimTore(), 0);
+                gastFormel.calcWinPoints(spiel.isStattgefunden(), comp.getWinMultiplicator(), comp.getRemisMultiplicator());
+                gastFormel.calcTrend(gastFormel.getHeimTore(), gastFormel.getGastTore(), spiel.isStattgefunden());
 
                 //  spiele.add(spiel);
 
