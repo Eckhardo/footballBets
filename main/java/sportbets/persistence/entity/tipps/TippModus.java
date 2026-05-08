@@ -6,7 +6,6 @@ import sportbets.persistence.entity.community.Community;
 import sportbets.persistence.entity.competition.Spiel;
 import sportbets.persistence.entity.tipps.converter.TippModusTypeAttributeConverter;
 import sportbets.persistence.entity.tipps.enums.TippModusType;
-import sportbets.web.dto.tipps.TippDto;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -83,9 +82,9 @@ public abstract class TippModus {
         this.tippConfigs = tippConfigs;
     }
 //--------------- abstract methods ----------------------------------
-    public abstract boolean isTippValid(@NotNull TippDto tipp);
+    public abstract boolean isTippValid(@NotNull Tipp tipp);
 
-    public abstract int calculateWinPoints(TippDto tipp, Spiel spiel);
+    public abstract int calculateWinPoints(Tipp tipp, Spiel spiel);
 
 
 

@@ -42,12 +42,14 @@ public class SpieltagServiceImpl implements SpieltagService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<Spieltag> findByNumberAndRound(int spieltagNumber, Long id) {
         return spieltagRepository.findByNumberAndRound(spieltagNumber, id);
     }
 
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<Spieltag> findById(Long id) {
         return spieltagRepository.findById(id);
     }
@@ -92,17 +94,20 @@ public class SpieltagServiceImpl implements SpieltagService {
 
     @Override
     @Transactional
+
     public void deleteById(Long id) {
         spieltagRepository.deleteById(id);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Spieltag> getAllForCompetition(Long id) {
         return spieltagRepository.findAllByCompId(id);
 
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Spieltag> getAllForRound(Long id) {
         return spieltagRepository.findAllByRoundId(id);
     }

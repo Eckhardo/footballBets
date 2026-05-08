@@ -142,12 +142,12 @@ public class CompetitionRound {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         CompetitionRound that = (CompetitionRound) o;
-        return Objects.equals(id, that.id) && hasGroups == that.hasGroups && roundNumber == that.roundNumber && Objects.equals(name, that.name) && Objects.equals(createdOn, that.createdOn);
+        return  hasGroups == that.hasGroups && roundNumber == that.roundNumber && Objects.equals(name, that.name) && Objects.equals(createdOn, that.createdOn);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, hasGroups, createdOn, roundNumber);
+        return Objects.hash( name, hasGroups, createdOn, roundNumber);
     }
 
     @Override

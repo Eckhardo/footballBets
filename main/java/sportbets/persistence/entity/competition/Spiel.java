@@ -254,12 +254,12 @@ public class Spiel {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Spiel spiel = (Spiel) o;
-        return spielNumber == spiel.spielNumber && Objects.equals(id, spiel.id) && Objects.equals(createdOn, spiel.createdOn);
+        return spielNumber == spiel.spielNumber && Objects.equals(createdOn, spiel.createdOn) && Objects.equals(anpfiffdate, spiel.anpfiffdate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, spielNumber, createdOn);
+        return Objects.hash(spielNumber, createdOn, anpfiffdate);
     }
 
     @Override

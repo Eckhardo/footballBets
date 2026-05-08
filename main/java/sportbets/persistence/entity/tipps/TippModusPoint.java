@@ -3,12 +3,12 @@ package sportbets.persistence.entity.tipps;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sportbets.persistence.entity.community.Community;
 import sportbets.persistence.entity.competition.Spiel;
 import sportbets.persistence.entity.tipps.enums.TippModusType;
-import sportbets.web.dto.tipps.TippDto;
 
 @Entity
 @Table(uniqueConstraints =
@@ -59,7 +59,7 @@ public class TippModusPoint extends TippModus {
 
     //	 ********************** Business Methods ********************** //
     @Override
-    public boolean isTippValid(TippDto tipp) {
+    public boolean isTippValid(@NotNull Tipp tipp) {
         log.debug("validate point");
         int heim = tipp.getHeimTipp() == null ? 0 : tipp.getHeimTipp();
         int remis = tipp.getRemisTipp() == null ? 0 : tipp.getRemisTipp();
@@ -69,7 +69,7 @@ public class TippModusPoint extends TippModus {
     }
 
     @Override
-    public int calculateWinPoints(TippDto tipp, Spiel spiel) {
+    public int calculateWinPoints(Tipp tipp, Spiel spiel) {
         log.debug("calculate point");
         if (!spiel.isStattgefunden()) {
             return 0;

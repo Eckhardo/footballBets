@@ -78,12 +78,12 @@ public class CompetitionMembership {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         CompetitionMembership that = (CompetitionMembership) o;
-        return Objects.equals(id, that.id) && Objects.equals(createdOn, that.createdOn) && Objects.equals(community.getName(), that.community.getName()) && Objects.equals(competition.getName(), that.competition.getName());
+        return Objects.equals(createdOn, that.createdOn) && Objects.equals(community.getName(), that.community.getName()) && Objects.equals(competition.getName(), that.competition.getName());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, createdOn, community, competition);
+        return Objects.hash( createdOn, community.getName(), competition.getName());
     }
 
     @Override

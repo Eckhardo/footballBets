@@ -52,7 +52,7 @@ public class SpielServiceImpl implements SpielService {
     }
 
     @Override
-    public List<Spiel> saveAll(MatchBatchRecord matchBatchRecord) {
+    public List<Spiel> saveBatch(MatchBatchRecord matchBatchRecord) {
         log.debug("saveAll :: {}", matchBatchRecord);
         Long compRoundId = matchBatchRecord.compRoundId();
 
@@ -144,7 +144,7 @@ public class SpielServiceImpl implements SpielService {
 
     @Override
     @Transactional
-    public List<Spiel> saveForSpieltag(Long spieltagId, List<SpielDto> dtos) {
+    public List<Spiel> saveList(Long spieltagId, List<SpielDto> dtos) {
 
         log.debug("saveForSpieltag :: {}", dtos);
         Spieltag spieltag = spieltagRepo.findById(spieltagId).orElseThrow(() -> new EntityNotFoundException("Matchday not found"));
@@ -185,7 +185,7 @@ public class SpielServiceImpl implements SpielService {
 
     @Override
     @Transactional
-    public Optional<Spiel> updateSpiel(Long id, SpielDto spielDto) {
+    public Optional<Spiel> updateOne(Long id, SpielDto spielDto) {
 
         log.debug("update Match dto:: {}", spielDto);
         Spiel savedSpiel = spielRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("spiel  does not exist given id:" + spielDto.getId()));
@@ -229,7 +229,7 @@ public class SpielServiceImpl implements SpielService {
 
     @Override
     @Transactional
-    public List<Spiel> updateForSpieltag(Long spieltagId, List<SpielDto> spielDtos) {
+    public List<Spiel> updateList(Long spieltagId, List<SpielDto> spielDtos) {
         log.debug("updateForSpieltag");
 
         List<Spiel> spieleToSave = new ArrayList<>();
@@ -288,12 +288,14 @@ public class SpielServiceImpl implements SpielService {
     }
 
     @Override
+    @Transactional
     public void deleteById(Long id) {
         spielRepo.deleteById(id);
     }
 
 
     @Override
+
     public List<Spiel> getAll() {
         return spielRepo.findAll();
 

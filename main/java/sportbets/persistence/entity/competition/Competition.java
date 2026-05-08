@@ -180,12 +180,12 @@ public class Competition {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Competition that = (Competition) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(createdOn, that.createdOn);
+        return  Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(createdOn, that.createdOn);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, createdOn);
+        return Objects.hash( name, description, createdOn);
     }
 
     @Override

@@ -152,6 +152,7 @@ public class CompTeamServiceImpl implements CompTeamService {
      * @param id
      */
     @Override
+    @Transactional
     public void deleteById(Long id) {
         compTeamRepo.deleteById(id);
     }
@@ -168,6 +169,7 @@ public class CompTeamServiceImpl implements CompTeamService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Team> findUnregisteredTeams(boolean isClub, List<CompetitionTeam> models) {
         List<Team> allTeams;
         if (isClub) {
@@ -186,6 +188,7 @@ public class CompTeamServiceImpl implements CompTeamService {
     }
 
     @Override
+    @Transactional(readOnly = true)
    public Optional<CompetitionTeam> findByTeamIdAndCompId(Long teamId, Long compId){
        return this.compTeamRepo.findByTeamIdAndCompId(teamId, compId);
     }

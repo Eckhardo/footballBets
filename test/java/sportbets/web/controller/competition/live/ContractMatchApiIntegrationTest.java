@@ -370,7 +370,7 @@ public class ContractMatchApiIntegrationTest {
         testSpiel2.setSpieltagId(savedSpieltag.getId());
 
         webClient.post()
-                .uri("/matches/batch2")
+                .uri("/matches/matchday")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(List.of(testSpiel1, testSpiel2))
                 .exchange()

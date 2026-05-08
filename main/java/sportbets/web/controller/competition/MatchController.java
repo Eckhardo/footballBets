@@ -50,7 +50,7 @@ public class MatchController {
         log.info("New matches  {}", matchBatchRecord);
 
 
-        spielService.saveAll(matchBatchRecord);
+        spielService.saveBatch(matchBatchRecord);
 
     }
 
@@ -67,7 +67,7 @@ public class MatchController {
         return createdDto;
     }
 
-    @PostMapping("/matches/batch2")
+    @PostMapping("/matches/matchday")
     @ResponseStatus(HttpStatus.CREATED)
     public List<SpielDto> postList( @RequestBody @Valid List<SpielDto> spielDtos) {
         log.debug("Save New matches");
@@ -75,7 +75,7 @@ public class MatchController {
        Long spieltagId= spielDtos.get(0).getSpieltagId();
         log.debug("New match day list for spieltag id {}", spieltagId);
         List<SpielDto> createdDtos = new ArrayList<>();
-        List<Spiel> createdModels = spielService.saveForSpieltag(spieltagId, spielDtos);
+        List<Spiel> createdModels = spielService.saveList(spieltagId, spielDtos);
 
         for (Spiel model : createdModels) {
         ModelMapper myModelMapper = MapperUtil.getModelMapperForSpiel();
@@ -91,7 +91,7 @@ public class MatchController {
         log.debug("Update match  {}", spielDto);
 
 
-        Spiel updatedModel = spielService.updateSpiel(id, spielDto)
+        Spiel updatedModel = spielService.updateOne(id, spielDto)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         ModelMapper myModelMapper = MapperUtil.getModelMapperForSpiel();
         SpielDto updatedDto = myModelMapper.map(updatedModel, SpielDto.class);

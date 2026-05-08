@@ -112,16 +112,14 @@ public class Spieltag {
 
     @Override
     public boolean equals(Object o) {
-
-        log.debug(" call equals::");
         if (o == null || getClass() != o.getClass()) return false;
         Spieltag spieltag = (Spieltag) o;
-        return spieltagNumber == spieltag.spieltagNumber && Objects.equals(id, spieltag.id) && Objects.equals(createdOn, spieltag.createdOn) ;
+        return spieltagNumber == spieltag.spieltagNumber && Objects.equals(createdOn, spieltag.createdOn) && Objects.equals(startDate, spieltag.startDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, spieltagNumber, createdOn);
+        return Objects.hash(spieltagNumber, createdOn, startDate);
     }
 
     @Override

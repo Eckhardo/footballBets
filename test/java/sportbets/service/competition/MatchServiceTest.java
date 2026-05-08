@@ -137,7 +137,7 @@ public class MatchServiceTest {
         // set gast team to same value as heimteam
         testSpiel1.setId(savedMatch.getId());
         testSpiel1.setGastTore(4);
-        Spiel updatedMatch = matchService.updateSpiel(testSpiel1.getId(), testSpiel1).orElseThrow();
+        Spiel updatedMatch = matchService.updateOne(testSpiel1.getId(), testSpiel1).orElseThrow();
 
         assertThat(updatedMatch.getId()).isNotNull();
         assertThat(updatedMatch.getAnpfiffdate()).isEqualTo(testSpiel1.getAnpfiffdate());
@@ -208,7 +208,7 @@ public class MatchServiceTest {
 
         MatchBatchRecord batch = new MatchBatchRecord(savedCompRound.getId(), savedTeam1.getId(), savedTeam2.getId());
 
-        List<Spiel> spiele = matchService.saveAll(batch);
+        List<Spiel> spiele = matchService.saveBatch(batch);
         for (Spiel entity : spiele) {
             assertThat(entity.getId()).isNotNull();
             assertThat(entity.getAnpfiffdate()).isNotNull();
@@ -251,7 +251,7 @@ public class MatchServiceTest {
         ModelMapper mapper = MapperUtil.getModelMapperForSpiel();
 
         List<SpielDto> dtos = new ArrayList<>();
-        List<Spiel> spiele = matchService.saveAll(batch);
+        List<Spiel> spiele = matchService.saveBatch(batch);
         for (Spiel entity : spiele) {
             Random rand = new Random();
             // Generiert 0, 1, 2, 3 oder 4
@@ -263,7 +263,7 @@ public class MatchServiceTest {
             log.debug("SpielDto  {}", spielDto);
             dtos.add(spielDto);
         }
-        List<Spiel> updateSpiele = matchService.updateForSpieltag(savedMatchday.getId(), dtos);
+        List<Spiel> updateSpiele = matchService.updateList(savedMatchday.getId(), dtos);
         assertThat(updateSpiele.size()).isEqualTo(9);
         for (Spiel entity : updateSpiele) {
             assertThat(entity.getHeimTore()).isEqualTo(2);

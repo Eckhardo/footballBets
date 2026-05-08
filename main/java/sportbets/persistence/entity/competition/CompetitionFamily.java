@@ -125,12 +125,12 @@ public class CompetitionFamily {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         CompetitionFamily that = (CompetitionFamily) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(createdOn, that.createdOn);
+        return  Objects.equals(name, that.name) && Objects.equals(createdOn, that.createdOn);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, createdOn);
+        return Objects.hash(name, createdOn);
     }
 
     @Override

@@ -35,7 +35,6 @@ import static sportbets.testdata.TestConstants.COMP_TEST;
 
 @SpringBootTest
 @ActiveProfiles("test")
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TippServiceTest {
 
@@ -109,20 +108,14 @@ public class TippServiceTest {
 
         SpielDto spielDto = TestConstants.TEST_SPIEL_DTO;
         spielDto.setHeimTeamId(savedTeamDto.getId());
-        spielDto.setHeimTeamAcronym(savedTeamDto.getAcronym());
         spielDto.setGastTeamId(savedTeamDto2.getId());
-        spielDto.setHeimTeamAcronym(savedTeamDto2.getAcronym());
         spielDto.setSpieltagId(savedMatchday.getId());
-        spielDto.setSpieltagNumber(savedMatchday.getSpieltagNumber());
         savedSpiel = matchService.save(spielDto);
 
         SpielDto spielDto2 = TestConstants.TEST_SPIEL_DTO_2;
         spielDto2.setHeimTeamId(savedTeamDto2.getId());
-        spielDto2.setHeimTeamAcronym(savedTeamDto2.getAcronym());
         spielDto2.setGastTeamId(savedTeamDto.getId());
-        spielDto2.setHeimTeamAcronym(savedTeamDto.getAcronym());
         spielDto2.setSpieltagId(savedMatchday.getId());
-        spielDto2.setSpieltagNumber(savedMatchday.getSpieltagNumber());
         savedSpiel2 = matchService.save(spielDto2);
         CommunityDto commDto = new CommunityDto(null, COMM_TEST, "Description of Community");
         savedCommunity = communityService.save(commDto);
@@ -166,7 +159,7 @@ public class TippServiceTest {
         tippDto.setCommMembId(savedCommunityMembership.getId());
         tippDto.setTippModusId(savedTippModusPoint.getId());
         tippDto.setTippModusType(savedTippModusPoint.getType());
-        TippDto savedTippDto = tippService.save(tippDto);
+        TippDto savedTippDto = tippService.saveOne(tippDto);
 
         log.debug("savedTipp: {}", savedTippDto);
         assertNotNull(savedTippDto.getId());
@@ -182,7 +175,7 @@ public class TippServiceTest {
         savedTippDto.setHeimTipp(2);
         savedTippDto.setGastTipp(2);
         savedTippDto.setRemisTipp(0);
-        TippDto updatedTipp = tippService.update(savedTippDto.getId(), savedTippDto).orElseThrow();
+        TippDto updatedTipp = tippService.updateOne(savedTippDto.getId(), savedTippDto).orElseThrow();
         assertEquals(2,updatedTipp.getHeimTipp());
         assertEquals(0,updatedTipp.getRemisTipp());
         assertEquals(2,updatedTipp.getGastTipp());
@@ -199,14 +192,14 @@ public class TippServiceTest {
         tippDto.setCommMembId(savedCommunityMembership.getId());
         tippDto.setTippModusId(savedTippModusPoint.getId());
         tippDto.setTippModusType(savedTippModusPoint.getType());
-        TippDto savedTippDto = tippService.save(tippDto);
+        TippDto savedTippDto = tippService.saveOne(tippDto);
         assertEquals(4, savedTippDto.getWinPoints());
 
         //update
         savedTippDto.setHeimTipp(1);
         savedTippDto.setGastTipp(3);
         savedTippDto.setRemisTipp(0);
-        TippDto updatredTipp = tippService.update(savedTippDto.getId(), savedTippDto).orElseThrow();
+        TippDto updatredTipp = tippService.updateOne(savedTippDto.getId(), savedTippDto).orElseThrow();
         assertEquals(1, updatredTipp.getWinPoints());
 
     }
@@ -221,7 +214,7 @@ public class TippServiceTest {
         tippDto.setCommMembId(savedCommunityMembership.getId());
         tippDto.setTippModusId(savedTippModusToto.getId());
         tippDto.setTippModusType(savedTippModusToto.getType());
-        TippDto savedTippDto = tippService.save(tippDto);
+        TippDto savedTippDto = tippService.saveOne(tippDto);
         assertEquals(1, savedTippDto.getWinPoints());
 
 

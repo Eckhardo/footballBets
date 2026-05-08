@@ -64,12 +64,12 @@ public class CompetitionTeam {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         CompetitionTeam that = (CompetitionTeam) o;
-        return Objects.equals(id, that.id) && Objects.equals(createdOn, that.createdOn) && Objects.equals(team, that.team) && Objects.equals(competition, that.competition);
+        return  Objects.equals(createdOn, that.createdOn) && Objects.equals(team.getAcronym(), that.team.getName() ) && Objects.equals(competition.getName(), that.competition.getName());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, createdOn, team, competition);
+        return Objects.hash( createdOn, team.getName(), competition.getName());
     }
 
     @Override
@@ -77,8 +77,8 @@ public class CompetitionTeam {
         return "CompetitionTeam{" +
                 "id=" + id +
                 ", createdOn=" + createdOn +
-                ", team=" + team +
-                ", competition=" + competition +
+                ", team=" + team.getName() +
+                ", competition=" + competition.getName() +
                 '}';
     }
 }
