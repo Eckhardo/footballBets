@@ -50,19 +50,17 @@ public class AuthController {
     public UmsInfoDto authenticateUser(@RequestBody @Valid LoginRequestDto loginRequest) {
         log.debug("AuthController. auth::{}", loginRequest);
 
-        Optional<Tipper> tipper = tipperService.authenticate(loginRequest.getUserName(), loginRequest.getPassword());
-        if (tipper.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid username or password");
-        }
+      Tipper tipper = tipperService.authenticate(loginRequest.getUserName(), loginRequest.getPassword()).orElseThrow(()-> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid username or password"));
+
         UmsInfoDto umsInfo = new UmsInfoDto(
-                tipper.get().getDefaultCommunityId(),
-                tipper.get().getDefaultCompetitionId(),
-                tipper.get().isCommunityAdmin(),
-                tipper.get().isCompetitionAdmin(),
-                tipper.get().getUsername() );
+                tipper.getDefaultCommunityId(),
+                tipper.getDefaultCompetitionId(),
+                tipper.isCommunityAdmin(),
+                true,
+                tipper.getUsername() );
           umsInfo.setLoggedIn(true);
         // fetch communities and competitions where tipper has admin rights
-        List<TipperRole> tipperRoles = tipperRoleService.getAllForTipper(tipper.get().getId());
+        List<TipperRole> tipperRoles = tipperRoleService.getAllForTipper(tipper.getId());
         if (!tipperRoles.isEmpty()) {
             for (TipperRole tipperRole : tipperRoles) {
                 if (tipperRole.getRole() instanceof CommunityRole) {
@@ -76,7 +74,7 @@ public class AuthController {
         CompetitionFamily competitionFamily =compFamilyService.findByByCompId(umsInfo.getDefaultCompetitionId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Competition Family not found"));
         umsInfo.setDefaultCountry(competitionFamily.getCountry());
         // fetch registered communities for common tipper
-        List<CommunityMembership> commMembs = communityMembershipService.findCommunities(tipper.get().getId());
+        List<CommunityMembership> commMembs = communityMembershipService.findCommunities(tipper.getId());
         if (!commMembs.isEmpty()) {
             for (CommunityMembership communityMembership : commMembs) {
                 umsInfo.getTipperCommunities().add(communityMembership.getCommunity().getId());

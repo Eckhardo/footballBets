@@ -13,33 +13,33 @@ public class UmsInfoDto {
 
     private static final Logger log = LoggerFactory.getLogger(UmsInfoDto.class);
     private String username;
-    boolean loggedIn=false;
-    private boolean isCommunityAdmin;
-    private boolean isCompetitionAdmin;
+    private boolean loggedIn = false;
+    private boolean commAdmin;
+    private boolean compAdmin;
     private Long defaultCommunityId;
     private Long defaultCompetitionId;
     private Country defaultCountry;
     /**
      * a set of competitions where tipper has admin rights
      */
-    private Set<Long> adminCompetitions=new HashSet<>();
+    private Set<Long> adminCompetitions = new HashSet<>();
 
     /**
      * a set of communities where tipper has admin rights
      */
-    private Set<Long> adminCommunities=new HashSet<>();
+    private Set<Long> adminCommunities = new HashSet<>();
 
     /**
      * a set of communities where tipper has abonnenment
      */
-    private Set<Long> tipperCommunities=new HashSet<>();
+    private Set<Long> tipperCommunities = new HashSet<>();
 
 
     public UmsInfoDto(Long defaultCommunityId, Long defaultCompetitionId, boolean isCommunityAdmin, boolean isCompetitionAdmin, String username) {
         this.defaultCommunityId = defaultCommunityId;
         this.defaultCompetitionId = defaultCompetitionId;
-        this.isCommunityAdmin = isCommunityAdmin;
-        this.isCompetitionAdmin = isCompetitionAdmin;
+        this.commAdmin = isCommunityAdmin;
+        this.compAdmin = isCompetitionAdmin;
         this.username = username;
     }
 
@@ -75,20 +75,20 @@ public class UmsInfoDto {
         this.defaultCompetitionId = defaultCompetitionId;
     }
 
-    public boolean isCommunityAdmin() {
-        return isCommunityAdmin;
+    public boolean isCommAdmin() {
+        return commAdmin;
     }
 
-    public void setCommunityAdmin(boolean communityAdmin) {
-        isCommunityAdmin = communityAdmin;
+    public void setCommAdmin(boolean commAdmin) {
+        this.commAdmin = commAdmin;
     }
 
-    public boolean getCompetitionAdmin() {
-        return isCompetitionAdmin;
+    public boolean getCompAdmin() {
+        return compAdmin;
     }
 
-    public void setCompetitionAdmin(boolean competitionAdmin) {
-        isCompetitionAdmin = competitionAdmin;
+    public void setCompAdmin(boolean compAdmin) {
+        this.compAdmin = compAdmin;
     }
 
     public Set<Long> getTipperCommunities() {
@@ -129,11 +129,11 @@ public class UmsInfoDto {
                 "defaultCommunityId=" + defaultCommunityId +
                 ", defaultCompetitionId=" + defaultCompetitionId +
                 ", username='" + username + '\'' +
-                ", isCommunityAdmin=" + isCommunityAdmin +
+                ", isCommunityAdmin=" + commAdmin +
                 ", size tipper comms=" + tipperCommunities.size() +
                 ", size admin comms=" + adminCommunities.size() +
                 ", size admin comps=" + adminCompetitions.size() +
-                ", isCompetitionAdmin=" + isCompetitionAdmin +
+                ", isCompetitionAdmin=" + compAdmin +
                 '}';
     }
 

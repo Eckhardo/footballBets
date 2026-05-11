@@ -10,10 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import sportbets.persistence.rowObject.TippConfigRow;
 import sportbets.service.tipps.TippConfigService;
-import sportbets.service.tipps.TippModusService;
 import sportbets.web.dto.tipps.TippConfigDto;
-import sportbets.web.dto.tipps.TippModusDto;
-import sportbets.web.dto.tipps.TippModusTotoDto;
 
 import java.util.List;
 
