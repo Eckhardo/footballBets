@@ -181,7 +181,7 @@ public class BuliService {
 
 
     SortedMap<Integer, LocalDateTime> retrieveSpieltage() {
-        String filePath = "src/test/java/sportbets/testdata/bl.json";
+        String filePath = "src/test/java/sportbets/testdata/bl25_26.json";
 
         SortedMap<Integer, LocalDateTime> spieltags = new TreeMap<>(
                 Comparator.nullsFirst(Comparator.naturalOrder())
@@ -235,7 +235,7 @@ public class BuliService {
     }
 
     List<Spiel> retrieveSpiele() {
-        String filePath = "src/test/java/sportbets/testdata/bl.json";
+        String filePath = "src/test/java/sportbets/testdata/bl25_26.json";
         Competition comp = compRepo.findByName(BUNDESLIGA_NAME_2025).orElseThrow();
 
         List<Spiel> spiele = new ArrayList<>();
@@ -265,8 +265,11 @@ public class BuliService {
                 String heim = (String) nestedObj.get("team1");
 
 
+
                 String auswärts = (String) nestedObj.get("team2");
+                log.debug("{}-{}", heim, auswärts);
                 JsonObject scores = (JsonObject) nestedObj.get("score");
+                log.debug("Spieltag {}", k);
                 JsonArray fts = (JsonArray) scores.get("ft");
                 BigDecimal heimTor = null;
                 BigDecimal gastTor = null;
