@@ -68,23 +68,15 @@ public class CommunityMembershipServiceImpl implements CommunityMembershipServic
     public Optional<CommunityMembership> update(Long id, CommunityMembershipDto membershipDto) {
 
         log.debug("update CommunityMembership dto:: {}", membershipDto);
-        Optional<CommunityMembership> updateModel = membershipRepository.findById(id);
-        if (updateModel.isEmpty()) {
-            throw new EntityNotFoundException("CommunityMembership  does not exits given id:" + membershipDto.getId());
-        }
+       CommunityMembership updateModel = membershipRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("CommunityMembership  does not exits given id:" + membershipDto.getId()));
+
 
         Community community = communityRepository.findByName(membershipDto.getCommName()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         Tipper tipper = tipperRepository.findById(membershipDto.getTipperId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        updateModel.get().setCommunity(community);
-        updateModel.get().setTipper(tipper);
-        log.debug("updated CommunityMembership  with {}", updateModel.get());
-        return Optional.of(membershipRepository.save(updateModel.get()));
-    }
-    private CommunityMembership updateFields(CommunityMembership base, CommunityMembership membership) {
-        base.setTipper(membership.getTipper());
-        base.setCommunity(membership.getCommunity());
-
-        return base;
+        updateModel.setCommunity(community);
+        updateModel.setTipper(tipper);
+        log.debug("updated CommunityMembership  with {}", updateModel);
+        return Optional.of(membershipRepository.save(updateModel));
     }
 
     @Override

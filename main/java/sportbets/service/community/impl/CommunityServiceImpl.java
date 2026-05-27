@@ -50,10 +50,10 @@ public class CommunityServiceImpl implements CommunityService {
             throw new EntityExistsException("Community already exist with given name:" + communityDto.getName());
         }
 
-        Community model = modelMapper.map(communityDto, Community.class);
-        CommunityRole communityRole = new CommunityRole(model.getName(), model.getDescription(), model);
-        model.addCommunityRole(communityRole);
-        return communityRepo.save(model);
+        Community entity = modelMapper.map(communityDto, Community.class);
+        CommunityRole communityRole = new CommunityRole(entity.getName(), entity.getDescription(), entity);
+        entity.addCommunityRole(communityRole);
+        return communityRepo.save(entity);
 
     }
 
@@ -62,22 +62,18 @@ public class CommunityServiceImpl implements CommunityService {
     @Transactional
     public Optional<Community> update(Long id, CommunityDto commDto) {
         log.debug("update:: {}", commDto);
-        Optional<Community> updateModel = communityRepo.findById(id);
-        if (updateModel.isEmpty()) {
-            throw new EntityNotFoundException("Community  DOES NOT exist with given id:" + id);
-        }
+        Community updateModel = communityRepo.findById(id).orElseThrow(()-> new EntityNotFoundException("Community  DOES NOT exist with given id:" + id) );
 
-
-        Optional<CommunityRole> oldCommunityRole = updateModel.get().getCommunityRoleByName(updateModel.get().getName());
+        Optional<CommunityRole> oldCommunityRole = updateModel.getCommunityRoleByName(updateModel.getName());
         if (oldCommunityRole.isPresent()) {
             oldCommunityRole.get().setName(commDto.getName());
             oldCommunityRole.get().setDescription(commDto.getDescription());
         }
-        updateModel.get().setName(commDto.getName());
-        updateModel.get().setDescription(commDto.getDescription());
+        updateModel.setName(commDto.getName());
+        updateModel.setDescription(commDto.getDescription());
 
 
-        return Optional.of(communityRepo.save(updateModel.get()));
+        return Optional.of(communityRepo.save(updateModel));
     }
 
 
