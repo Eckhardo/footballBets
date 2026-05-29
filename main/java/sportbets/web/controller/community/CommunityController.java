@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@RequestMapping("/communities")
 public class CommunityController {
 
     private static final Logger log = LoggerFactory.getLogger(CommunityController.class);
@@ -28,7 +29,7 @@ public class CommunityController {
         this.modelMapper = modelMapper;
     }
 
-    @GetMapping("/communities")
+    @GetMapping()
     public List<CommunityDto> findAll() {
         log.debug(":findAll");
         List<Community> communities = communityService.getAll();
@@ -40,7 +41,7 @@ public class CommunityController {
         return communityDtos;
     }
 
-    @GetMapping("/communities/{id}")
+    @GetMapping("/{id}")
     public CommunityDto findOne(@PathVariable Long id) {
         log.debug(":findOne::{}", id);
         Community model = communityService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -50,7 +51,7 @@ public class CommunityController {
 
     }
 
-    @PostMapping("/communities")
+    @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public CommunityDto post(@RequestBody @Valid CommunityDto newComm) {
         log.debug("New community {}", newComm);
@@ -60,7 +61,7 @@ public class CommunityController {
         return createdDto;
     }
 
-    @PutMapping(value = "/communities/{id}")
+    @PutMapping(value = "/{id}")
     public CommunityDto update(@PathVariable Long id, @RequestBody CommunityDto commDto) {
 
         Community updatedComm = this.communityService.update(id, commDto).orElseThrow();
@@ -72,7 +73,7 @@ public class CommunityController {
 
     }
 
-    @DeleteMapping(value = "/communities/{id}")
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<HttpStatus> delete(@PathVariable Long id) {
         log.debug("CommunityController.delete::{}", id);
         try {
