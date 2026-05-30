@@ -97,6 +97,7 @@ public class CommunityServiceImpl implements CommunityService {
     @Override
     public List<Community> getAll() {
         return communityRepo.findAll();
+
     }
 
     /**
