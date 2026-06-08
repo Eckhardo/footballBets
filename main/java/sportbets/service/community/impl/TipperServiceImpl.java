@@ -140,13 +140,6 @@ class TipperServiceImpl implements TipperService {
 
 
     @Override
-    @Transactional(readOnly = true)
-    public List<Tipper> getAllFormComp(Long compId) {
-        return List.of();
-    }
-
-
-    @Override
     public List<Tipper> getAll() {
         return tipperRepo.findAll();
     }

@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@RequestMapping("/tipper")
 class TipperController {
 
     private static final Logger log = LoggerFactory.getLogger(TipperController.class);
@@ -26,7 +27,7 @@ class TipperController {
         this.modelMapper = modelMapper;
     }
 
-    @GetMapping("/tipper/{id}")
+    @GetMapping("/{id}")
     public TipperDto findOne(@PathVariable Long id) {
         log.debug("TipperController:findOne::{}", id);
         Tipper model = tipperService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -35,7 +36,7 @@ class TipperController {
         return modelMapper.map(model, TipperDto.class);
 
     }
-    @PostMapping("/tipper")
+    @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public TipperDto post(@RequestBody @Valid TipperDto newTipper) {
         log.debug("TipperController.create::{}", newTipper);
@@ -46,9 +47,9 @@ class TipperController {
     }
 
 
-    @PutMapping(value = "/tipper/{id}")
+    @PutMapping(value = "/{id}")
     public TipperDto update(@PathVariable Long id, @RequestBody @Valid TipperDto tipperDto) {
-        log.debug("CompFamilyController.update::{}", tipperDto.toString());
+        log.debug("TipperController.update::{}", tipperDto.toString());
         Tipper updatedModel = tipperService.update(id, tipperDto).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         TipperDto dto = modelMapper.map(updatedModel, TipperDto.class);
         log.debug("return save::{}", dto);
@@ -56,9 +57,9 @@ class TipperController {
     }
 
 
-    @DeleteMapping(value = "/tipper/{id}")
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<HttpStatus> delete(@PathVariable Long id) {
-        log.debug("CompFamilyController.delete::{}", id);
+        log.debug("TipperController.delete::{}", id);
         try {
             tipperService.deleteById(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -68,8 +69,7 @@ class TipperController {
 
     }
 
-
-    @GetMapping("/tippers")
+    @GetMapping()
     public List<TipperDto> findAll() {
         List<Tipper> tippers = tipperService.getAll();
         List<TipperDto> tipperDtos = new ArrayList<>();

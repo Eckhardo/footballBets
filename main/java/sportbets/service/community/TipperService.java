@@ -26,8 +26,6 @@ public interface TipperService {
 
     void deleteByUserName(String userName);
 
-    List<Tipper> getAllFormComp(Long compId);
-
     List<Tipper> getAll();
 
     Optional<Tipper> authenticate(String username, String password);

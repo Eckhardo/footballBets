@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import sportbets.persistence.entity.community.Tipper;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -21,7 +22,5 @@ public interface TipperRepository extends JpaRepository<Tipper, Long> {
     @Query(" select t from Tipper t" +
             " where t.username =:username ")
     Optional<Tipper> checkUserName(String username);
-
-
 
 }
