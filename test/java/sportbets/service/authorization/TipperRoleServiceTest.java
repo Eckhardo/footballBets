@@ -76,7 +76,7 @@ class TipperRoleServiceTest {
         savedCommunity = communityService.save(communityDto);
         assertNotNull(savedCommunity);
 
-        TipperDto testTipper = new TipperDto(null, "Eckhard", "Kirschning", TEST_USERNAME, "root", "hint", "eki@gmx.de");
+        TipperDto testTipper = new TipperDto(null, "Eckhard", "Kirschning", TEST_USERNAME, "root", "hint", "eki@gmx.de",savedCommunity.getId());
         savedTipper = tipperService.save(testTipper);
         assertNotNull(savedTipper);
     }
@@ -105,6 +105,7 @@ class TipperRoleServiceTest {
 
         TipperRole savedTipperRole = tipperRoleService.save(tipperRoleDto).orElseThrow(() -> new EntityNotFoundException("savedTipperRole not found"));
         assertNotNull(savedTipperRole);
+        assertThat(savedTipperRole.getRole() instanceof CompetitionRole);
 
         assertNotNull(savedTipperRole.getId());
         assertEquals(savedRole.getId(), savedTipperRole.getRole().getId());
@@ -125,9 +126,10 @@ class TipperRoleServiceTest {
 
         TipperRoleDto tipperRoleDto = new TipperRoleDto(null, savedTipper.getId(), savedTipper.getUsername(), savedCommunityRole.getId(), savedCommunityRole.getName());
 
-
         TipperRole savedTipperRole = tipperRoleService.save(tipperRoleDto).orElseThrow(() -> new EntityNotFoundException("savedTipperRole not found"));
         assertNotNull(savedTipperRole);
+        assertThat(savedTipperRole.getRole() instanceof CommunityRole);
+
         assertNotNull(savedTipperRole.getId());
         assertEquals(savedCommunityRole.getId(), savedTipperRole.getRole().getId());
         assertEquals(savedCommunityRole.getName(), savedTipperRole.getRole().getName());

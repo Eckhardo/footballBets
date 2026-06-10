@@ -12,14 +12,14 @@ import org.springframework.http.ProblemDetail;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import sportbets.FootballBetsApplication;
+import sportbets.persistence.entity.community.Community;
 import sportbets.persistence.entity.competition.enums.Country;
 import sportbets.config.TestProfileLiveTest;
 import sportbets.persistence.entity.community.Tipper;
-import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
+import sportbets.persistence.repository.community.CommunityRepository;
 import sportbets.persistence.repository.community.TipperRepository;
-import sportbets.persistence.repository.competition.CompetitionFamilyRepository;
-import sportbets.persistence.repository.competition.CompetitionRepository;
+import sportbets.web.dto.community.CommunityDto;
 import sportbets.web.dto.community.TipperDto;
 import sportbets.web.dto.competition.CompetitionDto;
 import sportbets.web.dto.competition.CompetitionFamilyDto;
@@ -36,18 +36,17 @@ public class ContractTipperApiIntegrationTest {
 
     private static final Logger log = LoggerFactory.getLogger(ContractTipperApiIntegrationTest.class);
 
-    private static final String TEST_COMP_FAM = "TestLiga";
-    private static final String TEST_COMP = "TestLiga: Saison 2025";
+    private static final String TEST_COMM = "My Test Community";
     private static final String TEST_USERNAME = "Testuser";
-    TipperDto testTipper = new TipperDto(null, "Eckhard", "Kirschning", TEST_USERNAME, "passwd", "hint", "eki@gmx.de");
-    Competition savedComp = null;
+    CommunityDto communityDto = new CommunityDto(null, TEST_COMM, "Description of Community");
+
+    TipperDto testTipper = new TipperDto(null, "Eckhard", "Kirschning", TEST_USERNAME, "passwd", "hint", "eki@gmx.de",null);
+    Community savedCommunity = null;
 
     @Autowired
     WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();
     @Autowired
-    CompetitionFamilyRepository competitionFamilyRepository;
-    @Autowired
-    CompetitionRepository competitionRepository;
+    CommunityRepository communityRepository;
     @Autowired
     TipperRepository tipperRepository;
 
@@ -55,13 +54,13 @@ public class ContractTipperApiIntegrationTest {
     public void cleanup() {
         // Clean up all entities created during tests
         log.debug("cleanup");
-
-        CompetitionFamily fam = competitionFamilyRepository.findByName(TEST_COMP_FAM).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_FAM));
+        Community savedComm = communityRepository.findByName(TEST_COMM).orElseThrow();
         webClient.delete()
-                .uri("/families/" + fam.getId())
+                .uri("/communities/" + savedComm.getId())
                 .exchange()
                 .expectStatus()
                 .isNoContent();
+
 
 
         Tipper tipper = tipperRepository.findByUsername(TEST_USERNAME).orElseThrow(() -> new EntityNotFoundException(TEST_USERNAME));
@@ -76,36 +75,31 @@ public class ContractTipperApiIntegrationTest {
 
     @BeforeEach
     public void setUp() {
-        CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, TEST_COMP_FAM, "Description of TestLiga", true, true,  Country.GERMANY);
-        CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, null, TEST_COMP_FAM);
+        log.debug("setup tipper and community");
 
         webClient.post()
-                .uri("/families")
+                .uri("/communities")
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(compFamilyDto)
+                .bodyValue(communityDto)
                 .exchange()
                 .expectStatus()
-                .isCreated();
-        CompetitionFamily fam = competitionFamilyRepository.findByName(TEST_COMP_FAM).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_FAM));
-        compDto.setFamilyId(fam.getId());
-        compDto.setFamilyName(fam.getName());
-
-        webClient.post()
-                .uri("/competitions")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(compDto)
-                .exchange()
-                .expectStatus()
-                .isCreated();
-        savedComp = competitionRepository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_FAM));
-        assertThat(savedComp, notNullValue());
+                .isCreated()
+                .expectBody()
+                .jsonPath("$.id")
+                .exists()
+                .jsonPath("$.name")
+                .isEqualTo(TEST_COMM);
     }
 
 
     @Test
     @Order(1)
     void createNewTipper_withValidDtoInput_thenSuccess() {
-        testTipper.setDefaultCompetitionId(savedComp.getId());
+        savedCommunity= communityRepository.findByName(TEST_COMM).orElseThrow();
+
+        assertThat(testTipper.getUsername(), notNullValue());
+        testTipper.setDefaultCommunityId(savedCommunity.getId());
+
         webClient.post()
                 .uri("/tipper")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -124,8 +118,9 @@ public class ContractTipperApiIntegrationTest {
     @Test
     @Order(2)
     void createNewTipper_withInvalidDtoInput_thenFailure() {
+        savedCommunity= communityRepository.findByName(TEST_COMM).orElseThrow();
 
-        testTipper.setDefaultCompetitionId(savedComp.getId());
+        testTipper.setDefaultCommunityId(savedCommunity.getId());
         testTipper.setEmail("abc.gmx.de");
 
         webClient.post()
@@ -155,9 +150,12 @@ public class ContractTipperApiIntegrationTest {
     @Test
     @Order(3)
     void updateTipper_withValidInput_thenSuccess() {
+        savedCommunity= communityRepository.findByName(TEST_COMM).orElseThrow();
+
+        testTipper.setDefaultCommunityId(savedCommunity.getId());
         String updatedName="Werner";
 
-        testTipper.setDefaultCompetitionId(savedComp.getId());
+
         webClient.post()
                 .uri("/tipper")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -202,7 +200,7 @@ public class ContractTipperApiIntegrationTest {
     @Order(4)
     void deleteTipper_withValidInput_thenSuccess() {
 
-        testTipper.setDefaultCompetitionId(savedComp.getId());
+
         webClient.post()
                 .uri("/tipper")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -225,7 +223,7 @@ public class ContractTipperApiIntegrationTest {
                 .expectStatus()
                 .isNoContent();
 
-        testTipper.setDefaultCompetitionId(savedComp.getId());
+
         testTipper.setId(null);
         webClient.post()
                 .uri("/tipper")
@@ -245,8 +243,10 @@ public class ContractTipperApiIntegrationTest {
     @Test
     @Order(2)
     void createDuplicateTipper_withSameUserNane_thenFailure() {
+        savedCommunity= communityRepository.findByName(TEST_COMM).orElseThrow();
 
-        testTipper.setDefaultCompetitionId(savedComp.getId());
+        testTipper.setDefaultCommunityId(savedCommunity.getId());
+
         webClient.post()
                 .uri("/tipper")
                 .contentType(MediaType.APPLICATION_JSON)

@@ -26,14 +26,15 @@ public class TipperDto implements Serializable {
     @Email(message = " invalid email")
     private String email;
 
-    private Long defaultCompetitionId;
 
     private Long defaultCommunityId;
+
 
     public TipperDto() {
     }
 
-    public TipperDto(Long id, String firstname, String lastname, String username, String passwort, String passwortHint, String email) {
+
+    public TipperDto(Long id, String firstname, String lastname, String username, String passwort, String passwortHint, String email, Long defaultCommunityId) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -41,6 +42,8 @@ public class TipperDto implements Serializable {
         this.passwort = passwort;
         this.passwortHint = passwortHint;
         this.email = email;
+        this.defaultCommunityId = defaultCommunityId;
+
     }
 
     public Long getId() {
@@ -99,13 +102,15 @@ public class TipperDto implements Serializable {
         this.email = email;
     }
 
-    public Long getDefaultCompetitionId() {
-        return defaultCompetitionId;
+    public Long getDefaultCommunityId() {
+        return defaultCommunityId;
     }
 
-    public void setDefaultCompetitionId(Long defaultCompetitionId) {
-        this.defaultCompetitionId = defaultCompetitionId;
+    public void setDefaultCommunityId(Long defaultCommunityId) {
+        this.defaultCommunityId = defaultCommunityId;
     }
+
+
 
     @Override
     public boolean equals(Object o) {
@@ -119,12 +124,12 @@ public class TipperDto implements Serializable {
                 Objects.equals(this.passwort, entity.passwort) &&
                 Objects.equals(this.passwortHint, entity.passwortHint) &&
                 Objects.equals(this.email, entity.email) &&
-                Objects.equals(this.defaultCompetitionId, entity.defaultCompetitionId);
+                Objects.equals(this.defaultCommunityId, entity.defaultCommunityId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstname, lastname, username, passwort, passwortHint, email, defaultCompetitionId);
+        return Objects.hash(id, firstname, lastname, username, passwort, passwortHint, email, defaultCommunityId);
     }
 
     @Override
@@ -137,6 +142,6 @@ public class TipperDto implements Serializable {
                 "passwort = " + passwort + ", " +
                 "passwortHint = " + passwortHint + ", " +
                 "email = " + email + ", " +
-                "defaultCompetitionId = " + defaultCompetitionId + ")";
+                "defaultCommunityId = " + defaultCommunityId + ")";
     }
 }

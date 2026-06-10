@@ -38,8 +38,8 @@ public class ContractCommMembApiIntegrationTest {
     private static final String TEST_USERNAME2 = "TEST_USER2";
 
     CommunityDto communityDto = new CommunityDto(null, TEST_COMM, "Description of Community");
-    TipperDto testTipper = new TipperDto(null, "Eckhard", "Kirschning", TEST_USERNAME, "password", "hint", "eki@gmx.de");
-    TipperDto testTipper2 = new TipperDto(null, "Werner", "Wernersen", TEST_USERNAME2, "password", "hint", "werner@gmx.de");
+    TipperDto testTipper = new TipperDto(null, "Eckhard", "Kirschning", TEST_USERNAME, "password", "hint", "eki@gmx.de",null);
+    TipperDto testTipper2 = new TipperDto(null, "Werner", "Wernersen", TEST_USERNAME2, "password", "hint", "werner@gmx.de",null);
 
     @Autowired
     WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();

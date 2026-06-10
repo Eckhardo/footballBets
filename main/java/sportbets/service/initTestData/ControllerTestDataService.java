@@ -76,7 +76,7 @@ public class ControllerTestDataService {
     public static final SpielDto TEST_SPIEL_DTO_3 = new SpielDto(null, 3, 2, 4, true, LocalDateTime.now(), null, TEST_MATCH_DAY_DTO.getSpieltagNumber(), null, TEAM_DTO_2.getAcronym(), null, TEAM_DTO_1.getAcronym());
 
     public static CommunityDto TEST_COMM_DTO = new CommunityDto(null, "COMM_TEST", "Description of Community");
-    public static TipperDto WERNER_DTO = new TipperDto(null, "Werner", "Wernersen", "Wernerdo", "banane", "frucht", "werner@gmx.de");
+    public static TipperDto WERNER_DTO = new TipperDto(null, "Werner", "Wernersen", "Wernerdo", "banane", "frucht", "werner@gmx.de",null);
     public static CommunityMembershipDto TEST_COMM_MEMB_DTO = new CommunityMembershipDto(null, null, WERNER_DTO.getUsername(), null, TEST_COMM_DTO.getName());
     public static CompetitionMembershipDto TEST_COMP_MEM_DTO = new CompetitionMembershipDto(null, TEST_COMP_DTO.getName(), null, TEST_COMM_DTO.getName());
 

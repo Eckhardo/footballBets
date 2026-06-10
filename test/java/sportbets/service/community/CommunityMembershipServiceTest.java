@@ -49,9 +49,9 @@ public class CommunityMembershipServiceTest {
     @Autowired
     private TipperRoleService tipperRoleService;
 
-    TipperDto testTipper = new TipperDto(null, "Eckhard", "Kirschning", TEST_USERNAME, "root", "hint", "eki@gmx.de");
+    TipperDto testTipper = new TipperDto(null, "Eckhard", "Kirschning", TEST_USERNAME, "root", "hint", "eki@gmx.de", null);
 
-    TipperDto testTipper2 = new TipperDto(null, "Werner", "Wernersen", TEST_USERNAME_2, "root", "hint", "werner@gmx.de");
+    TipperDto testTipper2 = new TipperDto(null, "Werner", "Wernersen", TEST_USERNAME_2, "root", "hint", "werner@gmx.de", null);
 
     private final CommunityDto communityDto = new CommunityDto(null, TEST_COMM_1, "Description of Community");
     private final CommunityDto communityDto2 = new CommunityDto(null, TEST_COMM_2, "Description of Community2");
@@ -63,14 +63,15 @@ public class CommunityMembershipServiceTest {
 
     @BeforeEach
     public void setup() {
-        log.debug("setup tipper {}", testTipper);
-        savedTipper = tipperService.save(testTipper);
-        log.debug("setup tipper2 {}", testTipper2);
-        savedTipper2 = tipperService.save(testTipper2);
-        log.debug("setup community 1: {}", communityDto);
+
         savedCommunity = communityService.save(communityDto);
-        log.debug("setup community 2: {}", communityDto2);
+
         savedCommunity2 = communityService.save(communityDto2);
+        testTipper.setDefaultCommunityId(savedCommunity.getId());
+        savedTipper = tipperService.save(testTipper);
+        testTipper2.setDefaultCommunityId(savedCommunity2.getId());
+        savedTipper2 = tipperService.save(testTipper2);
+
     }
 
     @AfterEach
