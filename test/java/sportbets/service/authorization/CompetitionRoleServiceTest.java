@@ -32,9 +32,7 @@ public class CompetitionRoleServiceTest {
 
 
     private static final Logger log = LoggerFactory.getLogger(CompetitionRoleServiceTest.class);
-    private static final String TEST_COMP_FAM = TestConstants.COMP_FAM_TEST;
-    private static final String TEST_USERNAME = "TEST_USER";
-    final CompetitionFamilyDto competitionFamily = new CompetitionFamilyDto(null, TEST_COMP_FAM, "description of testliga", true, true, Country.GERMANY);
+     private final CompetitionFamilyDto competitionFamily =TestConstants.createValidFamilyDto();
     Competition savedComp = null;
     CompetitionFamily savedFam;
     @Autowired
@@ -50,7 +48,7 @@ public class CompetitionRoleServiceTest {
     public void setup() {
 
         savedFam = familyService.save(competitionFamily);
-        CompetitionDto compDto = TestConstants.TEST_COMP_DTO;
+        CompetitionDto compDto = TestConstants.createValidCompetitionDto();
         compDto.setFamilyId(savedFam.getId());
         savedComp = compService.save(compDto);
         assertNotNull(savedComp);
@@ -61,7 +59,7 @@ public class CompetitionRoleServiceTest {
 
     @AfterEach
     public void tearDown() {
-        familyService.deleteByName(TEST_COMP_FAM);
+        familyService.deleteByName(competitionFamily.getName());
 
     }
 
@@ -85,7 +83,7 @@ public class CompetitionRoleServiceTest {
         List<CompetitionRole> roles = competitionRoleService.getAllCompRoles();
 
         assertThat(roles).isNotNull();
-        CompetitionRole savedRole = roles.stream().filter((r) -> r.getName().equals(TestConstants.TEST_COMP_DTO.getName())).findFirst().get();
+        CompetitionRole savedRole = roles.stream().filter((r) -> r.getName().equals(TestConstants.createValidCompetitionDto().getName())).findFirst().get();
 
         assertEquals(savedComp.getId(), savedRole.getCompetition().getId());
         assertEquals(savedComp.getName(), savedRole.getCompetition().getName());

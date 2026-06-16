@@ -229,7 +229,7 @@ class CompetitionModelMapperTest {
         communityRole.setId(6L);
         testComm.addCommunityRole(communityRole);
 
-        Tipper testTipper = new Tipper("Eckhard", "Kirschning", "Eckhardo", "root", "hint", "eki@gmx.de");
+        Tipper testTipper = new Tipper("Eckhard", "Kirschning", "Tester", "root", "hint", "eki@gmx.de");
         testTipper.setId(7L);
         TipperRole compTipperRole = new TipperRole(competitionRole, testTipper);
         compTipperRole.setId(1L);

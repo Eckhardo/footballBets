@@ -15,6 +15,7 @@ import sportbets.persistence.entity.competition.enums.Country;
 import sportbets.config.TestProfileLiveTest;
 import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.repository.competition.CompetitionFamilyRepository;
+import sportbets.testdata.TestConstants;
 import sportbets.web.dto.competition.CompetitionFamilyDto;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -27,9 +28,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 public class ContractCompFamilyApiIntegrationTest {
 
     private static final Logger log = LoggerFactory.getLogger(ContractCompFamilyApiIntegrationTest.class);
-    private static final String COMP_FAM = "Premier League";
-    final CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, COMP_FAM, "Description of TestLiga", true, true, Country.GERMANY);
-
+    final CompetitionFamilyDto compFamilyDto = TestConstants.createValidFamilyDto();
     @Autowired
     WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();
     @Autowired
@@ -40,7 +39,7 @@ public class ContractCompFamilyApiIntegrationTest {
     public void cleanup() {
         // Clean up all entities created during tests
         log.debug("cleanup");
-        CompetitionFamily fam = competitionFamilyRepository.findByName(COMP_FAM).orElseThrow(() -> new EntityNotFoundException(COMP_FAM));
+        CompetitionFamily fam = competitionFamilyRepository.findByName(compFamilyDto.getName()).orElseThrow(() -> new EntityNotFoundException(compFamilyDto.getName()));
         Long id = fam.getId();
         log.debug("deleteFamily with id::{}", id);
         webClient.delete()
@@ -70,7 +69,7 @@ public class ContractCompFamilyApiIntegrationTest {
     @Test
     @Order(1)
     void givenPreloadedData_whenGetSingleFamily_thenResponseContainsFields() {
-        CompetitionFamily fam = competitionFamilyRepository.findByName(COMP_FAM).orElseThrow(() -> new EntityNotFoundException(COMP_FAM));
+        CompetitionFamily fam = competitionFamilyRepository.findByName(compFamilyDto.getName()).orElseThrow(() -> new EntityNotFoundException(compFamilyDto.getName()));
         Long id = fam.getId();
         webClient.get()
                 .uri("/families/" + id)
@@ -81,7 +80,7 @@ public class ContractCompFamilyApiIntegrationTest {
                 .jsonPath("$.id")
                 .value(Long.class, equalTo(id))
                 .jsonPath("$.name")
-                .isEqualTo(COMP_FAM)
+                .isEqualTo(compFamilyDto.getName())
                 .jsonPath("$.hasLigaModus")
                 .isEqualTo(true)
                 .jsonPath("$.country")
@@ -98,7 +97,7 @@ public class ContractCompFamilyApiIntegrationTest {
     void updateFamily_withValidFamilyJsonInput_thenSuccess() {
         log.debug("updateFamily_withValidFamilyJsonInput_thenSuccess");
 
-        CompetitionFamily fam = competitionFamilyRepository.findByName(COMP_FAM).orElseThrow(() -> new EntityNotFoundException(COMP_FAM));
+        CompetitionFamily fam = competitionFamilyRepository.findByName(compFamilyDto.getName()).orElseThrow(() -> new EntityNotFoundException(compFamilyDto.getName()));
         compFamilyDto.setDescription("Changed Description");
         Long id = fam.getId();
         log.debug("updateFamily with id::{}", id);
@@ -113,7 +112,7 @@ public class ContractCompFamilyApiIntegrationTest {
                 .jsonPath("$.id")
                 .exists()
                 .jsonPath("$.name")
-                .isEqualTo(COMP_FAM)
+                .isEqualTo(compFamilyDto.getName())
                 .jsonPath("$.description")
                 .isEqualTo("Changed Description")
                 .jsonPath("$.hasLigaModus")

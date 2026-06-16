@@ -8,11 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.entity.competition.CompetitionTeam;
-import sportbets.persistence.entity.competition.Team;
 import sportbets.testdata.TestConstants;
 import sportbets.web.dto.competition.CompetitionDto;
 import sportbets.web.dto.competition.CompetitionFamilyDto;
@@ -23,6 +21,7 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static sportbets.testdata.TestConstants.COMP_TEST;
+import static sportbets.testdata.TestConstants.createValidCompetitionDto;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ActiveProfiles("test")
@@ -30,7 +29,8 @@ import static sportbets.testdata.TestConstants.COMP_TEST;
 public class CompTeamServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(CompTeamServiceTest.class);
-    final CompetitionFamilyDto competitionFamily = TestConstants.TEST_FAMILY;
+
+    final CompetitionFamilyDto competitionFamily = TestConstants.createValidFamilyDto();
     final TeamDto team = TestConstants.TEAM_DTO_1;
     final TeamDto team1 =TestConstants.TEAM_DTO_2;
 
@@ -51,7 +51,7 @@ public class CompTeamServiceTest {
         log.debug("\n");
         log.debug("setup All Test data");
         CompetitionFamily savedFam = familyService.save(competitionFamily);
-        CompetitionDto compDto =  new CompetitionDto(null, COMP_TEST, "Description of Competition", 3, 1, null, savedFam.getName());
+        CompetitionDto compDto = createValidCompetitionDto();
         compDto.setFamilyId(savedFam.getId());
         savedComp = compService.save(compDto);
         log.info("comp saved finished");

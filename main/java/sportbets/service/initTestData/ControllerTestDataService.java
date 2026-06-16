@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.community.Community;
 import sportbets.persistence.entity.community.CommunityMembership;
 import sportbets.persistence.entity.community.Tipper;
@@ -76,13 +77,13 @@ public class ControllerTestDataService {
     public static final SpielDto TEST_SPIEL_DTO_3 = new SpielDto(null, 3, 2, 4, true, LocalDateTime.now(), null, TEST_MATCH_DAY_DTO.getSpieltagNumber(), null, TEAM_DTO_2.getAcronym(), null, TEAM_DTO_1.getAcronym());
 
     public static CommunityDto TEST_COMM_DTO = new CommunityDto(null, "COMM_TEST", "Description of Community");
-    public static TipperDto WERNER_DTO = new TipperDto(null, "Werner", "Wernersen", "Wernerdo", "banane", "frucht", "werner@gmx.de",null);
+    public static TipperDto WERNER_DTO = new TipperDto(null, "Werner", "Wernersen", "Wernerle", "banane", "frucht", "werner@gmx.de", null);
     public static CommunityMembershipDto TEST_COMM_MEMB_DTO = new CommunityMembershipDto(null, null, WERNER_DTO.getUsername(), null, TEST_COMM_DTO.getName());
     public static CompetitionMembershipDto TEST_COMP_MEM_DTO = new CompetitionMembershipDto(null, TEST_COMP_DTO.getName(), null, TEST_COMM_DTO.getName());
 
     public static TippConfigDto TIPP_CONFIG_DTO = new TippConfigDto(null, null, null, TEST_MATCH_DAY_DTO.getSpieltagNumber(), null);
 
-
+    @Transactional
     public Optional<Competition> initCompWithGames() {
 
         CompetitionFamily savedFam = familyService.save(TEST_COMP_FAM_DTO);
@@ -112,7 +113,6 @@ public class ControllerTestDataService {
         TEST_SPIEL_DTO_3.setHeimTeamId(savedTeam2.getId());
         TEST_SPIEL_DTO_3.setGastTeamId(savedTeam1.getId());
         Spiel savedSpiel3 = matchService.save(TEST_SPIEL_DTO_3);
-
 
 
         Community savedCommunity = communityService.save(TEST_COMM_DTO);
@@ -195,10 +195,11 @@ public class ControllerTestDataService {
         TIPP_CONFIG_DTO.setCompMembId(savedCompMemb.getId());
         TIPP_CONFIG_DTO.setTippModusId(savedTippModusPoint.getId());
         TippConfigDto savedTippConfig = tippConfigService.save(TIPP_CONFIG_DTO);
-        return new TippRecord(savedCommunityMembership, List.of(savedSpiel, savedSpiel2,savedSpiel3), List.of(savedTippModusToto, savedTippModusPoint));
+        return new TippRecord(savedCommunityMembership, List.of(savedSpiel, savedSpiel2, savedSpiel3), List.of(savedTippModusToto, savedTippModusPoint));
 
     }
 
+    @Transactional
     public void deleteCompWithGames(String famName) {
         familyService.deleteByName(famName);
         teamService.deleteByName(TEAM_DTO_1.getName());

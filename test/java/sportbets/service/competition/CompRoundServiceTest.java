@@ -17,15 +17,16 @@ import sportbets.web.dto.competition.CompetitionFamilyDto;
 import sportbets.web.dto.competition.CompetitionRoundDto;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static sportbets.testdata.TestConstants.COMP_TEST;
+import static sportbets.testdata.TestConstants.createValidCompetitionDto;
+import static sportbets.testdata.TestConstants.createValidFamilyDto;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ActiveProfiles("test")
 public class CompRoundServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(CompRoundServiceTest.class);
-    final CompetitionFamilyDto competitionFamily = TestConstants.TEST_FAMILY;
-    CompetitionDto compDto =  new CompetitionDto(null, COMP_TEST, "Description of Competition", 3, 1, null, competitionFamily.getName());
+    final CompetitionFamilyDto competitionFamily = createValidFamilyDto();
+    CompetitionDto compDto = createValidCompetitionDto();
     CompetitionRoundDto compRoundDto = TestConstants.TEST_COMP_ROUND_DTO;
 
     Competition savedComp = null;

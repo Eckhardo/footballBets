@@ -21,6 +21,7 @@ import java.util.Random;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static sportbets.testdata.TestConstants.COMP_TEST;
+import static sportbets.testdata.TestConstants.createValidCompetitionDto;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ActiveProfiles("test")
@@ -51,15 +52,15 @@ public class MatchServiceTest {
 
     @Autowired
     private CompTableService compTableService;
-
+    CompetitionFamilyDto competitionFamily = TestConstants.createValidFamilyDto();
     Competition savedComp = null;
     CompetitionRound savedCompRound = null;
 
     @BeforeEach
     public void setup() {
-        CompetitionFamilyDto competitionFamily = TestConstants.TEST_FAMILY;
+
         CompetitionFamily savedFam = familyService.save(competitionFamily);
-        CompetitionDto compDto = new CompetitionDto(null, COMP_TEST, "Description of Competition", 3, 1, null, competitionFamily.getName());
+        CompetitionDto compDto = createValidCompetitionDto();
         compDto.setFamilyId(savedFam.getId());
         savedComp = compService.save(compDto);
         CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, "TEST_COMP_ROUND", false, null, compDto.getName(), 18, 17, 1);
@@ -76,7 +77,7 @@ public class MatchServiceTest {
     public void tearDown() {
 
         log.debug("Delete All Test data");
-        familyService.deleteByName(TestConstants.TEST_FAMILY.getName());
+        familyService.deleteByName(competitionFamily.getName());
         teamService.deleteByName(TestConstants.TEAM_1.getName());
         teamService.deleteByName(TestConstants.TEAM_2.getName());
 

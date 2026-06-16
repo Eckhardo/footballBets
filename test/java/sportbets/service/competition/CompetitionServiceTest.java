@@ -30,14 +30,12 @@ public class CompetitionServiceTest {
     private static final Logger log = LoggerFactory.getLogger(CompetitionServiceTest.class);
 
 
-    final CompetitionFamilyDto competitionFamily = TestConstants.TEST_FAMILY;
+    final CompetitionFamilyDto competitionFamily = TestConstants.createValidFamilyDto();
     CompetitionFamily savedFam = null;
     @Autowired
     private CompFamilyService familyService; // Real service being tested
     @Autowired
     private CompService compService; // Real service being tested
-    @Autowired
-    private CompFamilyService compFamilyService;
     @Autowired
     private CompetitionRoleService competitionRoleService;
 
@@ -56,7 +54,7 @@ public class CompetitionServiceTest {
     @Test
     void whenValidComp_thenCompShouldBeSaved() {
 
-        CompetitionDto compDto = TestConstants.TEST_COMP_DTO;
+        CompetitionDto compDto = TestConstants.createValidCompetitionDto();
         compDto.setFamilyId(savedFam.getId());
         Competition savedComp = compService.save(compDto);
 
@@ -71,7 +69,7 @@ public class CompetitionServiceTest {
     @Test
     void whenValidComp_thenCompShouldBeUpdated() {
 
-        CompetitionDto compDto =TestConstants.TEST_COMP_DTO;
+        CompetitionDto compDto =TestConstants.createValidCompetitionDto();
         compDto.setFamilyId(savedFam.getId());
         Competition savedComp = compService.save(compDto);
         compDto.setName(TEST_COMP_DTO_2.getName());

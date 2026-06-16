@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import sportbets.persistence.builder.TipperConstants;
 import sportbets.persistence.entity.authorization.CommunityRole;
 import sportbets.persistence.entity.authorization.CompetitionRole;
 import sportbets.persistence.entity.authorization.TipperRole;
@@ -39,9 +40,9 @@ class TipperRoleServiceTest {
     private static final Logger log = LoggerFactory.getLogger(TipperRoleServiceTest.class);
 
     // Real service being tested
-    private static final String TEST_USERNAME = "TEST_USER";
+    private static final String TEST_USERNAME = "TEST_USER_NAME";
     private static final String TEST_COMM = "Test Community";
-     final CompetitionFamilyDto competitionFamily = TestConstants.TEST_FAMILY;
+     final CompetitionFamilyDto competitionFamily = TestConstants.createValidFamilyDto();
     CompetitionFamily savedFam;
     Competition savedComp = null;
     Tipper savedTipper = null;
@@ -67,7 +68,7 @@ class TipperRoleServiceTest {
     @BeforeEach
     public void setup() {
         savedFam = familyService.save(competitionFamily);
-        CompetitionDto compDto = TestConstants.TEST_COMP_DTO;
+        CompetitionDto compDto = TestConstants.createValidCompetitionDto();
         compDto.setFamilyId(savedFam.getId());
         savedComp = compService.save(compDto);
         assertNotNull(savedComp);
@@ -76,7 +77,9 @@ class TipperRoleServiceTest {
         savedCommunity = communityService.save(communityDto);
         assertNotNull(savedCommunity);
 
-        TipperDto testTipper = new TipperDto(null, "Eckhard", "Kirschning", TEST_USERNAME, "root", "hint", "eki@gmx.de",savedCommunity.getId());
+        TipperDto testTipper = new TipperDto(null,"Werner", "Wernersen", TEST_USERNAME, "banane", "frucht", "werner@gmx.de",null);
+
+        testTipper.setDefaultCommunityId(savedCommunity.getId());
         savedTipper = tipperService.save(testTipper);
         assertNotNull(savedTipper);
     }

@@ -26,7 +26,7 @@ public class CompetitionGroup {
     private CompetitionRound competitionRound;
 
     @OneToMany(mappedBy = "competitionGroup", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    private final Set<Spiel> spiele = new HashSet<>();
+    private  Set<Spiel> spiele = new HashSet<>();
 
 
     //	********************** Constructors ********************** //

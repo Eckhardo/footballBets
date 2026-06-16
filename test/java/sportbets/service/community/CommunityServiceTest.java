@@ -30,7 +30,7 @@ public class CommunityServiceTest {
     @Autowired
     private CommunityRoleService communityRoleService;
 
-
+    CommunityDto communityDto = new CommunityDto(null, "COMM_TEST", "Description of Community");
     @BeforeEach
     public void setup() {
         log.debug("setup");
@@ -38,13 +38,14 @@ public class CommunityServiceTest {
 
     @AfterEach
     public void tearDown() {
-        communityService.deleteByName(TestConstants.TEST_COMMUNITY_DTO.getName());
+        communityService.deleteByName(communityDto.getName());
     }
 
     @Test
     @Order(1)
     void whenValidComm_thenCommShouldBeSaved() {
-        CommunityDto communityDto = TestConstants.TEST_COMMUNITY_DTO;
+
+        ;
 
 
         Community saved = communityService.save(communityDto);
@@ -64,7 +65,6 @@ public class CommunityServiceTest {
     @Test
     @Order(2)
     void whenValidComm_thenCommShouldBeUpdated() {
-        CommunityDto communityDto = TestConstants.TEST_COMMUNITY_DTO;
 
         Community saved = communityService.save(communityDto);
 

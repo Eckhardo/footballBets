@@ -29,7 +29,6 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static sportbets.testdata.TestConstants.COMM_TEST;
-import static sportbets.testdata.TestConstants.COMP_TEST;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -39,7 +38,7 @@ import static sportbets.testdata.TestConstants.COMP_TEST;
 public class TippConfigServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(TippConfigServiceTest.class);
-    static CompetitionFamilyDto competitionFamily = TestConstants.TEST_FAMILY;
+    static CompetitionFamilyDto competitionFamily = TestConstants.createValidFamilyDto();
     static CommunityDto communityDto = new CommunityDto(null, COMM_TEST, "Description of Community");
 
     @Autowired
@@ -82,8 +81,8 @@ public class TippConfigServiceTest {
     static void setupOnce() {
         log.debug("setupOnce");
 
-        CompetitionFamily savedFam = familyService.save(TestConstants.TEST_FAMILY);
-        CompetitionDto compDto = new CompetitionDto(null, COMP_TEST, "Description of Competition", 3, 1, null, competitionFamily.getName());
+        CompetitionFamily savedFam = familyService.save(competitionFamily);
+        CompetitionDto compDto = TestConstants.createValidCompetitionDto();
         compDto.setFamilyId(savedFam.getId());
         Competition savedComp = compService.save(compDto);
         CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, "TEST_COMP_ROUND", false, null, compDto.getName(), 18, 17, 1);
@@ -103,8 +102,8 @@ public class TippConfigServiceTest {
     @AfterAll
     static void tearDownOnce() {
         log.debug("tearDownOnce");
-       familyService.deleteByName(competitionFamily.getName());
-       communityService.deleteByName(communityDto.getName());
+        familyService.deleteByName(competitionFamily.getName());
+        communityService.deleteByName(communityDto.getName());
     }
 
     @Test
@@ -128,7 +127,7 @@ public class TippConfigServiceTest {
         log.debug("tippConfigDto: {}", tippConfigDto);
         TippConfigDto savedTippConfig = tippConfigService.save(tippConfigDto);
         assertNotNull(savedTippConfig.getId());
-        List<TippConfigRow> configRows = tippConfigService.findAllForRound(savedCompRound.getId(),savedCompMemb.getId());
+        List<TippConfigRow> configRows = tippConfigService.findAllForRound(savedCompRound.getId(), savedCompMemb.getId());
         assertNotNull(configRows);
         assertEquals(1, configRows.size());
     }
@@ -171,7 +170,7 @@ public class TippConfigServiceTest {
 
         TippConfigDto savedTippConfig = tippConfigService.save(tippConfigDto);
         assertNotNull(savedTippConfig.getId());
-        TippConfigDto retrievedByParents= tippConfigService.findByParents(savedCompMemb.getId(),savedTippModus.getId(),savedMatchday.getId()).orElseThrow();
+        TippConfigDto retrievedByParents = tippConfigService.findByParents(savedCompMemb.getId(), savedTippModus.getId(), savedMatchday.getId()).orElseThrow();
         assertNotNull(retrievedByParents);
         assertEquals(savedTippConfig.getId(), retrievedByParents.getId());
     }

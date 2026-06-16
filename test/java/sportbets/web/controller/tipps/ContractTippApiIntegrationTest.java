@@ -14,6 +14,7 @@ import sportbets.persistence.entity.competition.SpielFormula;
 import sportbets.persistence.entity.competition.enums.Country;
 import sportbets.service.initTestData.ControllerTestDataService;
 import sportbets.service.tipps.TippService;
+import sportbets.testdata.TestConstants;
 import sportbets.web.dto.competition.CompetitionDto;
 import sportbets.web.dto.competition.CompetitionFamilyDto;
 import sportbets.web.dto.tipps.*;
@@ -31,9 +32,8 @@ public class ContractTippApiIntegrationTest {
 
     private static final Logger log = LoggerFactory.getLogger(ContractTippApiIntegrationTest.class);
 
-    public static final CompetitionFamilyDto TEST_COMP_FAM_DTO = new CompetitionFamilyDto(null, "COMP_FAM_TEST", "description of testliga", true, true, Country.GERMANY);
-    public static final CompetitionDto TEST_COMP_DTO = new CompetitionDto(null, "COMP_TEST", "Description of Competition", 3, 1, null, TEST_COMP_FAM_DTO.getName());
-
+    public static final CompetitionFamilyDto TEST_COMP_FAM_DTO = TestConstants.createValidFamilyDto();
+    public static final CompetitionDto TEST_COMP_DTO = TestConstants.createValidCompetitionDto();
 
     @Autowired
     ControllerTestDataService controllerTestDataService;

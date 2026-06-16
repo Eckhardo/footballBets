@@ -49,7 +49,7 @@ public class CompetitionMembershipServiceTest {
     @Autowired
     CompService compService;
 
-    final CompetitionFamilyDto testFamily = TestConstants.TEST_FAMILY;
+    final CompetitionFamilyDto testFamily = TestConstants.createValidFamilyDto();
     private static final String TEST_COMM_1 = "My Test Community 1";
     private static final String TEST_COMM_2 = "My Test Community 2";
     private final CommunityDto communityDto = new CommunityDto(null, TEST_COMM_1, "Description of Community");
@@ -64,7 +64,7 @@ public class CompetitionMembershipServiceTest {
     public void setup() {
         CompetitionFamily savedFam = familyService.save(testFamily);
 
-        CompetitionDto compDto =TestConstants.TEST_COMP_DTO;
+        CompetitionDto compDto =TestConstants.createValidCompetitionDto();
         compDto.setFamilyId(savedFam.getId());
         CompetitionDto compDto2 = TestConstants.TEST_COMP_DTO_2;
         compDto2.setFamilyId(savedFam.getId());

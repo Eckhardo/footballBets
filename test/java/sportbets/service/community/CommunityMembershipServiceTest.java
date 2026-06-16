@@ -49,7 +49,7 @@ public class CommunityMembershipServiceTest {
     @Autowired
     private TipperRoleService tipperRoleService;
 
-    TipperDto testTipper = new TipperDto(null, "Eckhard", "Kirschning", TEST_USERNAME, "root", "hint", "eki@gmx.de", null);
+    TipperDto testTipper = new TipperDto(null, "Eckhard", "Zabel", TEST_USERNAME, "root", "hint", "eki@gmx.de", null);
 
     TipperDto testTipper2 = new TipperDto(null, "Werner", "Wernersen", TEST_USERNAME_2, "root", "hint", "werner@gmx.de", null);
 

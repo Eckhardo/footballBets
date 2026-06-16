@@ -25,6 +25,7 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static sportbets.testdata.TestConstants.COMP_TEST;
+import static sportbets.testdata.TestConstants.createValidCompetitionDto;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ActiveProfiles("test")
@@ -34,7 +35,7 @@ public class MatchdayServiceTest {
     private static final Logger log = LoggerFactory.getLogger(MatchdayServiceTest.class);
     private static final String TEST_COMP_ROUND = "Saison 2025: Hinrunde";
     private static final int TEST_MATCH_DAY = 1;
-    final CompetitionFamilyDto competitionFamily = TestConstants.TEST_FAMILY;
+    final CompetitionFamilyDto competitionFamily = TestConstants.createValidFamilyDto();
     Competition savedComp = null;
     CompetitionRound savedCompRound = null;
     @Autowired
@@ -51,7 +52,7 @@ public class MatchdayServiceTest {
     public void setup() {
         log.debug("set up Test data");
         CompetitionFamily savedFam = familyService.save(competitionFamily);
-        CompetitionDto compDto = new CompetitionDto(null, COMP_TEST, "Description of Competition", 3, 1, null, competitionFamily.getName());
+        CompetitionDto compDto =createValidCompetitionDto();
         compDto.setFamilyId(savedFam.getId());
         savedComp = compService.save(compDto);
         log.debug("set up Test data: saved competition ");
@@ -67,7 +68,7 @@ public class MatchdayServiceTest {
     public void tearDown() {
 
         log.debug("Delete All Test data");
-        familyService.deleteByName(TestConstants.TEST_FAMILY.getName());
+        familyService.deleteByName(competitionFamily.getName());
     }
 
     @Test

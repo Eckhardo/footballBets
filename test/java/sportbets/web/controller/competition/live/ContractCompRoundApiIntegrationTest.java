@@ -35,13 +35,11 @@ import java.time.LocalDateTime;
 public class ContractCompRoundApiIntegrationTest {
 
     private static final Logger log = LoggerFactory.getLogger(ContractCompRoundApiIntegrationTest.class);
-    private static final String TEST_COMP_FAM = TestConstants.COMP_FAM_TEST;
-    private static final String TEST_COMP = TestConstants.COMP_TEST;
-    private static final String TEST_COMP_ROUND = "Saison 2025: Hinrunde";
+     private static final String TEST_COMP_ROUND = "Saison 2025: Hinrunde";
     private static final String TEST_COMP_ROUND_2 = "Saison 2025: Rueckrunde";
     private static final int TEST_MATCH_DAY = 1;
-    final CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, TEST_COMP_FAM, "Description of TestLiga", true, true,  Country.GERMANY);
-    final CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, null, TEST_COMP_FAM);
+    final CompetitionFamilyDto compFamilyDto = TestConstants.createValidFamilyDto();
+    final CompetitionDto compDto = TestConstants.createValidCompetitionDto();
     final CompetitionRoundDto compRoundDto =  new CompetitionRoundDto(null, 1, TEST_COMP_ROUND, false, compDto.getId(), compDto.getName(), 18, 17, 1);
     final SpieltagDto matchDayDto = new SpieltagDto(null, TEST_MATCH_DAY, LocalDateTime.now());
     @Autowired
@@ -58,7 +56,7 @@ public class ContractCompRoundApiIntegrationTest {
         // Clean up all entities created during tests
         log.debug("cleanup");
 
-        CompetitionFamily fam = competitionFamilyRepository.findByName(TEST_COMP_FAM).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_FAM));
+        CompetitionFamily fam = competitionFamilyRepository.findByName(compFamilyDto.getName()).orElseThrow(() -> new EntityNotFoundException(compFamilyDto.getName()));
         webClient.delete()
                 .uri("/families/" + fam.getId())
                 .exchange()
@@ -76,7 +74,7 @@ public class ContractCompRoundApiIntegrationTest {
                 .expectStatus()
                 .isCreated()
         ;
-        CompetitionFamily fam = competitionFamilyRepository.findByName(TEST_COMP_FAM).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_FAM));
+        CompetitionFamily fam = competitionFamilyRepository.findByName(compFamilyDto.getName()).orElseThrow(() -> new EntityNotFoundException(compFamilyDto.getName()));
         compDto.setFamilyId(fam.getId());
         compDto.setFamilyName(fam.getName());
 
@@ -87,7 +85,7 @@ public class ContractCompRoundApiIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isCreated();
-        Competition comp = competitionRepository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_FAM));
+        Competition comp = competitionRepository.findByName(compDto.getName()).orElseThrow(() -> new EntityNotFoundException(compDto.getName()));
         compRoundDto.setCompId(comp.getId());
         compRoundDto.setCompName(comp.getName());
 
@@ -117,7 +115,7 @@ public class ContractCompRoundApiIntegrationTest {
     @Test
     @Order(1)
     void createNewRound_withValidDtoInput_thenSuccess() {
-        Competition comp = competitionRepository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_FAM));
+        Competition comp = competitionRepository.findByName(compDto.getName()).orElseThrow(() -> new EntityNotFoundException(compDto.getName()));
         compRoundDto.setCompId(comp.getId());
         compRoundDto.setCompName(comp.getName());
         compRoundDto.setName(TEST_COMP_ROUND_2);
@@ -200,7 +198,8 @@ public class ContractCompRoundApiIntegrationTest {
     @Test
     @Order(4)
     void whenCompIdProvided_ThenFetchAllMatchDays() {
-        Competition comp = competitionRepository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_FAM));
+        Competition comp = competitionRepository.findByName(compDto.getName()).orElseThrow(() -> new EntityNotFoundException(compDto.getName()));
+
 
         webClient.get()
                 .uri("/competitions/" + comp.getId() + "/matchdays")
@@ -214,7 +213,7 @@ public class ContractCompRoundApiIntegrationTest {
     @Test
     @Order(4)
     void whenFindAllForComp_ThenFetchAll() {
-        Competition comp = competitionRepository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_FAM));
+        Competition comp = competitionRepository.findByName(compDto.getName()).orElseThrow(() -> new EntityNotFoundException(compDto.getName()));
 
         webClient.get()
                 .uri("/competitions/" + comp.getId() + "/rounds")

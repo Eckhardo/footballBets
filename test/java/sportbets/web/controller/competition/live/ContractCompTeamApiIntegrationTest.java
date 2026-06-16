@@ -23,6 +23,7 @@ import sportbets.persistence.repository.competition.CompetitionFamilyRepository;
 import sportbets.persistence.repository.competition.CompetitionRepository;
 import sportbets.persistence.repository.competition.CompetitionTeamRepository;
 import sportbets.persistence.repository.competition.TeamRepository;
+import sportbets.testdata.TestConstants;
 import sportbets.web.dto.competition.CompetitionDto;
 import sportbets.web.dto.competition.CompetitionFamilyDto;
 import sportbets.web.dto.competition.CompetitionTeamDto;
@@ -41,12 +42,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ContractCompTeamApiIntegrationTest {
     private static final Logger log = LoggerFactory.getLogger(ContractCompTeamApiIntegrationTest.class);
-    private static final String TEST_COMP_FAM = "TestLiga";
-    private static final String TEST_COMP = "TestLiga: Saison 2025";
-    private static final String TEAM_NAME = "Eintracht Braunschweig";
+      private static final String TEAM_NAME = "Eintracht Braunschweig";
     private static final String TEAM_NAME_2 = "Holstein Kiel";
-    final CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, TEST_COMP_FAM, "Description of TestLiga", true, true, Country.GERMANY);
-    final CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, null, TEST_COMP_FAM);
+    final CompetitionFamilyDto compFamilyDto = TestConstants.createValidFamilyDto();
+    final CompetitionDto compDto = TestConstants.createValidCompetitionDto();
     final TeamDto teamDto = new TeamDto(null, TEAM_NAME, "Braunschweig",true);
     final TeamDto teamDto1 = new TeamDto(null, TEAM_NAME_2, "Kiel",true);
     @Autowired
@@ -65,7 +64,7 @@ public class ContractCompTeamApiIntegrationTest {
         // Clean up all entities created during tests
         log.debug("cleanup");
 
-        CompetitionFamily fam = competitionFamilyRepository.findByName(TEST_COMP_FAM).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_FAM));
+        CompetitionFamily fam = competitionFamilyRepository.findByName(compFamilyDto.getName()).orElseThrow(() -> new EntityNotFoundException(compFamilyDto.getName()));
         webClient.delete()
                 .uri("/families/" + fam.getId())
                 .exchange()
@@ -100,7 +99,8 @@ public class ContractCompTeamApiIntegrationTest {
                 .expectStatus()
                 .isCreated()
         ;
-        CompetitionFamily fam = competitionFamilyRepository.findByName(TEST_COMP_FAM).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_FAM));
+
+        CompetitionFamily fam = competitionFamilyRepository.findByName(compFamilyDto.getName()).orElseThrow(() -> new EntityNotFoundException(compFamilyDto.getName()));
         compDto.setFamilyId(fam.getId());
         // save new competition
         webClient.post()
@@ -127,7 +127,7 @@ public class ContractCompTeamApiIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isCreated();
-        Competition comp = competitionRepository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP));
+        Competition comp = competitionRepository.findByName(compDto.getName()).orElseThrow(() -> new EntityNotFoundException(compDto.getName()));
 
         Team entity = teamRepository.findByName(TEAM_NAME).orElseThrow(() -> new EntityNotFoundException("Team not found"));
         teamDto.setId(entity.getId());
@@ -182,7 +182,7 @@ public class ContractCompTeamApiIntegrationTest {
     @Test
     @Order(2)
     void whenCompTeamIsUpdated_ThenDetailsHaveChanged() {
-        Competition comp = competitionRepository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP));
+        Competition comp = competitionRepository.findByName(compDto.getName()).orElseThrow(() -> new EntityNotFoundException(compDto.getName()));
         Team team = teamRepository.findByName(TEAM_NAME).orElseThrow(() -> new EntityNotFoundException("entity not found"));
         List<CompetitionTeam> compTeams = compTeamRepo.getAllForComp(comp.getId());
         assertNotNull(compTeams);
@@ -225,7 +225,7 @@ public class ContractCompTeamApiIntegrationTest {
     @Test
     @Order(2)
     void whenCompIdIsProvided_ThenAllCompTeamsAreRetrieved() {
-        Competition comp = competitionRepository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP));
+        Competition comp = competitionRepository.findByName(compDto.getName()).orElseThrow(() -> new EntityNotFoundException(compDto.getName()));
 
         webClient.get()
                 .uri("/compTeams/" + comp.getId())

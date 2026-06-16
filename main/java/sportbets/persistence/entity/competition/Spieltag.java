@@ -40,7 +40,7 @@ public class Spieltag {
     private CompetitionRound competitionRound;
 
     @OneToMany(mappedBy = "spieltag", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private final Set<Spiel> spiele = new HashSet<>();
+    private  Set<Spiel> spiele = new HashSet<>();
 
 
 

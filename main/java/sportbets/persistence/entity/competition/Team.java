@@ -28,7 +28,7 @@ public class Team  {
     private boolean hasClub = true;
 
     @OneToMany(mappedBy = "team", cascade ={ CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true, fetch = FetchType.LAZY)
-    private final Set<CompetitionTeam> competitionTeams = new HashSet<>();
+    private  Set<CompetitionTeam> competitionTeams = new HashSet<>();
 
 
     public Team() {

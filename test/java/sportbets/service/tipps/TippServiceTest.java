@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import sportbets.persistence.builder.TipperConstants;
 import sportbets.persistence.entity.community.Community;
 import sportbets.persistence.entity.community.CommunityMembership;
 import sportbets.persistence.entity.community.Tipper;
@@ -70,6 +69,7 @@ public class TippServiceTest {
 
     @Autowired
     private TippService tippService;
+    CompetitionFamilyDto competitionFamily = TestConstants.createValidFamilyDto();
 
     TeamDto savedTeamDto = null;
     TeamDto savedTeamDto2 = null;
@@ -90,9 +90,8 @@ public class TippServiceTest {
 
     @BeforeEach
     public void setUp() {
-        CompetitionFamilyDto competitionFamily = TestConstants.TEST_FAMILY;
         CompetitionFamily savedFam = familyService.save(competitionFamily);
-        CompetitionDto compDto = new CompetitionDto(null, COMP_TEST, "Description of Competition", 3, 1, null, competitionFamily.getName());
+        CompetitionDto compDto =TestConstants.createValidCompetitionDto();
         compDto.setFamilyId(savedFam.getId());
         savedComp = compService.save(compDto);
         CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, "TEST_COMP_ROUND", false, null, compDto.getName(), 18, 17, 1);
@@ -129,7 +128,8 @@ public class TippServiceTest {
         TippModusPointDto tippModusPointDto = new TippModusPointDto(null, "PunkteTest", TippModusType.TIPPMODUS_POINT.getDisplayName(), 1, savedCommunity.getId(), savedCommunity.getName(), 4);
         savedTippModusPoint = (TippModusPointDto) tippModusService.save(tippModusPointDto);
 
-        TipperDto testTipper = TipperConstants.WERNER_DTO;
+        TipperDto testTipper =new TipperDto(null,"Kalle", "Wernersen", "Kalleo", "banane", "frucht", "werner@gmx.de",null);
+
         savedTipper = tipperService.save(testTipper);
         CommunityMembershipDto commMembDto = new CommunityMembershipDto(null, savedTipper.getId(), savedTipper.getUsername(), savedCommunity.getId(), savedCommunity.getName());
         savedCommunityMembership = communityMembershipService.save(commMembDto);
@@ -140,7 +140,7 @@ public class TippServiceTest {
     public void tearDown() {
 
         log.debug("Delete All Test data");
-        familyService.deleteByName(TestConstants.TEST_FAMILY.getName());
+        familyService.deleteByName(competitionFamily.getName());
         teamService.deleteByName(savedTeamDto.getName());
         teamService.deleteByName(savedTeamDto2.getName());
         tipperService.deleteById(savedTipper.getId());

@@ -30,8 +30,8 @@ public class TippModusServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(TippModusServiceTest.class);
 
-    private final CommunityDto communityDto = new CommunityDto(null, COMM_TEST, "Description of Community");
-    private final CommunityDto communityDto2 = new CommunityDto(null, COMM_TEST_2, "Description of Community2");
+    private final CommunityDto communityDto = new CommunityDto(null, "TippModus Community", "Description of Community");
+    private final CommunityDto communityDto2 = new CommunityDto(null, "TippModus Community 2", "Description of Community2");
 
     Community savedCommunity = null;
 

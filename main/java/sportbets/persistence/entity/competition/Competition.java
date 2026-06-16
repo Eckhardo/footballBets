@@ -31,17 +31,17 @@ public class Competition {
     private final LocalDateTime createdOn = LocalDateTime.now();
 
     @OneToMany(mappedBy = "competition", cascade =CascadeType.PERSIST, orphanRemoval = true, fetch = FetchType.EAGER)
-    final Set<CompetitionRole> competitionRoles = new HashSet<>();
+    private Set<CompetitionRole> competitionRoles = new HashSet<>();
 
     @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private final Set<CompetitionRound> competitionRounds = new HashSet<>();
+    private  Set<CompetitionRound> competitionRounds = new HashSet<>();
 
     @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private final Set<CompetitionTeam> competitionTeams = new HashSet<>();
+    private  Set<CompetitionTeam> competitionTeams = new HashSet<>();
 
 
     @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private final Set<CompetitionMembership> competitionMemberships = new HashSet<>();
+    private  Set<CompetitionMembership> competitionMemberships = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "competitionFamily_id", foreignKey = @ForeignKey(name = "FK_COMP_TO_FAM"))

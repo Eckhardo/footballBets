@@ -59,6 +59,7 @@ public class CompServiceImpl implements CompService {
     @Override
     @Transactional
     public Competition save(CompetitionDto compDto) {
+        log.info("Saving competition");
 
         Optional<Competition> competition = compRepository.findByName(compDto.getName());
         if (competition.isPresent()) {
@@ -109,9 +110,7 @@ public class CompServiceImpl implements CompService {
 
     @Override
     public List<Competition> getAll() {
-
-        return compRepository.findAllComps();
-
+            return compRepository.findAllComps();
     }
 
     @Override

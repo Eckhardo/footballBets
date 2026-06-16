@@ -18,6 +18,7 @@ import sportbets.persistence.entity.competition.CompetitionRound;
 import sportbets.persistence.repository.competition.CompetitionFamilyRepository;
 import sportbets.persistence.repository.competition.CompetitionRepository;
 import sportbets.persistence.repository.competition.CompetitionRoundRepository;
+import sportbets.testdata.TestConstants;
 import sportbets.web.dto.competition.CompetitionDto;
 import sportbets.web.dto.competition.CompetitionFamilyDto;
 import sportbets.web.dto.competition.CompetitionRoundDto;
@@ -34,13 +35,12 @@ import java.time.LocalDateTime;
 public class ContractMatchDayApiIntegrationTest {
 
     private static final Logger log = LoggerFactory.getLogger(ContractMatchDayApiIntegrationTest.class);
-    private static final String TEST_COMP_FAM = "TestLiga";
-    private static final String TEST_COMP = "TestLiga: Saison 2025";
     private static final String TEST_COMP_ROUND = "Saison 2025: Hinrunde";
 
     private static final int TEST_MATCH_DAY = 1;
-    final CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, TEST_COMP_FAM, "Description of TestLiga", true, true, Country.GERMANY);
-    final CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, null, TEST_COMP_FAM);
+    final CompetitionFamilyDto compFamilyDto = TestConstants.createValidFamilyDto();
+    final CompetitionDto compDto =TestConstants.createValidCompetitionDto();
+
     final CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, TEST_COMP_ROUND, false, compDto.getId(), compDto.getName(), 18, 17, 1);
     final SpieltagDto matchDayDto = new SpieltagDto(null, TEST_MATCH_DAY, LocalDateTime.now());
 
@@ -58,7 +58,7 @@ public class ContractMatchDayApiIntegrationTest {
         // Clean up all entities created during tests
         log.info("\n cleanup \n");
 
-        CompetitionFamily fam = competitionFamilyRepository.findByName(TEST_COMP_FAM).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_FAM));
+        CompetitionFamily fam = competitionFamilyRepository.findByName(compFamilyDto.getName()).orElseThrow(() -> new EntityNotFoundException(compFamilyDto.getName()));
         webClient.delete()
                 .uri("/families/" + fam.getId())
                 .exchange()
@@ -76,7 +76,7 @@ public class ContractMatchDayApiIntegrationTest {
                 .expectStatus()
                 .isCreated()
         ;
-        CompetitionFamily fam = competitionFamilyRepository.findByName(TEST_COMP_FAM).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_FAM));
+        CompetitionFamily fam = competitionFamilyRepository.findByName(compFamilyDto.getName()).orElseThrow(() -> new EntityNotFoundException(compFamilyDto.getName()));
         compDto.setFamilyId(fam.getId());
 
         webClient.post()
@@ -86,7 +86,7 @@ public class ContractMatchDayApiIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isCreated();
-        Competition comp = competitionRepository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP));
+        Competition comp = competitionRepository.findByName(compDto.getName()).orElseThrow(() -> new EntityNotFoundException(compDto.getName()));
         compRoundDto.setCompId(comp.getId());
         compRoundDto.setCompName(comp.getName());
 
@@ -122,7 +122,7 @@ public class ContractMatchDayApiIntegrationTest {
     @Order(1)
     void whenCompIdProvided_ThenFetchAllMatchDays() {
 
-        Competition comp = competitionRepository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP));
+        Competition comp = competitionRepository.findByName(compDto.getName()).orElseThrow(() -> new EntityNotFoundException(compDto.getName()));
         Long id = comp.getId();
         webClient.get()
                 .uri("/competitions/" + id + "/matchdays")

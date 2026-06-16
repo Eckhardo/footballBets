@@ -28,9 +28,9 @@ public class CompetitionRound {
     @NotNull
     private Competition competition;
     @OneToMany(mappedBy = "competitionRound", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private final Set<CompetitionGroup> competitionGroups = new HashSet<>();
+    private  Set<CompetitionGroup> competitionGroups = new HashSet<>();
     @OneToMany(mappedBy = "competitionRound", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private final Set<Spieltag> spieltage = new HashSet<>();
+    private  Set<Spieltag> spieltage = new HashSet<>();
 
     public CompetitionRound() {
 

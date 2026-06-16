@@ -33,7 +33,7 @@ public class CompetitionFamily {
     private boolean hasClubs;
 
     @OneToMany(mappedBy = "competitionFamily", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private final Set<Competition> competitions = new HashSet<>();
+    private  Set<Competition> competitions = new HashSet<>();
 
     //	********************** Constructors ********************** //
 

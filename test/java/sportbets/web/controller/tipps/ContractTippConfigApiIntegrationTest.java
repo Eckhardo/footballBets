@@ -64,17 +64,15 @@ public class ContractTippConfigApiIntegrationTest {
     @Autowired
     TippConfigRepository tippConfigRepo;
 
-    private static final String TEST_COMP_FAM = TestConstants.COMP_FAM_TEST;
-    private static final String TEST_COMP = TestConstants.COMP_TEST;
-    private static final String TEST_COMP_ROUND = TestConstants.TEST_COMP_ROUND_DTO.getName();
+     private static final String TEST_COMP_ROUND = TestConstants.TEST_COMP_ROUND_DTO.getName();
     private static final int TEST_MATCH_DAY = 1;
 
 
     private static final String TEST_COMM = TestConstants.COMM_TEST;
 
 
-    final CompetitionFamilyDto compFamilyDto = new CompetitionFamilyDto(null, TEST_COMP_FAM, "Description of TestLiga", true, true, Country.GERMANY);
-    final CompetitionDto compDto = new CompetitionDto(null, TEST_COMP, "Description of Competition", 3, 1, null, TEST_COMP_FAM);
+    final CompetitionFamilyDto compFamilyDto =TestConstants.createValidFamilyDto();
+    final CompetitionDto compDto = TestConstants.createValidCompetitionDto();
     final CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, TEST_COMP_ROUND, false, compDto.getId(), compDto.getName(), 18, 17, 1);
     final SpieltagDto matchDayDto = new SpieltagDto(null, TEST_MATCH_DAY, LocalDateTime.now());
 
@@ -106,7 +104,7 @@ public class ContractTippConfigApiIntegrationTest {
                 .expectStatus()
                 .isCreated();
 
-        CompetitionFamily fam = familyRepository.findByName(TEST_COMP_FAM).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_FAM));
+        CompetitionFamily fam = familyRepository.findByName(compFamilyDto.getName()).orElseThrow(() -> new EntityNotFoundException(compFamilyDto.getName()));
         compDto.setFamilyId(fam.getId());
 
         webClient.post()
@@ -116,7 +114,7 @@ public class ContractTippConfigApiIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isCreated();
-        Competition savedComp = competitionRepository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP));
+        Competition savedComp = competitionRepository.findByName(compDto.getName()).orElseThrow(() -> new EntityNotFoundException(compDto.getName()));
         compRoundDto.setCompId(savedComp.getId());
         compRoundDto.setCompName(savedComp.getName());
 
@@ -221,7 +219,7 @@ public class ContractTippConfigApiIntegrationTest {
                 .jsonPath("$.commId")
                 .exists()
                 .jsonPath("$.compName")
-                .isEqualTo(TEST_COMP)
+                .isEqualTo(compDto.getName())
                 .jsonPath("$.compId")
                 .exists();
         savedoCompMemb = compMembRepo.findByCommIdAndCompId(savedCommunity.getId(), savedComp.getId()).orElseThrow();
@@ -235,7 +233,7 @@ public class ContractTippConfigApiIntegrationTest {
         log.debug("cleanup");
 
 
-        CompetitionFamily fam = familyRepository.findByName(TEST_COMP_FAM).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_FAM));
+        CompetitionFamily fam = familyRepository.findByName(compFamilyDto.getName()).orElseThrow(() -> new EntityNotFoundException(compFamilyDto.getName()));
         assertNotNull(fam);
         webClient.delete()
                 .uri("/families/" + fam.getId())
