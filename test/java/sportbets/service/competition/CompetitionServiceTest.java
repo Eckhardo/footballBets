@@ -20,7 +20,7 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static sportbets.testdata.TestConstants.TEST_COMP_DTO_2;
+
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -70,22 +70,23 @@ public class CompetitionServiceTest {
     void whenValidComp_thenCompShouldBeUpdated() {
 
         CompetitionDto compDto =TestConstants.createValidCompetitionDto();
+        CompetitionDto compDto2 =TestConstants.createValidCompetitionDto2();
         compDto.setFamilyId(savedFam.getId());
         Competition savedComp = compService.save(compDto);
-        compDto.setName(TEST_COMP_DTO_2.getName());
+        compDto.setName(compDto2.getName());
         compDto.setWinMultiplicator(5);
         compDto.setId(savedComp.getId());
         Competition updatedComp = compService.updateComp(savedComp.getId(), compDto).orElseThrow();
 
         assertThat(updatedComp.getId()).isNotNull();
-        assertThat(TEST_COMP_DTO_2.getName()).isEqualTo(updatedComp.getName());
+        assertThat(compDto2.getName()).isEqualTo(updatedComp.getName());
         assertThat(5).isEqualTo(updatedComp.getWinMultiplicator());
         List<CompetitionRole> roles = competitionRoleService.getAllCompRoles();
         assertThat(roles).isNotNull();
         for (CompetitionRole role : roles) {
             System.out.println(role.toString());
         }
-        CompetitionRole updatedRole = roles.stream().filter((r) -> r.getName().equals(TEST_COMP_DTO_2.getName())).findFirst().orElseThrow();
+        CompetitionRole updatedRole = roles.stream().filter((r) -> r.getName().equals(compDto2.getName())).findFirst().orElseThrow();
         assertThat(updatedRole).isNotNull();
         assertEquals(updatedComp.getId(), updatedRole.getCompetition().getId());
         assertThat(updatedComp.getName()).isEqualTo(updatedRole.getName());

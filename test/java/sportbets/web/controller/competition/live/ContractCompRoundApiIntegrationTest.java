@@ -11,7 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import sportbets.FootballBetsApplication;
-import sportbets.persistence.entity.competition.enums.Country;
 import sportbets.config.TestProfileLiveTest;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
@@ -35,12 +34,11 @@ import java.time.LocalDateTime;
 public class ContractCompRoundApiIntegrationTest {
 
     private static final Logger log = LoggerFactory.getLogger(ContractCompRoundApiIntegrationTest.class);
-     private static final String TEST_COMP_ROUND = "Saison 2025: Hinrunde";
-    private static final String TEST_COMP_ROUND_2 = "Saison 2025: Rueckrunde";
     private static final int TEST_MATCH_DAY = 1;
     final CompetitionFamilyDto compFamilyDto = TestConstants.createValidFamilyDto();
     final CompetitionDto compDto = TestConstants.createValidCompetitionDto();
-    final CompetitionRoundDto compRoundDto =  new CompetitionRoundDto(null, 1, TEST_COMP_ROUND, false, compDto.getId(), compDto.getName(), 18, 17, 1);
+    final CompetitionRoundDto compRoundDto = TestConstants.createValidCompRoundDto();
+    final CompetitionRoundDto compRoundDto2 = TestConstants.createValidCompRoundDto2();
     final SpieltagDto matchDayDto = new SpieltagDto(null, TEST_MATCH_DAY, LocalDateTime.now());
     @Autowired
     WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();
@@ -96,7 +94,7 @@ public class ContractCompRoundApiIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isCreated();
-        CompetitionRound round = competitionRoundRepository.findByName(TEST_COMP_ROUND).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
+        CompetitionRound round = competitionRoundRepository.findByName(compRoundDto.getName()).orElseThrow(() -> new EntityNotFoundException(compRoundDto.getName()));
         matchDayDto.setCompRoundId(round.getId());
         matchDayDto.setCompRoundName(round.getName());
 
@@ -116,14 +114,13 @@ public class ContractCompRoundApiIntegrationTest {
     @Order(1)
     void createNewRound_withValidDtoInput_thenSuccess() {
         Competition comp = competitionRepository.findByName(compDto.getName()).orElseThrow(() -> new EntityNotFoundException(compDto.getName()));
-        compRoundDto.setCompId(comp.getId());
-        compRoundDto.setCompName(comp.getName());
-        compRoundDto.setName(TEST_COMP_ROUND_2);
-        log.debug("createNewRound_withValidDtoInput_thenSuccess {}", compRoundDto.getCompId());
-        webClient.post()
+        compRoundDto2.setCompId(comp.getId());
+        compRoundDto2.setCompName(comp.getName());
+
+          webClient.post()
                 .uri("/rounds")
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(compRoundDto)
+                .bodyValue(compRoundDto2)
                 .exchange()
                 .expectStatus()
                 .isCreated()
@@ -131,7 +128,7 @@ public class ContractCompRoundApiIntegrationTest {
                 .jsonPath("$.id")
                 .exists()
                 .jsonPath("$.name")
-                .isEqualTo(TEST_COMP_ROUND_2)
+                .isEqualTo(compRoundDto2.getName())
                 .jsonPath("$.hasGroups")
                 .isEqualTo(false);
 
@@ -142,7 +139,7 @@ public class ContractCompRoundApiIntegrationTest {
     void givenPreloadedData_whenGetSingleRound_thenResponseContainsFields() {
 
 
-        CompetitionRound entity = competitionRoundRepository.findByName(TEST_COMP_ROUND).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
+        CompetitionRound entity = competitionRoundRepository.findByName(compRoundDto.getName()).orElseThrow(() -> new EntityNotFoundException(compRoundDto.getName()));
         Long id = entity.getId();
         webClient.get()
                 .uri("/rounds/" + id)
@@ -153,7 +150,7 @@ public class ContractCompRoundApiIntegrationTest {
                 .jsonPath("$.id")
                 .exists()
                 .jsonPath("$.name")
-                .isEqualTo(TEST_COMP_ROUND)
+                .isEqualTo(compRoundDto.getName())
                 .jsonPath("$.hasGroups")
                 .exists()
                 .jsonPath("$.compId")
@@ -168,7 +165,7 @@ public class ContractCompRoundApiIntegrationTest {
     @Order(3)
     void updateRound_withValidCompJsonInput_thenSuccess() {
 
-        CompetitionRound entity = competitionRoundRepository.findByName(TEST_COMP_ROUND).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
+        CompetitionRound entity = competitionRoundRepository.findByName(compRoundDto.getName()).orElseThrow(() -> new EntityNotFoundException(compRoundDto.getName()));
         compRoundDto.setCompId(entity.getCompetition().getId());
         // given
         compRoundDto.setRoundNumber(100);
@@ -185,7 +182,7 @@ public class ContractCompRoundApiIntegrationTest {
                 .jsonPath("$.id")
                 .exists()
                 .jsonPath("$.name")
-                .isEqualTo(TEST_COMP_ROUND)
+                .isEqualTo(compRoundDto.getName())
                 .jsonPath("$.roundNumber")
                 .isEqualTo(100)
                 .jsonPath("$.compId")

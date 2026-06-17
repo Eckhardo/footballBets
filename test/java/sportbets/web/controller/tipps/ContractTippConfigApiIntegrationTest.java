@@ -61,10 +61,7 @@ public class ContractTippConfigApiIntegrationTest {
 
     @Autowired
     TippModusRepository tippModusRepository;
-    @Autowired
-    TippConfigRepository tippConfigRepo;
 
-     private static final String TEST_COMP_ROUND = TestConstants.TEST_COMP_ROUND_DTO.getName();
     private static final int TEST_MATCH_DAY = 1;
 
 
@@ -73,7 +70,7 @@ public class ContractTippConfigApiIntegrationTest {
 
     final CompetitionFamilyDto compFamilyDto =TestConstants.createValidFamilyDto();
     final CompetitionDto compDto = TestConstants.createValidCompetitionDto();
-    final CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, TEST_COMP_ROUND, false, compDto.getId(), compDto.getName(), 18, 17, 1);
+    final CompetitionRoundDto compRoundDto =TestConstants.createValidCompRoundDto();
     final SpieltagDto matchDayDto = new SpieltagDto(null, TEST_MATCH_DAY, LocalDateTime.now());
 
     CommunityDto communityDto = new CommunityDto(null, TEST_COMM, "Description of Community");
@@ -128,7 +125,7 @@ public class ContractTippConfigApiIntegrationTest {
                 .exists();
 
 
-        CompetitionRound round = roundRepository.findByName(TEST_COMP_ROUND).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
+        CompetitionRound round = roundRepository.findByName(compRoundDto.getName()).orElseThrow(() -> new EntityNotFoundException(compRoundDto.getName()));
         matchDayDto.setCompRoundId(round.getId());
         matchDayDto.setCompRoundName(round.getName());
         webClient.post()

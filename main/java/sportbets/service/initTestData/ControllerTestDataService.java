@@ -62,6 +62,7 @@ public class ControllerTestDataService {
     private SpielService matchService;
 
     private static final Logger log = LoggerFactory.getLogger(ControllerTestDataService.class);
+
     public static final TeamDto TEAM_DTO_1 = new TeamDto(null, "TEAM_NAME_TEST1", "ZAC", true);
     public static final TeamDto TEAM_DTO_2 = new TeamDto(null, "TEAM_NAME_TEST2", "RAZ", true);
 

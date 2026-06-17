@@ -38,16 +38,12 @@ public class ContractCompMembApiIntegrationTest {
     private static final Logger log = LoggerFactory.getLogger(ContractCompMembApiIntegrationTest.class);
 
 
-    private static final String TEST_COMP_2 = "PremieraLiga: Saison 2025";
-
     private static final String TEST_COMM = "My Test Community";
-    private static final String TEST_COMM_2 = "My Test Community 2";
 
     final CompetitionFamilyDto compFamilyDto = TestConstants.createValidFamilyDto();
     final CommunityDto communityDto = new CommunityDto(null, TEST_COMM, "Description of Community");
     final CompetitionDto compDto = TestConstants.createValidCompetitionDto();
-    final CompetitionDto compDto2 = new CompetitionDto(null, TEST_COMP_2, "Description of Competition2", 3, 1, null, compFamilyDto.getName());
-
+    final CompetitionDto compDto2 = TestConstants.createValidCompetitionDto2();
     @Autowired
     WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();
     @Autowired
@@ -70,15 +66,15 @@ public class ContractCompMembApiIntegrationTest {
         webClient.delete()
                 .uri("/families/" + fam.getId())
                 .exchange()
-                .expectStatus()
-                .isNoContent();
+                .expectStatus().isNoContent();
+        Community community = communityRepository.findByName(TEST_COMM).orElseThrow();
 
-        Community savedComm = communityRepository.findByName(TEST_COMM).orElseThrow();
         webClient.delete()
-                .uri("/communities/" + savedComm.getId())
+                .uri("/communities/" + community.getId())
                 .exchange()
-                .expectStatus()
-                .isNoContent();
+                .expectStatus().isNoContent();
+
+
 
     }
 
@@ -124,7 +120,7 @@ public class ContractCompMembApiIntegrationTest {
                 .jsonPath("$.id")
                 .exists()
                 .jsonPath("$.name")
-                .isEqualTo(TEST_COMP_2);
+                .isEqualTo(compDto2.getName());
 
         webClient.post()
                 .uri("/communities")
@@ -200,7 +196,7 @@ public class ContractCompMembApiIntegrationTest {
                 .isEqualTo(compDto.getName())
                 .jsonPath("$.compId")
                 .exists();
-        Competition competition2 = compRepo.findByName(TEST_COMP_2).orElseThrow();
+        Competition competition2 = compRepo.findByName(compDto.getName()).orElseThrow();
         assertNotNull(competition2);
         CompetitionMembership compMemb = compMembRepo.findByCommIdAndCompId(community.getId(), competition.getId()).orElseThrow();
         assertNotNull(compMemb);
@@ -223,7 +219,7 @@ public class ContractCompMembApiIntegrationTest {
                 .jsonPath("$.commId")
                 .exists()
                 .jsonPath("$.compName")
-                .isEqualTo(TEST_COMP_2)
+                .isEqualTo(compDto.getName())
                 .jsonPath("$.compId")
                 .exists();
     }

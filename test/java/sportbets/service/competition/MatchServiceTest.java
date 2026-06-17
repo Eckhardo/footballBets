@@ -53,6 +53,9 @@ public class MatchServiceTest {
     @Autowired
     private CompTableService compTableService;
     CompetitionFamilyDto competitionFamily = TestConstants.createValidFamilyDto();
+    CompetitionDto compDto = createValidCompetitionDto();
+    CompetitionRoundDto compRoundDto = TestConstants.createValidCompRoundDto();
+
     Competition savedComp = null;
     CompetitionRound savedCompRound = null;
 
@@ -60,10 +63,8 @@ public class MatchServiceTest {
     public void setup() {
 
         CompetitionFamily savedFam = familyService.save(competitionFamily);
-        CompetitionDto compDto = createValidCompetitionDto();
         compDto.setFamilyId(savedFam.getId());
         savedComp = compService.save(compDto);
-        CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, "TEST_COMP_ROUND", false, null, compDto.getName(), 18, 17, 1);
         compRoundDto.setCompId(savedComp.getId());
         savedCompRound = compRoundService.save(compRoundDto);
         SpieltagDto matchDayDto = new SpieltagDto(null, 1, LocalDateTime.now(), savedCompRound.getId(), savedCompRound.getName());
@@ -200,9 +201,9 @@ public class MatchServiceTest {
     @Test
     @Order(4)
     void whenSaveInBatchForInitialization_thenMatchesShouldBeRetrieved() {
-        CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, "TEST_COMP_ROUND", false, null, savedComp.getName(), 18, 1, 1);
         compRoundDto.setCompId(savedComp.getId());
         compRoundDto.setId(savedCompRound.getId());
+        compRoundDto.setMatchdaysSize(1);
 
 
         compRoundService.updateRound(compRoundDto.getId(), compRoundDto);
@@ -241,9 +242,9 @@ public class MatchServiceTest {
     @Test
     @Order(5)
     void whenSaveInBatch_thenMatchesShouldBeRetrieved() {
-        CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, "TEST_COMP_ROUND", false, null, savedComp.getName(), 18, 1, 1);
         compRoundDto.setCompId(savedComp.getId());
         compRoundDto.setId(savedCompRound.getId());
+        compRoundDto.setMatchdaysSize(1);
 
 
         compRoundService.updateRound(compRoundDto.getId(), compRoundDto);

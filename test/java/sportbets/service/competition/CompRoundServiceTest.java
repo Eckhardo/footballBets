@@ -27,7 +27,7 @@ public class CompRoundServiceTest {
     private static final Logger log = LoggerFactory.getLogger(CompRoundServiceTest.class);
     final CompetitionFamilyDto competitionFamily = createValidFamilyDto();
     CompetitionDto compDto = createValidCompetitionDto();
-    CompetitionRoundDto compRoundDto = TestConstants.TEST_COMP_ROUND_DTO;
+    CompetitionRoundDto compRoundDto = TestConstants.createValidCompRoundDto()  ;
 
     Competition savedComp = null;
 

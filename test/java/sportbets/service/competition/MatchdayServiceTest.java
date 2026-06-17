@@ -56,7 +56,7 @@ public class MatchdayServiceTest {
         compDto.setFamilyId(savedFam.getId());
         savedComp = compService.save(compDto);
         log.debug("set up Test data: saved competition ");
-        CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, "TEST_COMP_ROUND", false, null, compDto.getName(), 18, 17, 1);
+        CompetitionRoundDto compRoundDto =TestConstants.createValidCompRoundDto();
         compRoundDto.setCompId(savedComp.getId());
         savedCompRound = compRoundService.save(compRoundDto);
         log.debug("set up Test data: saved competitionRound ");

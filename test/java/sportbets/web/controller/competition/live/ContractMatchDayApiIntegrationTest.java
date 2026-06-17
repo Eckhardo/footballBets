@@ -35,13 +35,12 @@ import java.time.LocalDateTime;
 public class ContractMatchDayApiIntegrationTest {
 
     private static final Logger log = LoggerFactory.getLogger(ContractMatchDayApiIntegrationTest.class);
-    private static final String TEST_COMP_ROUND = "Saison 2025: Hinrunde";
 
     private static final int TEST_MATCH_DAY = 1;
     final CompetitionFamilyDto compFamilyDto = TestConstants.createValidFamilyDto();
     final CompetitionDto compDto =TestConstants.createValidCompetitionDto();
 
-    final CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, TEST_COMP_ROUND, false, compDto.getId(), compDto.getName(), 18, 17, 1);
+    final CompetitionRoundDto compRoundDto =    TestConstants.createValidCompRoundDto();
     final SpieltagDto matchDayDto = new SpieltagDto(null, TEST_MATCH_DAY, LocalDateTime.now());
 
     @Autowired
@@ -100,7 +99,7 @@ public class ContractMatchDayApiIntegrationTest {
                 .exists();
 
 
-        savedRound = competitionRoundRepository.findByName(TEST_COMP_ROUND).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
+        savedRound = competitionRoundRepository.findByName(compRoundDto.getName()).orElseThrow(() -> new EntityNotFoundException(compRoundDto.getName()));
         matchDayDto.setCompRoundId(savedRound.getId());
         matchDayDto.setCompRoundName(savedRound.getName());
         webClient.post()

@@ -14,16 +14,13 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import sportbets.FootballBetsApplication;
 import sportbets.config.TestProfileLiveTest;
 import sportbets.persistence.entity.competition.*;
-import sportbets.persistence.entity.competition.enums.Country;
 import sportbets.persistence.repository.competition.*;
 import sportbets.testdata.TestConstants;
 import sportbets.web.dto.competition.*;
 import sportbets.web.dto.competition.batch.MatchBatchRecord;
 
 import java.time.LocalDateTime;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -38,7 +35,6 @@ import static sportbets.testdata.TestConstants.*;
 public class ContractMatchApiIntegrationTest {
 
     private static final Logger log = LoggerFactory.getLogger(ContractMatchApiIntegrationTest.class);
-    private static final String TEST_COMP_ROUND = COMP_ROUND_TEST;
 
 
     private static final int TEST_MATCH_DAY = 1;
@@ -46,8 +42,8 @@ public class ContractMatchApiIntegrationTest {
     private static final String TEAM_NAME_2 = TEAM_NAME_TEST2;
     private static final String TEAM_NAME_3 = TEAM_NAME_TEST3;
     final CompetitionFamilyDto compFamilyDto = TestConstants.createValidFamilyDto();
-    final CompetitionDto compDto =TestConstants.createValidCompetitionDto();
-    final CompetitionRoundDto compRoundDto = new CompetitionRoundDto(null, 1, TEST_COMP_ROUND, false, compDto.getId(), compDto.getName(), 18, 1, 1);
+    final CompetitionDto compDto = TestConstants.createValidCompetitionDto();
+    final CompetitionRoundDto compRoundDto = TestConstants.createValidCompRoundDto();
     final SpieltagDto matchDayDto = new SpieltagDto(null, TEST_MATCH_DAY, LocalDateTime.now());
     final TeamDto teamDto = new TeamDto(null, TEAM_NAME, "EIN", true);
     final TeamDto teamDto1 = new TeamDto(null, TEAM_NAME_2, "HOL", true);
@@ -115,7 +111,7 @@ public class ContractMatchApiIntegrationTest {
 
     @BeforeEach
     public void setUp() {
-
+        log.debug("setup");
         webClient.post()
                 .uri("/families")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -148,7 +144,7 @@ public class ContractMatchApiIntegrationTest {
                 .exists();
 
 
-        CompetitionRound round = competitionRoundRepository.findByName(TEST_COMP_ROUND).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
+        CompetitionRound round = competitionRoundRepository.findByName(compRoundDto.getName()).orElseThrow(() -> new EntityNotFoundException(compRoundDto.getName()));
         matchDayDto.setCompRoundId(round.getId());
         matchDayDto.setCompRoundName(round.getName());
         webClient.post()
@@ -190,14 +186,14 @@ public class ContractMatchApiIntegrationTest {
                 .isCreated();
         savedSpieltag = spieltagRepository.findByNumberWithRoundId(TEST_MATCH_DAY, round.getId()).orElseThrow(() -> new EntityNotFoundException(String.valueOf(TEST_MATCH_DAY)));
         assertNotNull(savedSpieltag);
-        savedTeam1 = teamRepository.findByName(TEAM_NAME).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
+        savedTeam1 = teamRepository.findByName(TEAM_NAME).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME));
         assertNotNull(savedTeam1);
 
-        savedTeam2 = teamRepository.findByName(TEAM_NAME_2).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
+        savedTeam2 = teamRepository.findByName(TEAM_NAME_2).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME_2));
         assertNotNull(savedTeam2);
-        savedTeam3 = teamRepository.findByName(TEAM_NAME_3).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
+        savedTeam3 = teamRepository.findByName(TEAM_NAME_3).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME_3));
         assertNotNull(savedTeam3);
-
+        log.debug("end setup");
 
     }
 
@@ -230,7 +226,7 @@ public class ContractMatchApiIntegrationTest {
                 .expectStatus()
                 .isCreated();
 
-        CompetitionRound round = competitionRoundRepository.findByName(TEST_COMP_ROUND).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
+        CompetitionRound round = competitionRoundRepository.findByName(compRoundDto.getName()).orElseThrow(() -> new EntityNotFoundException(compRoundDto.getName()));
         assertNotNull(round);
         Spieltag spieltag = spieltagRepository.findByNumberWithRoundId(TEST_MATCH_DAY, round.getId()).orElseThrow(() -> new EntityNotFoundException(String.valueOf(TEST_MATCH_DAY)));
         assertNotNull(spieltag);
@@ -274,7 +270,7 @@ public class ContractMatchApiIntegrationTest {
                 .expectStatus()
                 .isCreated();
 
-        CompetitionRound round = competitionRoundRepository.findByName(TEST_COMP_ROUND).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
+        CompetitionRound round = competitionRoundRepository.findByName(compRoundDto.getName()).orElseThrow(() -> new EntityNotFoundException(compRoundDto.getName()));
         assertNotNull(round);
         Spieltag spieltag = spieltagRepository.findByNumberWithRoundId(TEST_MATCH_DAY, round.getId()).orElseThrow(() -> new EntityNotFoundException(String.valueOf(TEST_MATCH_DAY)));
         assertNotNull(spieltag);
@@ -282,7 +278,7 @@ public class ContractMatchApiIntegrationTest {
         List<Spiel> spiele = spielRepository.findAllForMatchday(spieltag.getId());
         assertNotNull(spiele);
         Spiel spiel = spiele.stream().findFirst().orElseThrow(() -> new EntityNotFoundException(String.valueOf(spieltag.getId())));
-        Team team = teamRepository.findByName(TEAM_NAME_3).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
+        Team team = teamRepository.findByName(TEAM_NAME_3).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME_2));
         //change heimTore and set both teams to the same value (TeamA vs TeamA)
         testSpiel1.setId(spiel.getId());
         testSpiel1.setSpielNumber(spiel.getSpielNumber());
@@ -332,9 +328,24 @@ public class ContractMatchApiIntegrationTest {
                 .expectStatus()
                 .isCreated();
 
-        CompetitionRound round = competitionRoundRepository.findByName(TEST_COMP_ROUND).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
+        Competition comp = competitionRepository.findByName(compDto.getName()).orElseThrow(() -> new EntityNotFoundException(compDto.getName()));
+        CompetitionRound round = competitionRoundRepository.findByName(compRoundDto.getName()).orElseThrow(() -> new EntityNotFoundException(compRoundDto.getName()));
         assertNotNull(round);
-        log.debug("compRound {}", compRoundDto);
+
+        compRoundDto.setCompId(comp.getId());
+        compRoundDto.setCompName(comp.getName());
+        compRoundDto.setMatchdaysSize(1);
+
+        webClient.put()
+                .uri("/rounds/" + round.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(compRoundDto)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody().jsonPath("$.compId")
+                .exists();
+
         Spieltag spieltag = spieltagRepository.findByNumberWithRoundId(TEST_MATCH_DAY, round.getId()).orElseThrow(() -> new EntityNotFoundException(String.valueOf(TEST_MATCH_DAY)));
         assertNotNull(spieltag);
         log.debug("spieltag {}", spieltag);
@@ -377,7 +388,7 @@ public class ContractMatchApiIntegrationTest {
                 .isCreated();
 
 
-        CompetitionRound round = competitionRoundRepository.findByName(TEST_COMP_ROUND).orElseThrow(() -> new EntityNotFoundException(TEST_COMP_ROUND));
+        CompetitionRound round = competitionRoundRepository.findByName(compRoundDto.getName()).orElseThrow(() -> new EntityNotFoundException(compRoundDto.getName()));
         assertNotNull(round);
         Spieltag spieltag = spieltagRepository.findByNumberWithRoundId(TEST_MATCH_DAY, round.getId()).orElseThrow(() -> new EntityNotFoundException(String.valueOf(TEST_MATCH_DAY)));
         assertNotNull(spieltag);
@@ -393,17 +404,14 @@ public class ContractMatchApiIntegrationTest {
 
         assertNotNull(actualBody);
         assertEquals(2, actualBody.size());
-        for(SpielDto spielDto : actualBody) {
+        for (SpielDto spielDto : actualBody) {
             assertEquals(spieltag.getId(), spielDto.getSpieltagId());
-            assertThat(spielDto.getHeimTeamAcronym()).isIn(List.of(teamDto.getAcronym(),teamDto1.getAcronym(), teamDto2.getAcronym()));
-            assertThat(spielDto.getGastTeamAcronym()).isIn(List.of(teamDto.getAcronym(),teamDto1.getAcronym(), teamDto2.getAcronym()));
-            assertEquals(3,spielDto.getHeimTore());
-            assertThat(spielDto.getGastTore()).isIn(List.of(testSpiel1.getGastTore(),testSpiel2.getGastTore()));
+            assertThat(spielDto.getHeimTeamAcronym()).isIn(List.of(teamDto.getAcronym(), teamDto1.getAcronym(), teamDto2.getAcronym()));
+            assertThat(spielDto.getGastTeamAcronym()).isIn(List.of(teamDto.getAcronym(), teamDto1.getAcronym(), teamDto2.getAcronym()));
+            assertEquals(3, spielDto.getHeimTore());
+            assertThat(spielDto.getGastTore()).isIn(List.of(testSpiel1.getGastTore(), testSpiel2.getGastTore()));
 
         }
-
-
-
 
 
     }
