@@ -15,15 +15,17 @@ public interface TippModusRepository extends JpaRepository<TippModus, Long> {
 
     @Query("SELECT tm FROM TippModus tm join tm.community c  WHERE TYPE(tm) = TippModusToto and c.id=:id")
     List<TippModusToto> findTippModusToto(@Param("id") Long id);
+
     @Query("SELECT tm FROM TippModus tm join tm.community c  WHERE TYPE(tm) = TippModusResult and c.id=:id")
     List<TippModusResult> findTippModusResult(@Param("id") Long id);
+
     @Query("SELECT tm FROM TippModus tm join tm.community c  WHERE TYPE(tm) = TippModusPoint and c.id=:id")
     List<TippModusPoint> findTippModusPoint(@Param("id") Long id);
 
 
-
     @Query("select  tm from TippModus tm join tm.community c where c.id=:id")
     List<TippModus> findAllForCommunity(Long id);
+
     @Query("select  tm from TippModus tm join tm.community c where c.id=:commId and tm.name=:name")
     Optional<TippModus> findByName(Long commId, String name);
 

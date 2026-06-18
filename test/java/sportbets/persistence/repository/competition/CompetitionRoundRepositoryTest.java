@@ -9,10 +9,10 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
-import sportbets.persistence.entity.competition.enums.Country;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.entity.competition.CompetitionRound;
+import sportbets.testdata.TestConstants;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -42,18 +42,16 @@ public class CompetitionRoundRepositoryTest {
     @Before
     public void setUp() {
         // Initialize test data before test methods
-        CompetitionFamily testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true,  Country.GERMANY);
+        CompetitionFamily testFamily = TestConstants.createValidFamily();
         testComp = new Competition("TestLiga: Saison 2025/26", "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
         testRound = new CompetitionRound(1, "Hinrunde", testComp, false, 18, 17, 1);
         familyRepo.save(testFamily);
-        //  competitionDAO.save(testComp);
+
     }
 
     @After
     public void tearDown() {
 
-
-        //   familyRepo.deleteAll();
     }
 
     @Test

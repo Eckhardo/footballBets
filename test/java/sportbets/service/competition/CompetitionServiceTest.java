@@ -22,7 +22,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ActiveProfiles("test")
 
@@ -48,7 +47,7 @@ public class CompetitionServiceTest {
 
     @AfterEach
     public void tearDown() {
-     familyService.deleteByName(savedFam.getName());
+        familyService.deleteByName(savedFam.getName());
     }
 
     @Test
@@ -69,8 +68,8 @@ public class CompetitionServiceTest {
     @Test
     void whenValidComp_thenCompShouldBeUpdated() {
 
-        CompetitionDto compDto =TestConstants.createValidCompetitionDto();
-        CompetitionDto compDto2 =TestConstants.createValidCompetitionDto2();
+        CompetitionDto compDto = TestConstants.createValidCompetitionDto();
+        CompetitionDto compDto2 = TestConstants.createValidCompetitionDto2();
         compDto.setFamilyId(savedFam.getId());
         Competition savedComp = compService.save(compDto);
         compDto.setName(compDto2.getName());

@@ -1,7 +1,6 @@
 package sportbets.persistence.entity.competition;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,15 +10,14 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-public class Team  {
+public class Team {
 
     private static final Logger log = LoggerFactory.getLogger(Team.class);
+    @Column(nullable = false)
+    private final LocalDateTime createdOn = LocalDateTime.now();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
-    private final LocalDateTime createdOn = LocalDateTime.now();
-
     @Column(unique = true, nullable = false)
     private String name;
     @Column(unique = true, nullable = false)
@@ -27,8 +25,8 @@ public class Team  {
 
     private boolean hasClub = true;
 
-    @OneToMany(mappedBy = "team", cascade ={ CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true, fetch = FetchType.LAZY)
-    private  Set<CompetitionTeam> competitionTeams = new HashSet<>();
+    @OneToMany(mappedBy = "team", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true, fetch = FetchType.LAZY)
+    private final Set<CompetitionTeam> competitionTeams = new HashSet<>();
 
 
     public Team() {
@@ -46,7 +44,7 @@ public class Team  {
     }
 
     public void setId(Long id) {
-          this.id = id;
+        this.id = id;
     }
 
     public String getName() {

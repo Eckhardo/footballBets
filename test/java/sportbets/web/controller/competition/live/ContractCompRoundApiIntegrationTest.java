@@ -117,7 +117,7 @@ public class ContractCompRoundApiIntegrationTest {
         compRoundDto2.setCompId(comp.getId());
         compRoundDto2.setCompName(comp.getName());
 
-          webClient.post()
+        webClient.post()
                 .uri("/rounds")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(compRoundDto2)

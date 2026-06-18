@@ -10,6 +10,7 @@ import org.springframework.test.context.ActiveProfiles;
 import sportbets.persistence.entity.community.Community;
 import sportbets.persistence.entity.tipps.enums.TippModusType;
 import sportbets.service.community.CommunityService;
+import sportbets.testdata.TestConstants;
 import sportbets.web.dto.community.CommunityDto;
 import sportbets.web.dto.tipps.TippModusDto;
 import sportbets.web.dto.tipps.TippModusPointDto;
@@ -20,8 +21,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static sportbets.testdata.TestConstants.COMM_TEST;
-import static sportbets.testdata.TestConstants.COMM_TEST_2;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -30,8 +29,8 @@ public class TippModusServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(TippModusServiceTest.class);
 
-    private final CommunityDto communityDto = new CommunityDto(null, "TippModus Community", "Description of Community");
-    private final CommunityDto communityDto2 = new CommunityDto(null, "TippModus Community 2", "Description of Community2");
+    private final CommunityDto communityDto = TestConstants.createValidCommunityDto();
+    private final CommunityDto communityDto2 = TestConstants.createValidCommunityDto2();
 
     Community savedCommunity = null;
 
@@ -79,7 +78,7 @@ public class TippModusServiceTest {
         assertNotNull(dtoResult.getId());
         assertEquals(tippModusResultDto.getDeadline(), dtoResult.getDeadline());
 
-        TippModusResultDto resultDto = (TippModusResultDto) tippModusResultDto;
+        TippModusResultDto resultDto = tippModusResultDto;
         assertEquals(resultDto.getBonusPoints(), dtoResult.getBonusPoints());
         assertEquals(resultDto.getTendencyPoints(), dtoResult.getTendencyPoints());
         log.info("resultType:{}", dto);
@@ -127,7 +126,7 @@ public class TippModusServiceTest {
         assertEquals(tippModusResultDto.getDeadline(), dtoResult.getDeadline());
 
         // prepare for update
-        TippModusResultDto resultDto = (TippModusResultDto) tippModusResultDto;
+        TippModusResultDto resultDto = tippModusResultDto;
         assertEquals(resultDto.getBonusPoints(), dtoResult.getBonusPoints());
         assertEquals(resultDto.getTendencyPoints(), dtoResult.getTendencyPoints());
 

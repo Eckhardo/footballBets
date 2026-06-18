@@ -28,9 +28,9 @@ import java.util.Set;
 public class CompServiceImpl implements CompService {
 
     private static final Logger log = LoggerFactory.getLogger(CompServiceImpl.class);
+    final ModelMapper modelMapper;
     private final CompetitionRepository compRepository;
     private final CompetitionFamilyRepository compFamilyRepo;
-    final ModelMapper modelMapper;
 
 
     public CompServiceImpl(CompetitionRepository compRepository, CompetitionFamilyRepository compFamilyRepo, ModelMapper modelMapper) {
@@ -110,7 +110,7 @@ public class CompServiceImpl implements CompService {
 
     @Override
     public List<Competition> getAll() {
-            return compRepository.findAllComps();
+        return compRepository.findAllComps();
     }
 
     @Override

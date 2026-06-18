@@ -15,6 +15,7 @@ import sportbets.web.dto.competition.CompetitionMembershipDto;
 
 import java.util.ArrayList;
 import java.util.List;
+
 @RestController
 public class CompetitionMembershipController {
 

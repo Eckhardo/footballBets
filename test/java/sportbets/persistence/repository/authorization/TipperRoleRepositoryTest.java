@@ -11,7 +11,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
-import sportbets.persistence.entity.competition.enums.Country;
 import sportbets.persistence.entity.authorization.CommunityRole;
 import sportbets.persistence.entity.authorization.CompetitionRole;
 import sportbets.persistence.entity.authorization.Role;
@@ -25,6 +24,7 @@ import sportbets.persistence.repository.community.TipperRepository;
 import sportbets.persistence.repository.competition.CompetitionFamilyRepository;
 import sportbets.persistence.repository.competition.CompetitionRepository;
 import sportbets.persistence.repository.competition.SpielRepository;
+import sportbets.testdata.TestConstants;
 
 import java.util.List;
 
@@ -37,10 +37,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @RunWith(SpringRunner.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class TipperRoleRepositoryTest {
+
     public static final String TESTUSER = "Testuser";
     private static final Logger log = LoggerFactory.getLogger(TipperRoleRepositoryTest.class);
-    private static final String COMP_NAME = "TEST Saison 2025/26";
-    private static final String COMM_NAME = "TEST_COMM";
     TipperRole compTipperRole;
     TipperRole communityTipperRole;
     @Autowired
@@ -61,18 +60,22 @@ public class TipperRoleRepositoryTest {
 
     @Before
     public void setUp() {
-        CompetitionFamily testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true,  Country.GERMANY);
-        Competition testComp = new Competition(COMP_NAME, "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
-        testFamily.addCompetition(testComp);
-        CompetitionRole competitionRole = new CompetitionRole(COMP_NAME, "Meine Test Rolle", testComp);
+        log.debug("setUp");
+        CompetitionFamily testFamily = TestConstants.createValidFamily();
+        CompetitionFamily savedFam = familyRepo.save(testFamily);
+        Competition testComp = TestConstants.createValidCompetition();
+        testComp.setCompetitionFamily(savedFam);
+        savedFam.addCompetition(testComp);
+        CompetitionRole competitionRole = new CompetitionRole(testComp.getName(), "Meine Test Rolle", testComp);
         testComp.addCompetitionRole(competitionRole);
-        familyRepo.save(testFamily);
+        compRepo.save(testComp);
+        //  familyRepo.save(savedFam);
 
         Competition savedComp = compRepo.findByName(testComp.getName()).orElseThrow();
 
 
-        Community testComm = new Community(COMM_NAME, "Beschreibung");
-        CommunityRole communityRole = new CommunityRole(COMM_NAME, "", testComm);
+        Community testComm = TestConstants.createValidCommunity();
+        CommunityRole communityRole = new CommunityRole(testComm.getName(), "", testComm);
         testComm.addCommunityRole(communityRole);
         Community savedCommunity = commRepo.save(testComm);
 

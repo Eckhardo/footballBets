@@ -5,14 +5,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
 
-
 import java.time.LocalDateTime;
 
 
-public class TippRow  {
+public class TippRow {
     private static final Logger log = LoggerFactory.getLogger(TippRow.class);
     //	********************** Fields ********************** //
-
 
 
     private Long spielId;
@@ -26,7 +24,7 @@ public class TippRow  {
 
     private Integer heimTore;
     private Integer gastTore;
-    private Boolean hasStattgefunden;;
+    private Boolean hasStattgefunden;
 
     private String heimName;
     private String gastName;
@@ -74,7 +72,6 @@ public class TippRow  {
 
     /**
      * NOT placed tipps yet !
-     *
      */
 
     public TippRow(Long spielId, LocalDateTime anpfiffdate, Integer heimtore,
@@ -89,9 +86,8 @@ public class TippRow  {
 
     /**
      * FOR UPDATE TIPPS & VIEW TIPPS
-     *
+     * <p>
      * Full constructor for single tipper tipps for comp without groups
-     *
      */
     public TippRow(Long spielId, LocalDateTime anpfiffdate, Integer heimtore,
                    Integer gasttore, Boolean stattgefunden, String heimName,
@@ -112,7 +108,7 @@ public class TippRow  {
 
     /**
      * FOR UPDATE TIPPS & VIEW TIPPS
-     *
+     * <p>
      * Full constructor for single tipper tipps for comp with groups
      */
     public TippRow(Long spielId, LocalDateTime anpfiffdate, Integer heimtore,
@@ -289,8 +285,7 @@ public class TippRow  {
     }
 
     /**
-     * @param totoTippInput
-     *            The totoTippInput to set.
+     * @param totoTippInput The totoTippInput to set.
      */
     public void setTotoTippInput(Integer totoTippInput) {
         if (totoTippInput != null && totoTippInput == 1) {
@@ -298,7 +293,7 @@ public class TippRow  {
             remisTipp = 0;
             gastTipp = 0;
 
-        } else if (totoTippInput != null && totoTippInput== 0) {
+        } else if (totoTippInput != null && totoTippInput == 0) {
             heimTipp = 0;
             remisTipp = 1;
             gastTipp = 0;

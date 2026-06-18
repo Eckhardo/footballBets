@@ -15,44 +15,32 @@ import java.util.Set;
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class TippModus {
+    protected static final int HOMEWIN = 1;
+    protected static final int DRAW = 0;
+    protected static final int GUESTWIN = 2;
+    @Column(nullable = false)
+    private final LocalDateTime createdOn = LocalDateTime.now();
+    @OneToMany(mappedBy = "tippModus", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    Set<Tipp> tipps = new HashSet<>();
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
     @Column(name = "id", nullable = false)
     private Long id;
-
     @NotNull
     private String name;
     @Convert(converter = TippModusTypeAttributeConverter.class)
     private TippModusType type;
-
     /**
      * an Integer representation for the time when tipps have to be placed
      * before the speiltag begind
      */
     private Integer deadline;
-
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fk_comm_id", foreignKey = @ForeignKey(name = "FK_TIPP_MODUS_TO_COMMUNITY"))
     @NotNull
     private Community community;
-
-
-    @OneToMany(mappedBy = "tippModus", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    Set<Tipp> tipps = new HashSet<>();
-
     @OneToMany(mappedBy = "tippModus", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<TippConfig> tippConfigs = new HashSet();
-
-
-    @Column(nullable = false)
-    private final LocalDateTime createdOn = LocalDateTime.now();
-
-    protected static final int HOMEWIN = 1;
-
-    protected static final int DRAW = 0;
-
-    protected static final int GUESTWIN = 2;
 
     /**
      * No-arg constructor for JavaBean tools.
@@ -81,11 +69,11 @@ public abstract class TippModus {
         this(name, type, deadline, community);
         this.tippConfigs = tippConfigs;
     }
-//--------------- abstract methods ----------------------------------
+
+    //--------------- abstract methods ----------------------------------
     public abstract boolean isTippValid(@NotNull Tipp tipp);
 
     public abstract int calculateWinPoints(Tipp tipp, Spiel spiel);
-
 
 
     //-------------- getter and setter-------------------------------
@@ -141,6 +129,7 @@ public abstract class TippModus {
     public void addTipp(Tipp tipp) {
         this.tipps.add(tipp);
     }
+
     public Set<TippConfig> getTippConfigs() {
         return tippConfigs;
     }

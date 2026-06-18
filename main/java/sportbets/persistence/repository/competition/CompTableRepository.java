@@ -36,5 +36,4 @@ public interface CompTableRepository extends JpaRepository<SpielFormula, Long> {
     List<TeamPositionSummaryRow> findTableHeimOrGastForLigaModus(Long compId, int firstSp, int lastSp, boolean isHeimTeam);
 
 
-
 }

@@ -15,7 +15,7 @@ public record CommunityWizardRecord(
         Long compId,
         @NotBlank(message = "competition Name must not be blank")
         String compName,
-         @NotBlank(message = "tipper Name must not be blank")
+        @NotBlank(message = "tipper Name must not be blank")
         String tipperUserName
 ) {
 

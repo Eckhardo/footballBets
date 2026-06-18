@@ -9,8 +9,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
-import sportbets.persistence.entity.competition.enums.Country;
 import sportbets.persistence.entity.competition.*;
+import sportbets.testdata.TestConstants;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -45,7 +45,7 @@ public class CompetitionTeamRepositoryTest {
     public void setUp() {
         // Initialize test data before test methods
 
-        CompetitionFamily testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true,  Country.GERMANY);
+        CompetitionFamily testFamily = TestConstants.createValidFamily();
         testComp = new Competition("Saison 2025/26", "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
         CompetitionRound testRound = new CompetitionRound(1, "Vorrunde", testComp, false, 18, 17, 1);
         Spieltag testSpieltag = new Spieltag(1, LocalDateTime.now(), testRound);
@@ -54,9 +54,9 @@ public class CompetitionTeamRepositoryTest {
         testRound.addSpieltag(testSpieltag2);
         System.out.println("Save all cascade");
         familyRepo.save(testFamily);
-        Team team1 = new Team("Test1", "1",true );
+        Team team1 = new Team("Test1", "1", true);
         Team team2 = new Team("Test2", "2", true);
-        Team team3 = new Team("Test3", "3",true );
+        Team team3 = new Team("Test3", "3", true);
         Team team4 = new Team("Test4", "4", true);
         teamRepo.save(team1);
         teamRepo.save(team2);

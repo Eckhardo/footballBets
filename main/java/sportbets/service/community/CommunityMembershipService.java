@@ -15,7 +15,10 @@ public interface CommunityMembershipService {
     Optional<CommunityMembership> update(Long id, CommunityMembershipDto commDto);
 
     void deleteById(Long id);
+
     List<CommunityMembership> getAll();
+
     List<CommunityMembership> findCommunities(Long tipperId);
+
     Optional<CommunityMembership> findByCommIdAndTipperId(Long commId, Long tipperId);
 }

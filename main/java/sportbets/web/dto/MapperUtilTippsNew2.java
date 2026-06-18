@@ -19,6 +19,27 @@ public class MapperUtilTippsNew2 {
 
 
     private static final Logger log = LoggerFactory.getLogger(MapperUtilTippsNew2.class);
+    Provider<TippModusDto> hierarchyProvider = request -> {
+        TippModus source = (TippModus) request.getSource();
+        // Logik zur Auswahl der richtigen Unterklasse
+        log.info("hierarchyProvider: {}", source.getType());
+        return switch (source.getType()) {
+
+            case TIPPMODUS_TOTO -> new TippModusTotoDto();
+            case TIPPMODUS_RESULT -> new TippModusTotoDto();
+            case TIPPMODUS_POINT -> new TippModusTotoDto();
+            default -> throw new IllegalStateException("Unexpected value: " + source.getType());
+
+        };
+
+    };
+    // Converter Definition
+    Converter<TippModusType, String> tippModusToString = new AbstractConverter<TippModusType, String>() {
+        protected String convert(TippModusType source) {
+            log.info("CMapperTest :onverting TippModusType to String {}", source.getDisplayName());
+            return source == null ? null : source.getDisplayName();
+        }
+    };
 
     public ModelMapper getModelMapperForTippModus() {
         log.info("getModelMapper");
@@ -46,28 +67,6 @@ public class MapperUtilTippsNew2 {
 
         return modelMapper;
     }
-
-    Provider<TippModusDto> hierarchyProvider = request -> {
-        TippModus source = (TippModus) request.getSource();
-        // Logik zur Auswahl der richtigen Unterklasse
-        log.info("hierarchyProvider: {}", source.getType());
-        return switch (source.getType()) {
-
-            case TIPPMODUS_TOTO -> new TippModusTotoDto();
-            case TIPPMODUS_RESULT -> new TippModusTotoDto();
-            case TIPPMODUS_POINT -> new TippModusTotoDto();
-            default -> throw new IllegalStateException("Unexpected value: " + source.getType());
-
-        };
-
-    };
-    // Converter Definition
-    Converter<TippModusType, String> tippModusToString = new AbstractConverter<TippModusType, String>() {
-        protected String convert(TippModusType source) {
-            log.info("CMapperTest :onverting TippModusType to String {}", source.getDisplayName());
-            return source == null ? null : source.getDisplayName();
-        }
-    };
 }
 
 

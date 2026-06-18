@@ -10,25 +10,22 @@ import java.util.Objects;
 
 @Entity
 public class TippConfig {
+    @Column(nullable = false)
+    private final LocalDateTime createdOn = LocalDateTime.now();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fk_tippModus_id", foreignKey = @ForeignKey(name = "FK_TIPP_CONFIG_TO_MODUS"))
+    @NotNull
+    TippModus tippModus;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false)
-    private final LocalDateTime createdOn = LocalDateTime.now();
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_tippModus_id",foreignKey = @ForeignKey(name = "FK_TIPP_CONFIG_TO_MODUS"))
-    @NotNull
-    TippModus tippModus;
-
     // Owning Side:
-    @OneToOne(cascade = CascadeType.MERGE,  fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinColumn(name = "fk_spieltag_id")
     private Spieltag spieltag;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_comp_memb_id",foreignKey = @ForeignKey(name = "FK_TIPP_CONFIG_TO_COMP_MEMB"))
+    @JoinColumn(name = "fk_comp_memb_id", foreignKey = @ForeignKey(name = "FK_TIPP_CONFIG_TO_COMP_MEMB"))
     @NotNull
     private CompetitionMembership competitionMembership;
 
@@ -36,7 +33,7 @@ public class TippConfig {
 
     }
 
-    public TippConfig(Spieltag spieltag, CompetitionMembership competitionMembership, TippModus tippModus   ) {
+    public TippConfig(Spieltag spieltag, CompetitionMembership competitionMembership, TippModus tippModus) {
         this.spieltag = spieltag;
         this.competitionMembership = competitionMembership;
         this.tippModus = tippModus;
@@ -57,8 +54,16 @@ public class TippConfig {
         return spieltag;
     }
 
+    public void setSpieltag(Spieltag spieltag) {
+        this.spieltag = spieltag;
+    }
+
     public CompetitionMembership getCompetitionMembership() {
         return competitionMembership;
+    }
+
+    public void setCompetitionMembership(CompetitionMembership competitionMembership) {
+        this.competitionMembership = competitionMembership;
     }
 
     public TippModus getTippModus() {
@@ -67,14 +72,6 @@ public class TippConfig {
 
     public void setTippModus(TippModus tippModus) {
         this.tippModus = tippModus;
-    }
-
-    public void setSpieltag(Spieltag spieltag) {
-        this.spieltag = spieltag;
-    }
-
-    public void setCompetitionMembership(CompetitionMembership competitionMembership) {
-        this.competitionMembership = competitionMembership;
     }
 
     @Override

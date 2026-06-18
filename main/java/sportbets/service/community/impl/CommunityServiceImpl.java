@@ -23,7 +23,7 @@ public class CommunityServiceImpl implements CommunityService {
     private final CommunityRepository communityRepo;
     private final ModelMapper modelMapper;
 
-    public CommunityServiceImpl(CommunityRepository communityRepo,  ModelMapper modelMapper) {
+    public CommunityServiceImpl(CommunityRepository communityRepo, ModelMapper modelMapper) {
         this.communityRepo = communityRepo;
 
         this.modelMapper = modelMapper;
@@ -62,7 +62,7 @@ public class CommunityServiceImpl implements CommunityService {
     @Transactional
     public Optional<Community> update(Long id, CommunityDto commDto) {
         log.debug("update:: {}", commDto);
-        Community updateModel = communityRepo.findById(id).orElseThrow(()-> new EntityNotFoundException("Community  DOES NOT exist with given id:" + id) );
+        Community updateModel = communityRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("Community  DOES NOT exist with given id:" + id));
 
         Optional<CommunityRole> oldCommunityRole = updateModel.getCommunityRoleByName(updateModel.getName());
         if (oldCommunityRole.isPresent()) {

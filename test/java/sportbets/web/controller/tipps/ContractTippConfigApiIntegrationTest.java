@@ -16,12 +16,10 @@ import sportbets.FootballBetsApplication;
 import sportbets.config.TestProfileLiveTest;
 import sportbets.persistence.entity.community.Community;
 import sportbets.persistence.entity.competition.*;
-import sportbets.persistence.entity.competition.enums.Country;
 import sportbets.persistence.entity.tipps.TippModus;
 import sportbets.persistence.entity.tipps.enums.TippModusType;
 import sportbets.persistence.repository.community.CommunityRepository;
 import sportbets.persistence.repository.competition.*;
-import sportbets.persistence.repository.tipps.TippConfigRepository;
 import sportbets.persistence.repository.tipps.TippModusRepository;
 import sportbets.testdata.TestConstants;
 import sportbets.web.dto.community.CommunityDto;
@@ -41,10 +39,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class ContractTippConfigApiIntegrationTest {
 
     private static final Logger log = LoggerFactory.getLogger(ContractTippConfigApiIntegrationTest.class);
-
+    private static final int TEST_MATCH_DAY = 1;
+    final CompetitionFamilyDto compFamilyDto = TestConstants.createValidFamilyDto();
+    final CompetitionDto compDto = TestConstants.createValidCompetitionDto();
+    final CompetitionRoundDto compRoundDto = TestConstants.createValidCompRoundDto();
+    final SpieltagDto matchDayDto = new SpieltagDto(null, TEST_MATCH_DAY, LocalDateTime.now());
     @Autowired
     WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();
-
     @Autowired
     CompetitionFamilyRepository familyRepository;
     @Autowired
@@ -57,23 +58,9 @@ public class ContractTippConfigApiIntegrationTest {
     CommunityRepository communityRepository;
     @Autowired
     CompetitionMembershipRepository compMembRepo;
-
-
     @Autowired
     TippModusRepository tippModusRepository;
-
-    private static final int TEST_MATCH_DAY = 1;
-
-
-    private static final String TEST_COMM = TestConstants.COMM_TEST;
-
-
-    final CompetitionFamilyDto compFamilyDto =TestConstants.createValidFamilyDto();
-    final CompetitionDto compDto = TestConstants.createValidCompetitionDto();
-    final CompetitionRoundDto compRoundDto =TestConstants.createValidCompRoundDto();
-    final SpieltagDto matchDayDto = new SpieltagDto(null, TEST_MATCH_DAY, LocalDateTime.now());
-
-    CommunityDto communityDto = new CommunityDto(null, TEST_COMM, "Description of Community");
+    CommunityDto communityDto = TestConstants.createValidCommunityDto();
 
     final TippModusResultDto resultTest = new TippModusResultDto(null, "ErgebnisTest", TippModusType.TIPPMODUS_RESULT.getDisplayName(), 1, null, communityDto.getName(), 3, 1);
     final TippModusPointDto pointTest = new TippModusPointDto(null, "PunkteTest", TippModusType.TIPPMODUS_POINT.getDisplayName(), 1, null, communityDto.getName(), 4);
@@ -90,7 +77,6 @@ public class ContractTippConfigApiIntegrationTest {
     @BeforeEach
     public void setUp() {
         log.debug("setUp");
-
 
 
         webClient.post()
@@ -156,9 +142,9 @@ public class ContractTippConfigApiIntegrationTest {
                 .jsonPath("$.id")
                 .exists()
                 .jsonPath("$.name")
-                .isEqualTo(TEST_COMM);
+                .isEqualTo(communityDto.getName());
 
-        savedCommunity = communityRepository.findByName(TEST_COMM).orElseThrow();
+        savedCommunity = communityRepository.findByName(communityDto.getName()).orElseThrow();
         resultTest.setCommId(savedCommunity.getId());
         webClient.post()
                 .uri("/tippModus/result")
@@ -173,7 +159,7 @@ public class ContractTippConfigApiIntegrationTest {
                 .jsonPath("$.bonusPoints")
                 .isEqualTo(resultTest.getBonusPoints())
                 .jsonPath("$.commName")
-                .isEqualTo(TEST_COMM)
+                .isEqualTo(communityDto.getName())
                 .jsonPath("$.type")
                 .isEqualTo(TippModusType.TIPPMODUS_RESULT.getDisplayName());
         savedResultModus = tippModusRepository.findByNameAndCommunity(resultTest.getName(), savedCommunity.getId()).orElseThrow();
@@ -193,7 +179,7 @@ public class ContractTippConfigApiIntegrationTest {
                 .jsonPath("$.totalPoints")
                 .isEqualTo(pointTest.getTotalPoints())
                 .jsonPath("$.commName")
-                .isEqualTo(TEST_COMM)
+                .isEqualTo(communityDto.getName())
                 .jsonPath("$.type")
                 .isEqualTo(TippModusType.TIPPMODUS_POINT.getDisplayName());
         savedPointModus = tippModusRepository.findByNameAndCommunity(pointTest.getName(), savedCommunity.getId()).orElseThrow();
@@ -212,7 +198,7 @@ public class ContractTippConfigApiIntegrationTest {
                 .jsonPath("$.id")
                 .exists()
                 .jsonPath("$.commName")
-                .isEqualTo(TEST_COMM)
+                .isEqualTo(communityDto.getName())
                 .jsonPath("$.commId")
                 .exists()
                 .jsonPath("$.compName")
@@ -239,7 +225,7 @@ public class ContractTippConfigApiIntegrationTest {
                 .isNoContent();
 
 
-        Community savedComm = communityRepository.findByName(TEST_COMM).orElseThrow();
+        Community savedComm = communityRepository.findByName(communityDto.getName()).orElseThrow();
         assertNotNull(savedComm);
         webClient.delete()
                 .uri("/communities/" + savedComm.getId())

@@ -10,7 +10,6 @@ import sportbets.persistence.builder.TipperConstants;
 import sportbets.persistence.entity.community.Tipper;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
-import sportbets.persistence.entity.competition.enums.Country;
 import sportbets.service.competition.CompFamilyService;
 import sportbets.service.competition.CompService;
 import sportbets.testdata.TestConstants;
@@ -30,27 +29,23 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class CommunityWizardServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(CommunityWizardServiceTest.class);
-
-    @Autowired
-    private TipperService tipperService;
+    final CompetitionFamilyDto familyDto = TestConstants.createValidFamilyDto();
+    final CommunityDto commDto = TestConstants.createValidCommunityDto();
+    final CompetitionDto compDto = TestConstants.createValidCompetitionDto();
     @Autowired
     CommunityWizardService communityWizardService;
     @Autowired
     CommunityService communityService;
     @Autowired
     CompFamilyService compFamilyService;
-    @Autowired
-    private CompService compService;
-
-    final CompetitionFamilyDto familyDto =  TestConstants.createValidFamilyDto();
     TipperDto testTipper = TipperConstants.WERNER_DTO;
-
-    final CommunityDto commDto = TestConstants.TEST_COMMUNITY_DTO;
-    final CompetitionDto compDto = TestConstants.createValidCompetitionDto();
     Competition savedComp = null;
     Tipper savedTipper = null;
-
     CommunityWizardRecord testRecord = null;
+    @Autowired
+    private TipperService tipperService;
+    @Autowired
+    private CompService compService;
 
     @BeforeEach
     public void setup() {

@@ -16,23 +16,18 @@ import java.util.Set;
 
 @Entity
 public class Spiel {
+    @Column(nullable = false)
+    private final LocalDateTime createdOn = LocalDateTime.now();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Positive
     private int spielNumber;
     @PositiveOrZero
     private int heimTore;
     @PositiveOrZero
     private int gastTore;
-
-
     private boolean stattgefunden = false;
-
-    @Column(nullable = false)
-    private final LocalDateTime createdOn = LocalDateTime.now();
-
     @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
     // Specifies the format for JSON serialization (when the entity is returned as a response)
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
@@ -54,10 +49,10 @@ public class Spiel {
     private CompetitionGroup competitionGroup;
 
     @OneToMany(mappedBy = "spiel", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private  Set<Tipp> tipps = new HashSet<>();
+    private final Set<Tipp> tipps = new HashSet<>();
 
     @OneToMany(mappedBy = "spiel", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private  Set<SpielFormula> spielFormulas = new HashSet<>();
+    private final Set<SpielFormula> spielFormulas = new HashSet<>();
 
     public Spiel() {
 

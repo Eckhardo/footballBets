@@ -11,7 +11,6 @@ import org.springframework.test.context.ActiveProfiles;
 import sportbets.persistence.entity.authorization.CompetitionRole;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
-import sportbets.persistence.entity.competition.enums.Country;
 import sportbets.service.community.CommunityService;
 import sportbets.service.competition.CompFamilyService;
 import sportbets.service.competition.CompService;
@@ -32,7 +31,7 @@ public class CompetitionRoleServiceTest {
 
 
     private static final Logger log = LoggerFactory.getLogger(CompetitionRoleServiceTest.class);
-     private final CompetitionFamilyDto competitionFamily =TestConstants.createValidFamilyDto();
+    private final CompetitionFamilyDto competitionFamily = TestConstants.createValidFamilyDto();
     Competition savedComp = null;
     CompetitionFamily savedFam;
     @Autowired
@@ -44,7 +43,7 @@ public class CompetitionRoleServiceTest {
     @Autowired
     private CommunityService communityService; // Real service being tested
 
-       @BeforeEach
+    @BeforeEach
     public void setup() {
 
         savedFam = familyService.save(competitionFamily);
@@ -76,7 +75,7 @@ public class CompetitionRoleServiceTest {
     }
 
 
-   @Test
+    @Test
     public void findAllCompRoles() {
         log.debug("findCompRole");
 

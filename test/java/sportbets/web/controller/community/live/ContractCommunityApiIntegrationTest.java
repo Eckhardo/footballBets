@@ -13,6 +13,7 @@ import sportbets.FootballBetsApplication;
 import sportbets.config.TestProfileLiveTest;
 import sportbets.persistence.entity.community.Community;
 import sportbets.persistence.repository.community.CommunityRepository;
+import sportbets.testdata.TestConstants;
 import sportbets.web.dto.community.CommunityDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,10 +25,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ContractCommunityApiIntegrationTest {
     private static final Logger log = LoggerFactory.getLogger(ContractCommunityApiIntegrationTest.class);
 
-    private static final String TEST_COMM = "My Test Community";
-    private static final String TEST_COMM_2 = "My Test Community 2";
-
-    CommunityDto communityDto = new CommunityDto(null, TEST_COMM, "Description of Community");
+    CommunityDto communityDto = TestConstants.createValidCommunityDto();
+    CommunityDto communityDto2 = TestConstants.createValidCommunityDto2();
 
     @Autowired
     WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();
@@ -39,7 +38,7 @@ public class ContractCommunityApiIntegrationTest {
     public void cleanup() {
         // Clean up all entities created during tests
         log.debug("cleanup");
-        Community savedComm = communityRepository.findByName(TEST_COMM).orElseThrow();
+        Community savedComm = communityRepository.findByName(communityDto.getName()).orElseThrow();
         webClient.delete()
                 .uri("/communities/" + savedComm.getId())
                 .exchange()
@@ -69,7 +68,7 @@ public class ContractCommunityApiIntegrationTest {
                 .jsonPath("$.id")
                 .exists()
                 .jsonPath("$.name")
-                .isEqualTo(TEST_COMM);
+                .isEqualTo(communityDto.getName());
 
 
     }
@@ -91,7 +90,7 @@ public class ContractCommunityApiIntegrationTest {
                 .jsonPath("$.id")
                 .exists()
                 .jsonPath("$.name")
-                .isEqualTo(TEST_COMM);
+                .isEqualTo(communityDto.getName());
 
         // same community again
         webClient.post()
@@ -126,12 +125,12 @@ public class ContractCommunityApiIntegrationTest {
                 .jsonPath("$.id")
                 .exists()
                 .jsonPath("$.name")
-                .isEqualTo(TEST_COMM);
+                .isEqualTo(communityDto.getName());
 
 
-        Community community = communityRepository.findByName(TEST_COMM).orElseThrow();
+        Community community = communityRepository.findByName(communityDto.getName()).orElseThrow();
         communityDto.setId(community.getId());
-        communityDto.setName(TEST_COMM_2);
+        communityDto.setName(communityDto2.getName());
 
         // test and verify
         webClient.put()
@@ -145,11 +144,11 @@ public class ContractCommunityApiIntegrationTest {
                 .jsonPath("$.id")
                 .exists()
                 .jsonPath("$.name")
-                .isEqualTo(TEST_COMM_2)
+                .isEqualTo(communityDto2.getName())
                 .jsonPath("$.description")
                 .exists();
         // test and verify
-        communityDto.setName(TEST_COMM);
+        communityDto.setName(communityDto.getName());
         webClient.put()
                 .uri("/communities/" + communityDto.getId())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -161,12 +160,13 @@ public class ContractCommunityApiIntegrationTest {
                 .jsonPath("$.id")
                 .exists()
                 .jsonPath("$.name")
-                .isEqualTo(TEST_COMM)
+                .isEqualTo(communityDto.getName())
                 .jsonPath("$.description")
                 .exists();
 
 
     }
+
     @Test
     @Order(4)
     void createNewCommunity_thenGetAll_isSuccess() {
@@ -183,9 +183,9 @@ public class ContractCommunityApiIntegrationTest {
                 .jsonPath("$.id")
                 .exists()
                 .jsonPath("$.name")
-                .isEqualTo(TEST_COMM);
+                .isEqualTo(communityDto.getName());
 
-        Community community = communityRepository.findByName(TEST_COMM).orElseThrow();
+        Community community = communityRepository.findByName(communityDto.getName()).orElseThrow();
         communityDto.setId(community.getId());
 
 

@@ -24,7 +24,6 @@ import sportbets.web.dto.authorization.LoginRequestDto;
 import sportbets.web.dto.authorization.UmsInfoDto;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 public class AuthController {
@@ -50,15 +49,15 @@ public class AuthController {
     public UmsInfoDto authenticateUser(@RequestBody @Valid LoginRequestDto loginRequest) {
         log.debug("AuthController. auth::{}", loginRequest);
 
-      Tipper tipper = tipperService.authenticate(loginRequest.getUserName(), loginRequest.getPassword()).orElseThrow(()-> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid username or password"));
+        Tipper tipper = tipperService.authenticate(loginRequest.getUserName(), loginRequest.getPassword()).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid username or password"));
 
         UmsInfoDto umsInfo = new UmsInfoDto(
                 tipper.getDefaultCommunityId(),
                 tipper.getDefaultCompetitionId(),
                 tipper.isCommunityAdmin(),
                 true,
-                tipper.getUsername() );
-          umsInfo.setLoggedIn(true);
+                tipper.getUsername());
+        umsInfo.setLoggedIn(true);
         // fetch communities and competitions where tipper has admin rights
         List<TipperRole> tipperRoles = tipperRoleService.getAllForTipper(tipper.getId());
         if (!tipperRoles.isEmpty()) {
@@ -71,7 +70,7 @@ public class AuthController {
 
             }
         }
-        CompetitionFamily competitionFamily =compFamilyService.findByByCompId(umsInfo.getDefaultCompetitionId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Competition Family not found"));
+        CompetitionFamily competitionFamily = compFamilyService.findByByCompId(umsInfo.getDefaultCompetitionId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Competition Family not found"));
         umsInfo.setDefaultCountry(competitionFamily.getCountry());
         // fetch registered communities for common tipper
         List<CommunityMembership> commMembs = communityMembershipService.findCommunities(tipper.getId());

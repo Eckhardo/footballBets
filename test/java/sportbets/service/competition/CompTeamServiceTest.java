@@ -20,7 +20,6 @@ import sportbets.web.dto.competition.TeamDto;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static sportbets.testdata.TestConstants.COMP_TEST;
 import static sportbets.testdata.TestConstants.createValidCompetitionDto;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -32,7 +31,7 @@ public class CompTeamServiceTest {
 
     final CompetitionFamilyDto competitionFamily = TestConstants.createValidFamilyDto();
     final TeamDto team = TestConstants.TEAM_DTO_1;
-    final TeamDto team1 =TestConstants.TEAM_DTO_2;
+    final TeamDto team1 = TestConstants.TEAM_DTO_2;
 
     Competition savedComp = null;
     TeamDto savedTeam1 = null;
@@ -133,7 +132,6 @@ public class CompTeamServiceTest {
 
 
     }
-
 
 
     @Test

@@ -12,18 +12,17 @@ import java.util.Set;
 
 @Entity
 public class CompetitionMembership {
+    private final LocalDateTime createdOn = LocalDateTime.now();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private final LocalDateTime createdOn = LocalDateTime.now();
-
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "fk_comm_id",foreignKey = @ForeignKey(name = "FK_COMP_MEMB_TO_COMMUNITY"))
+    @JoinColumn(name = "fk_comm_id", foreignKey = @ForeignKey(name = "FK_COMP_MEMB_TO_COMMUNITY"))
     @NotNull
     private Community community;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "fk_comp_id",foreignKey = @ForeignKey(name = "FK_COMP_MEMB_TO_COMP"))
+    @JoinColumn(name = "fk_comp_id", foreignKey = @ForeignKey(name = "FK_COMP_MEMB_TO_COMP"))
     @NotNull
     private Competition competition;
 
@@ -31,14 +30,6 @@ public class CompetitionMembership {
     @OneToMany(mappedBy = "competitionMembership", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<TippConfig> tippConfigs = new HashSet();
 
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public CompetitionMembership() {
     }
@@ -48,6 +39,14 @@ public class CompetitionMembership {
         this.competition = competition;
         competition.addCompetitionMembership(this);
         community.addCompetitionMembership(this);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Community getCommunity() {
@@ -83,7 +82,7 @@ public class CompetitionMembership {
 
     @Override
     public int hashCode() {
-        return Objects.hash( createdOn, community.getName(), competition.getName());
+        return Objects.hash(createdOn, community.getName(), competition.getName());
     }
 
     @Override

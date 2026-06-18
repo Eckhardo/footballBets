@@ -8,11 +8,12 @@ import org.modelmapper.TypeMap;
 import org.modelmapper.config.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sportbets.persistence.entity.tipps.enums.TippModusType;
 import sportbets.persistence.entity.community.Community;
 import sportbets.persistence.entity.tipps.TippModusPoint;
 import sportbets.persistence.entity.tipps.TippModusResult;
 import sportbets.persistence.entity.tipps.TippModusToto;
+import sportbets.persistence.entity.tipps.enums.TippModusType;
+import sportbets.testdata.TestConstants;
 import sportbets.web.dto.tipps.TippModusPointDto;
 import sportbets.web.dto.tipps.TippModusResultDto;
 import sportbets.web.dto.tipps.TippModusTotoDto;
@@ -30,9 +31,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class TippModusTest {
     private static final Logger log = LoggerFactory.getLogger(TippModusTest.class);
 
-    private static final Community TEST_COMMUNITY = new Community("TestComm", "Description of test community");
+    private static final Community TEST_COMMUNITY = TestConstants.createValidCommunity();
 
-  //  @Test
+    //  @Test
     @Order(1)
     public void convertTippModusTotoToDTO() {
         log.info("\n convert tippmodus toto");
@@ -56,14 +57,14 @@ public class TippModusTest {
 
     }
 
-   // @Test
+    // @Test
     @Order(2)
     public void convertTippModusResultToDTO() {
         log.info("\n convert tippmodus result");
         TEST_COMMUNITY.setId(10L);
         ModelMapper myMapper = new MapperUtilTippsNew().getModelMapperForTippModus();
 
-        TippModusResult entity = new TippModusResult("myNameResult",TippModusType.TIPPMODUS_RESULT, 1, TEST_COMMUNITY, 3, 1);
+        TippModusResult entity = new TippModusResult("myNameResult", TippModusType.TIPPMODUS_RESULT, 1, TEST_COMMUNITY, 3, 1);
         entity.setId(20L);
         TippModusResultDto dto = myMapper.map(entity, TippModusResultDto.class);
         assertEquals(entity.getId(), dto.getId());
@@ -75,7 +76,7 @@ public class TippModusTest {
     }
 
 
-   // @Test
+    // @Test
     @Order(3)
     public void convertTippModusPointToDTO() {
         log.info("\n convert tippmodus point");
@@ -83,7 +84,7 @@ public class TippModusTest {
         ModelMapper myMapper = new MapperUtilTippsNew().getModelMapperForTippModus();
 
 
-        TippModusPoint entity = new TippModusPoint("myNamePoint",TippModusType.TIPPMODUS_POINT, 1, TEST_COMMUNITY, 4);
+        TippModusPoint entity = new TippModusPoint("myNamePoint", TippModusType.TIPPMODUS_POINT, 1, TEST_COMMUNITY, 4);
         entity.setId(20L);
         TippModusPointDto dto = myMapper.map(entity, TippModusPointDto.class);
         assertEquals(entity.getId(), dto.getId());

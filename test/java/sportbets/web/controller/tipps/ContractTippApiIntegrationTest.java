@@ -11,7 +11,6 @@ import sportbets.config.TestProfileLiveTest;
 import sportbets.persistence.entity.community.CommunityMembership;
 import sportbets.persistence.entity.competition.Spiel;
 import sportbets.persistence.entity.competition.SpielFormula;
-import sportbets.persistence.entity.competition.enums.Country;
 import sportbets.service.initTestData.ControllerTestDataService;
 import sportbets.service.tipps.TippService;
 import sportbets.testdata.TestConstants;
@@ -30,17 +29,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ContractTippApiIntegrationTest {
 
-    private static final Logger log = LoggerFactory.getLogger(ContractTippApiIntegrationTest.class);
-
     public static final CompetitionFamilyDto TEST_COMP_FAM_DTO = TestConstants.createValidFamilyDto();
     public static final CompetitionDto TEST_COMP_DTO = TestConstants.createValidCompetitionDto();
-
+    private static final Logger log = LoggerFactory.getLogger(ContractTippApiIntegrationTest.class);
+    final TippDto tippDtoHomeWin = new TippDto(null, 4, 0, 0, null);
+    final TippDto tippDtoRemis = new TippDto(null, 2, 2, 0, null);
+    final TippDto tippDtoGuestWin = new TippDto(null, 0, 1, 3, null);
     @Autowired
     ControllerTestDataService controllerTestDataService;
-
-    @Autowired
-    private TippService tippService;
-
     TippRecord tippRecord;
     CommunityMembership commMemb;
     Spiel homeWin;
@@ -48,10 +44,8 @@ public class ContractTippApiIntegrationTest {
     Spiel guestWin;
     TippModusTotoDto tippModusTotoDto;
     TippModusPointDto tippModusPointDto;
-
-    final TippDto tippDtoHomeWin = new TippDto(null, 4, 0, 0, null);
-    final TippDto tippDtoRemis = new TippDto(null, 2, 2, 0, null);
-    final TippDto tippDtoGuestWin = new TippDto(null, 0, 1, 3, null);
+    @Autowired
+    private TippService tippService;
 
     @BeforeEach
     public void setUp() {

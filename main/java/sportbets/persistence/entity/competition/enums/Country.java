@@ -1,4 +1,5 @@
 package sportbets.persistence.entity.competition.enums;
+
 public enum Country {
     ENGLAND("EN", "England"),
     ITALY("IT", "Italy"),
@@ -14,9 +15,6 @@ public enum Country {
         this.displayName = displayName;
     }
 
-    public String getIsoCode() { return isoCode; }
-    public String getDisplayName() { return displayName; }
-
     // Helper method to find a country by its ISO code
     public static Country fromIsoCode(String code) {
         for (Country country : Country.values()) {
@@ -25,5 +23,13 @@ public enum Country {
             }
         }
         return null;
+    }
+
+    public String getIsoCode() {
+        return isoCode;
+    }
+
+    public String getDisplayName() {
+        return displayName;
     }
 }

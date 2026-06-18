@@ -14,5 +14,6 @@ public interface CompetitionMembershipService {
     Optional<CompetitionMembership> update(Long id, CompetitionMembershipDto compMembDto);
 
     void deleteById(Long id);
+
     List<CompetitionMembership> getAll();
 }

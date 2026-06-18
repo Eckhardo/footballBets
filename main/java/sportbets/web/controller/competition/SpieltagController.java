@@ -83,7 +83,7 @@ public class SpieltagController {
     public Integer findMaxMatchday(@PathVariable Long id) {
         log.debug("findMaxMatchday::{}", id);
 
-        return spieltagService.findLastMatchdayForRound(id).orElseThrow(() -> new  ResponseStatusException(HttpStatus.NOT_FOUND));
+        return spieltagService.findLastMatchdayForRound(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping("/matchdays/batch")
@@ -91,16 +91,16 @@ public class SpieltagController {
     public void postBatch(@RequestBody @Valid MatchdayBatchRecord matchdayBatchRecord) {
         log.info("New matchday batch {}", matchdayBatchRecord);
         int firstMatchdayNumber = matchdayBatchRecord.firstMatchdayNumber();
-        int lastMatchdayNumber=matchdayBatchRecord.lastMatchdayNumber();
+        int lastMatchdayNumber = matchdayBatchRecord.lastMatchdayNumber();
         int numberOfMatchdays = lastMatchdayNumber - firstMatchdayNumber;
         Long compRoundId = matchdayBatchRecord.compRoundId();
         String compRoundName = matchdayBatchRecord.compRoundName();
-        Optional<Spieltag> firstMatchday= spieltagService.findByNumberAndRound(firstMatchdayNumber,compRoundId);
+        Optional<Spieltag> firstMatchday = spieltagService.findByNumberAndRound(firstMatchdayNumber, compRoundId);
         if (firstMatchday.isPresent()) {
             throw new EntityExistsException("Matchday already exists with number " + firstMatchdayNumber);
         }
-        for(int index = 0; index <= numberOfMatchdays; index++) {
-            SpieltagDto spieltagDto = new SpieltagDto(null,firstMatchdayNumber, LocalDateTime.now(),compRoundId,compRoundName);
+        for (int index = 0; index <= numberOfMatchdays; index++) {
+            SpieltagDto spieltagDto = new SpieltagDto(null, firstMatchdayNumber, LocalDateTime.now(), compRoundId, compRoundName);
             spieltagService.save(spieltagDto);
 
             log.info("New matchday batch {}", firstMatchdayNumber);

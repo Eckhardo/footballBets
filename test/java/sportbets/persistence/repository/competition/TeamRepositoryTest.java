@@ -47,10 +47,9 @@ public class TeamRepositoryTest {
     }
 
 
-
     @Test
     public void listTeams() {
-        for(int i=0;i<10;i++) {
+        for (int i = 0; i < 10; i++) {
             List<Team> teams = teamRepo.findAll();
             assertNotNull(teams);
         }

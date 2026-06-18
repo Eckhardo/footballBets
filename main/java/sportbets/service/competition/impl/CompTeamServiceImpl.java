@@ -189,7 +189,7 @@ public class CompTeamServiceImpl implements CompTeamService {
 
     @Override
     @Transactional(readOnly = true)
-   public Optional<CompetitionTeam> findByTeamIdAndCompId(Long teamId, Long compId){
-       return this.compTeamRepo.findByTeamIdAndCompId(teamId, compId);
+    public Optional<CompetitionTeam> findByTeamIdAndCompId(Long teamId, Long compId) {
+        return this.compTeamRepo.findByTeamIdAndCompId(teamId, compId);
     }
 }

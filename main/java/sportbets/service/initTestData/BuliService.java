@@ -11,7 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sportbets.common.DateUtil;
-import sportbets.persistence.builder.*;
+import sportbets.persistence.builder.CompFamilyConstants;
+import sportbets.persistence.builder.SpieltagConstants;
+import sportbets.persistence.builder.TeamConstants;
+import sportbets.persistence.builder.TipperConstants;
 import sportbets.persistence.entity.authorization.CommunityRole;
 import sportbets.persistence.entity.authorization.CompetitionRole;
 import sportbets.persistence.entity.authorization.Role;
@@ -46,6 +49,14 @@ public class BuliService {
 
     private static final Logger log = LoggerFactory.getLogger(BuliService.class);
     @Autowired
+    CompTableRepository compTableRepo;
+    @Autowired
+    TippConfigRepository tippConfigRepository;
+    Competition savedComp = null;
+    CompetitionRound savedHinrunde = null;
+    CompetitionRound savedRückrunde = null;
+    Community savedCommunity = null;
+    @Autowired
     private CompetitionFamilyRepository familyRepo;
     @Autowired
     private CompetitionTeamRepository compTeamRepo;
@@ -53,44 +64,25 @@ public class BuliService {
     private CompetitionRepository compRepo;
     @Autowired
     private CompetitionRoundRepository compRoundRepo;
-
     @Autowired
     private SpieltagRepository spieltagRepo;
     @Autowired
     private SpielRepository spielRepo;
-
     @Autowired
     private TeamRepository teamRepository;
-
-
     @Autowired
     private TipperRepository tipperRepo;
     @Autowired
     private TipperRoleRepository tipperRoleRepo;
     @Autowired
     private RoleRepository roleRepo;
-
     @Autowired
     private CommunityRepository commRepo;
-
     @Autowired
     private CompetitionMembershipRepository compMembRepo;
-
     @Autowired
     private CommunityMembershipRepository commMembRepo;
 
-    @Autowired
-    CompTableRepository compTableRepo;
-
-    @Autowired
-    TippConfigRepository tippConfigRepository;
-
-
-    Competition savedComp = null;
-
-    CompetitionRound savedHinrunde = null;
-    CompetitionRound savedRückrunde = null;
-    Community savedCommunity =null;
     @Transactional
     public void execute() {
         CompetitionFamily fam = familyRepo.save(CompFamilyConstants.BUNDESLIGA);
@@ -108,7 +100,7 @@ public class BuliService {
         ebi.setDefaultCommunityId(savedCommunity.getId());
         tipperRepo.save(ebi);
 
-        saveRoles( ebi);
+        saveRoles(ebi);
 
         CompetitionMembership compMemb = new CompetitionMembership(savedCommunity, savedComp);
         compMembRepo.save(compMemb);
@@ -137,7 +129,7 @@ public class BuliService {
         TippModus buliModus = new TippModusPoint("PunkteTipp", TippModusType.TIPPMODUS_POINT, 2, community, 4);
         TippModus buliModus2 = new TippModusToto("TotoTipp", TippModusType.TIPPMODUS_TOTO, 2, community);
 
-       log.debug("save matchdays");
+        log.debug("save matchdays");
         for (Spieltag spTagHin : spieltagHin) {
             Spieltag mySp = spieltagRepo.findByNumberWithRoundId(spTagHin.getSpieltagNumber(), savedHinrunde.getId()).orElseThrow();
             TippConfig tippConfig = new TippConfig(mySp, compMemb, buliModus);
@@ -155,7 +147,7 @@ public class BuliService {
         log.debug("add spielformula ::" + savedSpiele.size());
     }
 
-    private void saveRoles(  Tipper ebi) {
+    private void saveRoles(Tipper ebi) {
         CompetitionRole competitionRole = new CompetitionRole(savedComp.getName(), savedComp.getDescription(), savedComp);
         CommunityRole communityRole = new CommunityRole(savedCommunity.getName(), savedCommunity.getDescription(), savedCommunity);
 
@@ -263,7 +255,6 @@ public class BuliService {
                 LocalDateTime dt = DateUtil.formatDate(anpfiffTag + " " + time);
 
                 String heim = (String) nestedObj.get("team1");
-
 
 
                 String auswärts = (String) nestedObj.get("team2");

@@ -42,9 +42,9 @@ public class CompRoundServiceImpl implements CompRoundService {
     @Transactional
     public CompetitionRound save(CompetitionRoundDto compRoundDto) {
         log.debug("Saving competition round");
-        Optional<CompetitionRound> round = roundRepository.findByNameAndCompId(compRoundDto.getName(),compRoundDto.getCompId());
+        Optional<CompetitionRound> round = roundRepository.findByNameAndCompId(compRoundDto.getName(), compRoundDto.getCompId());
         if (round.isPresent()) {
-            throw new EntityExistsException("Comp Round already exist for comp " + compRoundDto.getCompName()+  " with given name:" + compRoundDto.getName());
+            throw new EntityExistsException("Comp Round already exist for comp " + compRoundDto.getCompName() + " with given name:" + compRoundDto.getName());
         }
         Competition comp = compRepo.findById(compRoundDto.getCompId()).orElseThrow(() -> new EntityNotFoundException("comp not found "));
         CompetitionRound model = modelMapper.map(compRoundDto, CompetitionRound.class);

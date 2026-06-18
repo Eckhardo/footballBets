@@ -15,7 +15,7 @@ public class CompetitionTeam {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
-    @JoinColumn(name = "fk_team_id",foreignKey = @ForeignKey(name = "FK_COMP_TEAM_TO_TEAM"))
+    @JoinColumn(name = "fk_team_id", foreignKey = @ForeignKey(name = "FK_COMP_TEAM_TO_TEAM"))
     @NotNull
     private Team team;
 
@@ -64,12 +64,12 @@ public class CompetitionTeam {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         CompetitionTeam that = (CompetitionTeam) o;
-        return  Objects.equals(createdOn, that.createdOn) && Objects.equals(team.getAcronym(), that.team.getName() ) && Objects.equals(competition.getName(), that.competition.getName());
+        return Objects.equals(createdOn, that.createdOn) && Objects.equals(team.getAcronym(), that.team.getName()) && Objects.equals(competition.getName(), that.competition.getName());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash( createdOn, team.getName(), competition.getName());
+        return Objects.hash(createdOn, team.getName(), competition.getName());
     }
 
     @Override

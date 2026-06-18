@@ -79,7 +79,7 @@ public class CompetitionRoleServiceImpl implements CompetitionRoleService {
 
     @Override
     public Optional<CompetitionRole> findByCompName(String name) {
-      return roleRepository.findByCompName(name);
+        return roleRepository.findByCompName(name);
     }
 
     @Override

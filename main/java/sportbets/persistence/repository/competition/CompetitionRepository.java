@@ -36,7 +36,7 @@ public interface CompetitionRepository extends JpaRepository<Competition, Long> 
             + " join fetch ct.competition c "
             + " where c.id =:compId"
             + " order by t.acronym asc")
-    List<Team> findTeamsForComp( @Param("compId")Long id);
+    List<Team> findTeamsForComp(@Param("compId") Long id);
 
 
     @Query(" select new sportbets.persistence.rowObject.CompRow("
@@ -59,7 +59,7 @@ public interface CompetitionRepository extends JpaRepository<Competition, Long> 
 
     @Query("select  c from Competition c join c.competitionRounds r"
             + " where r.id= :roundId")
-    Optional<Competition> findByRoundId( @Param("roundId")Long id);
+    Optional<Competition> findByRoundId(@Param("roundId") Long id);
 
     @Query(" select c from Competition c join fetch c.competitionFamily   ")
     List<Competition> findAllComps();

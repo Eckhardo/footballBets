@@ -44,17 +44,17 @@ public class TippModusResult extends TippModus {
     //	 ********************** Getter/Setter Methods ********************** //
 
     /**
-     * @param tendencyPoints The tendencyPoints to set.
-     */
-    public void setTendencyPoints(Integer tendencyPoints) {
-        this.tendencyPoints = tendencyPoints;
-    }
-
-    /**
      * @return Returns the tendencyPoints.
      */
     public Integer getTendencyPoints() {
         return tendencyPoints;
+    }
+
+    /**
+     * @param tendencyPoints The tendencyPoints to set.
+     */
+    public void setTendencyPoints(Integer tendencyPoints) {
+        this.tendencyPoints = tendencyPoints;
     }
 
     /**

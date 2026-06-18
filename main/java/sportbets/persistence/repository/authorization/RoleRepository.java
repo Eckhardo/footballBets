@@ -22,6 +22,7 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
 
     @Query("select  r from Role r where  TYPE(r) = CommunityRole ")
     List<CommunityRole> getAllCommunityRoles();
+
     @Query("select  r from Role r where  TYPE(r) = CommunityRole and r.name=:name ")
     Optional<CommunityRole> findByCommunityName(String name);
 

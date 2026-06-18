@@ -10,16 +10,16 @@ import java.util.Set;
 
 @Entity
 public class CompetitionRound {
-     @Id
+    @Column(nullable = false)
+    private final LocalDateTime createdOn = LocalDateTime.now();
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private int roundNumber;
     @Column(nullable = false)
     private String name;
     private boolean hasGroups = false;
-    @Column(nullable = false)
-    private final LocalDateTime createdOn = LocalDateTime.now();
-    private int teamsSize ;
+    private int teamsSize;
     private int matchdaysSize;
     private int firstMatchday;
 
@@ -28,9 +28,9 @@ public class CompetitionRound {
     @NotNull
     private Competition competition;
     @OneToMany(mappedBy = "competitionRound", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private  Set<CompetitionGroup> competitionGroups = new HashSet<>();
+    private final Set<CompetitionGroup> competitionGroups = new HashSet<>();
     @OneToMany(mappedBy = "competitionRound", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private  Set<Spieltag> spieltage = new HashSet<>();
+    private final Set<Spieltag> spieltage = new HashSet<>();
 
     public CompetitionRound() {
 
@@ -47,9 +47,9 @@ public class CompetitionRound {
         this.name = name;
         this.competition = competition;
         this.hasGroups = hasGroups;
-        this.teamsSize=teamsSize;
-        this.matchdaysSize=matchdaysSize;
-        this.firstMatchday=firstMatchday;
+        this.teamsSize = teamsSize;
+        this.matchdaysSize = matchdaysSize;
+        this.firstMatchday = firstMatchday;
         competition.addCompetitionRound(this);
 
     }
@@ -118,16 +118,16 @@ public class CompetitionRound {
         return teamsSize;
     }
 
+    public void setTeamsSize(int teamsSize) {
+        this.teamsSize = teamsSize;
+    }
+
     public int getFirstMatchday() {
         return firstMatchday;
     }
 
     public void setFirstMatchday(int firstMatchday) {
         this.firstMatchday = firstMatchday;
-    }
-
-    public void setTeamsSize(int teamsSize) {
-        this.teamsSize = teamsSize;
     }
 
     public int getMatchdaysSize() {
@@ -142,12 +142,12 @@ public class CompetitionRound {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         CompetitionRound that = (CompetitionRound) o;
-        return  hasGroups == that.hasGroups && roundNumber == that.roundNumber && Objects.equals(name, that.name) && Objects.equals(createdOn, that.createdOn);
+        return hasGroups == that.hasGroups && roundNumber == that.roundNumber && Objects.equals(name, that.name) && Objects.equals(createdOn, that.createdOn);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash( name, hasGroups, createdOn, roundNumber);
+        return Objects.hash(name, hasGroups, createdOn, roundNumber);
     }
 
     @Override

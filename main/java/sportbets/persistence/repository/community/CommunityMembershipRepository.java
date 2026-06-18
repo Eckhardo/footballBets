@@ -7,6 +7,7 @@ import sportbets.persistence.entity.community.CommunityMembership;
 
 import java.util.List;
 import java.util.Optional;
+
 @Repository
 public interface CommunityMembershipRepository extends JpaRepository<CommunityMembership, Long> {
 

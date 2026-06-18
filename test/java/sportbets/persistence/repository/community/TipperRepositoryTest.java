@@ -11,8 +11,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
-import sportbets.persistence.entity.competition.enums.Country;
 import sportbets.persistence.entity.authorization.CompetitionRole;
 import sportbets.persistence.entity.authorization.TipperRole;
 import sportbets.persistence.entity.community.Tipper;
@@ -22,6 +20,7 @@ import sportbets.persistence.repository.authorization.RoleRepository;
 import sportbets.persistence.repository.authorization.TipperRoleRepository;
 import sportbets.persistence.repository.competition.CompetitionFamilyRepository;
 import sportbets.persistence.repository.competition.CompetitionRepository;
+import sportbets.testdata.TestConstants;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -30,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Transactional
+
 public class TipperRepositoryTest {
 
     private static final Logger log = LoggerFactory.getLogger(TipperRepositoryTest.class);
@@ -39,6 +38,7 @@ public class TipperRepositoryTest {
     TipperRoleRepository tRoleRepo;
     @Autowired
     RoleRepository roleRepo;
+    CompetitionFamily testFamily = TestConstants.createValidFamily();
     private Tipper testTipper;
     @Autowired
     private TipperRepository tipperRepo;
@@ -47,19 +47,18 @@ public class TipperRepositoryTest {
     @Autowired
     private CompetitionRepository compRepo;
 
-    CompetitionFamily testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true,  Country.GERMANY);
-
-
     @Before
     public void setUp() {
-        Competition testComp = new Competition("TestLiga: Saison 2025/26", "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
-        testFamily.addCompetition(testComp);
-        familyRepo.save(testFamily);
-        Competition savedComp = compRepo.findByName(testComp.getName()).orElseThrow();
-
+        CompetitionFamily savedFam = familyRepo.save(testFamily);
+        Competition testComp = TestConstants.createValidCompetition();
+        testComp.setCompetitionFamily(savedFam);
+        savedFam.addCompetition(testComp);
+        CompetitionRole competitionRole = new CompetitionRole(testComp.getName(), "Meine Test Rolle", testComp);
+        testComp.addCompetitionRole(competitionRole);
+        Competition savedComp = compRepo.save(testComp);
+        CompetitionRole testRole = savedComp.getCompetitionRoles().stream().findFirst().get();
         testTipper = new Tipper("Eckhard", "Kirschning", "TestTipper", "root", "hint", "eki@gmx.de");
-         tipperRepo.save(testTipper);
-        CompetitionRole testRole = new CompetitionRole("1. Bundesliga Saison 2025/26", "Meine Test Rolle", savedComp);
+        tipperRepo.save(testTipper);
         testTipperRole = new TipperRole(testRole, testTipper);
         roleRepo.save(testRole);
         tRoleRepo.save(testTipperRole);
@@ -68,8 +67,8 @@ public class TipperRepositoryTest {
     @After
     public void tearDown() {
         log.info("Deleting test tipper");
-     //   tipperRepo.deleteByUsername(testTipper.getUsername());
-     //   familyRepo.deleteByName(testFamily.getName());
+        //   tipperRepo.deleteByUsername(testTipper.getUsername());
+        //   familyRepo.deleteByName(testFamily.getName());
 
     }
 

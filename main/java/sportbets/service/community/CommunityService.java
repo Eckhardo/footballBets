@@ -23,6 +23,7 @@ public interface CommunityService {
     void deleteAll();
 
     List<Community> getAll();
+
     Optional<Community> findByIdTest(Long id);
 
 }

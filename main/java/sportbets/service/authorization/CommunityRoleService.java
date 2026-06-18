@@ -16,6 +16,7 @@ public interface CommunityRoleService {
 
 
     Optional<CommunityRole> findByCommunityName(String name);
+
     List<CommunityRole> getAllCommunityRoles();
 
     void deleteByName(String name);

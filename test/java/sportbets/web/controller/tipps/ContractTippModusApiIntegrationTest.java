@@ -19,6 +19,7 @@ import sportbets.persistence.entity.tipps.TippModusToto;
 import sportbets.persistence.entity.tipps.enums.TippModusType;
 import sportbets.persistence.repository.community.CommunityRepository;
 import sportbets.persistence.repository.tipps.TippModusRepository;
+import sportbets.testdata.TestConstants;
 import sportbets.web.dto.community.CommunityDto;
 import sportbets.web.dto.tipps.TippModusDto;
 import sportbets.web.dto.tipps.TippModusPointDto;
@@ -38,8 +39,7 @@ public class ContractTippModusApiIntegrationTest {
 
     private static final Logger log = LoggerFactory.getLogger(ContractTippModusApiIntegrationTest.class);
 
-    private static final String TEST_COMM = "My Test Community";
-    CommunityDto communityDto = new CommunityDto(null, TEST_COMM, "Description of Community");
+    CommunityDto communityDto = TestConstants.createValidCommunityDto();
 
     @Autowired
     WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();
@@ -57,7 +57,7 @@ public class ContractTippModusApiIntegrationTest {
     public void cleanup() {
         // Clean up all entities created during tests
         log.debug("cleanup");
-        Community savedComm = communityRepository.findByName(TEST_COMM).orElseThrow();
+        Community savedComm = communityRepository.findByName(communityDto.getName()).orElseThrow();
         webClient.delete()
                 .uri("/communities/" + savedComm.getId())
                 .exchange()
@@ -79,7 +79,7 @@ public class ContractTippModusApiIntegrationTest {
                 .jsonPath("$.id")
                 .exists()
                 .jsonPath("$.name")
-                .isEqualTo(TEST_COMM);
+                .isEqualTo(communityDto.getName());
 
 
     }
@@ -88,7 +88,7 @@ public class ContractTippModusApiIntegrationTest {
     @Order(1)
     void saveRetrieveAndUpdateTippModusToto_withValidInput_thenSuccess() {
         log.debug("saveRetrieveAndUpdateTippModusToto_withValidInput_thenSuccess");
-        Community community = communityRepository.findByName(TEST_COMM).orElseThrow();
+        Community community = communityRepository.findByName(communityDto.getName()).orElseThrow();
         totoTest.setCommId(community.getId());
 
         webClient.post()
@@ -102,7 +102,7 @@ public class ContractTippModusApiIntegrationTest {
                 .jsonPath("$.id")
                 .exists()
                 .jsonPath("$.commName")
-                .isEqualTo(TEST_COMM)
+                .isEqualTo(communityDto.getName())
                 .jsonPath("$.type")
                 .isEqualTo(TippModusType.TIPPMODUS_TOTO.getDisplayName());
         log.debug("SAVED: ");
@@ -120,7 +120,7 @@ public class ContractTippModusApiIntegrationTest {
                 .jsonPath("$.commId")
                 .isEqualTo(community.getId())
                 .jsonPath("$.commName")
-                .isEqualTo(TEST_COMM)
+                .isEqualTo(communityDto.getName())
                 .jsonPath("$.type")
                 .isEqualTo(TippModusType.TIPPMODUS_TOTO.getDisplayName());
         totoTest.setId(totoId);
@@ -140,7 +140,7 @@ public class ContractTippModusApiIntegrationTest {
                 .jsonPath("$.commId")
                 .isEqualTo(community.getId())
                 .jsonPath("$.commName")
-                .isEqualTo(TEST_COMM)
+                .isEqualTo(communityDto.getName())
                 .jsonPath("$.type")
                 .isEqualTo(TippModusType.TIPPMODUS_TOTO.getDisplayName());
 
@@ -156,7 +156,7 @@ public class ContractTippModusApiIntegrationTest {
     @Order(2)
     void saveRetrieveAndUpdateTippModusResult_withValidInput_thenSuccess() {
 
-        Community community = communityRepository.findByName(TEST_COMM).orElseThrow();
+        Community community = communityRepository.findByName(communityDto.getName()).orElseThrow();
         resultTest.setCommId(community.getId());
 
         webClient.post()
@@ -172,7 +172,7 @@ public class ContractTippModusApiIntegrationTest {
                 .jsonPath("$.bonusPoints")
                 .isEqualTo(resultTest.getBonusPoints())
                 .jsonPath("$.commName")
-                .isEqualTo(TEST_COMM)
+                .isEqualTo(communityDto.getName())
                 .jsonPath("$.type")
                 .isEqualTo(TippModusType.TIPPMODUS_RESULT.getDisplayName());
 
@@ -191,7 +191,7 @@ public class ContractTippModusApiIntegrationTest {
                 .jsonPath("$.commId")
                 .isEqualTo(community.getId())
                 .jsonPath("$.commName")
-                .isEqualTo(TEST_COMM)
+                .isEqualTo(communityDto.getName())
                 .jsonPath("$.type")
                 .isEqualTo(TippModusType.TIPPMODUS_RESULT.getDisplayName());
 
@@ -212,7 +212,7 @@ public class ContractTippModusApiIntegrationTest {
                 .jsonPath("$.commId")
                 .isEqualTo(community.getId())
                 .jsonPath("$.commName")
-                .isEqualTo(TEST_COMM)
+                .isEqualTo(communityDto.getName())
                 .jsonPath("$.type")
                 .isEqualTo(TippModusType.TIPPMODUS_RESULT.getDisplayName());
 
@@ -223,7 +223,7 @@ public class ContractTippModusApiIntegrationTest {
     @Order(3)
     void saveRetrieveAndUpdateTippModusPoint_withValidInput_thenSuccess() {
 
-        Community community = communityRepository.findByName(TEST_COMM).orElseThrow();
+        Community community = communityRepository.findByName(communityDto.getName()).orElseThrow();
         pointTest.setCommId(community.getId());
 
         webClient.post()
@@ -239,7 +239,7 @@ public class ContractTippModusApiIntegrationTest {
                 .jsonPath("$.totalPoints")
                 .isEqualTo(pointTest.getTotalPoints())
                 .jsonPath("$.commName")
-                .isEqualTo(TEST_COMM)
+                .isEqualTo(communityDto.getName())
                 .jsonPath("$.type")
                 .isEqualTo(TippModusType.TIPPMODUS_POINT.getDisplayName());
 
@@ -258,7 +258,7 @@ public class ContractTippModusApiIntegrationTest {
                 .jsonPath("$.commId")
                 .isEqualTo(community.getId())
                 .jsonPath("$.commName")
-                .isEqualTo(TEST_COMM)
+                .isEqualTo(communityDto.getName())
                 .jsonPath("$.type")
                 .isEqualTo(TippModusType.TIPPMODUS_POINT.getDisplayName());
 
@@ -279,7 +279,7 @@ public class ContractTippModusApiIntegrationTest {
                 .jsonPath("$.commId")
                 .isEqualTo(community.getId())
                 .jsonPath("$.commName")
-                .isEqualTo(TEST_COMM)
+                .isEqualTo(communityDto.getName())
                 .jsonPath("$.type")
                 .isEqualTo(TippModusType.TIPPMODUS_POINT.getDisplayName());
 
@@ -290,7 +290,7 @@ public class ContractTippModusApiIntegrationTest {
     @Order(4)
     void deleteTippModusPoint_withValidInput_thenSuccess() {
 
-        Community community = communityRepository.findByName(TEST_COMM).orElseThrow();
+        Community community = communityRepository.findByName(communityDto.getName()).orElseThrow();
         pointTest.setCommId(community.getId());
 
         webClient.post()
@@ -304,7 +304,7 @@ public class ContractTippModusApiIntegrationTest {
                 .jsonPath("$.id")
                 .exists()
                 .jsonPath("$.commName")
-                .isEqualTo(TEST_COMM)
+                .isEqualTo(communityDto.getName())
                 .jsonPath("$.type")
                 .isEqualTo(TippModusType.TIPPMODUS_POINT.getDisplayName());
 
@@ -323,7 +323,7 @@ public class ContractTippModusApiIntegrationTest {
                 .jsonPath("$.commId")
                 .isEqualTo(community.getId())
                 .jsonPath("$.commName")
-                .isEqualTo(TEST_COMM)
+                .isEqualTo(communityDto.getName())
                 .jsonPath("$.type")
                 .isEqualTo(TippModusType.TIPPMODUS_POINT.getDisplayName());
 
@@ -356,7 +356,7 @@ public class ContractTippModusApiIntegrationTest {
     @Order(5)
     void retrieveTippModusTotoListForCommunity_withValidInput_thenSuccess() {
 
-        Community community = communityRepository.findByName(TEST_COMM).orElseThrow();
+        Community community = communityRepository.findByName(communityDto.getName()).orElseThrow();
         totoTest.setCommId(community.getId());
 
         webClient.post()
@@ -370,7 +370,7 @@ public class ContractTippModusApiIntegrationTest {
                 .jsonPath("$.id")
                 .exists()
                 .jsonPath("$.commName")
-                .isEqualTo(TEST_COMM)
+                .isEqualTo(communityDto.getName())
                 .jsonPath("$.type")
                 .isEqualTo(TippModusType.TIPPMODUS_TOTO.getDisplayName());
 
@@ -387,7 +387,7 @@ public class ContractTippModusApiIntegrationTest {
                 .jsonPath("$.id")
                 .exists()
                 .jsonPath("$.commName")
-                .isEqualTo(TEST_COMM)
+                .isEqualTo(communityDto.getName())
                 .jsonPath("$.type")
                 .isEqualTo(TippModusType.TIPPMODUS_TOTO.getDisplayName());
 
@@ -405,7 +405,7 @@ public class ContractTippModusApiIntegrationTest {
     @Order(6)
     void retrieveTippModusListForCommunity_withValidInput_thenSuccess() {
 
-        Community community = communityRepository.findByName(TEST_COMM).orElseThrow();
+        Community community = communityRepository.findByName(communityDto.getName()).orElseThrow();
         totoTest.setCommId(community.getId());
 
         webClient.post()
@@ -419,7 +419,7 @@ public class ContractTippModusApiIntegrationTest {
                 .jsonPath("$.id")
                 .exists()
                 .jsonPath("$.commName")
-                .isEqualTo(TEST_COMM)
+                .isEqualTo(communityDto.getName())
                 .jsonPath("$.type")
                 .isEqualTo(TippModusType.TIPPMODUS_TOTO.getDisplayName());
 
@@ -435,7 +435,7 @@ public class ContractTippModusApiIntegrationTest {
                 .jsonPath("$.id")
                 .exists()
                 .jsonPath("$.commName")
-                .isEqualTo(TEST_COMM)
+                .isEqualTo(communityDto.getName())
                 .jsonPath("$.type")
                 .isEqualTo(TippModusType.TIPPMODUS_POINT.getDisplayName());
         resultTest.setCommId(community.getId());
@@ -450,7 +450,7 @@ public class ContractTippModusApiIntegrationTest {
                 .jsonPath("$.id")
                 .exists()
                 .jsonPath("$.commName")
-                .isEqualTo(TEST_COMM)
+                .isEqualTo(communityDto.getName())
                 .jsonPath("$.type")
                 .isEqualTo(TippModusType.TIPPMODUS_RESULT.getDisplayName());
 

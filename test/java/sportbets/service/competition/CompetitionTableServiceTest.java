@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionRound;
 import sportbets.persistence.repository.competition.CompTableRepository;
@@ -35,23 +34,20 @@ public class CompetitionTableServiceTest {
 
 
     private static final String TEST_COMP = "1. Bundesliga Saison 2025";
-    @Autowired
-    private CompService compService; // Real service being tested
-
-    @Autowired
-    private CompTableRepository compTableRepository;
-
-    @Autowired
-    private CompTableService compTableService;
-
     Competition myComp;
     CompetitionRound myRound;
+    @Autowired
+    private CompService compService; // Real service being tested
+    @Autowired
+    private CompTableRepository compTableRepository;
+    @Autowired
+    private CompTableService compTableService;
 
     @BeforeEach
     public void setup() {
 
-       Competition comp = compService.findByName(TEST_COMP).orElseThrow();
-       myComp = compService.findByIdJoinFetchRounds(comp.getId());
+        Competition comp = compService.findByName(TEST_COMP).orElseThrow();
+        myComp = compService.findByIdJoinFetchRounds(comp.getId());
         assertNotNull(myComp);
         myRound = myComp.getCompetitionRounds().stream().findFirst().orElseThrow();
         log.info("myRound  {}", myRound);
@@ -65,7 +61,7 @@ public class CompetitionTableServiceTest {
 
     @Test
     public void retrieveTableData() {
-        TableSearchCriteria searchCriteria = new TableSearchCriteria(myComp.getId(), 1, 18,null);
+        TableSearchCriteria searchCriteria = new TableSearchCriteria(myComp.getId(), 1, 18, null);
 
         List<TeamPositionSummaryRow> rows = compTableService.findTableForLigaModus(searchCriteria);
         assertThat(18).isEqualTo(rows.size());
@@ -75,7 +71,7 @@ public class CompetitionTableServiceTest {
 
     @Test
     public void retrieveTableDataHeim() {
-        TableSearchCriteria searchCriteria = new TableSearchCriteria(myComp.getId(), 1, 18,true);
+        TableSearchCriteria searchCriteria = new TableSearchCriteria(myComp.getId(), 1, 18, true);
 
         List<TeamPositionSummaryRow> rows = compTableService.findTableHeimOrGastForLigaModus(searchCriteria);
         assertThat(18).isEqualTo(rows.size());
@@ -84,11 +80,10 @@ public class CompetitionTableServiceTest {
     }
 
 
-
     @Test
     public void retrieveTableForRound() {
 
-        TableSearchCriteria searchCriteria = new TableSearchCriteria(myComp.getId(), 18, 34,true);
+        TableSearchCriteria searchCriteria = new TableSearchCriteria(myComp.getId(), 18, 34, true);
 
         List<TeamPositionSummaryRow> rows = compTableService.findTableHeimOrGastForLigaModus(searchCriteria);
         assertThat(18).isEqualTo(rows.size());

@@ -42,7 +42,7 @@ public class CompTableServiceImpl implements CompTableService {
     }
 
     @Override
-   @Transactional(readOnly = true)
+    @Transactional(readOnly = true)
     public List<TeamPositionSummaryRow> findTableForRoundForLigaModus(Long compId, int spieltagStart, int spieltagEnd) {
         List<TeamPositionSummaryRow> rows = compTableRepository.findTableForLigaModus(compId, spieltagStart, spieltagEnd);
         log.info(" findTableForRoundsForLigaModus rows size:" + rows.size());

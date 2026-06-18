@@ -75,12 +75,12 @@ public class CommunityMembershipDto implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CommunityMembershipDto entity = (CommunityMembershipDto) o;
-        return Objects.equals(this.id, entity.id) ;
+        return Objects.equals(this.id, entity.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, tipperId,commId);
+        return Objects.hash(id, tipperId, commId);
     }
 
     @Override

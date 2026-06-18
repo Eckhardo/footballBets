@@ -17,6 +17,7 @@ import sportbets.web.dto.authorization.CommunityRoleDto;
 
 import java.util.List;
 import java.util.Optional;
+
 @Service
 public class CommunityRoleServiceImpl implements CommunityRoleService {
 

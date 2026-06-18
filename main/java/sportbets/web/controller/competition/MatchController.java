@@ -69,16 +69,16 @@ public class MatchController {
 
     @PostMapping("/matches/matchday")
     @ResponseStatus(HttpStatus.CREATED)
-    public List<SpielDto> postList( @RequestBody @Valid List<SpielDto> spielDtos) {
+    public List<SpielDto> postList(@RequestBody @Valid List<SpielDto> spielDtos) {
         log.debug("Save New matches");
         assert spielDtos != null;
-       Long spieltagId= spielDtos.get(0).getSpieltagId();
+        Long spieltagId = spielDtos.get(0).getSpieltagId();
         log.debug("New match day list for spieltag id {}", spieltagId);
         List<SpielDto> createdDtos = new ArrayList<>();
         List<Spiel> createdModels = spielService.saveList(spieltagId, spielDtos);
 
         for (Spiel model : createdModels) {
-        ModelMapper myModelMapper = MapperUtil.getModelMapperForSpiel();
+            ModelMapper myModelMapper = MapperUtil.getModelMapperForSpiel();
             SpielDto createdDto = myModelMapper.map(model, SpielDto.class);
             log.debug("SpielDto saved {}", createdDto);
         }

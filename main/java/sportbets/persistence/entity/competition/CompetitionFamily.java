@@ -1,8 +1,8 @@
 package sportbets.persistence.entity.competition;
 
 import jakarta.persistence.*;
-import sportbets.persistence.entity.competition.enums.Country;
 import sportbets.persistence.entity.competition.converter.CountryAttributeConverter;
+import sportbets.persistence.entity.competition.enums.Country;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -33,7 +33,7 @@ public class CompetitionFamily {
     private boolean hasClubs;
 
     @OneToMany(mappedBy = "competitionFamily", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private  Set<Competition> competitions = new HashSet<>();
+    private final Set<Competition> competitions = new HashSet<>();
 
     //	********************** Constructors ********************** //
 
@@ -125,7 +125,7 @@ public class CompetitionFamily {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         CompetitionFamily that = (CompetitionFamily) o;
-        return  Objects.equals(name, that.name) && Objects.equals(createdOn, that.createdOn);
+        return Objects.equals(name, that.name) && Objects.equals(createdOn, that.createdOn);
     }
 
     @Override

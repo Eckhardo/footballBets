@@ -13,18 +13,19 @@ public interface TippModusService {
 
     TippModusDto save(TippModusDto dto);
 
-    Optional<TippModusDto> update(Long id,TippModusDto dto);
+    Optional<TippModusDto> update(Long id, TippModusDto dto);
 
     void deleteById(Long id);
 
     List<TippModusDto> getAllForCommunity(Long id);
 
-   List<TippModusDto> findTotoTypesForCommunity(Long id);
+    List<TippModusDto> findTotoTypesForCommunity(Long id);
 
     List<TippModusDto> findResultTypesForCommunity(Long id);
 
 
     List<TippModusDto> findPointTypesForCommunity(Long id);
+
     Optional<TippModusDto> findByNameAndCommunity(String name, Long commId);
 
 }

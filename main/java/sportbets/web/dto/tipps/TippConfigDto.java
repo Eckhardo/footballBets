@@ -9,15 +9,15 @@ import java.util.Objects;
  * DTO for {@link sportbets.persistence.entity.tipps.TippConfig}
  */
 public class TippConfigDto implements Serializable {
-    private  Long id;
+    private Long id;
     @NotNull(message = " compMemb id cannot be null")
-    private  Long compMembId;
+    private Long compMembId;
     @NotNull(message = " spieltag id cannot be null")
-    private  Long spieltagId;
+    private Long spieltagId;
     @NotNull(message = " spieltag number cannot be null")
-    private  int spieltagNumber;
+    private int spieltagNumber;
     @NotNull(message = " tipp modus id cannot be null")
-    private  Long tippModusId;
+    private Long tippModusId;
 
     public TippConfigDto() {
     }
@@ -34,29 +34,28 @@ public class TippConfigDto implements Serializable {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Long getCompMembId() {
         return compMembId;
-    }
-
-    public Long getSpieltagId() {
-        return spieltagId;
-    }
-
-    public Long getTippModusId() {
-        return tippModusId;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public void setCompMembId(Long compMembId) {
         this.compMembId = compMembId;
     }
 
+    public Long getSpieltagId() {
+        return spieltagId;
+    }
+
     public void setSpieltagId(Long spieltagId) {
         this.spieltagId = spieltagId;
+    }
+
+    public Long getTippModusId() {
+        return tippModusId;
     }
 
     public void setTippModusId(Long tippModusId) {

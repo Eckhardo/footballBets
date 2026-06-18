@@ -12,7 +12,6 @@ public interface CompetitionRoleService {
     CompetitionRole save(CompetitionRoleDto dto);
 
 
-
     List<CompetitionRole> getAllCompRoles();
 
     void deleteById(Long id);

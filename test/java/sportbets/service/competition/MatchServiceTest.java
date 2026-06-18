@@ -20,7 +20,6 @@ import java.util.Random;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static sportbets.testdata.TestConstants.COMP_TEST;
 import static sportbets.testdata.TestConstants.createValidCompetitionDto;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -35,6 +34,12 @@ public class MatchServiceTest {
     TeamDto team1 = TestConstants.TEAM_DTO_2;
 
     Spieltag savedMatchday = null;
+    CompetitionFamilyDto competitionFamily = TestConstants.createValidFamilyDto();
+    CompetitionDto compDto = createValidCompetitionDto();
+    CompetitionRoundDto compRoundDto = TestConstants.createValidCompRoundDto();
+    SpieltagDto spieltagDto = TestConstants.createValidSpieltagDto();
+    Competition savedComp = null;
+    CompetitionRound savedCompRound = null;
     @Autowired
     private CompFamilyService familyService; // Real service being tested
     @Autowired
@@ -43,21 +48,12 @@ public class MatchServiceTest {
     private CompRoundService compRoundService;
     @Autowired
     private TeamService teamService;
-
     @Autowired
     private SpieltagService spieltagService;
-
     @Autowired
     private SpielService matchService;
-
     @Autowired
     private CompTableService compTableService;
-    CompetitionFamilyDto competitionFamily = TestConstants.createValidFamilyDto();
-    CompetitionDto compDto = createValidCompetitionDto();
-    CompetitionRoundDto compRoundDto = TestConstants.createValidCompRoundDto();
-
-    Competition savedComp = null;
-    CompetitionRound savedCompRound = null;
 
     @BeforeEach
     public void setup() {
@@ -67,8 +63,9 @@ public class MatchServiceTest {
         savedComp = compService.save(compDto);
         compRoundDto.setCompId(savedComp.getId());
         savedCompRound = compRoundService.save(compRoundDto);
-        SpieltagDto matchDayDto = new SpieltagDto(null, 1, LocalDateTime.now(), savedCompRound.getId(), savedCompRound.getName());
-        savedMatchday = spieltagService.save(matchDayDto);
+        spieltagDto.setCompRoundId(savedCompRound.getId());
+        spieltagDto.setCompRoundName(savedCompRound.getName());
+        savedMatchday = spieltagService.save(spieltagDto);
         savedTeam1 = teamService.save(team);
         savedTeam2 = teamService.save(team1);
 
@@ -269,24 +266,23 @@ public class MatchServiceTest {
         assertThat(updateSpiele.size()).isEqualTo(9);
         for (Spiel entity : updateSpiele) {
             assertThat(entity.getHeimTore()).isEqualTo(2);
-            assertThat(entity.getGastTore()).isIn(  0, 1, 2, 3, 4);
+            assertThat(entity.getGastTore()).isIn(0, 1, 2, 3, 4);
             SpielFormula heimFormula = entity.getSpielFormulaForHeim().orElseThrow();
             assertNotNull(heimFormula);
             assertThat(heimFormula.isHeimTeam()).isTrue();
             assertThat(heimFormula.getDiffTore()).isIn(-1, -2, -3, -4, 0, 1, 2, 3, 4);
-            assertThat(heimFormula.getHeimTore()).isIn( 2);
-            assertThat(heimFormula.getGastTore()).isIn(  0, 1, 2, 3, 4);
+            assertThat(heimFormula.getHeimTore()).isIn(2);
+            assertThat(heimFormula.getGastTore()).isIn(0, 1, 2, 3, 4);
             assertThat(heimFormula.getTeamName()).isIn(savedTeam1.getName(), savedTeam2.getName());
             assertThat(heimFormula.getTeamNameAcronym()).isIn(savedTeam1.getAcronym(), savedTeam2.getAcronym());
-
 
 
             SpielFormula gastFormula = entity.getSpielFormulaForGast().orElseThrow();
             assertNotNull(gastFormula);
             assertThat(gastFormula.isHeimTeam()).isFalse();
             assertThat(gastFormula.getDiffTore()).isIn(-1, -2, -3, -4, 0, 1, 2, 3, 4);
-            assertThat(gastFormula.getGastTore()).isIn( 2);
-            assertThat(gastFormula.getHeimTore()).isIn(  0, 1, 2, 3, 4);
+            assertThat(gastFormula.getGastTore()).isIn(2);
+            assertThat(gastFormula.getHeimTore()).isIn(0, 1, 2, 3, 4);
             assertThat(gastFormula.getTeamName()).isIn(savedTeam1.getName(), savedTeam2.getName());
             assertThat(gastFormula.getTeamNameAcronym()).isIn(savedTeam1.getAcronym(), savedTeam2.getAcronym());
 

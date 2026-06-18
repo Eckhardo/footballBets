@@ -24,6 +24,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+
 @Hidden
 @ControllerAdvice
 public class CustomExceptionsHandler extends ResponseEntityExceptionHandler {
@@ -31,7 +32,7 @@ public class CustomExceptionsHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({EntityNotFoundException.class, TransientObjectException.class})
     public ProblemDetail resolveEntityNotFoundException2(Exception ex, ServletRequest request, HttpServletResponse response) {
-    log.error("EntityNotFoundException", ex);
+        log.error("EntityNotFoundException", ex);
 
 
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Invalid associated entity: " + ex.getMessage());
@@ -48,6 +49,7 @@ public class CustomExceptionsHandler extends ResponseEntityExceptionHandler {
         problemDetail.setTitle("duplicate entity");
         return problemDetail;
     }
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex, HttpHeaders headers,
@@ -58,7 +60,8 @@ public class CustomExceptionsHandler extends ResponseEntityExceptionHandler {
                 errors.put(error.getField(), error.getDefaultMessage()));
         return ResponseEntity.badRequest().body(errors);
     }
-    @ExceptionHandler({ MethodArgumentTypeMismatchException.class})
+
+    @ExceptionHandler({MethodArgumentTypeMismatchException.class})
     public ProblemDetail resolveMethodArgumentTypeMismatchException(Exception ex, ServletRequest request, HttpServletResponse response) {
 
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "wrong method argument type: " + ex.getMessage());
@@ -66,6 +69,7 @@ public class CustomExceptionsHandler extends ResponseEntityExceptionHandler {
         problemDetail.setTitle("wrong method argument type");
         return problemDetail;
     }
+
     @ExceptionHandler({DataIntegrityViolationException.class})
     public ErrorResponse resolveDuplicatedKey(DataIntegrityViolationException ex) {
         ErrorResponseException response = new ErrorResponseException(HttpStatus.BAD_REQUEST);

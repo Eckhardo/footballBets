@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.entity.competition.CompetitionRound;
@@ -20,11 +19,9 @@ import sportbets.web.dto.competition.CompetitionFamilyDto;
 import sportbets.web.dto.competition.CompetitionRoundDto;
 import sportbets.web.dto.competition.SpieltagDto;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static sportbets.testdata.TestConstants.COMP_TEST;
 import static sportbets.testdata.TestConstants.createValidCompetitionDto;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -36,6 +33,8 @@ public class MatchdayServiceTest {
     private static final String TEST_COMP_ROUND = "Saison 2025: Hinrunde";
     private static final int TEST_MATCH_DAY = 1;
     final CompetitionFamilyDto competitionFamily = TestConstants.createValidFamilyDto();
+    final SpieltagDto matchDayDto = TestConstants.createValidSpieltagDto();
+
     Competition savedComp = null;
     CompetitionRound savedCompRound = null;
     @Autowired
@@ -52,11 +51,11 @@ public class MatchdayServiceTest {
     public void setup() {
         log.debug("set up Test data");
         CompetitionFamily savedFam = familyService.save(competitionFamily);
-        CompetitionDto compDto =createValidCompetitionDto();
+        CompetitionDto compDto = createValidCompetitionDto();
         compDto.setFamilyId(savedFam.getId());
         savedComp = compService.save(compDto);
         log.debug("set up Test data: saved competition ");
-        CompetitionRoundDto compRoundDto =TestConstants.createValidCompRoundDto();
+        CompetitionRoundDto compRoundDto = TestConstants.createValidCompRoundDto();
         compRoundDto.setCompId(savedComp.getId());
         savedCompRound = compRoundService.save(compRoundDto);
         log.debug("set up Test data: saved competitionRound ");
@@ -74,7 +73,8 @@ public class MatchdayServiceTest {
     @Test
     void whenValidMatchday_thenMatchdayShouldBeSaved() {
         log.debug("whenValidMatchday_thenMatchdayShouldBeSaved");
-        SpieltagDto matchDayDto = new SpieltagDto(null, TEST_MATCH_DAY, LocalDateTime.now(), savedCompRound.getId(), savedCompRound.getName());
+        matchDayDto.setCompRoundId(savedCompRound.getId());
+        matchDayDto.setCompRoundName(savedCompRound.getName());
         Spieltag savedMatchday = spieltagService.save(matchDayDto);
 
         assertThat(savedMatchday.getId()).isNotNull();
@@ -89,7 +89,8 @@ public class MatchdayServiceTest {
     void whenValidMatchday_thenMatchdayShouldBeUpdated() {
 
 
-        SpieltagDto matchDayDto = new SpieltagDto(null, TEST_MATCH_DAY, LocalDateTime.now(), savedCompRound.getId(), savedCompRound.getName());
+        matchDayDto.setCompRoundId(savedCompRound.getId());
+        matchDayDto.setCompRoundName(savedCompRound.getName());
         Spieltag savedMatchday = spieltagService.save(matchDayDto);
         matchDayDto.setId(savedMatchday.getId());
         matchDayDto.setSpieltagNumber(5);
@@ -105,7 +106,8 @@ public class MatchdayServiceTest {
 
     @Test
     void whenValidRound_thenAllMatchdaysShouldRetrieved() {
-        SpieltagDto matchDayDto = new SpieltagDto(null, TEST_MATCH_DAY, LocalDateTime.now(), savedCompRound.getId(), savedCompRound.getName());
+        matchDayDto.setCompRoundId(savedCompRound.getId());
+        matchDayDto.setCompRoundName(savedCompRound.getName());
         Spieltag savedMatchday = spieltagService.save(matchDayDto);
 
         List<Spieltag> matchdays = spieltagService.getAllForCompetition(savedComp.getId());

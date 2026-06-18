@@ -11,7 +11,7 @@ import java.util.Objects;
 public class CompetitionRole extends Role {
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "fk_comp_id",foreignKey = @ForeignKey(name = "FK_COMP_ROLE_TO_COMP"))
+    @JoinColumn(name = "fk_comp_id", foreignKey = @ForeignKey(name = "FK_COMP_ROLE_TO_COMP"))
     @NotNull
     public Competition competition;
 
@@ -52,6 +52,6 @@ public class CompetitionRole extends Role {
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), getName(),getDescription());
+        return Objects.hash(super.hashCode(), getName(), getDescription());
     }
 }

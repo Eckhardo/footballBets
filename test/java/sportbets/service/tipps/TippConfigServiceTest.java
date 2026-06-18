@@ -22,7 +22,6 @@ import sportbets.web.dto.competition.*;
 import sportbets.web.dto.tipps.TippConfigDto;
 import sportbets.web.dto.tipps.TippModusTotoDto;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -39,43 +38,22 @@ public class TippConfigServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(TippConfigServiceTest.class);
     static CompetitionFamilyDto competitionFamily = TestConstants.createValidFamilyDto();
-    static CommunityDto communityDto = new CommunityDto(null, COMM_TEST, "Description of Community");
-
-    @Autowired
-    TippConfigService tippConfigService;
-    @Autowired
-    TippModusRepository tippModusRepository;
-
-
-    private static CompFamilyService familyService;
-    private static CompService compService; // Real service being tested
-    private static CompRoundService compRoundService;
-    private static SpieltagService spieltagService;
-
-    private static CommunityService communityService;
-    private static TippModusService tippModusService;
-    private static CompetitionMembershipService membershipService;
-
+    static CommunityDto communityDto = TestConstants.createValidCommunityDto();
     static Spieltag savedMatchday;
     static CompetitionMembership savedCompMemb;
     static TippModusTotoDto savedTippModus;
     static CompetitionRound savedCompRound;
-
+    private static CompFamilyService familyService;
+    private static CompService compService; // Real service being tested
+    private static CompRoundService compRoundService;
+    private static SpieltagService spieltagService;
+    private static CommunityService communityService;
+    private static TippModusService tippModusService;
+    private static CompetitionMembershipService membershipService;
     @Autowired
-    public void setRepos(CompFamilyService familyService, CompService compService,
-                         CompRoundService compRoundService, SpieltagService spieltagService,
-                         CommunityService communityService,
-                         CompetitionMembershipService membershipService,
-                         TippModusService tippModusService) {
-        TippConfigServiceTest.familyService = familyService;
-        TippConfigServiceTest.compService = compService;
-        TippConfigServiceTest.compRoundService = compRoundService;
-        TippConfigServiceTest.spieltagService = spieltagService;
-
-        TippConfigServiceTest.communityService = communityService;
-        TippConfigServiceTest.membershipService = membershipService;
-        TippConfigServiceTest.tippModusService = tippModusService;
-    }
+    TippConfigService tippConfigService;
+    @Autowired
+    TippModusRepository tippModusRepository;
 
     @BeforeAll
     static void setupOnce() {
@@ -88,7 +66,10 @@ public class TippConfigServiceTest {
         CompetitionRoundDto compRoundDto = TestConstants.createValidCompRoundDto();
         compRoundDto.setCompId(savedComp.getId());
         savedCompRound = compRoundService.save(compRoundDto);
-        SpieltagDto matchDayDto = new SpieltagDto(null, 66, LocalDateTime.now(), savedCompRound.getId(), savedCompRound.getName());
+        SpieltagDto matchDayDto = TestConstants.createValidSpieltagDto();
+        matchDayDto.setCompRoundId(savedCompRound.getId());
+        matchDayDto.setCompRoundName(savedCompRound.getName());
+
         savedMatchday = spieltagService.save(matchDayDto);
         CommunityDto commDto = new CommunityDto(null, COMM_TEST, "Description of Community");
         Community savedComm = communityService.save(commDto);
@@ -104,6 +85,22 @@ public class TippConfigServiceTest {
         log.debug("tearDownOnce");
         familyService.deleteByName(competitionFamily.getName());
         communityService.deleteByName(communityDto.getName());
+    }
+
+    @Autowired
+    public void setRepos(CompFamilyService familyService, CompService compService,
+                         CompRoundService compRoundService, SpieltagService spieltagService,
+                         CommunityService communityService,
+                         CompetitionMembershipService membershipService,
+                         TippModusService tippModusService) {
+        TippConfigServiceTest.familyService = familyService;
+        TippConfigServiceTest.compService = compService;
+        TippConfigServiceTest.compRoundService = compRoundService;
+        TippConfigServiceTest.spieltagService = spieltagService;
+
+        TippConfigServiceTest.communityService = communityService;
+        TippConfigServiceTest.membershipService = membershipService;
+        TippConfigServiceTest.tippModusService = tippModusService;
     }
 
     @Test

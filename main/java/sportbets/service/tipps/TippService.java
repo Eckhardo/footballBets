@@ -10,16 +10,16 @@ import java.util.Optional;
 public interface TippService {
 
 
-
     Optional<TippDto> findById(Long id);
 
-    TippDto saveOne (TippDto dto);
+    TippDto saveOne(TippDto dto);
+
     List<TippDto> saveList(List<TippDto> dtoList);
 
 
     Optional<TippDto> updateOne(Long id, TippDto dto);
 
-   List<TippDto> updateList(List<TippDto >dtoList);
+    List<TippDto> updateList(List<TippDto> dtoList);
 
 
     void deleteById(Long id);

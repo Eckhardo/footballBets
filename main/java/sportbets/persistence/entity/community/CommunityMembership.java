@@ -3,7 +3,6 @@ package sportbets.persistence.entity.community;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import sportbets.persistence.entity.tipps.Tipp;
-import sportbets.persistence.entity.tipps.TippModus;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -12,25 +11,20 @@ import java.util.Set;
 
 @Entity
 public class CommunityMembership {
+    private final LocalDateTime createdOn = LocalDateTime.now();
+    @OneToMany(mappedBy = "communityMembership", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    Set<Tipp> tipps = new HashSet<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private final LocalDateTime createdOn = LocalDateTime.now();
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fk_comm_id", foreignKey = @ForeignKey(name = "FK_COMM_MEMB_TO_COMMUNITY"))
     @NotNull
     private Community community;
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fk_tipper_id", foreignKey = @ForeignKey(name = "FK_COMM_MEMB_TO_ZIPPRT"))
     @NotNull
     private Tipper tipper;
-
-
-    @OneToMany(mappedBy = "communityMembership", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    Set<Tipp> tipps = new HashSet<>();
 
     public CommunityMembership() {
     }
@@ -79,12 +73,12 @@ public class CommunityMembership {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         CommunityMembership that = (CommunityMembership) o;
-        return   Objects.equals(createdOn, that.createdOn) && Objects.equals(community.getName(), that.community.getName()) && Objects.equals(tipper.getUsername(), that.tipper.getUsername());
+        return Objects.equals(createdOn, that.createdOn) && Objects.equals(community.getName(), that.community.getName()) && Objects.equals(tipper.getUsername(), that.tipper.getUsername());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash( createdOn, community.getName(), tipper.getUsername());
+        return Objects.hash(createdOn, community.getName(), tipper.getUsername());
     }
 
     @Override

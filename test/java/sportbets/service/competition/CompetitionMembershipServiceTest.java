@@ -33,45 +33,38 @@ public class CompetitionMembershipServiceTest {
 
 
     private static final Logger log = LoggerFactory.getLogger(CompetitionMembershipServiceTest.class);
+    final CompetitionFamilyDto testFamily = TestConstants.createValidFamilyDto();
+    private final CommunityDto communityDto = TestConstants.createValidCommunityDto();
+    private final CommunityDto communityDto2 = TestConstants.createValidCommunityDto2();
     @Autowired
     CompetitionMembershipService membershipService;
     @Autowired
-    private CompetitionRoleService compRoleService;
-    @Autowired
-    private CompFamilyService familyService; // Real service being tested
-
-
-    @Autowired
     CommunityService communityService;
     @Autowired
-    private CommunityRoleService communityRoleService;
-
-    @Autowired
     CompService compService;
-
-    final CompetitionFamilyDto testFamily = TestConstants.createValidFamilyDto();
-    private static final String TEST_COMM_1 = "My Test Community 1";
-    private static final String TEST_COMM_2 = "My Test Community 2";
-    private final CommunityDto communityDto = new CommunityDto(null, TEST_COMM_1, "Description of Community");
-    private final CommunityDto communityDto2 = new CommunityDto(null, TEST_COMM_2, "Description of Community2");
-
     Competition savedComp = null;
     Competition savedComp2 = null;
     Community savedCommunity = null;
     Community savedCommunity2 = null;
+    @Autowired
+    private CompetitionRoleService compRoleService;
+    @Autowired
+    private CompFamilyService familyService; // Real service being tested
+    @Autowired
+    private CommunityRoleService communityRoleService;
 
     @BeforeEach
     public void setup() {
         CompetitionFamily savedFam = familyService.save(testFamily);
 
-        CompetitionDto compDto =TestConstants.createValidCompetitionDto();
+        CompetitionDto compDto = TestConstants.createValidCompetitionDto();
         compDto.setFamilyId(savedFam.getId());
         CompetitionDto compDto2 = TestConstants.createValidCompetitionDto2();
         compDto2.setFamilyId(savedFam.getId());
         savedComp = compService.save(compDto);
         savedComp2 = compService.save(compDto2);
         log.debug("setup: {}", communityDto);
-         savedCommunity = communityService.save(communityDto);
+        savedCommunity = communityService.save(communityDto);
         savedCommunity2 = communityService.save(communityDto2);
     }
 
@@ -197,7 +190,7 @@ public class CompetitionMembershipServiceTest {
         log.debug("comp deleted");
         Optional<Competition> deletedComp = compService.findById(savedComp.getId());
         assertTrue(deletedComp.isEmpty());
-         Optional<CompetitionMembership> deleted = membershipService.findById(savedCompMemb.getId());
+        Optional<CompetitionMembership> deleted = membershipService.findById(savedCompMemb.getId());
         Optional<CompetitionRole> deletedRole = compRoleService.findByCompName(savedComp.getName());
         assertTrue(deletedRole.isEmpty());
         assertTrue(deleted.isEmpty());

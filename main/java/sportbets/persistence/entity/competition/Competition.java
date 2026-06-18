@@ -18,6 +18,8 @@ public class Competition {
 
 
     private static final Logger log = LoggerFactory.getLogger(Competition.class);
+    @Column(nullable = false)
+    private final LocalDateTime createdOn = LocalDateTime.now();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,22 +28,18 @@ public class Competition {
     private String description;
     private int winMultiplicator = 3;
     private int remisMultiplicator = 1;
-
-    @Column(nullable = false)
-    private final LocalDateTime createdOn = LocalDateTime.now();
-
-    @OneToMany(mappedBy = "competition", cascade =CascadeType.PERSIST, orphanRemoval = true, fetch = FetchType.EAGER)
-    private Set<CompetitionRole> competitionRoles = new HashSet<>();
+    @OneToMany(mappedBy = "competition", cascade = CascadeType.PERSIST, orphanRemoval = true, fetch = FetchType.EAGER)
+    private final Set<CompetitionRole> competitionRoles = new HashSet<>();
 
     @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private  Set<CompetitionRound> competitionRounds = new HashSet<>();
+    private final Set<CompetitionRound> competitionRounds = new HashSet<>();
 
     @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private  Set<CompetitionTeam> competitionTeams = new HashSet<>();
+    private final Set<CompetitionTeam> competitionTeams = new HashSet<>();
 
 
     @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private  Set<CompetitionMembership> competitionMemberships = new HashSet<>();
+    private final Set<CompetitionMembership> competitionMemberships = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "competitionFamily_id", foreignKey = @ForeignKey(name = "FK_COMP_TO_FAM"))
@@ -180,12 +178,12 @@ public class Competition {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Competition that = (Competition) o;
-        return  Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(createdOn, that.createdOn);
+        return Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(createdOn, that.createdOn);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash( name, description, createdOn);
+        return Objects.hash(name, description, createdOn);
     }
 
     @Override

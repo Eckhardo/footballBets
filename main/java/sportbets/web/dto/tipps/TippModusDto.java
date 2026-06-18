@@ -10,19 +10,18 @@ import java.util.Objects;
  * DTO for {@link sportbets.persistence.entity.tipps.TippModus}
  */
 public class TippModusDto implements Serializable {
-    private Long id;
     @NotNull(message = " name cannot be null")
     String name;
+    private Long id;
     @NotNull(message = " type cannot be null")
     private String type;
     @NotNull
     @Positive(message = "Must be positive value")
-    private  Integer deadline;
+    private Integer deadline;
 
     @NotNull(message = " community id cannot be null")
     private Long commId;
     private String commName;
-
 
 
     public TippModusDto() {
@@ -62,13 +61,12 @@ public class TippModusDto implements Serializable {
         this.type = type;
     }
 
+    public Integer getDeadline() {
+        return deadline;
+    }
 
     public void setDeadline(Integer deadline) {
         this.deadline = deadline;
-    }
-
-    public Integer getDeadline() {
-        return deadline;
     }
 
     public Long getCommId() {

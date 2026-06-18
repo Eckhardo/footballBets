@@ -12,17 +12,13 @@ import org.springframework.http.ProblemDetail;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import sportbets.FootballBetsApplication;
-import sportbets.persistence.entity.community.Community;
-import sportbets.persistence.entity.competition.enums.Country;
 import sportbets.config.TestProfileLiveTest;
+import sportbets.persistence.entity.community.Community;
 import sportbets.persistence.entity.community.Tipper;
-import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.repository.community.CommunityRepository;
 import sportbets.persistence.repository.community.TipperRepository;
 import sportbets.web.dto.community.CommunityDto;
 import sportbets.web.dto.community.TipperDto;
-import sportbets.web.dto.competition.CompetitionDto;
-import sportbets.web.dto.competition.CompetitionFamilyDto;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
@@ -40,7 +36,7 @@ public class ContractTipperApiIntegrationTest {
     private static final String TEST_USERNAME = "Testuser";
     CommunityDto communityDto = new CommunityDto(null, TEST_COMM, "Description of Community");
 
-    TipperDto testTipper = new TipperDto(null, "Eckhard", "Kirschning", TEST_USERNAME, "passwd", "hint", "eki@gmx.de",null);
+    TipperDto testTipper = new TipperDto(null, "Eckhard", "Kirschning", TEST_USERNAME, "passwd", "hint", "eki@gmx.de", null);
     Community savedCommunity = null;
 
     @Autowired
@@ -60,7 +56,6 @@ public class ContractTipperApiIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isNoContent();
-
 
 
         Tipper tipper = tipperRepository.findByUsername(TEST_USERNAME).orElseThrow(() -> new EntityNotFoundException(TEST_USERNAME));
@@ -95,7 +90,7 @@ public class ContractTipperApiIntegrationTest {
     @Test
     @Order(1)
     void createNewTipper_withValidDtoInput_thenSuccess() {
-        savedCommunity= communityRepository.findByName(TEST_COMM).orElseThrow();
+        savedCommunity = communityRepository.findByName(TEST_COMM).orElseThrow();
 
         assertThat(testTipper.getUsername(), notNullValue());
         testTipper.setDefaultCommunityId(savedCommunity.getId());
@@ -118,7 +113,7 @@ public class ContractTipperApiIntegrationTest {
     @Test
     @Order(2)
     void createNewTipper_withInvalidDtoInput_thenFailure() {
-        savedCommunity= communityRepository.findByName(TEST_COMM).orElseThrow();
+        savedCommunity = communityRepository.findByName(TEST_COMM).orElseThrow();
 
         testTipper.setDefaultCommunityId(savedCommunity.getId());
         testTipper.setEmail("abc.gmx.de");
@@ -150,10 +145,10 @@ public class ContractTipperApiIntegrationTest {
     @Test
     @Order(3)
     void updateTipper_withValidInput_thenSuccess() {
-        savedCommunity= communityRepository.findByName(TEST_COMM).orElseThrow();
+        savedCommunity = communityRepository.findByName(TEST_COMM).orElseThrow();
 
         testTipper.setDefaultCommunityId(savedCommunity.getId());
-        String updatedName="Werner";
+        String updatedName = "Werner";
 
 
         webClient.post()
@@ -240,10 +235,11 @@ public class ContractTipperApiIntegrationTest {
 
 
     }
+
     @Test
     @Order(2)
     void createDuplicateTipper_withSameUserNane_thenFailure() {
-        savedCommunity= communityRepository.findByName(TEST_COMM).orElseThrow();
+        savedCommunity = communityRepository.findByName(TEST_COMM).orElseThrow();
 
         testTipper.setDefaultCommunityId(savedCommunity.getId());
 

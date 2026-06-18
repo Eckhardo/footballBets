@@ -37,11 +37,10 @@ public class TippEqualizerServiceImpl implements TippEqualizerService {
         List<Spiel> spiele = spielRepo.findAllForMatchday(spieltagId);
         for (Spiel spiel : spiele) {
             Set<Tipp> tipps = spiel.getTipps();
-            ;
             for (Tipp tipp : tipps) {
                 TippModus tippModus = tipp.getTippModus();
-                 CommunityMembership cm= tipp.getCommunityMembership();
-                int winPoints= tippModus.calculateWinPoints(tipp,spiel);
+                CommunityMembership cm = tipp.getCommunityMembership();
+                int winPoints = tippModus.calculateWinPoints(tipp, spiel);
                 log.info("######## winPoints: {}", winPoints);
                 tipp.setWinPoints(winPoints);
                 tippRepo.save(tipp);

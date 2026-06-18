@@ -34,17 +34,17 @@ public class TippConfigController {
     }
 
 
-
     @GetMapping("/rows/{id}")
     public List<TippConfigRow> findRows(@PathVariable Long id) {
         log.debug(":findRows::{}", id);
         return tippConfigService.findTippConfigRows(id);
     }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public TippConfigDto post(@RequestBody @Valid TippConfigDto newDto) {
         log.debug("save tipp config  {}", newDto);
-      TippConfigDto saved= tippConfigService.save(newDto);
+        TippConfigDto saved = tippConfigService.save(newDto);
         log.debug("saved tipp config  {}", saved);
         return saved;
     }

@@ -23,6 +23,7 @@ import java.util.Optional;
 @Service
 public class CommunityMembershipServiceImpl implements CommunityMembershipService {
 
+    private static final Logger log = LoggerFactory.getLogger(CommunityMembershipServiceImpl.class);
     private final CommunityMembershipRepository membershipRepository;
     private final CommunityRepository communityRepository;
     private final TipperRepository tipperRepository;
@@ -33,8 +34,6 @@ public class CommunityMembershipServiceImpl implements CommunityMembershipServic
         this.tipperRepository = tipperRepository;
 
     }
-
-    private static final Logger log = LoggerFactory.getLogger(CommunityMembershipServiceImpl.class);
 
     @Override
     public Optional<CommunityMembership> findById(Long id) {
@@ -68,7 +67,7 @@ public class CommunityMembershipServiceImpl implements CommunityMembershipServic
     public Optional<CommunityMembership> update(Long id, CommunityMembershipDto membershipDto) {
 
         log.debug("update CommunityMembership dto:: {}", membershipDto);
-       CommunityMembership updateModel = membershipRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("CommunityMembership  does not exits given id:" + membershipDto.getId()));
+        CommunityMembership updateModel = membershipRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("CommunityMembership  does not exits given id:" + membershipDto.getId()));
 
 
         Community community = communityRepository.findByName(membershipDto.getCommName()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -98,6 +97,6 @@ public class CommunityMembershipServiceImpl implements CommunityMembershipServic
 
     @Override
     public Optional<CommunityMembership> findByCommIdAndTipperId(Long commId, Long tipperId) {
-       return membershipRepository.findByCommIdAndTipperId(commId, tipperId);
+        return membershipRepository.findByCommIdAndTipperId(commId, tipperId);
     }
 }

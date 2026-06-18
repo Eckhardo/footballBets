@@ -9,14 +9,12 @@ import java.util.Objects;
 
 @Entity
 public class SpielFormula {
+    @Column(nullable = false)
+    private final LocalDateTime createdOn = LocalDateTime.now();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private boolean isHeimTeam;
-    @Column(nullable = false)
-    private final LocalDateTime createdOn = LocalDateTime.now();
-
     @PositiveOrZero
     @Column(nullable = false)
     private int won;
@@ -221,15 +219,15 @@ public class SpielFormula {
     }
 
     public void calcWinPoints(boolean stattgefunden, int winMultiplicator,
-                             int remisMultiplicator) {
+                              int remisMultiplicator) {
 
         if (stattgefunden) {
             if (heimTore == gastTore) {
-                points= remisMultiplicator;
+                points = remisMultiplicator;
             } else if (heimTore < gastTore) {
-                points= 0;
+                points = 0;
             } else {
-                points= winMultiplicator;
+                points = winMultiplicator;
             }
         }
     }

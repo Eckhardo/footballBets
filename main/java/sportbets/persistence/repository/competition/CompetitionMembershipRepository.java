@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import sportbets.persistence.entity.competition.CompetitionMembership;
 
 import java.util.Optional;
+
 @Repository
 public interface CompetitionMembershipRepository extends JpaRepository<CompetitionMembership, Long> {
 

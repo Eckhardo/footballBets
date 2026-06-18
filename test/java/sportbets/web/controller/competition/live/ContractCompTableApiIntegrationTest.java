@@ -43,14 +43,14 @@ public class ContractCompTableApiIntegrationTest {
     void givenPreloadedData_whenSearchCompTable_thenResponseContainsCompleteCompTable() {
         Competition entity = repository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP));
         Long id = entity.getId();
-        TableSearchCriteria criteria=new TableSearchCriteria(id,1,10,null);
+        TableSearchCriteria criteria = new TableSearchCriteria(id, 1, 10, null);
         webClient.get()
-                .uri( uriBuilder -> uriBuilder
+                .uri(uriBuilder -> uriBuilder
                         .path("/compTable/search")
-                        .queryParam("compId",criteria.getCompId())
+                        .queryParam("compId", criteria.getCompId())
                         .queryParam("startSpieltag", criteria.getStartSpieltag())
                         .queryParam("endSpieltag", criteria.getEndSpieltag())
-                        .queryParam("isHeimOrGast",criteria.getHeimOrGast())
+                        .queryParam("isHeimOrGast", criteria.getHeimOrGast())
                         .build())
                 .exchange()
                 .expectStatus()
@@ -65,14 +65,14 @@ public class ContractCompTableApiIntegrationTest {
     void givenPreloadedData_whenSearchHeimCompTable_thenResponseContainsHeimCompTable() {
         Competition entity = repository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP));
         Long id = entity.getId();
-        TableSearchCriteria criteria=new TableSearchCriteria(id,1,10,true);
+        TableSearchCriteria criteria = new TableSearchCriteria(id, 1, 10, true);
         webClient.get()
-                .uri( uriBuilder -> uriBuilder
+                .uri(uriBuilder -> uriBuilder
                         .path("/compTable/search")
-                        .queryParam("compId",criteria.getCompId())
+                        .queryParam("compId", criteria.getCompId())
                         .queryParam("startSpieltag", criteria.getStartSpieltag())
                         .queryParam("endSpieltag", criteria.getEndSpieltag())
-                        .queryParam("isHeimOrGast",criteria.getHeimOrGast())
+                        .queryParam("isHeimOrGast", criteria.getHeimOrGast())
                         .build())
                 .exchange()
                 .expectStatus()

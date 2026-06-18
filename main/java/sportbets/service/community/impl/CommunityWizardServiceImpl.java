@@ -39,17 +39,17 @@ public class CommunityWizardServiceImpl implements CommunityWizardService {
     public CommunityWizardRecord save(CommunityWizardRecord record) {
         log.debug("save CommunityWizardRecord {}", record);
 
-        Tipper tipper= tipperRepository.findByUsername(record.tipperUserName()).orElseThrow(()-> new EntityNotFoundException("tipper not found"));
+        Tipper tipper = tipperRepository.findByUsername(record.tipperUserName()).orElseThrow(() -> new EntityNotFoundException("tipper not found"));
 
         Competition competition = competitionRepository.findById(record.compId()).orElseThrow(() -> new EntityNotFoundException("Competition not found"));
         Community comm = new Community(record.commName(), record.commDescription());
         CommunityRole communityRole = new CommunityRole(comm.getName(), comm.getDescription(), comm);
         comm.addCommunityRole(communityRole);
 
-        CommunityMembership communityMembership=new CommunityMembership(comm,tipper);
+        CommunityMembership communityMembership = new CommunityMembership(comm, tipper);
 
         CompetitionMembership competitionMembership = new CompetitionMembership(comm, competition);
         Community savedComm = communityRepository.save(comm);
-        return new CommunityWizardRecord(savedComm.getName(), savedComm.getDescription(), competition.getId(), competition.getName(),tipper.getUsername());
+        return new CommunityWizardRecord(savedComm.getName(), savedComm.getDescription(), competition.getId(), competition.getName(), tipper.getUsername());
     }
 }

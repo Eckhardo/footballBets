@@ -11,8 +11,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
-import sportbets.persistence.entity.competition.enums.Country;
 import sportbets.persistence.entity.competition.CompetitionFamily;
+import sportbets.testdata.TestConstants;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -38,7 +38,7 @@ public class CompetitionFamilyRepositoryTest {
     @Before
     public void setUp() {
         // Initialize test data before each test method
-        testFamily = new CompetitionFamily("TestLiga", "2. Deutsche Fussball TestLiga", true, true,  Country.GERMANY);
+        testFamily = TestConstants.createValidFamily();
 
         familyRepo.save(testFamily);
     }
@@ -52,7 +52,7 @@ public class CompetitionFamilyRepositoryTest {
     @Test
     public void whenFindAll_thenCheckWithAllAnyMatchers() {
         // given
-        Predicate<CompetitionFamily> p1 = g -> g.getName().equals("TestLiga");
+        Predicate<CompetitionFamily> p1 = g -> g.getName().equals(testFamily.getName());
         Predicate<CompetitionFamily> p2 = g -> g.getName().equals("EURO");
 
         // when
@@ -90,7 +90,7 @@ public class CompetitionFamilyRepositoryTest {
 
     @Test
     public void givenFamily_whenFindByNameCalled_thenFamilyIsFound() {
-        CompetitionFamily foundFamily = familyRepo.findByName("TestLiga").orElse(null);
+        CompetitionFamily foundFamily = familyRepo.findByName(testFamily.getName()).orElse(null);
 
         assertNotNull(foundFamily);
         assertEquals(testFamily.getName(), foundFamily.getName());

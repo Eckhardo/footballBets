@@ -22,6 +22,7 @@ class TipperController {
     private static final Logger log = LoggerFactory.getLogger(TipperController.class);
     private final TipperService tipperService;
     private final ModelMapper modelMapper;
+
     TipperController(TipperService tipperService, ModelMapper modelMapper) {
         this.tipperService = tipperService;
         this.modelMapper = modelMapper;
@@ -36,6 +37,7 @@ class TipperController {
         return modelMapper.map(model, TipperDto.class);
 
     }
+
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public TipperDto post(@RequestBody @Valid TipperDto newTipper) {

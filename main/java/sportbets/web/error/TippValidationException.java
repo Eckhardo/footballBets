@@ -5,7 +5,8 @@ public class TippValidationException extends RuntimeException {
     public TippValidationException(String message) {
         super(message);
     }
-    public TippValidationException (String message, Throwable cause) {
-        super (message, cause);
+
+    public TippValidationException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

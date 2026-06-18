@@ -10,8 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import sportbets.persistence.entity.competition.enums.Country;
 import sportbets.persistence.entity.competition.*;
+import sportbets.testdata.TestConstants;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -45,7 +45,7 @@ public class SpieltagRepositoryTest {
     @Before
     public void setUp() {
         // Initialize test data before test methods
-        CompetitionFamily testFamily = new CompetitionFamily("TestLiga", "1. Deutsche Fussball Bundesliga", true, true,   Country.GERMANY);
+        CompetitionFamily testFamily = TestConstants.createValidFamily();
         testComp = new Competition("Saison 2025/26", "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
         testRound = new CompetitionRound(1, "Vorrunde", testComp, false, 18, 17, 1);
         Spieltag testSpieltag = new Spieltag(1, LocalDateTime.now(), testRound);
@@ -53,7 +53,7 @@ public class SpieltagRepositoryTest {
         testRound.addSpieltag(testSpieltag);
         testRound.addSpieltag(testSpieltag2);
         System.out.println("Save all cascade");
-        CompetitionFamily savedFam=  familyRepo.save(testFamily);
+        CompetitionFamily savedFam = familyRepo.save(testFamily);
         //  competitionDAO.save(testComp);
     }
 
@@ -94,20 +94,18 @@ public class SpieltagRepositoryTest {
 
     @Test
     public void whenFindMaxMatchdayForRoundIsCalled_thenMaxMatchDayIsFound() {
-         Competition foundRound = compRepo.findById(1L).orElse(null);
+        Competition foundRound = compRepo.findById(1L).orElse(null);
 
         assertNotNull(foundRound);
 
-      Optional<Integer> maxMatchdays = spieltagRepo.findLastMatchdayForRound(foundRound.getId());
-      if (maxMatchdays.isPresent()){
-          log.info(maxMatchdays.get().toString());
-          assertNotNull(maxMatchdays.get());
-          assertEquals(17, maxMatchdays.get());
-      }
-      else{
-          throw new RuntimeException("Spieltag not found");
-      }
-
+        Optional<Integer> maxMatchdays = spieltagRepo.findLastMatchdayForRound(foundRound.getId());
+        if (maxMatchdays.isPresent()) {
+            log.info(maxMatchdays.get().toString());
+            assertNotNull(maxMatchdays.get());
+            assertEquals(17, maxMatchdays.get());
+        } else {
+            throw new RuntimeException("Spieltag not found");
+        }
 
 
         // then

@@ -11,6 +11,7 @@ import org.springframework.test.context.ActiveProfiles;
 import sportbets.persistence.entity.authorization.CommunityRole;
 import sportbets.persistence.entity.community.Community;
 import sportbets.service.community.CommunityService;
+import sportbets.testdata.TestConstants;
 import sportbets.web.dto.community.CommunityDto;
 
 import java.util.List;
@@ -18,7 +19,6 @@ import java.util.List;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static sportbets.testdata.TestConstants.COMM_TEST;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ActiveProfiles("test")
@@ -27,12 +27,11 @@ public class CommunityRoleServiceTest {
     private static final Logger log = LoggerFactory.getLogger(CommunityRoleServiceTest.class);
 
     Community savedCommunity = null;
-
+    CommunityDto communityDto = TestConstants.createValidCommunityDto();
     @Autowired
     private CommunityService communityService; // Real service being tested
     @Autowired
     private CommunityRoleService communityRoleService;
-    CommunityDto communityDto =  new CommunityDto(null, COMM_TEST, "Description of Community");
 
     @BeforeEach
     public void setup() {

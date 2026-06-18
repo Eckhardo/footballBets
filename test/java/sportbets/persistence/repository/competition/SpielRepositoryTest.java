@@ -11,9 +11,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
-import sportbets.persistence.entity.competition.enums.Country;
 import sportbets.persistence.entity.competition.*;
-import sportbets.service.competition.CompFamilyService;
+import sportbets.testdata.TestConstants;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -30,39 +29,35 @@ public class SpielRepositoryTest {
 
 
     private static final Logger log = LoggerFactory.getLogger(SpielRepositoryTest.class);
+    CompetitionFamily testFamily;
     private Competition testComp;
-
-
     private Spiel testSpiel1;
     private Spiel testSpiel2;
     @Autowired
     private CompetitionFamilyRepository familyRepo;
-
     @Autowired
     private SpielRepository spielRepo;
     @Autowired
     private CompetitionRepository compRepo;
-
     @Autowired
     private TeamRepository teamRepo;
-
     @Autowired
     private CompetitionFamilyRepository competitionFamilyRepository;
-    CompetitionFamily testFamily;
+
     @Before
     public void setUp() {
 
         // Initialize test data before test methods
-        testFamily = new CompetitionFamily("TestLiga", "2. Deutsche Fussball Bundesliga", true, true,  Country.GERMANY);
+        testFamily = TestConstants.createValidFamily();
         testComp = new Competition("TestLiga: Saison 2025/26", "1. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
         CompetitionRound testRound = new CompetitionRound(1, "Hinrunde", testComp, false, 18, 17, 1);
         CompetitionGroup testGroup = new CompetitionGroup("Gruppe A", 1, testRound);
         testRound.addCompetitionGroup(testGroup);
         Spieltag testSpieltag = new Spieltag(1, LocalDateTime.now(), testRound);
         testRound.addSpieltag(testSpieltag);
-        Team team1 = new Team("Test1", "1",true );
+        Team team1 = new Team("Test1", "1", true);
         Team team2 = new Team("Test2", "2", true);
-        Team team3 = new Team("Test3", "3",true );
+        Team team3 = new Team("Test3", "3", true);
         Team team4 = new Team("Test4", "4", true);
 
         CompetitionTeam ct1 = new CompetitionTeam(team1, testComp);
@@ -91,7 +86,7 @@ public class SpielRepositoryTest {
     public void tearDown() {
 
 
-    familyRepo.deleteByName(testFamily.getName());
+        familyRepo.deleteByName(testFamily.getName());
     }
 
     @Test

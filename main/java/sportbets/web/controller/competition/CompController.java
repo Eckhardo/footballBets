@@ -26,6 +26,7 @@ public class CompController {
     private static final Logger log = LoggerFactory.getLogger(CompController.class);
     private final CompService compService;
     private final SpieltagService spieltagService;
+
     public CompController(CompService compService, SpieltagService spieltagService) {
         this.compService = compService;
         this.spieltagService = spieltagService;
@@ -41,7 +42,7 @@ public class CompController {
             competitionDtos.add(myMapper.map(comp, CompetitionDto.class));
 
         });
-         return competitionDtos;
+        return competitionDtos;
     }
 
     @GetMapping("/{id}")
@@ -120,6 +121,7 @@ public class CompController {
         log.debug("Competition RETURN do {}", createdDto);
         return createdDto;
     }
+
     @PutMapping(value = "/{id}")
     public CompetitionDto update(@PathVariable Long id, @RequestBody CompetitionDto compDto) {
 

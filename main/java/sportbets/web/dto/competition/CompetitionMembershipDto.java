@@ -22,15 +22,15 @@ public class CompetitionMembershipDto implements Serializable {
     }
 
 
-    public Long getId() {
-        return id;
-    }
-
     public CompetitionMembershipDto(Long compId, String compName, Long commId, String commName) {
         this.compId = compId;
         this.compName = compName;
         this.commId = commId;
         this.commName = commName;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public void setId(Long id) {

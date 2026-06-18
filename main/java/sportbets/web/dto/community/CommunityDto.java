@@ -12,7 +12,7 @@ import java.util.Objects;
  * DTO for {@link Community}
  */
 public class CommunityDto implements Serializable {
-    private  Long id;
+    private Long id;
     @Size(message = "Name must be at least 5 chars long", min = 5, max = 20)
     private String name;
     @NotNull
@@ -54,7 +54,6 @@ public class CommunityDto implements Serializable {
     }
 
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -62,7 +61,7 @@ public class CommunityDto implements Serializable {
         CommunityDto entity = (CommunityDto) o;
         return Objects.equals(this.id, entity.id) &&
                 Objects.equals(this.name, entity.name) &&
-                Objects.equals(this.description, entity.description) ;
+                Objects.equals(this.description, entity.description);
     }
 
     @Override
@@ -75,6 +74,6 @@ public class CommunityDto implements Serializable {
         return getClass().getSimpleName() + "(" +
                 "id = " + id + ", " +
                 "name = " + name + ", " +
-                "description = " + description +  ")";
+                "description = " + description + ")";
     }
 }

@@ -22,12 +22,11 @@ public class CompTableController {
     }
 
 
-
     @GetMapping("/compTable/search")
     public List<TeamPositionSummaryRow> search(TableSearchCriteria criteria) {
         log.info("CompTableController search {}", criteria);
 
-        if (criteria.getHeimOrGast()!=null) {
+        if (criteria.getHeimOrGast() != null) {
             return compTableService.findTableHeimOrGastForLigaModus(criteria);
         } else {
             return compTableService.findTableForLigaModus(criteria);

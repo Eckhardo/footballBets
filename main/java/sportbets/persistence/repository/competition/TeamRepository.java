@@ -27,6 +27,6 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
     @QueryHints(@QueryHint(name = "org.hibernate.cacheable", value = "true"))
     @Override
     @Query("select t from Team t ")
-   List<Team> findAll();
+    List<Team> findAll();
 
 }

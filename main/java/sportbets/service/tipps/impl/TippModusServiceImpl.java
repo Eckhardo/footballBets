@@ -54,7 +54,7 @@ public class TippModusServiceImpl implements TippModusService {
 
     @Override
     public Optional<TippModusDto> findByNameAndCommunity(String name, Long commId) {
-        TippModus entity = repo.findByNameAndCommunity(name,commId).orElseThrow(() -> new EntityNotFoundException("TippModus not found"));
+        TippModus entity = repo.findByNameAndCommunity(name, commId).orElseThrow(() -> new EntityNotFoundException("TippModus not found"));
         return Optional.of(convertToDto(entity));
     }
 
@@ -142,8 +142,8 @@ public class TippModusServiceImpl implements TippModusService {
     public List<TippModusDto> findPointTypesForCommunity(Long id) {
         List<TippModusPoint> entities = repo.findTippModusPoint(id);
         List<TippModusDto> dtos = new ArrayList<>();
-         for (TippModusPoint entity : entities) {
-             dtos.add(convertToDto(entity));
+        for (TippModusPoint entity : entities) {
+            dtos.add(convertToDto(entity));
         }
         return dtos;
     }

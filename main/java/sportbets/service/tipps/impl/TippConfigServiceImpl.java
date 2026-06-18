@@ -78,8 +78,8 @@ public class TippConfigServiceImpl implements TippConfigService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<TippConfigDto> findByParents(Long compMembId,  Long tippModusId, Long spieltagId) {
-        TippConfig entity = tippConfigRepo.findByParents(compMembId, tippModusId, spieltagId).orElseThrow(()-> new EntityNotFoundException("tipp config not found"));
+    public Optional<TippConfigDto> findByParents(Long compMembId, Long tippModusId, Long spieltagId) {
+        TippConfig entity = tippConfigRepo.findByParents(compMembId, tippModusId, spieltagId).orElseThrow(() -> new EntityNotFoundException("tipp config not found"));
         return Optional.of(convertToDto(entity));
 
     }

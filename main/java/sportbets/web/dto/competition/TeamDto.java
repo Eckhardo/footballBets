@@ -22,7 +22,7 @@ public class TeamDto implements Serializable {
     public TeamDto() {
     }
 
-    public TeamDto(Long id, String name, String acronym,  boolean isClub) {
+    public TeamDto(Long id, String name, String acronym, boolean isClub) {
         this.id = id;
         this.name = name;
         this.acronym = acronym;

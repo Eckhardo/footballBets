@@ -18,7 +18,6 @@ import sportbets.persistence.entity.competition.Team;
 import sportbets.persistence.repository.competition.SpielRepository;
 import sportbets.persistence.repository.competition.SpieltagRepository;
 import sportbets.persistence.repository.competition.TeamRepository;
-import sportbets.web.dto.competition.TeamDto;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -50,12 +49,13 @@ public class ReadJSONTest {
     public void tearDown() {
         log.debug("tearDown");
     }
+
     @Test
-    void testTest(){
+    void testTest() {
 
     }
 
-  //  @Test
+    //  @Test
     void retrieveTeams() {
 
         Set<Team> teams = new HashSet<>();
@@ -99,7 +99,7 @@ public class ReadJSONTest {
         // return teams;
     }
 
- //   @Test
+    //   @Test
     void retrieveSpiele() {
 
         List<Spiel> spiele = new ArrayList<>();

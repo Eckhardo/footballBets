@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import sportbets.persistence.builder.TipperConstants;
 import sportbets.persistence.entity.authorization.CommunityRole;
 import sportbets.persistence.entity.authorization.CompetitionRole;
 import sportbets.persistence.entity.authorization.TipperRole;
@@ -41,8 +40,8 @@ class TipperRoleServiceTest {
 
     // Real service being tested
     private static final String TEST_USERNAME = "TEST_USER_NAME";
-    private static final String TEST_COMM = "Test Community";
-     final CompetitionFamilyDto competitionFamily = TestConstants.createValidFamilyDto();
+
+    final CompetitionFamilyDto competitionFamily = TestConstants.createValidFamilyDto();
     CompetitionFamily savedFam;
     Competition savedComp = null;
     Tipper savedTipper = null;
@@ -73,11 +72,11 @@ class TipperRoleServiceTest {
         savedComp = compService.save(compDto);
         assertNotNull(savedComp);
 
-        CommunityDto communityDto = new CommunityDto(null, TEST_COMM, "Description of Community");
+        CommunityDto communityDto = TestConstants.createValidCommunityDto();
         savedCommunity = communityService.save(communityDto);
         assertNotNull(savedCommunity);
 
-        TipperDto testTipper = new TipperDto(null,"Werner", "Wernersen", TEST_USERNAME, "banane", "frucht", "werner@gmx.de",null);
+        TipperDto testTipper = new TipperDto(null, "Werner", "Wernersen", TEST_USERNAME, "banane", "frucht", "werner@gmx.de", null);
 
         testTipper.setDefaultCommunityId(savedCommunity.getId());
         savedTipper = tipperService.save(testTipper);

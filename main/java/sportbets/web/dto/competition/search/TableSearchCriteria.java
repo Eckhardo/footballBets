@@ -10,11 +10,7 @@ public class TableSearchCriteria implements Serializable {
     private final Boolean isHeimOrGast;
 
 
-
-
-
-
-    public TableSearchCriteria(Long compId, Integer startSpieltag, Integer endSpieltag, Boolean isHeimOrGast ) {
+    public TableSearchCriteria(Long compId, Integer startSpieltag, Integer endSpieltag, Boolean isHeimOrGast) {
         this.compId = compId;
         this.endSpieltag = endSpieltag;
         this.isHeimOrGast = isHeimOrGast;
@@ -24,6 +20,7 @@ public class TableSearchCriteria implements Serializable {
     public Long getCompId() {
         return compId;
     }
+
     public Integer getEndSpieltag() {
         return endSpieltag;
     }

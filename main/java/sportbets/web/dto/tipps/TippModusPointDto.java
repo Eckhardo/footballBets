@@ -18,7 +18,7 @@ public class TippModusPointDto extends TippModusDto implements Serializable {
 
 
     public TippModusPointDto(Long id, String name, String type, Integer deadline, Long commId, String commName, Integer totalPoints) {
-        super(id,name , type, deadline, commId, commName);
+        super(id, name, type, deadline, commId, commName);
         this.totalPoints = totalPoints;
     }
 

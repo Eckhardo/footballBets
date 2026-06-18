@@ -43,9 +43,9 @@ public class SpielFormulaRepositoryTest {
 
         Competition foundComp = compRepo.findByName(COMP_NAME).orElse(null);
         assertNotNull(foundComp);
-        TableSearchCriteria searchCriteria = new TableSearchCriteria(foundComp.getId(),1,17,null);
+        TableSearchCriteria searchCriteria = new TableSearchCriteria(foundComp.getId(), 1, 17, null);
 
-        List<TeamPositionSummaryRow> rows = compTableRepository.findTableForLigaModus(searchCriteria.getCompId(),searchCriteria.getStartSpieltag(),searchCriteria.getEndSpieltag());
+        List<TeamPositionSummaryRow> rows = compTableRepository.findTableForLigaModus(searchCriteria.getCompId(), searchCriteria.getStartSpieltag(), searchCriteria.getEndSpieltag());
         assertNotNull(rows);
         assertThat(rows.size()).isGreaterThan(17);
         rows.sort(Comparator.comparing(TeamPositionSummaryRow::getPoints).reversed());
@@ -58,9 +58,9 @@ public class SpielFormulaRepositoryTest {
 
         Competition foundComp = compRepo.findByName(COMP_NAME).orElse(null);
         assertNotNull(foundComp);
-        TableSearchCriteria searchCriteria = new TableSearchCriteria(foundComp.getId(),1,17,true);
+        TableSearchCriteria searchCriteria = new TableSearchCriteria(foundComp.getId(), 1, 17, true);
 
-        List<TeamPositionSummaryRow> rows = compTableRepository.findTableHeimOrGastForLigaModus(searchCriteria.getCompId(),searchCriteria.getStartSpieltag(),searchCriteria.getEndSpieltag(),searchCriteria.getHeimOrGast());
+        List<TeamPositionSummaryRow> rows = compTableRepository.findTableHeimOrGastForLigaModus(searchCriteria.getCompId(), searchCriteria.getStartSpieltag(), searchCriteria.getEndSpieltag(), searchCriteria.getHeimOrGast());
 
         assertNotNull(rows);
         assertThat(rows.size()).isGreaterThan(17);
@@ -76,11 +76,11 @@ public class SpielFormulaRepositoryTest {
         assertNotNull(foundComp);
         Competition foundCompWithRounds = compRepo.findByIdJoinFetchRounds(foundComp.getId());
         assertNotNull(foundCompWithRounds);
-        CompetitionRound firstRound= foundCompWithRounds.getCompetitionRounds().stream().findFirst().orElseThrow();
+        CompetitionRound firstRound = foundCompWithRounds.getCompetitionRounds().stream().findFirst().orElseThrow();
         log.info("firstRound  {}", firstRound);
-        TableSearchCriteria searchCriteria = new TableSearchCriteria(foundComp.getId(),2,22,true);
+        TableSearchCriteria searchCriteria = new TableSearchCriteria(foundComp.getId(), 2, 22, true);
 
-        List<TeamPositionSummaryRow> rows = compTableRepository.findTableForLigaModus(searchCriteria.getCompId(),searchCriteria.getStartSpieltag(),searchCriteria.getEndSpieltag());
+        List<TeamPositionSummaryRow> rows = compTableRepository.findTableForLigaModus(searchCriteria.getCompId(), searchCriteria.getStartSpieltag(), searchCriteria.getEndSpieltag());
 
         assertNotNull(rows);
         assertThat(rows.size()).isGreaterThan(17);

@@ -47,12 +47,13 @@ public class CompRoundController {
             @RequestParam(value = "name") String name,
             @RequestParam(value = "compId") Long compId) {
         log.info("CompetitionRound findByNameAndCompId:: {} ", compId);
-        CompetitionRound model = roundService.findByNameAndCompId(name,compId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        CompetitionRound model = roundService.findByNameAndCompId(name, compId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         log.info("CompetitionRound foundByName:: {} ", model);
         ModelMapper modelMapper = MapperUtil.getModelMapperForCompetition();
         return modelMapper.map(model, CompetitionRoundDto.class);
 
     }
+
     @PostMapping("/rounds")
     @ResponseStatus(HttpStatus.CREATED)
     public CompetitionRoundDto post(@RequestBody @Valid CompetitionRoundDto roundDto) {

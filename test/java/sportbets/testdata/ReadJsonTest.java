@@ -19,12 +19,13 @@ import java.io.IOException;
 public class ReadJsonTest {
     @Autowired
     private TeamRepository teamRepository;
+
     @Test
-    void testTest(){
+    void testTest() {
 
     }
 
-  //  @Test
+    //  @Test
     public void makeIt() {
         String filePath = "src/test/java/sportbets/testdata/bl.json";
         try (FileReader reader = new FileReader(filePath)) {

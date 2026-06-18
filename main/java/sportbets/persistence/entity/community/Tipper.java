@@ -38,10 +38,10 @@ public class Tipper {
     private Long defaultCompetitionId;
 
     @OneToMany(mappedBy = "tipper", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Set<TipperRole> tipperRoles = new HashSet<>();
+    private final Set<TipperRole> tipperRoles = new HashSet<>();
 
     @OneToMany(mappedBy = "tipper", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Set<CommunityMembership> communityMemberships = new HashSet<>();
+    private final Set<CommunityMembership> communityMemberships = new HashSet<>();
 
 
     public Tipper() {
@@ -57,8 +57,8 @@ public class Tipper {
 
     }
 
-    public Tipper(  String firstname, String lastname, String username,  String passwort, String passwortHint,String email,  boolean isCommunityAdmin, boolean isCompetitionAdmin) {
-      this(firstname, lastname, username, passwort, passwortHint, email);
+    public Tipper(String firstname, String lastname, String username, String passwort, String passwortHint, String email, boolean isCommunityAdmin, boolean isCompetitionAdmin) {
+        this(firstname, lastname, username, passwort, passwortHint, email);
         this.isCommunityAdmin = isCommunityAdmin;
         this.isCompetitionAdmin = isCompetitionAdmin;
 

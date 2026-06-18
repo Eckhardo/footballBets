@@ -17,24 +17,22 @@ import java.util.Set;
 @Table(name = "community")
 public class Community {
     private static final Logger log = LoggerFactory.getLogger(Community.class);
+    private final LocalDateTime createdOn = LocalDateTime.now();
+    @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    Set<CommunityRole> communityRoles = new HashSet<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String description;
-    private final LocalDateTime createdOn = LocalDateTime.now();
-
-    @OneToMany(mappedBy = "community", cascade = CascadeType.ALL,  orphanRemoval = true, fetch = FetchType.EAGER)
-    Set<CommunityRole> communityRoles = new HashSet<>();
+    @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private final Set<CommunityMembership> communityMemberships = new HashSet<>();
 
     @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Set<CommunityMembership> communityMemberships = new HashSet<>();
+    private final Set<CompetitionMembership> competitionMemberships = new HashSet<>();
 
     @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Set<CompetitionMembership> competitionMemberships = new HashSet<>();
-
-    @OneToMany(mappedBy = "community", cascade = CascadeType.ALL,orphanRemoval = true, fetch = FetchType.LAZY)
-    private  Set<TippModus> tippModi=new HashSet<>();
+    private final Set<TippModus> tippModi = new HashSet<>();
 
 
     public Community() {
@@ -92,6 +90,7 @@ public class Community {
         }
         this.getCommunityRoles().add(role);
     }
+
     public void removeCommunityRole(CommunityRole role) {
         if (role == null) {
             throw new IllegalArgumentException("Can't add a null Community role.");
@@ -147,8 +146,8 @@ public class Community {
         return "Community{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", description='" + description + + '\'' +
-                ", ROLE name =" + (communityRoles.isEmpty() ? "nothing": communityRoles.stream().findFirst().get().getName()) +
+                ", description='" + description + +'\'' +
+                ", ROLE name =" + (communityRoles.isEmpty() ? "nothing" : communityRoles.stream().findFirst().get().getName()) +
                 '}';
     }
 }

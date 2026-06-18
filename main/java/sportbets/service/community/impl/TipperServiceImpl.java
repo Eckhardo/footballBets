@@ -152,10 +152,9 @@ class TipperServiceImpl implements TipperService {
     }
 
 
-
     @Override
     public boolean isUserNamePermitted(String username) {
-       Optional<Tipper> tipper= tipperRepo.checkUserName(username);
+        Optional<Tipper> tipper = tipperRepo.checkUserName(username);
         return tipper.isEmpty();
     }
 

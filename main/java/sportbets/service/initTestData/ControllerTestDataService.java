@@ -31,6 +31,24 @@ import java.util.Optional;
 @Service
 public class ControllerTestDataService {
 
+    public static final TeamDto TEAM_DTO_1 = new TeamDto(null, "TEAM_NAME_TEST1", "ZAC", true);
+    public static final TeamDto TEAM_DTO_2 = new TeamDto(null, "TEAM_NAME_TEST2", "RAZ", true);
+    public static final CompetitionFamilyDto TEST_COMP_FAM_DTO = new CompetitionFamilyDto(null, "COMP_FAM_TEST", "description of testliga", true, true, Country.GERMANY);
+    public static final CompetitionDto TEST_COMP_DTO = new CompetitionDto(null, "COMP_TEST", "Description of Competition", 3, 1, null, TEST_COMP_FAM_DTO.getName());
+    public static final CompetitionRoundDto TEST_COMP_ROUND_DTO = new CompetitionRoundDto(null, 1, "TEST_COMP_ROUND", false, null, TEST_COMP_DTO.getName(), 18, 17, 1);
+    public static final SpieltagDto TEST_MATCH_DAY_DTO = new SpieltagDto(null, 1, LocalDateTime.now(), null, TEST_COMP_ROUND_DTO.getName());
+    public static final SpielDto TEST_SPIEL_DTO = new SpielDto(null, 1, 3, 1, true, LocalDateTime.now(), null, TEST_MATCH_DAY_DTO.getSpieltagNumber(), null, TEAM_DTO_1.getAcronym(), null, TEAM_DTO_2.getAcronym());
+    public static final SpielDto TEST_SPIEL_DTO_2 = new SpielDto(null, 2, 2, 2, true, LocalDateTime.now(), null, TEST_MATCH_DAY_DTO.getSpieltagNumber(), null, TEAM_DTO_2.getAcronym(), null, TEAM_DTO_1.getAcronym());
+    public static final SpielDto TEST_SPIEL_DTO_3 = new SpielDto(null, 3, 2, 4, true, LocalDateTime.now(), null, TEST_MATCH_DAY_DTO.getSpieltagNumber(), null, TEAM_DTO_2.getAcronym(), null, TEAM_DTO_1.getAcronym());
+    public static TippConfigDto TIPP_CONFIG_DTO = new TippConfigDto(null, null, null, TEST_MATCH_DAY_DTO.getSpieltagNumber(), null);
+    private static final Logger log = LoggerFactory.getLogger(ControllerTestDataService.class);
+    public static CommunityDto TEST_COMM_DTO = new CommunityDto(null, "COMM_TEST", "Description of Community");
+    public static CompetitionMembershipDto TEST_COMP_MEM_DTO = new CompetitionMembershipDto(null, TEST_COMP_DTO.getName(), null, TEST_COMM_DTO.getName());
+
+    public static TipperDto WERNER_DTO = new TipperDto(null, "Werner", "Wernersen", "Wernerle", "banane", "frucht", "werner@gmx.de", null);
+    public static CommunityMembershipDto TEST_COMM_MEMB_DTO = new CommunityMembershipDto(null, null, WERNER_DTO.getUsername(), null, TEST_COMM_DTO.getName());
+    @Autowired
+    TipperService tipperService;
     @Autowired
     private CompFamilyService familyService; // Real service being tested
     @Autowired
@@ -41,17 +59,12 @@ public class ControllerTestDataService {
     private TeamService teamService;
     @Autowired
     private CompTeamService compTeamService;
-
     @Autowired
     private SpieltagService spieltagService;
-
-    @Autowired
-    TipperService tipperService;
     @Autowired
     private CommunityService communityService;
     @Autowired
     private CommunityMembershipService communityMembershipService;
-
     @Autowired
     private CompetitionMembershipService competitionMembershipService;
     @Autowired
@@ -60,29 +73,6 @@ public class ControllerTestDataService {
     private TippConfigService tippConfigService;
     @Autowired
     private SpielService matchService;
-
-    private static final Logger log = LoggerFactory.getLogger(ControllerTestDataService.class);
-
-    public static final TeamDto TEAM_DTO_1 = new TeamDto(null, "TEAM_NAME_TEST1", "ZAC", true);
-    public static final TeamDto TEAM_DTO_2 = new TeamDto(null, "TEAM_NAME_TEST2", "RAZ", true);
-
-    public static final CompetitionFamilyDto TEST_COMP_FAM_DTO = new CompetitionFamilyDto(null, "COMP_FAM_TEST", "description of testliga", true, true, Country.GERMANY);
-    public static final CompetitionDto TEST_COMP_DTO = new CompetitionDto(null, "COMP_TEST", "Description of Competition", 3, 1, null, TEST_COMP_FAM_DTO.getName());
-
-
-    public static final CompetitionRoundDto TEST_COMP_ROUND_DTO = new CompetitionRoundDto(null, 1, "TEST_COMP_ROUND", false, null, TEST_COMP_DTO.getName(), 18, 17, 1);
-
-    public static final SpieltagDto TEST_MATCH_DAY_DTO = new SpieltagDto(null, 1, LocalDateTime.now(), null, TEST_COMP_ROUND_DTO.getName());
-    public static final SpielDto TEST_SPIEL_DTO = new SpielDto(null, 1, 3, 1, true, LocalDateTime.now(), null, TEST_MATCH_DAY_DTO.getSpieltagNumber(), null, TEAM_DTO_1.getAcronym(), null, TEAM_DTO_2.getAcronym());
-    public static final SpielDto TEST_SPIEL_DTO_2 = new SpielDto(null, 2, 2, 2, true, LocalDateTime.now(), null, TEST_MATCH_DAY_DTO.getSpieltagNumber(), null, TEAM_DTO_2.getAcronym(), null, TEAM_DTO_1.getAcronym());
-    public static final SpielDto TEST_SPIEL_DTO_3 = new SpielDto(null, 3, 2, 4, true, LocalDateTime.now(), null, TEST_MATCH_DAY_DTO.getSpieltagNumber(), null, TEAM_DTO_2.getAcronym(), null, TEAM_DTO_1.getAcronym());
-
-    public static CommunityDto TEST_COMM_DTO = new CommunityDto(null, "COMM_TEST", "Description of Community");
-    public static TipperDto WERNER_DTO = new TipperDto(null, "Werner", "Wernersen", "Wernerle", "banane", "frucht", "werner@gmx.de", null);
-    public static CommunityMembershipDto TEST_COMM_MEMB_DTO = new CommunityMembershipDto(null, null, WERNER_DTO.getUsername(), null, TEST_COMM_DTO.getName());
-    public static CompetitionMembershipDto TEST_COMP_MEM_DTO = new CompetitionMembershipDto(null, TEST_COMP_DTO.getName(), null, TEST_COMM_DTO.getName());
-
-    public static TippConfigDto TIPP_CONFIG_DTO = new TippConfigDto(null, null, null, TEST_MATCH_DAY_DTO.getSpieltagNumber(), null);
 
     @Transactional
     public Optional<Competition> initCompWithGames() {

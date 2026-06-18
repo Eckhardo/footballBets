@@ -140,14 +140,16 @@ Accept: application/vnd.kirschning.api.v1+json
 
 Naturally, with header versioning, we can use the same URL for multiple versions of API.
 
+### Code Examples for API Versioning and Header Versioning
 
-
-###  Code Examples for API Versioning and Header Versioning
 Scenario: A mandatory field has been added to the Domain Model, breaking the Contract of the API in parts.
 Changes have to be made in the Controller (and DTO )
-####  API Versioning 
+
+#### API Versioning
+
 Establish a new Package (v2) and copy the Controller class into it. Provide the following Modifications:
 Give the Controller a distinct name, so the spring bean context can distinguish and load both versions.
+
 ```java
 
 @RestController(value = "MatchdayController.url.v2")
@@ -156,7 +158,9 @@ public class MatchdayController {
     
 }
 ```
-####  Header Versioning 
+
+#### Header Versioning
+
 ```java
 
 @RestController(value = "MatchdayController.contentnegotiation.v2")

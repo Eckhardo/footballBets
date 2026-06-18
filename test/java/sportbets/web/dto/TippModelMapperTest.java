@@ -6,21 +6,18 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sportbets.persistence.entity.competition.Spiel;
-import sportbets.persistence.entity.competition.Team;
-import sportbets.persistence.entity.tipps.Tipp;
-import sportbets.persistence.entity.tipps.enums.TippModusType;
 import sportbets.persistence.entity.community.Community;
+import sportbets.persistence.entity.tipps.Tipp;
 import sportbets.persistence.entity.tipps.TippModusPoint;
 import sportbets.persistence.entity.tipps.TippModusResult;
 import sportbets.persistence.entity.tipps.TippModusToto;
+import sportbets.persistence.entity.tipps.enums.TippModusType;
 import sportbets.testdata.TestConstants;
 import sportbets.web.dto.tipps.TippDto;
 import sportbets.web.dto.tipps.TippModusPointDto;
 import sportbets.web.dto.tipps.TippModusResultDto;
 import sportbets.web.dto.tipps.TippModusTotoDto;
 
-import java.time.LocalDateTime;
 import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -29,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class TippModelMapperTest {
     private static final Logger log = LoggerFactory.getLogger(TippModelMapperTest.class);
 
-    private static final Community TEST_COMMUNITY = new Community("TestComm", "Description of test community");
+    private static final Community TEST_COMMUNITY = TestConstants.createValidCommunity();
 
     @BeforeAll
     public static void setUp() {
@@ -44,7 +41,7 @@ public class TippModelMapperTest {
         Collection<TypeMap<?, ?>> typeMaps = myMapper.getTypeMaps();
 
 
-        TippModusToto entity = new TippModusToto("myNameToto",TippModusType.TIPPMODUS_TOTO, 1, TEST_COMMUNITY);
+        TippModusToto entity = new TippModusToto("myNameToto", TippModusType.TIPPMODUS_TOTO, 1, TEST_COMMUNITY);
         entity.setId(20L);
         TippModusTotoDto dto = myMapper.map(entity, TippModusTotoDto.class);
         assertEquals(entity.getCommunity().getName(), dto.getCommName());
@@ -58,7 +55,7 @@ public class TippModelMapperTest {
         final ModelMapper myMapper = new MapperUtilTipps().modelMapperForResultTipp();
 
 
-        TippModusResult entity = new TippModusResult("myNameResult",TippModusType.TIPPMODUS_RESULT, 1, TEST_COMMUNITY, 3, 1);
+        TippModusResult entity = new TippModusResult("myNameResult", TippModusType.TIPPMODUS_RESULT, 1, TEST_COMMUNITY, 3, 1);
         entity.setId(20L);
         TippModusResultDto dto = myMapper.map(entity, TippModusResultDto.class);
         assertEquals(entity.getCommunity().getName(), dto.getCommName());
@@ -75,7 +72,7 @@ public class TippModelMapperTest {
         final ModelMapper myMapper = new MapperUtilTipps().modelMapperForPointTipp();
 
 
-        TippModusPoint entity = new TippModusPoint("myNamePoint",TippModusType.TIPPMODUS_POINT, 1, TEST_COMMUNITY, 4);
+        TippModusPoint entity = new TippModusPoint("myNamePoint", TippModusType.TIPPMODUS_POINT, 1, TEST_COMMUNITY, 4);
         entity.setId(20L);
         TippModusPointDto dto = myMapper.map(entity, TippModusPointDto.class);
         assertEquals(entity.getCommunity().getName(), dto.getCommName());
@@ -89,7 +86,7 @@ public class TippModelMapperTest {
         log.info("\n convert tipp entity to dto");
         final ModelMapper myMapper = new MapperUtilTipps().modelMapperForTipp();
 
-        Tipp entity= TestConstants.TEST_TIPP_ENTITY;
+        Tipp entity = TestConstants.TEST_TIPP_ENTITY;
         entity.getCommunityMembership().setId(1L);
         entity.getTippModus().setId(2L);
         entity.getSpiel().setId(3L);
@@ -108,8 +105,6 @@ public class TippModelMapperTest {
         assertEquals(entity.getRemisTipp(), dto.getRemisTipp());
         assertEquals(entity.getGastTipp(), dto.getGastTipp());
         assertEquals(entity.getWinPoints(), dto.getWinPoints());
-
-
 
 
     }

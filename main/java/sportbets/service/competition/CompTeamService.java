@@ -21,6 +21,8 @@ public interface CompTeamService {
     void deleteById(Long id);
 
     List<CompetitionTeam> getAllForComp(Long compId);
-    List<Team>  findUnregisteredTeams(boolean isClub, List<CompetitionTeam> models);
+
+    List<Team> findUnregisteredTeams(boolean isClub, List<CompetitionTeam> models);
+
     Optional<CompetitionTeam> findByTeamIdAndCompId(Long teamId, Long compId);
 }

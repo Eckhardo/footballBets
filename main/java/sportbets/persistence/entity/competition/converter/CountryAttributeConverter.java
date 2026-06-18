@@ -27,7 +27,7 @@ public class CountryAttributeConverter implements AttributeConverter<Country, St
             return null;
 
         return switch (dbData) {
-            case "DE" ->  Country.GERMANY;
+            case "DE" -> Country.GERMANY;
             case "IT" -> Country.ITALY;
             case "EN" -> Country.ENGLAND;
             case "ES" -> Country.SPAIN;

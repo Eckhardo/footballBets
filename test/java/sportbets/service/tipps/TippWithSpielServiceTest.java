@@ -10,7 +10,6 @@ import sportbets.persistence.entity.community.CommunityMembership;
 import sportbets.persistence.entity.competition.Spiel;
 import sportbets.persistence.entity.competition.SpielFormula;
 import sportbets.persistence.entity.competition.Spieltag;
-import sportbets.persistence.entity.competition.enums.Country;
 import sportbets.service.initTestData.ControllerTestDataService;
 import sportbets.testdata.TestConstants;
 import sportbets.web.dto.competition.CompetitionDto;
@@ -26,17 +25,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TippWithSpielServiceTest {
 
-    private static final Logger log = LoggerFactory.getLogger(TippWithSpielServiceTest.class);
-
-
     public static final CompetitionFamilyDto TEST_COMP_FAM_DTO = TestConstants.createValidFamilyDto();
-    public static final CompetitionDto TEST_COMP_DTO =TestConstants.createValidCompetitionDto();
+    public static final CompetitionDto TEST_COMP_DTO = TestConstants.createValidCompetitionDto();
+    private static final Logger log = LoggerFactory.getLogger(TippWithSpielServiceTest.class);
+    final TippDto tippDtoHomeWin = new TippDto(null, 4, 0, 0, null);
+    final TippDto tippDtoRemis = new TippDto(null, 2, 2, 0, null);
+    final TippDto tippDtoGuestWin = new TippDto(null, 0, 1, 3, null);
     @Autowired
     ControllerTestDataService controllerTestDataService;
-
-    @Autowired
-    private TippService tippService;
-
     TippRecord tippRecord;
     CommunityMembership commMemb;
     Spieltag spieltag;
@@ -45,10 +41,8 @@ public class TippWithSpielServiceTest {
     Spiel gameGuestWin;
     TippModusTotoDto tippModusTotoDto;
     TippModusPointDto tippModusPointDto;
-
-    final TippDto tippDtoHomeWin = new TippDto(null, 4, 0, 0, null);
-    final TippDto tippDtoRemis = new TippDto(null, 2, 2, 0, null);
-    final TippDto tippDtoGuestWin = new TippDto(null, 0, 1, 3, null);
+    @Autowired
+    private TippService tippService;
 
     @BeforeEach
     public void setUp() {
@@ -145,7 +139,6 @@ public class TippWithSpielServiceTest {
 
         TippDto savedTippDtoRemis = tippService.saveOne(tippDtoRemis);
         assertThat(savedTippDtoRemis.getId()).isNotNull();
-
 
 
         TippDto savedTippDtGuest = tippService.saveOne(tippDtoGuestWin);

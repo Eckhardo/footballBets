@@ -35,36 +35,38 @@ public class TeamController {
     @GetMapping("/teams")
     public List<TeamDto> findAllTeams() {
 
-     return teamService.getAll();
+        return teamService.getAll();
 
     }
 
     @GetMapping("/teams/clubs")
     public List<TeamDto> findAllClubTeams() {
 
-       return teamService.getAllClubTeams();
+        return teamService.getAllClubTeams();
 
     }
+
     @GetMapping("/teams/nations")
     public List<TeamDto> findAllNationTeams() {
 
-       return teamService.getAllNationTeams();
+        return teamService.getAllNationTeams();
 
     }
+
     @PostMapping("/teams")
     @ResponseStatus(HttpStatus.CREATED)
     public TeamDto post(@RequestBody TeamDto teamDto) {
         log.info("New team {}", teamDto);
 
-      return teamService.save(teamDto);
+        return teamService.save(teamDto);
 
     }
 
     @PutMapping(value = "/teams/{id}")
-    public TeamDto update(@PathVariable Long id, @RequestBody  @Valid TeamDto teamDto) {
+    public TeamDto update(@PathVariable Long id, @RequestBody @Valid TeamDto teamDto) {
         log.info("Update teamDTO  {}", teamDto);
 
-       return teamService.updateTeam(id, teamDto).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return teamService.updateTeam(id, teamDto).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
     }
 

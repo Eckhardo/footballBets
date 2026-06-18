@@ -26,9 +26,8 @@ public class TeamPositionSummaryRow implements Serializable, Comparable<TeamPosi
     private final long gamesLost;
 
 
-
     public TeamPositionSummaryRow(String teamName, String teamNameAcronym, long spieltage, long points, long heimtore, long gasttore, long difftore, long gamesWon, long gamesRemis, long gamesLost) {
-      super();
+        super();
         this.teamName = teamName;
         this.teamNameAcronym = teamNameAcronym;
         this.spieltage = spieltage;
@@ -41,8 +40,8 @@ public class TeamPositionSummaryRow implements Serializable, Comparable<TeamPosi
         this.gamesLost = gamesLost;
     }
 /**
-     * @param position The position to set.
-     */
+ * @param position The position to set.
+ */
     /**
      * @return Returns the difftore.
      */

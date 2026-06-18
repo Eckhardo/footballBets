@@ -17,17 +17,16 @@ public class CompetitionRoundDto implements Serializable {
     @NotBlank(message = "name must not be empty")
     private String name;
     private boolean hasGroups = false;
-    private int teamsSize ;
+    private int teamsSize;
     private int matchdaysSize;
     private int firstMatchday;
-    @NotNull (message = " competition id cannot be null")
+    @NotNull(message = " competition id cannot be null")
     private Long compId;
-    @NotBlank (message = " competition name cannot be empty")
+    @NotBlank(message = " competition name cannot be empty")
     private String compName;
 
     public CompetitionRoundDto() {
     }
-
 
 
     public CompetitionRoundDto(Long id, int roundNumber, String name, boolean hasGroups, Long compId, String compName, int teamsSize, int matchdaysSize, int firstMatchday) {

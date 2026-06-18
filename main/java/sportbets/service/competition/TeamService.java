@@ -21,5 +21,6 @@ public interface TeamService {
     Optional<TeamDto> findByName(String name);
 
     List<TeamDto> getAllClubTeams();
+
     List<TeamDto> getAllNationTeams();
 }

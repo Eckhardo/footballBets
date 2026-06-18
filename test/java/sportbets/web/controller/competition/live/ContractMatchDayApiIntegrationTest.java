@@ -10,7 +10,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import sportbets.FootballBetsApplication;
-import sportbets.persistence.entity.competition.enums.Country;
 import sportbets.config.TestProfileLiveTest;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
@@ -38,9 +37,9 @@ public class ContractMatchDayApiIntegrationTest {
 
     private static final int TEST_MATCH_DAY = 1;
     final CompetitionFamilyDto compFamilyDto = TestConstants.createValidFamilyDto();
-    final CompetitionDto compDto =TestConstants.createValidCompetitionDto();
+    final CompetitionDto compDto = TestConstants.createValidCompetitionDto();
 
-    final CompetitionRoundDto compRoundDto =    TestConstants.createValidCompRoundDto();
+    final CompetitionRoundDto compRoundDto = TestConstants.createValidCompRoundDto();
     final SpieltagDto matchDayDto = new SpieltagDto(null, TEST_MATCH_DAY, LocalDateTime.now());
 
     @Autowired
@@ -52,6 +51,7 @@ public class ContractMatchDayApiIntegrationTest {
     @Autowired
     CompetitionRoundRepository competitionRoundRepository;
     CompetitionRound savedRound;
+
     @AfterEach
     public void cleanup() {
         // Clean up all entities created during tests
@@ -135,7 +135,7 @@ public class ContractMatchDayApiIntegrationTest {
     @Test
     @Order(2)
     void givenBatchDetails_whenPostNewMatchdaysInBatch_thenResponseIsOK() {
-        final MatchdayBatchRecord matchdayBatchRecord= new MatchdayBatchRecord(18,34,savedRound.getId(),savedRound.getName());
+        final MatchdayBatchRecord matchdayBatchRecord = new MatchdayBatchRecord(18, 34, savedRound.getId(), savedRound.getName());
         webClient.post()
                 .uri("/matchdays/batch")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -150,7 +150,7 @@ public class ContractMatchDayApiIntegrationTest {
     @Order(1)
     void whenRoundIdProvided_ThenFetchMaxMatchday() {
 
-      CompetitionRound buliHinrunde = competitionRoundRepository.findById(1L).orElseThrow(() -> new EntityNotFoundException("Bundesliga Hinrunde"));
+        CompetitionRound buliHinrunde = competitionRoundRepository.findById(1L).orElseThrow(() -> new EntityNotFoundException("Bundesliga Hinrunde"));
         Long id = buliHinrunde.getId();
         webClient.get()
                 .uri("/matchdays/" + id + "/max")

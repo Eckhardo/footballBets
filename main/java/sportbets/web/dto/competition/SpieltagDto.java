@@ -23,7 +23,7 @@ public class SpieltagDto implements Serializable {
     // Specifies the format for JSON serialization (when the entity is returned as a response)
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
     private LocalDateTime startDate;
-    @NotNull (message = " round id cannot be null")
+    @NotNull(message = " round id cannot be null")
     private Long compRoundId;
     @NotBlank(message = " round name cannot be empty")
     private String compRoundName;

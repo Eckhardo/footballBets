@@ -12,13 +12,11 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import sportbets.FootballBetsApplication;
-
 import sportbets.config.TestProfileLiveTest;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.entity.competition.CompetitionTeam;
 import sportbets.persistence.entity.competition.Team;
-import sportbets.persistence.entity.competition.enums.Country;
 import sportbets.persistence.repository.competition.CompetitionFamilyRepository;
 import sportbets.persistence.repository.competition.CompetitionRepository;
 import sportbets.persistence.repository.competition.CompetitionTeamRepository;
@@ -42,12 +40,12 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ContractCompTeamApiIntegrationTest {
     private static final Logger log = LoggerFactory.getLogger(ContractCompTeamApiIntegrationTest.class);
-      private static final String TEAM_NAME = "Eintracht Braunschweig";
+    private static final String TEAM_NAME = "Eintracht Braunschweig";
     private static final String TEAM_NAME_2 = "Holstein Kiel";
     final CompetitionFamilyDto compFamilyDto = TestConstants.createValidFamilyDto();
     final CompetitionDto compDto = TestConstants.createValidCompetitionDto();
-    final TeamDto teamDto = new TeamDto(null, TEAM_NAME, "Braunschweig",true);
-    final TeamDto teamDto1 = new TeamDto(null, TEAM_NAME_2, "Kiel",true);
+    final TeamDto teamDto = new TeamDto(null, TEAM_NAME, "Braunschweig", true);
+    final TeamDto teamDto1 = new TeamDto(null, TEAM_NAME_2, "Kiel", true);
     @Autowired
     WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();
     @Autowired
@@ -244,8 +242,8 @@ public class ContractCompTeamApiIntegrationTest {
         Competition entity = competitionRepository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP));
         Long id = entity.getId();
 
-        EntityExchangeResult<List<CompetitionTeamDto>> result =   webClient.get()
-                .uri("/compTeams/" +id+"/teams")
+        EntityExchangeResult<List<CompetitionTeamDto>> result = webClient.get()
+                .uri("/compTeams/" + id + "/teams")
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -255,7 +253,7 @@ public class ContractCompTeamApiIntegrationTest {
         List<CompetitionTeamDto> actualBody = result.getResponseBody();
 
         assertNotNull(actualBody);
-        assertEquals( 0,actualBody.size());
+        assertEquals(0, actualBody.size());
 
 
     }

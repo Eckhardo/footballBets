@@ -14,9 +14,8 @@ import sportbets.web.dto.tipps.TippModusResultDto;
 import sportbets.web.dto.tipps.TippModusTotoDto;
 
 
-
 /*
-*  Wokrs only for one type of TippModus for unknown reasons
+ *  Wokrs only for one type of TippModus for unknown reasons
  */
 @Deprecated(since = "20.04.2026")
 public class MapperUtilTippsNew {
@@ -24,6 +23,26 @@ public class MapperUtilTippsNew {
 
     private static final Logger log = LoggerFactory.getLogger(MapperUtilTippsNew.class);
     private final ModelMapper modelMapper = new ModelMapper();
+    // Converter Definition
+    Converter<TippModusType, String> tippModusToString = new AbstractConverter<TippModusType, String>() {
+        protected String convert(TippModusType source) {
+            log.info("Converting TippModusType to String {}", source.getDisplayName());
+            return source == null ? null : source.getDisplayName();
+        }
+    };
+    Provider<TippModusDto> hierarchyProvider = request -> {
+        TippModus source = (TippModus) request.getSource();
+        // Logik zur Auswahl der richtigen Unterklasse
+        log.info("hierarchyProvider: {}", source.getType());
+        return switch (source.getType()) {
+
+            case TIPPMODUS_TOTO -> new TippModusTotoDto();
+            case TIPPMODUS_RESULT -> new TippModusResultDto();
+            case TIPPMODUS_POINT -> new TippModusPointDto();
+            default -> throw new IllegalStateException("Unexpected value: " + source.getType());
+        };
+
+    };
 
     public ModelMapper getModelMapperForTippModus() {
         log.info("getModelMapper");
@@ -54,26 +73,4 @@ public class MapperUtilTippsNew {
 
         return this.modelMapper;
     }
-
-    // Converter Definition
-    Converter<TippModusType, String> tippModusToString = new AbstractConverter<TippModusType, String>() {
-        protected String convert(TippModusType source) {
-            log.info("Converting TippModusType to String {}", source.getDisplayName());
-            return source == null ? null : source.getDisplayName();
-        }
-    };
-
-    Provider<TippModusDto> hierarchyProvider = request -> {
-        TippModus source = (TippModus) request.getSource();
-        // Logik zur Auswahl der richtigen Unterklasse
-        log.info("hierarchyProvider: {}", source.getType());
-        return switch (source.getType()) {
-
-            case TIPPMODUS_TOTO -> new TippModusTotoDto();
-            case TIPPMODUS_RESULT -> new TippModusResultDto();
-            case TIPPMODUS_POINT -> new TippModusPointDto();
-            default -> throw new IllegalStateException("Unexpected value: " + source.getType());
-        };
-
-    };
 }

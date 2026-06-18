@@ -11,34 +11,24 @@ import java.util.Objects;
 @Entity
 public class Tipp {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
-
-
+    @Column(nullable = false)
+    private final LocalDateTime createdOn = LocalDateTime.now();
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_spiel_id", foreignKey = @ForeignKey(name = "FK_TIPP_TO_GAME"))
     @NotNull
     public Spiel spiel;
-
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_commMemb_id", foreignKey = @ForeignKey(name = "FK_TIPP_TO_COMP_MEMB"))
     @NotNull
     private CommunityMembership communityMembership;
-
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_tippModus_id", foreignKey = @ForeignKey(name = "FK_TIPP_TO_TIPPMODUS"))
     @NotNull
     private TippModus tippModus;
-
-
-    @Column(nullable = false)
-    private final LocalDateTime createdOn = LocalDateTime.now();
-
-
     private Integer heimTipp;
 
 

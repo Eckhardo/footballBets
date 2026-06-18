@@ -30,6 +30,7 @@ public class TippDto implements Serializable {
 
     public TippDto() {
     }
+
     public TippDto(Long id, Integer heimTipp, Integer remisTipp, Integer gastTipp, Integer winPoints) {
         this.id = id;
         this.heimTipp = heimTipp;
@@ -53,36 +54,36 @@ public class TippDto implements Serializable {
         return id;
     }
 
-    public Integer getHeimTipp() {
-        return heimTipp;
-    }
-
-    public Integer getRemisTipp() {
-        return remisTipp;
-    }
-
-    public Integer getGastTipp() {
-        return gastTipp;
-    }
-
-    public Integer getWinPoints() {
-        return winPoints;
-    }
-
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getHeimTipp() {
+        return heimTipp;
     }
 
     public void setHeimTipp(Integer heimTipp) {
         this.heimTipp = heimTipp;
     }
 
+    public Integer getRemisTipp() {
+        return remisTipp;
+    }
+
     public void setRemisTipp(Integer remisTipp) {
         this.remisTipp = remisTipp;
     }
 
+    public Integer getGastTipp() {
+        return gastTipp;
+    }
+
     public void setGastTipp(Integer gastTipp) {
         this.gastTipp = gastTipp;
+    }
+
+    public Integer getWinPoints() {
+        return winPoints;
     }
 
     public void setWinPoints(Integer winPoints) {

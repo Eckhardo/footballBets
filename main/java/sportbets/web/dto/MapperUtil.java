@@ -52,6 +52,7 @@ public class MapperUtil {
 
         return modelMapper;
     }
+
     public static ModelMapper getModelMapperForCompetitionMembership() {
         ModelMapper modelMapper = new ModelMapper();
 
@@ -167,7 +168,6 @@ public class MapperUtil {
 
 
     }
-
 
 
     public static ModelMapper getModelMapperForCommunityMembership() {

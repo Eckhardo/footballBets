@@ -164,7 +164,7 @@ public class SpielServiceImpl implements SpielService {
             model.setHeimTeam(heimTeam);
             model.setGastTeam(gastTeam);
 
-             SpielFormula heimFormel = new SpielFormula(model, heimTeam.getName(), heimTeam.getAcronym(),
+            SpielFormula heimFormel = new SpielFormula(model, heimTeam.getName(), heimTeam.getAcronym(),
                     true, model.getHeimTore(), model
                     .getGastTore(), 0);
             heimFormel.calcWinPoints(model.isStattgefunden(), comp.getWinMultiplicator(), comp.getRemisMultiplicator());

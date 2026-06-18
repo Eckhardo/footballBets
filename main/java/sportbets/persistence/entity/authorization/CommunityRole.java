@@ -12,7 +12,7 @@ public class CommunityRole extends Role {
 
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "fk_comm_id",foreignKey = @ForeignKey(name = "FK_COMM_ROLE_TO_COMM"))
+    @JoinColumn(name = "fk_comm_id", foreignKey = @ForeignKey(name = "FK_COMM_ROLE_TO_COMM"))
     @NotNull
     public Community community;
 
@@ -52,6 +52,6 @@ public class CommunityRole extends Role {
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), getName(),getDescription());
+        return Objects.hash(super.hashCode(), getName(), getDescription());
     }
 }

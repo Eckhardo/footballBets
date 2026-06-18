@@ -47,6 +47,7 @@ public class CompFamilyController {
         return modelMapper.map(model, CompetitionFamilyDto.class);
 
     }
+
     @PostMapping("/families")
     @ResponseStatus(HttpStatus.CREATED)
     public CompetitionFamilyDto post(@RequestBody @Valid CompetitionFamilyDto newFam) {

@@ -9,6 +9,12 @@ import sportbets.web.dto.tipps.*;
 @Component
 public class MapperUtilTipps {
     private final ModelMapper modelMapper = new ModelMapper();
+    // Converter Definition
+    Converter<TippModusType, String> tippModusToString = new AbstractConverter<TippModusType, String>() {
+        protected String convert(TippModusType source) {
+            return source == null ? null : source.getDisplayName();
+        }
+    };
 
     public ModelMapper modelMapperForResultTipp() {
         // setup
@@ -29,7 +35,6 @@ public class MapperUtilTipps {
         return modelMapper;
     }
 
-
     public ModelMapper modelMapperForTotoTipp() {
 
         TypeMap<TippModusToto, TippModusTotoDto> typeMap = modelMapper.getTypeMap(TippModusToto.class, TippModusTotoDto.class);
@@ -41,7 +46,7 @@ public class MapperUtilTipps {
                     // to the 'parentId' field in the destination
                     map(source.getCommunity().getName()).setCommName(null);
                     map(source.getCommunity().getId()).setCommId(null);
-                 using(tippModusToString).map(source.getType()).setType(null);
+                    using(tippModusToString).map(source.getType()).setType(null);
 
                 }
             });
@@ -61,7 +66,7 @@ public class MapperUtilTipps {
                     // to the 'parentId' field in the destination
                     map(source.getCommunity().getName()).setCommName(null);
                     map(source.getCommunity().getId()).setCommId(null);
-                   using(tippModusToString).map(source.getType()).setType(null);
+                    using(tippModusToString).map(source.getType()).setType(null);
 
                 }
             });
@@ -91,6 +96,7 @@ public class MapperUtilTipps {
 
         return modelMapper;
     }
+
     public ModelMapper modelMapperForTipp() {
         TypeMap<Tipp, TippDto> typeMap = modelMapper.getTypeMap(Tipp.class, TippDto.class);
         // add deep mapping to flatten source
@@ -113,12 +119,4 @@ public class MapperUtilTipps {
 
         return modelMapper;
     }
-
-
-    // Converter Definition
-    Converter<TippModusType, String> tippModusToString = new AbstractConverter<TippModusType, String>() {
-        protected String convert(TippModusType source) {
-            return source == null ? null : source.getDisplayName();
-        }
-    };
 }

@@ -117,7 +117,7 @@ class CompTeamController {
         List<Long> addedTeamIds = new ArrayList<>();
         for (CompetitionTeamDto toBeAdded : registeredCompTeams) {
             Optional<CompetitionTeam> candidate = compTeamService.findByTeamIdAndCompId(toBeAdded.getTeamId(), toBeAdded.getCompId());
-            if (candidate.isPresent()){
+            if (candidate.isPresent()) {
                 continue;
             }
             compTeamService.save(toBeAdded);

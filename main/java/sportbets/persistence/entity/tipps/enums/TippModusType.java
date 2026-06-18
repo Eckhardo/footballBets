@@ -12,10 +12,6 @@ public enum TippModusType {
         this.displayName = displayName;
     }
 
-    public String getDisplayName() {
-        return displayName;
-    }
-
     public static TippModusType fromString(String displayName) {
 
         return switch (displayName) {
@@ -28,9 +24,13 @@ public enum TippModusType {
 
     }
 
-    public static  String fromEnum(TippModusType type) {
+    public static String fromEnum(TippModusType type) {
 
         return type.getDisplayName();
+    }
+
+    public String getDisplayName() {
+        return displayName;
     }
 
 }

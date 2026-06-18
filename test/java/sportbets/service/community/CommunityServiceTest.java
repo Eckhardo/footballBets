@@ -27,10 +27,10 @@ public class CommunityServiceTest {
 
     @Autowired
     CommunityService communityService;
+    CommunityDto communityDto = TestConstants.createValidCommunityDto();
     @Autowired
     private CommunityRoleService communityRoleService;
 
-    CommunityDto communityDto = new CommunityDto(null, "COMM_TEST", "Description of Community");
     @BeforeEach
     public void setup() {
         log.debug("setup");
@@ -44,8 +44,6 @@ public class CommunityServiceTest {
     @Test
     @Order(1)
     void whenValidComm_thenCommShouldBeSaved() {
-
-        ;
 
 
         Community saved = communityService.save(communityDto);

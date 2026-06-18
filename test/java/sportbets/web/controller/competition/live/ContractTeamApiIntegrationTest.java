@@ -32,9 +32,9 @@ public class ContractTeamApiIntegrationTest {
     private static final Logger log = LoggerFactory.getLogger(ContractTeamApiIntegrationTest.class);
     private static final String TEAM_NAME = TEAM_NAME_TEST1;
     private static final String TEAM_NAME_2 = TEAM_NAME_TEST2;
-    final TeamDto teamDto = new TeamDto(null, TEAM_NAME, "Team 1",true);
-    final TeamDto teamDto1 = new TeamDto(null, TEAM_NAME_2, "Team 2",true);
-    final TeamDto FRANCE = new TeamDto(null, "TestCountry", "TEST",false);
+    final TeamDto teamDto = new TeamDto(null, TEAM_NAME, "Team 1", true);
+    final TeamDto teamDto1 = new TeamDto(null, TEAM_NAME_2, "Team 2", true);
+    final TeamDto FRANCE = new TeamDto(null, "TestCountry", "TEST", false);
     @Autowired
     WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();
     @Autowired
@@ -81,9 +81,8 @@ public class ContractTeamApiIntegrationTest {
                 .isNoContent();
 
 
-
-    Team team2 = teamRepository.findByName(TEAM_NAME_2).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME));
-    Long id2 = team2.getId();
+        Team team2 = teamRepository.findByName(TEAM_NAME_2).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME));
+        Long id2 = team2.getId();
         log.debug("delete team with id::{}", id2);
         webClient.delete()
                 .uri("/teams/" + id2)
@@ -99,7 +98,7 @@ public class ContractTeamApiIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isNoContent();
-}
+    }
 
     @Test
     @Order(1)
@@ -180,6 +179,7 @@ public class ContractTeamApiIntegrationTest {
                     assertThat(items).extracting(TeamDto::isHasClub).contains(true);
                 });
     }
+
     @Test
     @Order(5)
     void whenCallForAllNations_ThenNationsArePresentInfCollection() {

@@ -54,13 +54,12 @@ public class TippModusToto extends TippModus {
         int remis = tipp.getRemisTipp() == null ? 0 : tipp.getRemisTipp();
         int gast = tipp.getGastTipp() == null ? 0 : tipp.getGastTipp();
 
-        if (spiel.getHeimTore()> spiel.getGastTore()) {
-            return heim ;
-        } else if (spiel.getGastTore()> spiel.getHeimTore()) {
+        if (spiel.getHeimTore() > spiel.getGastTore()) {
+            return heim;
+        } else if (spiel.getGastTore() > spiel.getHeimTore()) {
             return gast;
 
-        }
-        else{
+        } else {
             return remis;
         }
 
