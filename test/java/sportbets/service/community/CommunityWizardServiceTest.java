@@ -38,7 +38,7 @@ public class CommunityWizardServiceTest {
     CommunityService communityService;
     @Autowired
     CompFamilyService compFamilyService;
-    TipperDto testTipper = TipperConstants.WERNER_DTO;
+    TipperDto testTipper = TipperConstants.createValidTipperDto();
     Competition savedComp = null;
     Tipper savedTipper = null;
     CommunityWizardRecord testRecord = null;

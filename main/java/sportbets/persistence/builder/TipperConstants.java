@@ -5,12 +5,26 @@ import sportbets.web.dto.community.TipperDto;
 
 public class TipperConstants {
 
-    public static TipperDto ECKHARD_DTO = new TipperDto(null, "Eckhard", "Kirschning", "Eckhardo", "hrubesch", "ungeheuer", "taerna@gmx.de", null);
+    public static Tipper getECKHARD() {
+        return new Tipper("Eckhard", "Kirschning", "Eckhardo", "hrubesch", "ungeheuer", "taerna@gmx.de", true, true);
 
-    public static Tipper ECKHARD = new Tipper("Eckhard", "Kirschning", "Eckhardo", "hrubesch", "ungeheuer", "taerna@gmx.de", true, true);
-
-    public static Tipper WERNER = new Tipper("Werner", "Wernersen", "Wernerdo", "hrubesch", "ungeheuer", "werner@gmx.de");
-    public static TipperDto WERNER_DTO = new TipperDto(null, "Werner", "Wernersen", "Wernerdo", "banane", "frucht", "werner@gmx.de", null);
+    }
 
 
+
+
+    public static TipperDto createValidTipperDto(){
+       return   new TipperDto(null, "Werner", "Wernersen", "Wernerdo", "banane", "frucht", "werner@gmx.de", null);
+
+    }
+
+    public static TipperDto createValidTipperDto2(){
+        return   new TipperDto(null, "Otto", "Ottosen", "ottoso", "banane", "frucht", "werner@gmx.de", null);
+
+    }
+
+    public static Tipper createValidTipper(){
+        return   new Tipper("Werner", "Wernersen", "Wernerdo", "hrubesch", "ungeheuer", "werner@gmx.de");
+
+    }
 }

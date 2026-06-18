@@ -27,7 +27,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static sportbets.testdata.TestConstants.COMM_TEST;
+
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -71,7 +71,7 @@ public class TippConfigServiceTest {
         matchDayDto.setCompRoundName(savedCompRound.getName());
 
         savedMatchday = spieltagService.save(matchDayDto);
-        CommunityDto commDto = new CommunityDto(null, COMM_TEST, "Description of Community");
+        CommunityDto commDto = new CommunityDto(null, communityDto.getName(), "Description of Community");
         Community savedComm = communityService.save(commDto);
         CompetitionMembershipDto competitionMembershipDto = new CompetitionMembershipDto(savedComp.getId(), savedComp.getName(), savedComm.getId(), savedComm.getName());
         savedCompMemb = membershipService.save(competitionMembershipDto);

@@ -9,11 +9,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import sportbets.persistence.builder.TipperConstants;
 import sportbets.persistence.entity.authorization.CommunityRole;
 import sportbets.persistence.entity.authorization.TipperRole;
 import sportbets.persistence.entity.community.Community;
 import sportbets.persistence.entity.community.CommunityMembership;
 import sportbets.persistence.entity.community.Tipper;
+import sportbets.persistence.entity.tipps.Tipp;
 import sportbets.service.authorization.CommunityRoleService;
 import sportbets.service.authorization.TipperRoleService;
 import sportbets.testdata.TestConstants;
@@ -31,12 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class CommunityMembershipServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(CommunityMembershipServiceTest.class);
-
-    private static final String TEST_COMM_1 = "My Test Community 1";
-    private static final String TEST_COMM_2 = "My Test Community 2";
-    private static final String TEST_USERNAME = "TEST_USER";
-    private static final String TEST_USERNAME_2 = "TEST_USER 2";
-    private final CommunityDto communityDto = TestConstants.createValidCommunityDto();
+     private final CommunityDto communityDto = TestConstants.createValidCommunityDto();
     private final CommunityDto communityDto2 = TestConstants.createValidCommunityDto2();
     @Autowired
     CommunityMembershipService membershipService;
@@ -44,9 +41,8 @@ public class CommunityMembershipServiceTest {
     CommunityService communityService;
     @Autowired
     TipperService tipperService;
-    TipperDto testTipper = new TipperDto(null, "Eckhard", "Zabel", TEST_USERNAME, "root", "hint", "eki@gmx.de", null);
-
-    TipperDto testTipper2 = new TipperDto(null, "Werner", "Wernersen", TEST_USERNAME_2, "root", "hint", "werner@gmx.de", null);
+    TipperDto testTipper = TipperConstants.createValidTipperDto();
+    TipperDto testTipper2 = TipperConstants.createValidTipperDto2();
     Tipper savedTipper = null;
     Tipper savedTipper2 = null;
     Community savedCommunity = null;
@@ -55,6 +51,8 @@ public class CommunityMembershipServiceTest {
     private CommunityRoleService communityRoleService;
     @Autowired
     private TipperRoleService tipperRoleService;
+
+    CommunityMembershipDto dto = TestConstants.createValidCommunityMembershipDto();
 
     @BeforeEach
     public void setup() {
@@ -85,7 +83,9 @@ public class CommunityMembershipServiceTest {
 
         assertNotNull(savedTipper);
         assertNotNull(savedCommunity);
-        CommunityMembershipDto dto = new CommunityMembershipDto(null, savedTipper.getId(), savedTipper.getUsername(), savedCommunity.getId(), savedCommunity.getName());
+        dto.setTipperId(savedTipper.getId());
+        dto.setCommId(savedCommunity.getId());
+        dto.setCommName(savedCommunity.getName());
 
         CommunityMembership savedCommunityMembership = membershipService.save(dto);
         assertNotNull(savedCommunityMembership);
@@ -100,8 +100,9 @@ public class CommunityMembershipServiceTest {
 
         assertNotNull(savedTipper);
         assertNotNull(savedCommunity);
-
-        CommunityMembershipDto dto = new CommunityMembershipDto(null, savedTipper.getId(), savedTipper.getUsername(), savedCommunity.getId(), savedCommunity.getName());
+        dto.setTipperId(savedTipper.getId());
+        dto.setCommId(savedCommunity.getId());
+        dto.setCommName(savedCommunity.getName());
 
         CommunityMembership savedCommunityMembership = membershipService.save(dto);
         assertNotNull(savedCommunityMembership);
@@ -144,7 +145,9 @@ public class CommunityMembershipServiceTest {
         assertNotNull(savedTipper);
         assertNotNull(savedCommunity);
 
-        CommunityMembershipDto dto = new CommunityMembershipDto(null, savedTipper.getId(), savedTipper.getUsername(), savedCommunity.getId(), savedCommunity.getName());
+        dto.setTipperId(savedTipper.getId());
+        dto.setCommId(savedCommunity.getId());
+        dto.setCommName(savedCommunity.getName());
 
         CommunityMembership savedCommunityMembership = membershipService.save(dto);
         assertNotNull(savedCommunityMembership);
@@ -166,7 +169,9 @@ public class CommunityMembershipServiceTest {
 
         CommunityRole communityRole = communityRoleService.findByCommunityName(communityDto.getName()).orElseThrow();
         assertNotNull(communityRole);
-        CommunityMembershipDto dto = new CommunityMembershipDto(null, savedTipper.getId(), savedTipper.getUsername(), savedCommunity.getId(), savedCommunity.getName());
+        dto.setTipperId(savedTipper.getId());
+        dto.setCommId(savedCommunity.getId());
+        dto.setCommName(savedCommunity.getName());
 
         CommunityMembership savedCommunityMembership = membershipService.save(dto);
         assertNotNull(savedCommunityMembership);
@@ -196,7 +201,9 @@ public class CommunityMembershipServiceTest {
         TipperRole savedTipperRole = tipperRoleService.save(tipperRoleDto).orElseThrow(() -> new EntityNotFoundException("savedTipperRole not found"));
         assertNotNull(savedTipperRole);
 
-        CommunityMembershipDto dto = new CommunityMembershipDto(null, savedTipper.getId(), savedTipper.getUsername(), savedCommunity.getId(), savedCommunity.getName());
+        dto.setTipperId(savedTipper.getId());
+        dto.setCommId(savedCommunity.getId());
+        dto.setCommName(savedCommunity.getName());
 
         CommunityMembership savedCommunityMembership = membershipService.save(dto);
         assertNotNull(savedCommunityMembership);

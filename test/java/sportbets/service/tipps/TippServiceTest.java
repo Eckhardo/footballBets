@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import sportbets.persistence.builder.TipperConstants;
 import sportbets.persistence.entity.community.Community;
 import sportbets.persistence.entity.community.CommunityMembership;
 import sportbets.persistence.entity.community.Tipper;
@@ -76,6 +77,7 @@ public class TippServiceTest {
 
     @BeforeEach
     public void setUp() {
+        log.debug("setUp");
         CompetitionFamily savedFam = familyService.save(competitionFamily);
         CompetitionDto compDto = TestConstants.createValidCompetitionDto();
         compDto.setFamilyId(savedFam.getId());
@@ -116,11 +118,15 @@ public class TippServiceTest {
         TippModusPointDto tippModusPointDto = new TippModusPointDto(null, "PunkteTest", TippModusType.TIPPMODUS_POINT.getDisplayName(), 1, savedCommunity.getId(), savedCommunity.getName(), 4);
         savedTippModusPoint = (TippModusPointDto) tippModusService.save(tippModusPointDto);
 
-        TipperDto testTipper = new TipperDto(null, "Kalle", "Wernersen", "Kalleo", "banane", "frucht", "werner@gmx.de", null);
-
+        TipperDto testTipper = TipperConstants.createValidTipperDto();
         savedTipper = tipperService.save(testTipper);
-        CommunityMembershipDto commMembDto = new CommunityMembershipDto(null, savedTipper.getId(), savedTipper.getUsername(), savedCommunity.getId(), savedCommunity.getName());
+        CommunityMembershipDto commMembDto = TestConstants.createValidCommunityMembershipDto();
+        commMembDto.setTipperId(savedTipper.getId());
+        commMembDto.setCommId(savedCommunity.getId());
+        commMembDto.setCommName(savedCommunity.getName());
+
         savedCommunityMembership = communityMembershipService.save(commMembDto);
+        log.debug("setup end");
 
     }
 

@@ -95,7 +95,7 @@ public class BuliService {
         Community community = new Community("Bulitipper", "Die Dinos des Tippens");
         savedCommunity = commRepo.save(community);
 
-        Tipper ebi = TipperConstants.ECKHARD;
+        Tipper ebi = TipperConstants.getECKHARD();
         ebi.setDefaultCompetitionId(savedComp.getId());
         ebi.setDefaultCommunityId(savedCommunity.getId());
         tipperRepo.save(ebi);
