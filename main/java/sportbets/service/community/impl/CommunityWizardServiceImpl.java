@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.authorization.CommunityRole;
+import sportbets.persistence.entity.authorization.TipperRole;
 import sportbets.persistence.entity.community.Community;
 import sportbets.persistence.entity.community.CommunityMembership;
 import sportbets.persistence.entity.community.Tipper;
@@ -38,18 +39,25 @@ public class CommunityWizardServiceImpl implements CommunityWizardService {
     @Transactional
     public CommunityWizardRecord save(CommunityWizardRecord record) {
         log.debug("save CommunityWizardRecord {}", record);
-
+        // retrieve existing objects
         Tipper tipper = tipperRepository.findByUsername(record.tipperUserName()).orElseThrow(() -> new EntityNotFoundException("tipper not found"));
-
         Competition competition = competitionRepository.findById(record.compId()).orElseThrow(() -> new EntityNotFoundException("Competition not found"));
+
+        // prepare new community
         Community comm = new Community(record.commName(), record.commDescription());
         CommunityRole communityRole = new CommunityRole(comm.getName(), comm.getDescription(), comm);
         comm.addCommunityRole(communityRole);
-
+        // prepare community membership
         CommunityMembership communityMembership = new CommunityMembership(comm, tipper);
 
+        // prepare competition membership
         CompetitionMembership competitionMembership = new CompetitionMembership(comm, competition);
         Community savedComm = communityRepository.save(comm);
+
+        tipper.setDefaultCommunityId(savedComm.getId());
+        tipper.addTipperRole(new TipperRole(communityRole, tipper));
+        tipperRepository.save(tipper);
+
         return new CommunityWizardRecord(savedComm.getName(), savedComm.getDescription(), competition.getId(), competition.getName(), tipper.getUsername());
     }
 }

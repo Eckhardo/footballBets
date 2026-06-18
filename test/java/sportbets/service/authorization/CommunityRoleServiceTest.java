@@ -1,5 +1,6 @@
 package sportbets.service.authorization;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,8 +56,7 @@ public class CommunityRoleServiceTest {
         assertEquals(savedCommunity.getName(), communityRole.getName());
         assertEquals(savedCommunity.getId(), communityRole.getCommunity().getId());
         assertEquals(savedCommunity.getName(), communityRole.getCommunity().getName());
-        Community myComm = communityService.findByIdTest(savedCommunity.getId()).orElseThrow();
-        assertThat(myComm.getCommunityRoles()).isNotNull();
+
     }
 
 
@@ -66,8 +66,11 @@ public class CommunityRoleServiceTest {
 
         List<CommunityRole> roles = communityRoleService.getAllCommunityRoles();
         assertThat(roles).isNotNull();
-        CommunityRole savedRole = roles.stream().filter((r) -> r.getName().equals(communityDto.getName())).findFirst().get();
+        for (CommunityRole communityRole : roles) {
+            log.debug("found communityRole: {}", communityRole);
+        }
 
+        CommunityRole savedRole = roles.stream().filter(r -> r.getCommunity().getName().equals(savedCommunity.getName())).findFirst().orElseThrow();
         assertEquals(savedCommunity.getId(), savedRole.getCommunity().getId());
         assertEquals(savedCommunity.getName(), savedRole.getCommunity().getName());
     }

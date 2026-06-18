@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import sportbets.persistence.builder.TipperConstants;
 import sportbets.persistence.entity.authorization.CompetitionRole;
 import sportbets.persistence.entity.authorization.TipperRole;
 import sportbets.persistence.entity.community.Tipper;
@@ -57,7 +58,7 @@ public class TipperRepositoryTest {
         testComp.addCompetitionRole(competitionRole);
         Competition savedComp = compRepo.save(testComp);
         CompetitionRole testRole = savedComp.getCompetitionRoles().stream().findFirst().get();
-        testTipper = new Tipper("Eckhard", "Kirschning", "TestTipper", "root", "hint", "eki@gmx.de");
+        testTipper = TipperConstants.createValidTipper();
         tipperRepo.save(testTipper);
         testTipperRole = new TipperRole(testRole, testTipper);
         roleRepo.save(testRole);

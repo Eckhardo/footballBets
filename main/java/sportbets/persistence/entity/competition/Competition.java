@@ -66,10 +66,6 @@ public class Competition {
 
     }
 
-    public Competition(Long source) {
-        this.id = source;
-    }
-
 
     public Long getId() {
         return id;

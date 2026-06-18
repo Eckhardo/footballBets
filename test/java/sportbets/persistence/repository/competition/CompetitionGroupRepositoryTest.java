@@ -41,7 +41,7 @@ public class CompetitionGroupRepositoryTest {
     @Before
     public void setUp() {
         // Initialize test data before test methods
-        CompetitionFamily testFamily = TestConstants.createValidFamily();
+        CompetitionFamily testFamily =  TestConstants.createValidFamily();
         Competition testComp = new Competition("Saison 2025/26", "1. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
         CompetitionRound testRound = new CompetitionRound(1, "Vorrunde", testComp, false, 18, 17, 1);
         testGroup = new CompetitionGroup("Gruppe A", 1, testRound);
