@@ -38,16 +38,14 @@ public class ContractMatchApiIntegrationTest {
 
 
     private static final int TEST_MATCH_DAY = 1;
-    private static final String TEAM_NAME = TEAM_NAME_TEST1;
-    private static final String TEAM_NAME_2 = TEAM_NAME_TEST2;
-    private static final String TEAM_NAME_3 = TEAM_NAME_TEST3;
+
     final CompetitionFamilyDto compFamilyDto = TestConstants.createValidFamilyDto();
     final CompetitionDto compDto = TestConstants.createValidCompetitionDto();
     final CompetitionRoundDto compRoundDto = TestConstants.createValidCompRoundDto();
     final SpieltagDto matchDayDto = new SpieltagDto(null, TEST_MATCH_DAY, LocalDateTime.now());
-    final TeamDto teamDto = new TeamDto(null, TEAM_NAME, "EIN", true);
-    final TeamDto teamDto1 = new TeamDto(null, TEAM_NAME_2, "HOL", true);
-    final TeamDto teamDto2 = new TeamDto(null, TEAM_NAME_3, "PRE", true);
+    final TeamDto teamDto =TestConstants.createValidTeamDto();
+    final TeamDto teamDto1 = TestConstants.createValidTeamDto2();
+    final TeamDto teamDto2 = TestConstants.createValidTeamDto3();
     final SpielDto testSpiel1 = new SpielDto(null, 1, 3, 1, false, LocalDateTime.now(), matchDayDto.getId(), matchDayDto.getSpieltagNumber(), teamDto.getId(), teamDto.getAcronym(), teamDto2.getId(), teamDto2.getAcronym());
     final SpielDto testSpiel2 = new SpielDto(null, 2, 3, 3, false, LocalDateTime.now(), matchDayDto.getId(), matchDayDto.getSpieltagNumber(), teamDto1.getId(), teamDto1.getAcronym(), teamDto.getId(), teamDto.getAcronym());
     @Autowired
@@ -82,7 +80,7 @@ public class ContractMatchApiIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isNoContent();
-        Team team = teamRepository.findByName(TEAM_NAME).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME));
+        Team team = teamRepository.findByName(teamDto.getName()).orElseThrow(() -> new EntityNotFoundException(teamDto.getName()));
         Long id = team.getId();
         log.debug("delete team with id::{}", id);
         webClient.delete()
@@ -90,7 +88,7 @@ public class ContractMatchApiIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isNoContent();
-        Team team2 = teamRepository.findByName(TEAM_NAME_2).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME));
+        Team team2 = teamRepository.findByName(teamDto1.getName()).orElseThrow(() -> new EntityNotFoundException(teamDto1.getName()));
         Long id2 = team2.getId();
         log.debug("delete team with id::{}", id2);
         webClient.delete()
@@ -98,7 +96,7 @@ public class ContractMatchApiIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isNoContent();
-        Team team3 = teamRepository.findByName(TEAM_NAME_3).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME));
+        Team team3 = teamRepository.findByName(teamDto2.getName()).orElseThrow(() -> new EntityNotFoundException(teamDto2.getName()));
         Long id3 = team3.getId();
         log.debug("delete team with id::{}", id2);
         webClient.delete()
@@ -186,12 +184,12 @@ public class ContractMatchApiIntegrationTest {
                 .isCreated();
         savedSpieltag = spieltagRepository.findByNumberWithRoundId(TEST_MATCH_DAY, round.getId()).orElseThrow(() -> new EntityNotFoundException(String.valueOf(TEST_MATCH_DAY)));
         assertNotNull(savedSpieltag);
-        savedTeam1 = teamRepository.findByName(TEAM_NAME).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME));
+        savedTeam1 = teamRepository.findByName(teamDto.getName()).orElseThrow(() -> new EntityNotFoundException(teamDto.getName()));
         assertNotNull(savedTeam1);
 
-        savedTeam2 = teamRepository.findByName(TEAM_NAME_2).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME_2));
+        savedTeam2 = teamRepository.findByName(teamDto1.getName()).orElseThrow(() -> new EntityNotFoundException(teamDto1.getName()));
         assertNotNull(savedTeam2);
-        savedTeam3 = teamRepository.findByName(TEAM_NAME_3).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME_3));
+        savedTeam3 = teamRepository.findByName(teamDto2.getName()).orElseThrow(() -> new EntityNotFoundException(teamDto2.getName()));
         assertNotNull(savedTeam3);
         log.debug("end setup");
 
@@ -278,7 +276,7 @@ public class ContractMatchApiIntegrationTest {
         List<Spiel> spiele = spielRepository.findAllForMatchday(spieltag.getId());
         assertNotNull(spiele);
         Spiel spiel = spiele.stream().findFirst().orElseThrow(() -> new EntityNotFoundException(String.valueOf(spieltag.getId())));
-        Team team = teamRepository.findByName(TEAM_NAME_3).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME_2));
+        Team team = teamRepository.findByName(teamDto2.getName()).orElseThrow(() -> new EntityNotFoundException(teamDto2.getName()));
         //change heimTore and set both teams to the same value (TeamA vs TeamA)
         testSpiel1.setId(spiel.getId());
         testSpiel1.setSpielNumber(spiel.getSpielNumber());

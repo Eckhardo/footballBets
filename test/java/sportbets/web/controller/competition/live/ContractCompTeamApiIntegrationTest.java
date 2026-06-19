@@ -40,12 +40,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ContractCompTeamApiIntegrationTest {
     private static final Logger log = LoggerFactory.getLogger(ContractCompTeamApiIntegrationTest.class);
-    private static final String TEAM_NAME = "Eintracht Braunschweig";
-    private static final String TEAM_NAME_2 = "Holstein Kiel";
     final CompetitionFamilyDto compFamilyDto = TestConstants.createValidFamilyDto();
     final CompetitionDto compDto = TestConstants.createValidCompetitionDto();
-    final TeamDto teamDto = new TeamDto(null, TEAM_NAME, "Braunschweig", true);
-    final TeamDto teamDto1 = new TeamDto(null, TEAM_NAME_2, "Kiel", true);
+    final TeamDto teamDto = TestConstants.createValidTeamDto();
+    final TeamDto teamDto1 = TestConstants.createValidTeamDto2();
     @Autowired
     WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();
     @Autowired
@@ -68,7 +66,7 @@ public class ContractCompTeamApiIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isNoContent();
-        Team team = teamRepository.findByName(TEAM_NAME).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME));
+        Team team = teamRepository.findByName(teamDto.getName()).orElseThrow(() -> new EntityNotFoundException(teamDto.getName()));
         Long id = team.getId();
         log.debug("delete team with id::{}", id);
         webClient.delete()
@@ -76,7 +74,7 @@ public class ContractCompTeamApiIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isNoContent();
-        Team team2 = teamRepository.findByName(TEAM_NAME_2).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME));
+        Team team2 = teamRepository.findByName(teamDto1.getName()).orElseThrow(() -> new EntityNotFoundException(teamDto1.getName()));
         Long id2 = team2.getId();
         log.debug("delete team with id::{}", id2);
         webClient.delete()
@@ -127,11 +125,11 @@ public class ContractCompTeamApiIntegrationTest {
                 .isCreated();
         Competition comp = competitionRepository.findByName(compDto.getName()).orElseThrow(() -> new EntityNotFoundException(compDto.getName()));
 
-        Team entity = teamRepository.findByName(TEAM_NAME).orElseThrow(() -> new EntityNotFoundException("Team not found"));
+        Team entity = teamRepository.findByName(teamDto.getName()).orElseThrow(() -> new EntityNotFoundException("Team not found"));
         teamDto.setId(entity.getId());
         CompetitionTeamDto compTeamDto = new CompetitionTeamDto(null, comp.getId(), comp.getName(), teamDto.getId(), teamDto.getAcronym(), true);
 
-        Team entity2 = teamRepository.findByName(TEAM_NAME_2).orElseThrow(() -> new EntityNotFoundException("Team not found"));
+        Team entity2 = teamRepository.findByName(teamDto1.getName()).orElseThrow(() -> new EntityNotFoundException("Team not found"));
         teamDto1.setId(entity2.getId());
         CompetitionTeamDto compTeamDto2 = new CompetitionTeamDto(null, comp.getId(), comp.getName(), teamDto1.getId(), teamDto1.getAcronym(), true);
         log.debug("Post competition team 1{}", compTeamDto);
@@ -159,7 +157,7 @@ public class ContractCompTeamApiIntegrationTest {
     void givenPreloadedData_whenGetSingleTeam_thenResponseContainsFields() {
         log.debug("givenPreloadedData_whenGetSingleTeam_thenResponseContainsFields");
 
-        Team team = teamRepository.findByName(TEAM_NAME).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME));
+        Team team = teamRepository.findByName(teamDto.getName()).orElseThrow(() -> new EntityNotFoundException(teamDto.getName()));
         Long id = team.getId();
         webClient.get()
                 .uri("/teams/" + id)
@@ -170,7 +168,7 @@ public class ContractCompTeamApiIntegrationTest {
                 .jsonPath("$.id")
                 .value(Long.class, equalTo(id))
                 .jsonPath("$.name")
-                .isEqualTo(TEAM_NAME)
+                .isEqualTo(teamDto.getName())
                 .jsonPath("$.acronym")
                 .value(String.class, equalTo(team.getAcronym()));
 
@@ -181,7 +179,7 @@ public class ContractCompTeamApiIntegrationTest {
     @Order(2)
     void whenCompTeamIsUpdated_ThenDetailsHaveChanged() {
         Competition comp = competitionRepository.findByName(compDto.getName()).orElseThrow(() -> new EntityNotFoundException(compDto.getName()));
-        Team team = teamRepository.findByName(TEAM_NAME).orElseThrow(() -> new EntityNotFoundException("entity not found"));
+        Team team = teamRepository.findByName(teamDto.getName()).orElseThrow(() -> new EntityNotFoundException("entity not found"));
         List<CompetitionTeam> compTeams = compTeamRepo.getAllForComp(comp.getId());
         assertNotNull(compTeams);
         CompetitionTeam compTeam = compTeams.stream().findFirst().orElseThrow(() -> new EntityNotFoundException("entity not found"));
@@ -202,7 +200,7 @@ public class ContractCompTeamApiIntegrationTest {
                 .jsonPath("$.compName").isEqualTo(comp.getName());
 
 
-        Team team2 = teamRepository.findByName(TEAM_NAME_2).orElseThrow(() -> new EntityNotFoundException("entity not found"));
+        Team team2 = teamRepository.findByName(teamDto1.getName()).orElseThrow(() -> new EntityNotFoundException("entity not found"));
         CompetitionTeamDto compTeamDto2 = new CompetitionTeamDto(compTeam.getId(), comp.getId(), comp.getName(), team2.getId(), team2.getAcronym(), true);
 
         webClient.put()

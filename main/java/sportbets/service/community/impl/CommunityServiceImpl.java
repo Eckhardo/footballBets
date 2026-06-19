@@ -80,13 +80,23 @@ public class CommunityServiceImpl implements CommunityService {
     @Override
     @Transactional
     public void deleteById(Long id) {
-        communityRepo.deleteById(id);
+        // Idempotent check: If it is already gone, do nothing
+        if (communityRepo.existsById(id)) {
+            communityRepo.deleteById(id);
+        }
+
     }
 
     @Override
     @Transactional
     public void deleteByName(String name) {
-        communityRepo.deleteByName(name);
+        // Idempotent check: If it is already gone, do nothing
+        if (communityRepo.existsByName(name)) {
+            log.debug("Community exist with given name:{}", name);
+            communityRepo.deleteByName(name);
+        }
+        log.debug("Community to be delete:: {}", name);
+
     }
 
     @Override
@@ -100,12 +110,5 @@ public class CommunityServiceImpl implements CommunityService {
 
     }
 
-    /**
-     * @param id
-     * @return
-     */
-    @Override
-    public Optional<Community> findByIdTest(Long id) {
-        return communityRepo.findById(id);
-    }
+
 }

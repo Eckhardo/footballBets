@@ -30,8 +30,8 @@ public class MatchServiceTest {
     private static final Logger log = LoggerFactory.getLogger(MatchServiceTest.class);
     TeamDto savedTeam1 = null;
     TeamDto savedTeam2 = null;
-    TeamDto team = TestConstants.TEAM_DTO_1;
-    TeamDto team1 = TestConstants.TEAM_DTO_2;
+    TeamDto team = TestConstants.createValidTeamDto();
+    TeamDto team1 = TestConstants.createValidTeamDto2();
 
     Spieltag savedMatchday = null;
     CompetitionFamilyDto competitionFamily = TestConstants.createValidFamilyDto();
@@ -76,8 +76,8 @@ public class MatchServiceTest {
 
         log.debug("Delete All Test data");
         familyService.deleteByName(competitionFamily.getName());
-        teamService.deleteByName(TestConstants.TEAM_1.getName());
-        teamService.deleteByName(TestConstants.TEAM_2.getName());
+        teamService.deleteByName(team.getName());
+        teamService.deleteByName(team1.getName());
 
 
     }

@@ -53,7 +53,7 @@ public class CommunityWizardServiceImpl implements CommunityWizardService {
         // prepare competition membership
         CompetitionMembership competitionMembership = new CompetitionMembership(comm, competition);
         Community savedComm = communityRepository.save(comm);
-
+        log.debug("set tipper fields ");
         tipper.setDefaultCommunityId(savedComm.getId());
         tipper.addTipperRole(new TipperRole(communityRole, tipper));
 

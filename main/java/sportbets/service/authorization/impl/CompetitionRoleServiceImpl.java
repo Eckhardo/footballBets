@@ -85,7 +85,10 @@ public class CompetitionRoleServiceImpl implements CompetitionRoleService {
     @Override
     @Transactional
     public void deleteById(Long id) {
-        roleRepository.deleteById(id);
+        // Idempotent check: If it is already gone, do nothing
+        if (roleRepository.existsById(id)) {
+            roleRepository.deleteById(id);
+        }
     }
 
 

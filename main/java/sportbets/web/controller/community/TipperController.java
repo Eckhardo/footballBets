@@ -60,14 +60,11 @@ class TipperController {
 
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<HttpStatus> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         log.debug("TipperController.delete::{}", id);
-        try {
-            tipperService.deleteById(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+
+        tipperService.deleteById(id);
+        return ResponseEntity.noContent().build();
 
     }
 

@@ -92,16 +92,19 @@ public class CompFamilyServiceImpl implements CompFamilyService {
     @Override
     @Transactional
     public void deleteByName(String name) {
-
-        compFamilyRepository.deleteByName(name);
+        // Idempotent check: If it is already gone, do nothing
+        if (compFamilyRepository.existsByName(name)) {
+            compFamilyRepository.deleteByName(name);
+        }
     }
 
     @Override
     @Transactional
     public void deleteById(Long id) {
-
-
-        compFamilyRepository.deleteById(id);
+        // Idempotent check: If it is already gone, do nothing
+        if (compFamilyRepository.existsById(id)) {
+            compFamilyRepository.deleteById(id);
+        }
     }
 
 }

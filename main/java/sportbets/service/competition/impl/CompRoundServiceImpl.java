@@ -84,14 +84,20 @@ public class CompRoundServiceImpl implements CompRoundService {
 
     @Override
     @Transactional
-    public void deleteById(Long id) {
-        roundRepository.deleteById(id);
+    public void deleteByName(String name) {
+        // Idempotent check: If it is already gone, do nothing
+        if (roundRepository.existsByName(name)) {
+            roundRepository.deleteByName(name);
+        }
     }
 
     @Override
     @Transactional
-    public void deleteByName(String name) {
-        roundRepository.deleteByName(name);
+    public void deleteById(Long id) {
+        // Idempotent check: If it is already gone, do nothing
+        if (roundRepository.existsById(id)) {
+            roundRepository.deleteById(id);
+        }
     }
 
 

@@ -148,13 +148,14 @@ public class CompTeamServiceImpl implements CompTeamService {
         return base;
     }
 
-    /**
-     * @param id
-     */
+
     @Override
     @Transactional
     public void deleteById(Long id) {
-        compTeamRepo.deleteById(id);
+        // Idempotent check: If it is already gone, do nothing
+        if (compTeamRepo.existsById(id)) {
+            compTeamRepo.deleteById(id);
+        }
     }
 
     /**

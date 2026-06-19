@@ -287,10 +287,14 @@ public class SpielServiceImpl implements SpielService {
         return base;
     }
 
+
     @Override
     @Transactional
     public void deleteById(Long id) {
-        spielRepo.deleteById(id);
+        // Idempotent check: If it is already gone, do nothing
+        if (spielRepo.existsById(id)) {
+            spielRepo.deleteById(id);
+        }
     }
 
 

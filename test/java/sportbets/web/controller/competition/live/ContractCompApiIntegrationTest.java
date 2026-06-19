@@ -31,11 +31,10 @@ import static org.hamcrest.CoreMatchers.equalTo;
 @ActiveProfiles("test")
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class ContractComApiIntegrationTest {
+public class ContractCompApiIntegrationTest {
 
-    private static final Logger log = LoggerFactory.getLogger(ContractComApiIntegrationTest.class);
+    private static final Logger log = LoggerFactory.getLogger(ContractCompApiIntegrationTest.class);
 
-    private static final String TEST_COMP_2 = "TestLiga: Saison 2026";
     final CompetitionFamilyDto compFamilyDto = TestConstants.createValidFamilyDto();
     final CompetitionDto compDto = TestConstants.createValidCompetitionDto();
     @Autowired
@@ -62,6 +61,7 @@ public class ContractComApiIntegrationTest {
 
     @BeforeEach
     public void setUp() {
+        log.debug("setUp");
         webClient.post()
                 .uri("/families")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -70,17 +70,6 @@ public class ContractComApiIntegrationTest {
                 .expectStatus()
                 .isCreated();
 
-        log.debug("setUp");
-        CompetitionFamily fam = competitionFamilyRepository.findByName(compFamilyDto.getName()).orElseThrow(() -> new EntityNotFoundException(compFamilyDto.getName()));
-        compDto.setFamilyId(fam.getId());
-
-        webClient.post()
-                .uri("/competitions")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(compDto)
-                .exchange()
-                .expectStatus()
-                .isCreated();
 
     }
 
@@ -89,7 +78,7 @@ public class ContractComApiIntegrationTest {
     void createNewComp_withValidCompJsonInput_thenSuccess() {
         CompetitionFamily fam = competitionFamilyRepository.findByName(compFamilyDto.getName()).orElseThrow(() -> new EntityNotFoundException(compFamilyDto.getName()));
         compDto.setFamilyId(fam.getId());
-        compDto.setName(TEST_COMP_2);
+        compDto.setFamilyName(compFamilyDto.getName());
 
         webClient.post()
                 .uri("/competitions")
@@ -102,7 +91,7 @@ public class ContractComApiIntegrationTest {
                 .jsonPath("$.id")
                 .exists()
                 .jsonPath("$.name")
-                .isEqualTo(TEST_COMP_2)
+                .isEqualTo(compDto.getName())
                 .jsonPath("$.winMultiplicator")
                 .isEqualTo(3)
                 .jsonPath("$.remisMultiplicator")
@@ -113,6 +102,27 @@ public class ContractComApiIntegrationTest {
     @Test
     @Order(2)
     void givenPreloadedData_whenGetSingleComp_thenResponseContainsFields() {
+        CompetitionFamily fam = competitionFamilyRepository.findByName(compFamilyDto.getName()).orElseThrow(() -> new EntityNotFoundException(compFamilyDto.getName()));
+        compDto.setFamilyId(fam.getId());
+        compDto.setFamilyName(compFamilyDto.getName());
+
+        webClient.post()
+                .uri("/competitions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(compDto)
+                .exchange()
+                .expectStatus()
+                .isCreated()
+                .expectBody()
+                .jsonPath("$.id")
+                .exists()
+                .jsonPath("$.name")
+                .isEqualTo(compDto.getName())
+                .jsonPath("$.winMultiplicator")
+                .isEqualTo(3)
+                .jsonPath("$.remisMultiplicator")
+                .exists();
+
         Competition entity = repository.findByName(compDto.getName()).orElseThrow(() -> new EntityNotFoundException(compDto.getName()));
         Long id = entity.getId();
         webClient.get()
@@ -139,6 +149,26 @@ public class ContractComApiIntegrationTest {
     @Order(3)
     void updateComp_withValidCompJsonInput_thenSuccess() {
         log.debug("updateComp_withValidCompJsonInput_thenSuccess");
+        CompetitionFamily fam = competitionFamilyRepository.findByName(compFamilyDto.getName()).orElseThrow(() -> new EntityNotFoundException(compFamilyDto.getName()));
+        compDto.setFamilyId(fam.getId());
+        compDto.setFamilyName(compFamilyDto.getName());
+
+        webClient.post()
+                .uri("/competitions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(compDto)
+                .exchange()
+                .expectStatus()
+                .isCreated()
+                .expectBody()
+                .jsonPath("$.id")
+                .exists()
+                .jsonPath("$.name")
+                .isEqualTo(compDto.getName())
+                .jsonPath("$.winMultiplicator")
+                .isEqualTo(3)
+                .jsonPath("$.remisMultiplicator")
+                .exists();
 
         Competition entity = repository.findByName(compDto.getName()).orElseThrow(() -> new EntityNotFoundException(compDto.getName()));
         Long id = entity.getId();
@@ -168,6 +198,27 @@ public class ContractComApiIntegrationTest {
     @Test
     @Order(4)
     void whenCompIdProvided_ThenFetchAllTeams() {
+        CompetitionFamily fam = competitionFamilyRepository.findByName(compFamilyDto.getName()).orElseThrow(() -> new EntityNotFoundException(compFamilyDto.getName()));
+        compDto.setFamilyId(fam.getId());
+        compDto.setFamilyName(compFamilyDto.getName());
+
+        webClient.post()
+                .uri("/competitions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(compDto)
+                .exchange()
+                .expectStatus()
+                .isCreated()
+                .expectBody()
+                .jsonPath("$.id")
+                .exists()
+                .jsonPath("$.name")
+                .isEqualTo(compDto.getName())
+                .jsonPath("$.winMultiplicator")
+                .isEqualTo(3)
+                .jsonPath("$.remisMultiplicator")
+                .exists();
+
         Competition entity = repository.findByName(compDto.getName()).orElseThrow(() -> new EntityNotFoundException(compDto.getName()));
         Long id = entity.getId();
         webClient.get()
@@ -181,6 +232,27 @@ public class ContractComApiIntegrationTest {
     @Test
     @Order(4)
     void whenFindAllForComp_ThenFetchAll() {
+        CompetitionFamily fam = competitionFamilyRepository.findByName(compFamilyDto.getName()).orElseThrow(() -> new EntityNotFoundException(compFamilyDto.getName()));
+        compDto.setFamilyId(fam.getId());
+        compDto.setFamilyName(compFamilyDto.getName());
+
+        webClient.post()
+                .uri("/competitions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(compDto)
+                .exchange()
+                .expectStatus()
+                .isCreated()
+                .expectBody()
+                .jsonPath("$.id")
+                .exists()
+                .jsonPath("$.name")
+                .isEqualTo(compDto.getName())
+                .jsonPath("$.winMultiplicator")
+                .isEqualTo(3)
+                .jsonPath("$.remisMultiplicator")
+                .exists();
+
         Competition entity = repository.findByName(compDto.getName()).orElseThrow(() -> new EntityNotFoundException(compDto.getName()));
 
         webClient.get()
@@ -197,7 +269,7 @@ public class ContractComApiIntegrationTest {
     void createNewComp_withInvalidDtoInput_thenFailure() {
         CompetitionFamily fam = competitionFamilyRepository.findByName(compFamilyDto.getName()).orElseThrow(() -> new EntityNotFoundException(compFamilyDto.getName()));
         compDto.setFamilyId(fam.getId());
-        compDto.setName(TEST_COMP_2);
+        compDto.setFamilyName(compFamilyDto.getName());
 
         webClient.post()
                 .uri("/competitions")
@@ -210,7 +282,7 @@ public class ContractComApiIntegrationTest {
                 .jsonPath("$.id")
                 .exists()
                 .jsonPath("$.name")
-                .isEqualTo(TEST_COMP_2)
+                .isEqualTo(compDto.getName())
                 .jsonPath("$.winMultiplicator")
                 .isEqualTo(3)
                 .jsonPath("$.remisMultiplicator")
@@ -230,7 +302,7 @@ public class ContractComApiIntegrationTest {
                 .value(problem -> {
                     assertThat(problem.getTitle()).isEqualTo("duplicate entity");
                     assertThat(problem.getStatus()).isEqualTo(400);
-                    assertThat(problem.getDetail()).contains("duplicate entity: Competition already exists with given name:TestLiga: Saison 2026");
+                    assertThat(problem.getDetail()).contains("duplicate entity: Competition already exists with given name:TEST Liga Saison 2026");
 
                 });
     }

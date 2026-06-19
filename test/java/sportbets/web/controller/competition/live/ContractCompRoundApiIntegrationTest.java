@@ -34,6 +34,7 @@ import java.time.LocalDateTime;
 public class ContractCompRoundApiIntegrationTest {
 
     private static final Logger log = LoggerFactory.getLogger(ContractCompRoundApiIntegrationTest.class);
+
     private static final int TEST_MATCH_DAY = 1;
     final CompetitionFamilyDto compFamilyDto = TestConstants.createValidFamilyDto();
     final CompetitionDto compDto = TestConstants.createValidCompetitionDto();

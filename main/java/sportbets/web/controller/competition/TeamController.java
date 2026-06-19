@@ -71,12 +71,9 @@ public class TeamController {
     }
 
     @DeleteMapping(value = "/teams/{id}")
-    public ResponseEntity<HttpStatus> delete(@PathVariable Long id) {
-        try {
-            teamService.deleteById(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+
+        teamService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

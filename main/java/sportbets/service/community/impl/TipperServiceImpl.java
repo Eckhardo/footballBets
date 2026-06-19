@@ -128,14 +128,20 @@ class TipperServiceImpl implements TipperService {
     @Override
     @Transactional
     public void deleteById(Long id) {
-        tipperRepo.deleteById(id);
+        // Idempotent check: If it is already gone, do nothing
+        if (tipperRepo.existsById(id)) {
+            tipperRepo.deleteById(id);
+        }
     }
 
 
     @Override
     @Transactional
     public void deleteByUserName(String userName) {
-        tipperRepo.deleteByUsername(userName);
+        // Idempotent check: If it is already gone, do nothing
+        if (tipperRepo.existsByUsername(userName)) {
+            tipperRepo.deleteByUsername(userName);
+        }
     }
 
 

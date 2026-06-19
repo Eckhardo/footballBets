@@ -74,13 +74,10 @@ public class CommunityController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<HttpStatus> delete(@PathVariable Long id) {
+    public ResponseEntity<Void>  delete(@PathVariable Long id) {
         log.debug("CommunityController.delete::{}", id);
-        try {
-            communityService.deleteById(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        // Always returns 204 No Content to maintain idempotency
+        communityService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -100,13 +100,10 @@ public class MatchController {
     }
 
     @DeleteMapping(value = "/matches/{id}")
-    public ResponseEntity<HttpStatus> delete(@PathVariable Long id) {
-        try {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+
             spielService.deleteById(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+            return ResponseEntity.noContent().build();
 
     }
 }

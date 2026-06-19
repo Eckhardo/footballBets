@@ -63,7 +63,10 @@ class TipperRoleServiceImpl implements TipperRoleService {
 
     @Override
     public void deleteById(Long id) {
-        tipperRoleRepo.deleteById(id);
+        // Idempotent t: If it is already gone, do nothing
+        if (tipperRoleRepo.existsById(id)) {
+            tipperRoleRepo.deleteById(id);
+        }
     }
 
     @Override

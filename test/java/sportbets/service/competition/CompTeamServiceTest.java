@@ -30,8 +30,8 @@ public class CompTeamServiceTest {
     private static final Logger log = LoggerFactory.getLogger(CompTeamServiceTest.class);
 
     final CompetitionFamilyDto competitionFamily = TestConstants.createValidFamilyDto();
-    final TeamDto team = TestConstants.TEAM_DTO_1;
-    final TeamDto team1 = TestConstants.TEAM_DTO_2;
+    final TeamDto team = TestConstants.createValidTeamDto();
+    final TeamDto team1 = TestConstants.createValidTeamDto2();
 
     Competition savedComp = null;
     TeamDto savedTeam1 = null;

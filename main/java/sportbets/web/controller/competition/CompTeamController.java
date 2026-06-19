@@ -146,14 +146,10 @@ class CompTeamController {
     }
 
     @DeleteMapping(value = "/compTeam/{id}")
-    public ResponseEntity<HttpStatus> delete(@PathVariable Long id) {
-        try {
-            compTeamService.deleteById(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
 
+        compTeamService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping(value = "/compTeam/{ids}")

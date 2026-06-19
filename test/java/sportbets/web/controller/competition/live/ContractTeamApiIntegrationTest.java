@@ -14,6 +14,7 @@ import sportbets.FootballBetsApplication;
 import sportbets.config.TestProfileLiveTest;
 import sportbets.persistence.entity.competition.Team;
 import sportbets.persistence.repository.competition.TeamRepository;
+import sportbets.testdata.TestConstants;
 import sportbets.web.dto.competition.TeamDto;
 
 import java.util.List;
@@ -30,10 +31,8 @@ import static sportbets.testdata.TestConstants.TEAM_NAME_TEST2;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ContractTeamApiIntegrationTest {
     private static final Logger log = LoggerFactory.getLogger(ContractTeamApiIntegrationTest.class);
-    private static final String TEAM_NAME = TEAM_NAME_TEST1;
-    private static final String TEAM_NAME_2 = TEAM_NAME_TEST2;
-    final TeamDto teamDto = new TeamDto(null, TEAM_NAME, "Team 1", true);
-    final TeamDto teamDto1 = new TeamDto(null, TEAM_NAME_2, "Team 2", true);
+     final TeamDto teamDto = TestConstants.createValidTeamDto();
+    final TeamDto teamDto1 = TestConstants.createValidTeamDto2();
     final TeamDto FRANCE = new TeamDto(null, "TestCountry", "TEST", false);
     @Autowired
     WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();
@@ -71,7 +70,7 @@ public class ContractTeamApiIntegrationTest {
     public void cleanup() {
         // Clean up all entities created during tests
         log.debug("cleanup");
-        Team team = teamRepository.findByName(TEAM_NAME).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME));
+        Team team = teamRepository.findByName(teamDto.getName()).orElseThrow(() -> new EntityNotFoundException(teamDto.getName()));
         Long id = team.getId();
         log.debug("delete team with id::{}", id);
         webClient.delete()
@@ -81,7 +80,7 @@ public class ContractTeamApiIntegrationTest {
                 .isNoContent();
 
 
-        Team team2 = teamRepository.findByName(TEAM_NAME_2).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME));
+        Team team2 = teamRepository.findByName(teamDto1.getName()).orElseThrow(() -> new EntityNotFoundException(teamDto1.getName()));
         Long id2 = team2.getId();
         log.debug("delete team with id::{}", id2);
         webClient.delete()
@@ -90,7 +89,7 @@ public class ContractTeamApiIntegrationTest {
                 .expectStatus()
                 .isNoContent();
 
-        Team team3 = teamRepository.findByName(FRANCE.getName()).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME));
+        Team team3 = teamRepository.findByName(FRANCE.getName()).orElseThrow(() -> new EntityNotFoundException(FRANCE.getName()));
         Long id3 = team3.getId();
         log.debug("delete team with id::{}", id3);
         webClient.delete()
@@ -103,7 +102,7 @@ public class ContractTeamApiIntegrationTest {
     @Test
     @Order(1)
     void givenPreloadedData_whenGetSingleTeam_thenResponseContainsFields() {
-        Team team = teamRepository.findByName(TEAM_NAME).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME));
+        Team team = teamRepository.findByName(teamDto.getName()).orElseThrow(() -> new EntityNotFoundException(teamDto.getName()));
         Long id = team.getId();
         webClient.get()
                 .uri("/teams/" + id)
@@ -114,9 +113,9 @@ public class ContractTeamApiIntegrationTest {
                 .jsonPath("$.id")
                 .value(Long.class, equalTo(id))
                 .jsonPath("$.name")
-                .isEqualTo(TEAM_NAME)
+                .isEqualTo(teamDto.getName())
                 .jsonPath("$.acronym")
-                .isEqualTo("Team 1");
+                .isEqualTo(teamDto.getAcronym());
 
     }
 
@@ -126,7 +125,7 @@ public class ContractTeamApiIntegrationTest {
     void updateTeam_withValidTeamJsonInput_thenSuccess() {
         log.debug("updateTeam_withValidTeamJsonInput_thenSuccess");
 
-        Team team = teamRepository.findByName(TEAM_NAME).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME));
+        Team team = teamRepository.findByName(teamDto.getName()).orElseThrow(() -> new EntityNotFoundException(teamDto.getName()));
         teamDto.setAcronym("Changed Description");
         Long id = team.getId();
         webClient.put()
@@ -140,7 +139,7 @@ public class ContractTeamApiIntegrationTest {
                 .jsonPath("$.id")
                 .exists()
                 .jsonPath("$.name")
-                .isEqualTo(TEAM_NAME)
+                .isEqualTo(teamDto.getName())
                 .jsonPath("$.acronym")
                 .isEqualTo("Changed Description");
 
@@ -149,7 +148,7 @@ public class ContractTeamApiIntegrationTest {
     @Test
     @Order(3)
     void whenCallForAll_ThenNewTeamIsPartOfCollection() {
-        Team team = teamRepository.findByName(TEAM_NAME).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME));
+        Team team = teamRepository.findByName(teamDto.getName()).orElseThrow(() -> new EntityNotFoundException(teamDto.getName()));
         teamDto.setId(team.getId());
 
         webClient.get()
@@ -163,7 +162,7 @@ public class ContractTeamApiIntegrationTest {
     @Test
     @Order(4)
     void whenCallForAllClubs_ThenTeamsArePresentInfCollection() {
-        Team team = teamRepository.findByName(TEAM_NAME).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME));
+        Team team = teamRepository.findByName(teamDto.getName()).orElseThrow(() -> new EntityNotFoundException(teamDto.getName()));
         teamDto.setId(team.getId());
 
         webClient.get()
@@ -183,7 +182,7 @@ public class ContractTeamApiIntegrationTest {
     @Test
     @Order(5)
     void whenCallForAllNations_ThenNationsArePresentInfCollection() {
-        Team team = teamRepository.findByName(TEAM_NAME).orElseThrow(() -> new EntityNotFoundException(TEAM_NAME));
+        Team team = teamRepository.findByName(teamDto.getName()).orElseThrow(() -> new EntityNotFoundException(this.teamDto.getName()));
         teamDto.setId(team.getId());
 
         webClient.get()

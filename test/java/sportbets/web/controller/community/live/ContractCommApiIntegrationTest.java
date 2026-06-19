@@ -22,8 +22,8 @@ import static org.assertj.core.api.Assertions.assertThat;
         classes = {FootballBetsApplication.class, TestProfileLiveTest.class})
 @ActiveProfiles("test")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class ContractCommunityApiIntegrationTest {
-    private static final Logger log = LoggerFactory.getLogger(ContractCommunityApiIntegrationTest.class);
+public class ContractCommApiIntegrationTest {
+    private static final Logger log = LoggerFactory.getLogger(ContractCommApiIntegrationTest.class);
 
     CommunityDto communityDto = TestConstants.createValidCommunityDto();
     CommunityDto communityDto2 = TestConstants.createValidCommunityDto2();

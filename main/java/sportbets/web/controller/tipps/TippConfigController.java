@@ -51,14 +51,11 @@ public class TippConfigController {
 
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<HttpStatus> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         log.debug(".delete::{}", id);
-        try {
-            tippConfigService.deleteById(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+
+        tippConfigService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

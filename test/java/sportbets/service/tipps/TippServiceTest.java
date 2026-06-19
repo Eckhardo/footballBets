@@ -89,8 +89,8 @@ public class TippServiceTest {
         matchDayDto.setCompRoundId(savedCompRound.getId());
         matchDayDto.setCompRoundName(savedCompRound.getName());
         savedMatchday = spieltagService.save(matchDayDto);
-        TeamDto team = TestConstants.TEAM_DTO_1;
-        TeamDto team1 = TestConstants.TEAM_DTO_2;
+        TeamDto team = TestConstants.createValidTeamDto();
+        TeamDto team1 = TestConstants.createValidTeamDto2();
 
         savedTeamDto = teamService.save(team);
         savedTeamDto2 = teamService.save(team1);

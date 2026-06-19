@@ -29,14 +29,9 @@ public class TestConstants {
 
     public static final String TEAM_NAME_TEST2 = "TestName2";
     public static final String TEAM_NAME_TEST3 = "TestName3";
-
-    public static final TeamDto TEAM_DTO_1 = new TeamDto(null, TEAM_NAME_TEST1, "ZAC", true);
-    public static final TeamDto TEAM_DTO_2 = new TeamDto(null, TEAM_NAME_TEST2, "RAZ", true);
-    public static final SpielDto TEST_SPIEL_DTO = new SpielDto(null, 1, 3, 1, true, LocalDateTime.now(), null, createValidSpieltagDto().getSpieltagNumber(), null, TEAM_DTO_1.getAcronym(), null, TEAM_DTO_2.getAcronym());
-    public static final SpielDto TEST_SPIEL_DTO_2 = new SpielDto(null, 2, 2, 2, true, LocalDateTime.now(), null, createValidSpieltagDto().getSpieltagNumber(), null, TEAM_DTO_2.getAcronym(), null, TEAM_DTO_1.getAcronym());
-    public static final Team TEAM_1 = new Team(TEAM_NAME_TEST1, "ZAC", true);
-    public static final Team TEAM_2 = new Team(TEAM_NAME_TEST2, "RAZ", true);
-    public static final Spiel TEST_SPIEL_ENTITY = new Spiel(createValidSpieltag(), 1, LocalDateTime.now(), TEAM_1, TEAM_2, 2, 1, true);
+    public static final SpielDto TEST_SPIEL_DTO = new SpielDto(null, 1, 3, 1, true, LocalDateTime.now(), null, createValidSpieltagDto().getSpieltagNumber(), null, createValidTeamDto().getAcronym(), null, createValidTeamDto2().getAcronym());
+    public static final SpielDto TEST_SPIEL_DTO_2 = new SpielDto(null, 2, 2, 2, true, LocalDateTime.now(), null, createValidSpieltagDto().getSpieltagNumber(), null, createValidTeamDto2().getAcronym(), null, createValidTeamDto().getAcronym());
+    public static final Spiel TEST_SPIEL_ENTITY = new Spiel(createValidSpieltag(), 1, LocalDateTime.now(), createValidTeam(), createValidTeam2(), 2, 1, true);
     public static final TippModus TEST_TIPP_MODUS_ENTITY = new TippModusPoint("myNamePoint", TippModusType.TIPPMODUS_POINT, 1, createValidCommunity(), 4);
     public static final Tipp TEST_TIPP_ENTITY = new Tipp(TEST_SPIEL_ENTITY, createValidCommunityMembership(), TEST_TIPP_MODUS_ENTITY, 4, 0, 0, 4);
     public static final TippModusDto TEST_TIPP_MODUS_DTO = new TippModusPointDto(null, "myNamePoint", TippModusType.TIPPMODUS_POINT.getDisplayName(), 1, null, createValidCommunityDto().getName(), 4);
@@ -86,21 +81,44 @@ public class TestConstants {
     }
 
     public static SpielDto createValidSpielDto() {
-        return new SpielDto(null, 1, 3, 1, true, LocalDateTime.now(), null, createValidSpieltagDto().getSpieltagNumber(), null, TEAM_DTO_1.getAcronym(), null, TEAM_DTO_2.getAcronym());
+        return new SpielDto(null, 1, 3, 1, true, LocalDateTime.now(), null, createValidSpieltagDto().getSpieltagNumber(), null, createValidTeamDto().getAcronym(), null, createValidTeamDto2().getAcronym());
 
 
     }
 
     public static SpielDto createValidSpielDto2() {
-        return new SpielDto(null, 2, 2, 2, true, LocalDateTime.now(), null, createValidSpieltagDto().getSpieltagNumber(), null, TEAM_DTO_2.getAcronym(), null, TEAM_DTO_1.getAcronym());
+        return new SpielDto(null, 2, 2, 2, true, LocalDateTime.now(), null, createValidSpieltagDto().getSpieltagNumber(), null, createValidTeamDto2().getAcronym(), null, createValidTeamDto().getAcronym());
 
 
     }
 
     public static Spiel createValidSpiel() {
-        return new Spiel(createValidSpieltag(), 1, LocalDateTime.now(), TEAM_1, TEAM_2, 2, 1, true);
+        return new Spiel(createValidSpieltag(), 1, LocalDateTime.now(), createValidTeam(), createValidTeam2(), 2, 1, true);
 
     }
+
+    public static TeamDto createValidTeamDto() {
+        return new TeamDto(null, TEAM_NAME_TEST1, "ZAC", true);
+
+    }
+
+    public static TeamDto createValidTeamDto2() {
+        return new TeamDto(null, TEAM_NAME_TEST2, "RAZ", true);
+
+    }
+
+    public static TeamDto createValidTeamDto3() {
+        return  new TeamDto(null, TEAM_NAME_TEST3, "PRE", true);
+
+    }
+    public static Team createValidTeam() {
+        return new Team(TEAM_NAME_TEST1, "ZAC", true);
+    }
+
+    public static Team createValidTeam2() {
+        return new Team(TEAM_NAME_TEST2, "RAZ", true);
+    }
+
 
     public static CommunityDto createValidCommunityDto() {
         return new CommunityDto(null, COMM_TEST, "Description of Community");

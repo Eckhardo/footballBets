@@ -80,13 +80,10 @@ public class CompRoundController {
     }
 
     @DeleteMapping(value = "/rounds/{id}")
-    public ResponseEntity<HttpStatus> delete(@PathVariable Long id) {
-        try {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+
             roundService.deleteById(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+            return ResponseEntity.noContent().build();
 
     }
 

@@ -13,10 +13,12 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import sportbets.FootballBetsApplication;
 import sportbets.config.TestProfileLiveTest;
+import sportbets.persistence.builder.TipperConstants;
 import sportbets.persistence.entity.community.Community;
 import sportbets.persistence.entity.community.Tipper;
 import sportbets.persistence.repository.community.CommunityRepository;
 import sportbets.persistence.repository.community.TipperRepository;
+import sportbets.testdata.TestConstants;
 import sportbets.web.dto.community.CommunityDto;
 import sportbets.web.dto.community.TipperDto;
 
@@ -32,11 +34,9 @@ public class ContractTipperApiIntegrationTest {
 
     private static final Logger log = LoggerFactory.getLogger(ContractTipperApiIntegrationTest.class);
 
-    private static final String TEST_COMM = "My Test Community";
-    private static final String TEST_USERNAME = "Testuser";
-    CommunityDto communityDto = new CommunityDto(null, TEST_COMM, "Description of Community");
+    CommunityDto communityDto = TestConstants.createValidCommunityDto();
 
-    TipperDto testTipper = new TipperDto(null, "Eckhard", "Kirschning", TEST_USERNAME, "passwd", "hint", "eki@gmx.de", null);
+    TipperDto testTipper = TipperConstants.createValidTipperDto();
     Community savedCommunity = null;
 
     @Autowired
@@ -50,7 +50,7 @@ public class ContractTipperApiIntegrationTest {
     public void cleanup() {
         // Clean up all entities created during tests
         log.debug("cleanup");
-        Community savedComm = communityRepository.findByName(TEST_COMM).orElseThrow();
+        Community savedComm = communityRepository.findByName(communityDto.getName()).orElseThrow();
         webClient.delete()
                 .uri("/communities/" + savedComm.getId())
                 .exchange()
@@ -58,7 +58,7 @@ public class ContractTipperApiIntegrationTest {
                 .isNoContent();
 
 
-        Tipper tipper = tipperRepository.findByUsername(TEST_USERNAME).orElseThrow(() -> new EntityNotFoundException(TEST_USERNAME));
+        Tipper tipper = tipperRepository.findByUsername(testTipper.getUsername()).orElseThrow(() -> new EntityNotFoundException(testTipper.getUsername()));
         Long id = tipper.getId();
         log.debug("delete tipper with id::{}", id);
         webClient.delete()
@@ -83,14 +83,14 @@ public class ContractTipperApiIntegrationTest {
                 .jsonPath("$.id")
                 .exists()
                 .jsonPath("$.name")
-                .isEqualTo(TEST_COMM);
+                .isEqualTo(communityDto.getName());
     }
 
 
     @Test
     @Order(1)
     void createNewTipper_withValidDtoInput_thenSuccess() {
-        savedCommunity = communityRepository.findByName(TEST_COMM).orElseThrow();
+        savedCommunity = communityRepository.findByName(communityDto.getName()).orElseThrow();
 
         assertThat(testTipper.getUsername(), notNullValue());
         testTipper.setDefaultCommunityId(savedCommunity.getId());
@@ -106,14 +106,14 @@ public class ContractTipperApiIntegrationTest {
                 .jsonPath("$.id")
                 .exists()
                 .jsonPath("$.username")
-                .isEqualTo(TEST_USERNAME);
+                .isEqualTo(testTipper.getUsername());
 
     }
 
     @Test
     @Order(2)
     void createNewTipper_withInvalidDtoInput_thenFailure() {
-        savedCommunity = communityRepository.findByName(TEST_COMM).orElseThrow();
+        savedCommunity = communityRepository.findByName(communityDto.getName()).orElseThrow();
 
         testTipper.setDefaultCommunityId(savedCommunity.getId());
         testTipper.setEmail("abc.gmx.de");
@@ -138,14 +138,14 @@ public class ContractTipperApiIntegrationTest {
                 .jsonPath("$.id")
                 .exists()
                 .jsonPath("$.username")
-                .isEqualTo(TEST_USERNAME);
+                .isEqualTo(testTipper.getUsername());
 
     }
 
     @Test
     @Order(3)
     void updateTipper_withValidInput_thenSuccess() {
-        savedCommunity = communityRepository.findByName(TEST_COMM).orElseThrow();
+        savedCommunity = communityRepository.findByName(communityDto.getName()).orElseThrow();
 
         testTipper.setDefaultCommunityId(savedCommunity.getId());
         String updatedName = "Werner";
@@ -162,10 +162,10 @@ public class ContractTipperApiIntegrationTest {
                 .jsonPath("$.id")
                 .exists()
                 .jsonPath("$.username")
-                .isEqualTo(TEST_USERNAME);
+                .isEqualTo(testTipper.getUsername());
 
 
-        Tipper tipper = tipperRepository.findByUsername(TEST_USERNAME).orElseThrow(() -> new EntityNotFoundException(TEST_USERNAME));
+        Tipper tipper = tipperRepository.findByUsername(testTipper.getUsername()).orElseThrow(() -> new EntityNotFoundException(testTipper.getUsername()));
         testTipper.setId(tipper.getId());
         testTipper.setFirstname(updatedName);
 
@@ -181,7 +181,7 @@ public class ContractTipperApiIntegrationTest {
                 .jsonPath("$.id")
                 .exists()
                 .jsonPath("$.username")
-                .isEqualTo(TEST_USERNAME)
+                .isEqualTo(testTipper.getUsername())
                 .jsonPath("$.firstname")
                 .isEqualTo(updatedName)
                 .jsonPath("$.lastname")
@@ -207,9 +207,9 @@ public class ContractTipperApiIntegrationTest {
                 .jsonPath("$.id")
                 .exists()
                 .jsonPath("$.username")
-                .isEqualTo(TEST_USERNAME);
+                .isEqualTo(testTipper.getUsername());
 
-        Tipper tipper = tipperRepository.findByUsername(TEST_USERNAME).orElseThrow(() -> new EntityNotFoundException(TEST_USERNAME));
+        Tipper tipper = tipperRepository.findByUsername(testTipper.getUsername()).orElseThrow(() -> new EntityNotFoundException(testTipper.getUsername()));
         testTipper.setId(tipper.getId());
 
         webClient.delete()
@@ -231,7 +231,7 @@ public class ContractTipperApiIntegrationTest {
                 .jsonPath("$.id")
                 .exists()
                 .jsonPath("$.username")
-                .isEqualTo(TEST_USERNAME);
+                .isEqualTo(testTipper.getUsername());
 
 
     }
@@ -239,7 +239,7 @@ public class ContractTipperApiIntegrationTest {
     @Test
     @Order(2)
     void createDuplicateTipper_withSameUserNane_thenFailure() {
-        savedCommunity = communityRepository.findByName(TEST_COMM).orElseThrow();
+        savedCommunity = communityRepository.findByName(communityDto.getName()).orElseThrow();
 
         testTipper.setDefaultCommunityId(savedCommunity.getId());
 
@@ -254,7 +254,7 @@ public class ContractTipperApiIntegrationTest {
                 .jsonPath("$.id")
                 .exists()
                 .jsonPath("$.username")
-                .isEqualTo(TEST_USERNAME);
+                .isEqualTo(testTipper.getUsername());
 
         webClient.post()
                 .uri("/tipper")

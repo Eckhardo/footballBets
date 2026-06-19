@@ -22,4 +22,5 @@ public interface TipperRepository extends JpaRepository<Tipper, Long> {
             " where t.username =:username ")
     Optional<Tipper> checkUserName(String username);
 
+    boolean existsByUsername(String userName);
 }

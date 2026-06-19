@@ -63,4 +63,6 @@ public interface CompetitionRepository extends JpaRepository<Competition, Long> 
 
     @Query(" select c from Competition c join fetch c.competitionFamily   ")
     List<Competition> findAllComps();
+
+    boolean existsByName(String name);
 }

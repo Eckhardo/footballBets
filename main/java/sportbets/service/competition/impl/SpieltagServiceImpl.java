@@ -94,9 +94,11 @@ public class SpieltagServiceImpl implements SpieltagService {
 
     @Override
     @Transactional
-
     public void deleteById(Long id) {
-        spieltagRepository.deleteById(id);
+        // Idempotent check: If it is already gone, do nothing
+        if (spieltagRepository.existsById(id)) {
+            spieltagRepository.deleteById(id);
+        }
     }
 
     @Override

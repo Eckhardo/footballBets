@@ -88,14 +88,20 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     @Transactional
-    public void deleteById(Long id) {
-        teamRepository.deleteById(id);
+    public void deleteByName(String name) {
+        // Idempotent check: If it is already gone, do nothing
+        if (teamRepository.existsByName(name)) {
+            teamRepository.deleteByName(name);
+        }
     }
 
     @Override
     @Transactional
-    public void deleteByName(String name) {
-        teamRepository.deleteByName(name);
+    public void deleteById(Long id) {
+        // Idempotent check: If it is already gone, do nothing
+        if (teamRepository.existsById(id)) {
+            teamRepository.deleteById(id);
+        }
     }
 
     @Override

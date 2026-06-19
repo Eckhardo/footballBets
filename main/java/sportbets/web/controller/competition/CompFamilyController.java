@@ -69,14 +69,11 @@ public class CompFamilyController {
     }
 
     @DeleteMapping(value = "/families/{id}")
-    public ResponseEntity<HttpStatus> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         log.info("CompFamilyController.delete::{}", id);
-        try {
-            compFamilyService.deleteById(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+
+        compFamilyService.deleteById(id);
+        return ResponseEntity.noContent().build();
 
     }
 

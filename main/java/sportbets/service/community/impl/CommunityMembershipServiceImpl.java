@@ -81,7 +81,10 @@ public class CommunityMembershipServiceImpl implements CommunityMembershipServic
     @Override
     @Transactional
     public void deleteById(Long id) {
-        membershipRepository.deleteById(id);
+        // Idempotent check: If it is already gone, do nothing
+        if (membershipRepository.existsById(id)) {
+            membershipRepository.deleteById(id);
+        }
     }
 
 

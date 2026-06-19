@@ -102,11 +102,6 @@ public class CompServiceImpl implements CompService {
     }
 
 
-    @Override
-    @Transactional
-    public void deleteById(Long id) {
-        compRepository.deleteById(id);
-    }
 
     @Override
     public List<Competition> getAll() {
@@ -147,11 +142,22 @@ public class CompServiceImpl implements CompService {
     public List<Competition> findByFamilyId(Long familyId) {
         return compRepository.findByFamilyId(familyId);
     }
-
     @Override
     @Transactional
     public void deleteByName(String name) {
-        compRepository.deleteByName(name);
+        // Idempotent check: If it is already gone, do nothing
+        if (compRepository.existsByName(name)) {
+            compRepository.deleteByName(name);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(Long id) {
+        // Idempotent check: If it is already gone, do nothing
+        if (compRepository.existsById(id)) {
+            compRepository.deleteById(id);
+        }
     }
 
     /**

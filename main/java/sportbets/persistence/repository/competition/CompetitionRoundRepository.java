@@ -19,4 +19,5 @@ public interface CompetitionRoundRepository extends JpaRepository<CompetitionRou
 
     void deleteByName(String name);
 
+    boolean existsByName(String name);
 }
