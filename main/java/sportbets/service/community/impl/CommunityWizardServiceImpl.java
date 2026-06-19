@@ -56,6 +56,7 @@ public class CommunityWizardServiceImpl implements CommunityWizardService {
 
         tipper.setDefaultCommunityId(savedComm.getId());
         tipper.addTipperRole(new TipperRole(communityRole, tipper));
+
         tipperRepository.save(tipper);
 
         return new CommunityWizardRecord(savedComm.getName(), savedComm.getDescription(), competition.getId(), competition.getName(), tipper.getUsername());

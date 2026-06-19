@@ -17,14 +17,16 @@ import java.util.Set;
 @Table(name = "community")
 public class Community {
     private static final Logger log = LoggerFactory.getLogger(Community.class);
-    private final LocalDateTime createdOn = LocalDateTime.now();
-    @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    Set<CommunityRole> communityRoles = new HashSet<>();
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String description;
+    private final LocalDateTime createdOn = LocalDateTime.now();
+
+
     @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private final Set<CommunityMembership> communityMemberships = new HashSet<>();
 
@@ -34,6 +36,8 @@ public class Community {
     @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private final Set<TippModus> tippModi = new HashSet<>();
 
+    @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    Set<CommunityRole> communityRoles = new HashSet<>();
 
     public Community() {
 
@@ -129,6 +133,13 @@ public class Community {
         this.getCompetitionMemberships().add(compMemb);
     }
 
+    //------------------------------------------- Business methods -----------------------------------------
+    boolean isCommunityAdmin() {
+        return communityRoles.stream().anyMatch(item -> item.getName().equals(this.name));
+
+    }
+
+    //---------------------------------------- - equals hascode and toString -----------------------------------
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
