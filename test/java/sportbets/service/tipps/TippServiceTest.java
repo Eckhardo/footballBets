@@ -95,13 +95,13 @@ public class TippServiceTest {
         savedTeamDto = teamService.save(team);
         savedTeamDto2 = teamService.save(team1);
 
-        SpielDto spielDto = TestConstants.TEST_SPIEL_DTO;
+        SpielDto spielDto = TestConstants.createValidSpielDto();
         spielDto.setHeimTeamId(savedTeamDto.getId());
         spielDto.setGastTeamId(savedTeamDto2.getId());
         spielDto.setSpieltagId(savedMatchday.getId());
         savedSpiel = matchService.save(spielDto);
 
-        SpielDto spielDto2 = TestConstants.TEST_SPIEL_DTO_2;
+        SpielDto spielDto2 = TestConstants.createValidSpielDto2();
         spielDto2.setHeimTeamId(savedTeamDto2.getId());
         spielDto2.setGastTeamId(savedTeamDto.getId());
         spielDto2.setSpieltagId(savedMatchday.getId());
@@ -111,11 +111,12 @@ public class TippServiceTest {
         assertNotNull(savedCommunity);
         CompetitionMembershipDto competitionMembershipDto = new CompetitionMembershipDto(savedComp.getId(), savedComp.getName(), savedCommunity.getId(), savedCommunity.getName());
         savedCompMemb = competitionMembershipService.save(competitionMembershipDto);
-        TippModusTotoDto tippModusTotoDto = new TippModusTotoDto(null, "TotoTest", TippModusType.TIPPMODUS_TOTO.getDisplayName(), 1, savedCommunity.getId(), savedCommunity.getName());
-
+        TippModusTotoDto tippModusTotoDto = TestConstants.createValidTippModusTotoDto();
+        tippModusTotoDto.setCommId(savedCommunity.getId());
         savedTippModusToto = (TippModusTotoDto) tippModusService.save(tippModusTotoDto);
 
-        TippModusPointDto tippModusPointDto = new TippModusPointDto(null, "PunkteTest", TippModusType.TIPPMODUS_POINT.getDisplayName(), 1, savedCommunity.getId(), savedCommunity.getName(), 4);
+        TippModusPointDto tippModusPointDto = TestConstants.createValidTippModusPointDto();
+        tippModusPointDto.setCommId(savedCommunity.getId());
         savedTippModusPoint = (TippModusPointDto) tippModusService.save(tippModusPointDto);
 
         TipperDto testTipper = TipperConstants.createValidTipperDto();

@@ -28,18 +28,7 @@ import static sportbets.testdata.TestConstants.createValidCompetitionDto;
 public class MatchServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(MatchServiceTest.class);
-    TeamDto savedTeam1 = null;
-    TeamDto savedTeam2 = null;
-    TeamDto team = TestConstants.createValidTeamDto();
-    TeamDto team1 = TestConstants.createValidTeamDto2();
 
-    Spieltag savedMatchday = null;
-    CompetitionFamilyDto competitionFamily = TestConstants.createValidFamilyDto();
-    CompetitionDto compDto = createValidCompetitionDto();
-    CompetitionRoundDto compRoundDto = TestConstants.createValidCompRoundDto();
-    SpieltagDto spieltagDto = TestConstants.createValidSpieltagDto();
-    Competition savedComp = null;
-    CompetitionRound savedCompRound = null;
     @Autowired
     private CompFamilyService familyService; // Real service being tested
     @Autowired
@@ -55,6 +44,19 @@ public class MatchServiceTest {
     @Autowired
     private CompTableService compTableService;
 
+    TeamDto savedTeam1 = null;
+    TeamDto savedTeam2 = null;
+    TeamDto team = TestConstants.createValidTeamDto();
+    TeamDto team1 = TestConstants.createValidTeamDto2();
+    SpielDto testSpiel1=TestConstants.createValidSpielDto();
+    SpielDto testSpiel2=TestConstants.createValidSpielDto2();
+    Spieltag savedMatchday = null;
+    CompetitionFamilyDto competitionFamily = TestConstants.createValidFamilyDto();
+    CompetitionDto compDto = createValidCompetitionDto();
+    CompetitionRoundDto compRoundDto = TestConstants.createValidCompRoundDto();
+    SpieltagDto spieltagDto = TestConstants.createValidSpieltagDto();
+    Competition savedComp = null;
+    CompetitionRound savedCompRound = null;
     @BeforeEach
     public void setup() {
 
@@ -65,10 +67,18 @@ public class MatchServiceTest {
         savedCompRound = compRoundService.save(compRoundDto);
         spieltagDto.setCompRoundId(savedCompRound.getId());
         spieltagDto.setCompRoundName(savedCompRound.getName());
+
         savedMatchday = spieltagService.save(spieltagDto);
         savedTeam1 = teamService.save(team);
         savedTeam2 = teamService.save(team1);
-
+        testSpiel1.setSpieltagNumber(spieltagDto.getSpieltagNumber());
+        testSpiel1.setSpieltagId(savedMatchday.getId());
+        testSpiel1.setHeimTeamId(savedTeam1.getId());
+        testSpiel1.setGastTeamId(savedTeam2.getId());
+        testSpiel2.setSpieltagNumber(spieltagDto.getSpieltagNumber());
+        testSpiel2.setSpieltagId(savedMatchday.getId());
+        testSpiel2.setHeimTeamId(savedTeam2.getId());
+        testSpiel2.setGastTeamId(savedTeam1.getId());
     }
 
     @AfterEach
@@ -85,7 +95,6 @@ public class MatchServiceTest {
     @Test
     @Order(1)
     void whenValidMatch_thenMatchShouldBeSaved() {
-        SpielDto testSpiel1 = new SpielDto(null, 1, 3, 1, true, LocalDateTime.now(), savedMatchday.getId(), savedMatchday.getSpieltagNumber(), savedTeam1.getId(), savedTeam1.getAcronym(), savedTeam2.getId(), savedTeam2.getAcronym());
 
         Spiel savedMatch = matchService.save(testSpiel1);
         assertThat(savedMatch.getId()).isNotNull();
@@ -118,8 +127,7 @@ public class MatchServiceTest {
     @Test
     @Order(2)
     void whenValidMatch_thenMatchShouldBeUpdated() {
-        SpielDto testSpiel1 = new SpielDto(null, 1, 3, 1, true, LocalDateTime.now(), savedMatchday.getId(), savedMatchday.getSpieltagNumber(), savedTeam1.getId(), savedTeam1.getAcronym(), savedTeam2.getId(), savedTeam2.getAcronym());
-        Spiel savedMatch = matchService.save(testSpiel1);
+         Spiel savedMatch = matchService.save(testSpiel1);
         SpielFormula heimFormula = savedMatch.getSpielFormulaForHeim().orElseThrow();
         assertNotNull(heimFormula);
         assertThat(1).isEqualTo(heimFormula.getWon());
@@ -169,10 +177,7 @@ public class MatchServiceTest {
     @Test
     @Order(3)
     void whenValidMatchDay_thenMatchesShouldBeRetrieved() {
-
-        SpielDto testSpiel1 = new SpielDto(null, 1, 3, 1, true, LocalDateTime.now(), savedMatchday.getId(), savedMatchday.getSpieltagNumber(), savedTeam1.getId(), savedTeam1.getAcronym(), savedTeam2.getId(), savedTeam2.getAcronym());
-        SpielDto testSpiel2 = new SpielDto(null, 2, 3, 1, true, LocalDateTime.now(), savedMatchday.getId(), savedMatchday.getSpieltagNumber(), savedTeam2.getId(), savedTeam2.getAcronym(), savedTeam1.getId(), savedTeam1.getAcronym());
-        Spiel savedMatch = matchService.save(testSpiel1);
+     Spiel savedMatch = matchService.save(testSpiel1);
         Spiel savedMatch2 = matchService.save(testSpiel2);
         List<Spiel> spiels = matchService.getAllForMatchday(savedMatchday.getId());
         assertThat(spiels.size()).isEqualTo(2);

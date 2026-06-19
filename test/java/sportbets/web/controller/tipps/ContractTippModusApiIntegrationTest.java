@@ -49,9 +49,9 @@ public class ContractTippModusApiIntegrationTest {
 
     @Autowired
     TippModusRepository tippModusRepository;
-    TippModusTotoDto totoTest = new TippModusTotoDto(null, "TotoTest", TippModusType.TIPPMODUS_TOTO.getDisplayName(), 1, null, communityDto.getName());
-    TippModusResultDto resultTest = new TippModusResultDto(null, "ErgebnisTest", TippModusType.TIPPMODUS_RESULT.getDisplayName(), 1, null, communityDto.getName(), 3, 1);
-    TippModusPointDto pointTest = new TippModusPointDto(null, "PunkteTest", TippModusType.TIPPMODUS_POINT.getDisplayName(), 1, null, communityDto.getName(), 4);
+    private final TippModusTotoDto totoTest = TestConstants.createValidTippModusTotoDto();
+    private final TippModusResultDto resultTest = TestConstants.createValidTippModusResultDto();
+    private final TippModusPointDto pointTest = TestConstants.createValidTippModusPointDto();
 
     @AfterEach
     public void cleanup() {

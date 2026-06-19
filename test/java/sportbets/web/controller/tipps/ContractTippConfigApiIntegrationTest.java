@@ -62,9 +62,8 @@ public class ContractTippConfigApiIntegrationTest {
     TippModusRepository tippModusRepository;
     CommunityDto communityDto = TestConstants.createValidCommunityDto();
 
-    final TippModusResultDto resultTest = new TippModusResultDto(null, "ErgebnisTest", TippModusType.TIPPMODUS_RESULT.getDisplayName(), 1, null, communityDto.getName(), 3, 1);
-    final TippModusPointDto pointTest = new TippModusPointDto(null, "PunkteTest", TippModusType.TIPPMODUS_POINT.getDisplayName(), 1, null, communityDto.getName(), 4);
-
+    final TippModusResultDto resultTest = TestConstants.createValidTippModusResultDto();
+    final TippModusPointDto pointTest = TestConstants.createValidTippModusPointDto();
 
     // saved Entities
     Spieltag savedMatchday;
@@ -253,19 +252,5 @@ public class ContractTippConfigApiIntegrationTest {
                 .jsonPath("$.id")
                 .exists();
 
-
-//        TippConfigDto tippConfigDto2 = new TippConfigDto(null, savedoCompMemb.getId(), savedMatchday.getId(), savedMatchday.getSpieltagNumber(), savedResultModus.getId());
-//        webClient.post()
-//                .uri("/tippConfig")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .bodyValue(tippConfigDto2)
-//                .exchange()
-//                .expectStatus()
-//                .isCreated()
-//                .expectBody()
-//                .jsonPath("$.spieltagNumber")
-//                .exists()
-//                .jsonPath("$.id")
-//                .exists();
     }
 }

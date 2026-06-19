@@ -71,11 +71,13 @@ public class TippConfigServiceTest {
         matchDayDto.setCompRoundName(savedCompRound.getName());
 
         savedMatchday = spieltagService.save(matchDayDto);
-        CommunityDto commDto = new CommunityDto(null, communityDto.getName(), "Description of Community");
+        CommunityDto commDto = TestConstants.createValidCommunityDto();
         Community savedComm = communityService.save(commDto);
         CompetitionMembershipDto competitionMembershipDto = new CompetitionMembershipDto(savedComp.getId(), savedComp.getName(), savedComm.getId(), savedComm.getName());
         savedCompMemb = membershipService.save(competitionMembershipDto);
-        TippModusTotoDto tippModusTotoDto = new TippModusTotoDto(null, "TotoTest", TippModusType.TIPPMODUS_TOTO.getDisplayName(), 1, savedComm.getId(), savedComm.getName());
+        TippModusTotoDto tippModusTotoDto = TestConstants.createValidTippModusTotoDto();
+        tippModusTotoDto.setCommId(savedComm.getId());
+        tippModusTotoDto.setCommName(savedComm.getName());
         savedTippModus = (TippModusTotoDto) tippModusService.save(tippModusTotoDto);
 
     }

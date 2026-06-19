@@ -6,35 +6,31 @@ import sportbets.persistence.entity.community.CommunityMembership;
 import sportbets.persistence.entity.competition.*;
 import sportbets.persistence.entity.competition.enums.Country;
 import sportbets.persistence.entity.tipps.Tipp;
-import sportbets.persistence.entity.tipps.TippModus;
 import sportbets.persistence.entity.tipps.TippModusPoint;
+import sportbets.persistence.entity.tipps.TippModusResult;
+import sportbets.persistence.entity.tipps.TippModusToto;
 import sportbets.persistence.entity.tipps.enums.TippModusType;
 import sportbets.web.dto.community.CommunityDto;
 import sportbets.web.dto.community.CommunityMembershipDto;
 import sportbets.web.dto.competition.*;
-import sportbets.web.dto.tipps.TippModusDto;
 import sportbets.web.dto.tipps.TippModusPointDto;
+import sportbets.web.dto.tipps.TippModusResultDto;
+import sportbets.web.dto.tipps.TippModusTotoDto;
 
 import java.time.LocalDateTime;
 
 public class TestConstants {
 
-    public static final String COMM_TEST = "Test Community";
-    public static final String COMM_TEST_2 = "Test Community 2";
-    public static final String COMP_FAM_TEST = "TEST Liga";
-    public static final String COMP_TEST = "TEST Liga Saison 2026";
-    public static final String COMP_TEST_2 = "TEST Liga Saison 2027";
-    public static final String COMP_ROUND_TEST = "Test Comp Round";
-    public static final String TEAM_NAME_TEST1 = "TestName";
-
-    public static final String TEAM_NAME_TEST2 = "TestName2";
-    public static final String TEAM_NAME_TEST3 = "TestName3";
-    public static final SpielDto TEST_SPIEL_DTO = new SpielDto(null, 1, 3, 1, true, LocalDateTime.now(), null, createValidSpieltagDto().getSpieltagNumber(), null, createValidTeamDto().getAcronym(), null, createValidTeamDto2().getAcronym());
-    public static final SpielDto TEST_SPIEL_DTO_2 = new SpielDto(null, 2, 2, 2, true, LocalDateTime.now(), null, createValidSpieltagDto().getSpieltagNumber(), null, createValidTeamDto2().getAcronym(), null, createValidTeamDto().getAcronym());
-    public static final Spiel TEST_SPIEL_ENTITY = new Spiel(createValidSpieltag(), 1, LocalDateTime.now(), createValidTeam(), createValidTeam2(), 2, 1, true);
-    public static final TippModus TEST_TIPP_MODUS_ENTITY = new TippModusPoint("myNamePoint", TippModusType.TIPPMODUS_POINT, 1, createValidCommunity(), 4);
-    public static final Tipp TEST_TIPP_ENTITY = new Tipp(TEST_SPIEL_ENTITY, createValidCommunityMembership(), TEST_TIPP_MODUS_ENTITY, 4, 0, 0, 4);
-    public static final TippModusDto TEST_TIPP_MODUS_DTO = new TippModusPointDto(null, "myNamePoint", TippModusType.TIPPMODUS_POINT.getDisplayName(), 1, null, createValidCommunityDto().getName(), 4);
+    private static final String COMM_TEST = "Test Community";
+    private static final String COMM_TEST_2 = "Test Community 2";
+    private static final String COMP_FAM_TEST = "TEST Liga";
+    private static final String COMP_TEST = "TEST Liga Saison 2026";
+    private static final String COMP_TEST_2 = "TEST Liga Saison 2027";
+    private static final String COMP_ROUND_TEST = "Test Comp Round";
+    private static final String TEAM_NAME_TEST1 = "TestName";
+    private static final String TEAM_NAME_TEST2 = "TestName2";
+    private static final String TEAM_NAME_TEST3 = "TestName3";
+    public static final Tipp TEST_TIPP_ENTITY = new Tipp(createValidSpiel(), createValidCommunityMembership(), createValidTippModusPoint(), 4, 0, 0, 4);
 
     // Returns a fresh object every time it is called
     public static CompetitionFamilyDto createValidFamilyDto() {
@@ -108,9 +104,10 @@ public class TestConstants {
     }
 
     public static TeamDto createValidTeamDto3() {
-        return  new TeamDto(null, TEAM_NAME_TEST3, "PRE", true);
+        return new TeamDto(null, TEAM_NAME_TEST3, "PRE", true);
 
     }
+
     public static Team createValidTeam() {
         return new Team(TEAM_NAME_TEST1, "ZAC", true);
     }
@@ -142,5 +139,31 @@ public class TestConstants {
 
     public static CommunityMembership createValidCommunityMembership() {
         return new CommunityMembership(createValidCommunity(), TipperConstants.createValidTipper());
+    }
+
+    public static TippModusPointDto createValidTippModusPointDto() {
+        return new TippModusPointDto(null, "myNamePoint", TippModusType.TIPPMODUS_POINT.getDisplayName(), 1, null, createValidCommunityDto().getName(), 4);
+    }
+
+    public static TippModusPoint createValidTippModusPoint() {
+        return new TippModusPoint("myNamePoint", TippModusType.TIPPMODUS_POINT, 1, createValidCommunity(), 4);
+    }
+
+    public static TippModusTotoDto createValidTippModusTotoDto() {
+        return new TippModusTotoDto(null, "TotoTest", TippModusType.TIPPMODUS_TOTO.getDisplayName(), 1, null, createValidCommunityDto().getName());
+    }
+
+    public static TippModusToto createValidTippModusToto() {
+        return new TippModusToto("TotoTipp", TippModusType.TIPPMODUS_TOTO, 2, createValidCommunity());
+
+    }
+
+    public static TippModusResultDto createValidTippModusResultDto() {
+        return new TippModusResultDto(null, "ErgebnisTest", TippModusType.TIPPMODUS_RESULT.getDisplayName(), 1, null, createValidCommunity().getName(), 3, 1);
+    }
+
+    public static TippModusResult createValidTippModusResult() {
+        return new TippModusResult("myNameResult", TippModusType.TIPPMODUS_RESULT, 1, createValidCommunity(), 3, 1);
+
     }
 }

@@ -46,9 +46,9 @@ public class ContractMatchApiIntegrationTest {
     final TeamDto teamDto =TestConstants.createValidTeamDto();
     final TeamDto teamDto1 = TestConstants.createValidTeamDto2();
     final TeamDto teamDto2 = TestConstants.createValidTeamDto3();
-    final SpielDto testSpiel1 = new SpielDto(null, 1, 3, 1, false, LocalDateTime.now(), matchDayDto.getId(), matchDayDto.getSpieltagNumber(), teamDto.getId(), teamDto.getAcronym(), teamDto2.getId(), teamDto2.getAcronym());
-    final SpielDto testSpiel2 = new SpielDto(null, 2, 3, 3, false, LocalDateTime.now(), matchDayDto.getId(), matchDayDto.getSpieltagNumber(), teamDto1.getId(), teamDto1.getAcronym(), teamDto.getId(), teamDto.getAcronym());
-    @Autowired
+    final SpielDto testSpiel1 = TestConstants.createValidSpielDto();
+    final SpielDto testSpiel2 =TestConstants.createValidSpielDto2();
+            @Autowired
     WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();
     @Autowired
     CompetitionFamilyRepository competitionFamilyRepository;
@@ -406,7 +406,7 @@ public class ContractMatchApiIntegrationTest {
             assertEquals(spieltag.getId(), spielDto.getSpieltagId());
             assertThat(spielDto.getHeimTeamAcronym()).isIn(List.of(teamDto.getAcronym(), teamDto1.getAcronym(), teamDto2.getAcronym()));
             assertThat(spielDto.getGastTeamAcronym()).isIn(List.of(teamDto.getAcronym(), teamDto1.getAcronym(), teamDto2.getAcronym()));
-            assertEquals(3, spielDto.getHeimTore());
+            assertEquals(2, spielDto.getHeimTore());
             assertThat(spielDto.getGastTore()).isIn(List.of(testSpiel1.getGastTore(), testSpiel2.getGastTore()));
 
         }

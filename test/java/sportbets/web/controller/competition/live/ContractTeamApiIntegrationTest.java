@@ -21,8 +21,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static sportbets.testdata.TestConstants.TEAM_NAME_TEST1;
-import static sportbets.testdata.TestConstants.TEAM_NAME_TEST2;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         classes = {FootballBetsApplication.class, TestProfileLiveTest.class})
