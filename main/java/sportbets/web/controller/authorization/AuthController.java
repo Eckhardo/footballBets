@@ -16,6 +16,7 @@ import sportbets.persistence.entity.authorization.TipperRole;
 import sportbets.persistence.entity.community.CommunityMembership;
 import sportbets.persistence.entity.community.Tipper;
 import sportbets.persistence.entity.competition.CompetitionFamily;
+import sportbets.persistence.entity.competition.enums.Country;
 import sportbets.service.authorization.TipperRoleService;
 import sportbets.service.community.CommunityMembershipService;
 import sportbets.service.community.TipperService;
@@ -55,7 +56,7 @@ public class AuthController {
                 tipper.getDefaultCommunityId(),
                 tipper.getDefaultCompetitionId(),
                 tipper.isCommunityAdmin(),
-                true,
+                tipper.isCompetitionAdmin(),
                 tipper.getUsername());
         umsInfo.setLoggedIn(true);
         // fetch communities and competitions where tipper has admin rights
@@ -64,15 +65,24 @@ public class AuthController {
             for (TipperRole tipperRole : tipperRoles) {
                 if (tipperRole.getRole() instanceof CommunityRole) {
                     umsInfo.getAdminCommunities().add(((CommunityRole) tipperRole.getRole()).getCommunity().getId());
-                } else {
+                } else if( tipperRole.getRole() instanceof CompetitionRole){
                     umsInfo.getAdminCompetitions().add(((CompetitionRole) tipperRole.getRole()).getCompetition().getId());
+                }
+                else{
+                    // do nothing
                 }
 
             }
         }
-        CompetitionFamily competitionFamily = compFamilyService.findByByCompId(umsInfo.getDefaultCompetitionId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Competition Family not found"));
-        umsInfo.setDefaultCountry(competitionFamily.getCountry());
-        // fetch registered communities for common tipper
+        if(umsInfo.getDefaultCompetitionId()!=null){
+            CompetitionFamily competitionFamily = compFamilyService.findByByCompId(umsInfo.getDefaultCompetitionId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Competition Family not found"));
+            umsInfo.setDefaultCountry(competitionFamily.getCountry());
+
+        }
+        else{
+            umsInfo.setDefaultCountry(Country.GERMANY);
+        }
+          // fetch registered communities for common tipper
         List<CommunityMembership> commMembs = communityMembershipService.findCommunities(tipper.getId());
         if (!commMembs.isEmpty()) {
             for (CommunityMembership communityMembership : commMembs) {
