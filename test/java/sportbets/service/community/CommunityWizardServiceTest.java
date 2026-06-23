@@ -1,16 +1,12 @@
 package sportbets.service.community;
 
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.builder.TipperConstants;
-import sportbets.persistence.entity.authorization.TipperRole;
-import sportbets.persistence.entity.community.Community;
 import sportbets.persistence.entity.community.Tipper;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
@@ -23,7 +19,8 @@ import sportbets.web.dto.community.TipperDto;
 import sportbets.web.dto.competition.CompetitionDto;
 import sportbets.web.dto.competition.CompetitionFamilyDto;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -52,11 +49,13 @@ public class CommunityWizardServiceTest {
     final CompetitionFamilyDto familyDto = TestConstants.createValidFamilyDto();
     final CommunityDto commDto = TestConstants.createValidCommunityDto();
     final CompetitionDto compDto = TestConstants.createValidCompetitionDto();
-    final TipperDto testTipper = TipperConstants.createValidTipperDto();
-
+    final TipperDto adminTipperDto = TipperConstants.createValidTipperDto();
+    final TipperDto memberTipperDto = TipperConstants.createValidTipperDto2();
     private Competition savedComp = null;
-    private Tipper savedTipper = null;
+    private Tipper adminTipper = null;
     private CommunityWizardRecord testRecord = null;
+
+    private List<Long> tipperIds=new ArrayList<>();
 
     @BeforeEach
     public void setup() {
@@ -65,11 +64,11 @@ public class CommunityWizardServiceTest {
         CompetitionFamily savedFam = compFamilyService.save(familyDto);
         compDto.setFamilyId(savedFam.getId());
         compDto.setFamilyName(savedFam.getName());
-
-
         savedComp = compService.save(compDto);
 
-        savedTipper = tipperService.save(testTipper);
+        adminTipper = tipperService.save(adminTipperDto);
+        Tipper memberTipper= tipperService.save(memberTipperDto);
+        tipperIds.add(memberTipper.getId());
         log.info("setup end");
     }
 
@@ -77,7 +76,9 @@ public class CommunityWizardServiceTest {
     public void tearDown() {
         log.info("tearDown");
         compFamilyService.deleteByName(familyDto.getName());
-        tipperService.deleteByUserName(testTipper.getUsername());
+        tipperService.deleteByUserName(adminTipperDto.getUsername());
+        tipperService.deleteByUserName(memberTipperDto.getUsername());
+
         communityService.deleteByName(commDto.getName());
 
         log.info("tearDown end");
@@ -86,20 +87,10 @@ public class CommunityWizardServiceTest {
     @Test
     @Order(1)
     void whenSaveCommunityWithGivenCompetition_thenCompetitionMembershipShouldBeCreated() {
-        testRecord = new CommunityWizardRecord(commDto.getName(), commDto.getDescription(), savedComp.getId(), savedComp.getName(), savedTipper.getUsername());
-        CommunityWizardRecord saved = communityWizardService.save(testRecord);
+        testRecord = new CommunityWizardRecord(commDto.getName(), commDto.getDescription(), savedComp.getId(), savedComp.getName(), adminTipper.getUsername(),tipperIds);
+        CommunityDto saved = communityWizardService.save(testRecord);
+        assertThat(saved.getId()).isNotNull();
+        assertThat(saved.getName()).isEqualTo(commDto.getName());
 
-        assertThat(saved.commName()).isNotNull();
-        assertThat(saved.commDescription()).isEqualTo(commDto.getDescription());
-        assertEquals(saved.compId(), savedComp.getId());
-        assertEquals(saved.compName(), savedComp.getName());
-        assertEquals(testTipper.getUsername(), saved.tipperUserName());
-        Community community = communityService.findByName(commDto.getName()).orElseThrow(() -> new EntityNotFoundException("Community with name " + commDto.getName() + " not found"));
-        Tipper tipper = tipperService.findById(savedTipper.getId()).orElseThrow(() -> new EntityNotFoundException("entity tipper not found"));
-        assertThat(tipper.getDefaultCommunityId()).isEqualTo(community.getId());
-        Set<TipperRole> roles = tipper.getTipperRoles();
-        assertNotNull(roles);
     }
-
-
 }

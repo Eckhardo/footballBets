@@ -83,7 +83,7 @@ public class TestConstants {
     }
 
     public static SpielDto createValidSpielDto2() {
-        return new SpielDto(null, 2, 2, 2, true, LocalDateTime.now(), null, createValidSpieltagDto().getSpieltagNumber(), null, createValidTeamDto2().getAcronym(), null, createValidTeamDto().getAcronym());
+        return new SpielDto(null, 2, 3, 2, true, LocalDateTime.now(), null, createValidSpieltagDto().getSpieltagNumber(), null, createValidTeamDto2().getAcronym(), null, createValidTeamDto().getAcronym());
 
 
     }

@@ -10,7 +10,15 @@ public class TipperConstants {
 
     }
 
+    public static Tipper getBERND() {
+        return   new Tipper("Bernd", "Ahlers", "Bernd", "hrubesch", "ungeheuer", "bernd@gmx.de");
 
+    }
+
+    public static Tipper getDIERK() {
+        return   new Tipper("Dierk", "Ahlers", "Dierk", "hrubesch", "ungeheuer", "dierk@gmx.de");
+
+    }
 
 
     public static TipperDto createValidTipperDto(){
@@ -27,4 +35,5 @@ public class TipperConstants {
         return   new Tipper("Werner", "Wernersen", "Wernerdo", "hrubesch", "ungeheuer", "werner@gmx.de");
 
     }
+
 }

@@ -65,7 +65,7 @@ public class AuthController {
             for (TipperRole tipperRole : tipperRoles) {
                 if (tipperRole.getRole() instanceof CommunityRole) {
                     umsInfo.getAdminCommunities().add(((CommunityRole) tipperRole.getRole()).getCommunity().getId());
-                } else if( tipperRole.getRole() instanceof CompetitionRole){
+                  } else if( tipperRole.getRole() instanceof CompetitionRole){
                     umsInfo.getAdminCompetitions().add(((CompetitionRole) tipperRole.getRole()).getCompetition().getId());
                 }
                 else{

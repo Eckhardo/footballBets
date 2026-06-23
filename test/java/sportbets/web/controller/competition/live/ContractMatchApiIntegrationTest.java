@@ -406,7 +406,7 @@ public class ContractMatchApiIntegrationTest {
             assertEquals(spieltag.getId(), spielDto.getSpieltagId());
             assertThat(spielDto.getHeimTeamAcronym()).isIn(List.of(teamDto.getAcronym(), teamDto1.getAcronym(), teamDto2.getAcronym()));
             assertThat(spielDto.getGastTeamAcronym()).isIn(List.of(teamDto.getAcronym(), teamDto1.getAcronym(), teamDto2.getAcronym()));
-            assertEquals(2, spielDto.getHeimTore());
+            assertEquals(3, spielDto.getHeimTore());
             assertThat(spielDto.getGastTore()).isIn(List.of(testSpiel1.getGastTore(), testSpiel2.getGastTore()));
 
         }

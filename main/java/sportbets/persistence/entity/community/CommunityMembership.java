@@ -22,7 +22,7 @@ public class CommunityMembership {
     @NotNull
     private Community community;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "fk_tipper_id", foreignKey = @ForeignKey(name = "FK_COMM_MEMB_TO_ZIPPRT"))
+    @JoinColumn(name = "fk_tipper_id", foreignKey = @ForeignKey(name = "FK_COMM_MEMB_TO_TIPPER"))
     @NotNull
     private Tipper tipper;
 

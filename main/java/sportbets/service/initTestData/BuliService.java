@@ -99,13 +99,27 @@ public class BuliService {
         ebi.setDefaultCompetitionId(savedComp.getId());
         ebi.setDefaultCommunityId(savedCommunity.getId());
         tipperRepo.save(ebi);
-
         saveRoles(ebi);
+        CommunityMembership commMemb = new CommunityMembership(savedCommunity, ebi);
+        commMembRepo.save(commMemb);
+
+        Tipper bernd = TipperConstants.getBERND();
+        bernd.setDefaultCompetitionId(savedComp.getId());
+        bernd.setDefaultCommunityId(savedCommunity.getId());
+        tipperRepo.save(bernd);
+        CommunityMembership commMembBernd = new CommunityMembership(savedCommunity, bernd);
+        commMembRepo.save(commMembBernd);
+
+
+        Tipper dierk = TipperConstants.getDIERK();
+        dierk.setDefaultCompetitionId(savedComp.getId());
+        dierk.setDefaultCommunityId(savedCommunity.getId());
+        tipperRepo.save(dierk);
+        CommunityMembership commMembDierk = new CommunityMembership(savedCommunity, dierk);
+        commMembRepo.save(commMembDierk);
 
         CompetitionMembership compMemb = new CompetitionMembership(savedCommunity, savedComp);
         compMembRepo.save(compMemb);
-        CommunityMembership commMemb = new CommunityMembership(savedCommunity, ebi);
-        commMembRepo.save(commMemb);
 
         saveCompTeams();
 
@@ -147,14 +161,14 @@ public class BuliService {
         log.debug("add spielformula ::" + savedSpiele.size());
     }
 
-    private void saveRoles(Tipper ebi) {
+    private void saveRoles(Tipper tipper) {
         CompetitionRole competitionRole = new CompetitionRole(savedComp.getName(), savedComp.getDescription(), savedComp);
         CommunityRole communityRole = new CommunityRole(savedCommunity.getName(), savedCommunity.getDescription(), savedCommunity);
 
         Role savedCompetitionRole = roleRepo.save(competitionRole);
         Role savedCommmunityRole = roleRepo.save(communityRole);
-        TipperRole tipperCompRole = new TipperRole(savedCompetitionRole, ebi);
-        TipperRole tipperCommRole = new TipperRole(savedCommmunityRole, ebi);
+        TipperRole tipperCompRole = new TipperRole(savedCompetitionRole, tipper);
+        TipperRole tipperCommRole = new TipperRole(savedCommmunityRole, tipper);
         tipperRoleRepo.save(tipperCommRole);
         tipperRoleRepo.save(tipperCompRole);
     }

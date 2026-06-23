@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import sportbets.service.community.CommunityWizardService;
+import sportbets.web.dto.community.CommunityDto;
 import sportbets.web.dto.community.CommunityWizardRecord;
 
 @RestController
@@ -24,7 +25,7 @@ class CommunityWizardController {
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public CommunityWizardRecord post(@RequestBody @Valid CommunityWizardRecord communityWizardRecord) {
+    public CommunityDto post(@RequestBody @Valid CommunityWizardRecord communityWizardRecord) {
         log.debug("save CommunityWizardRecord {}", communityWizardRecord);
         return wizardService.save(communityWizardRecord);
     }

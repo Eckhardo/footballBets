@@ -12,53 +12,69 @@ import sportbets.persistence.entity.community.CommunityMembership;
 import sportbets.persistence.entity.community.Tipper;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionMembership;
+import sportbets.persistence.repository.community.CommunityMembershipRepository;
 import sportbets.persistence.repository.community.CommunityRepository;
 import sportbets.persistence.repository.community.TipperRepository;
 import sportbets.persistence.repository.competition.CompetitionRepository;
 import sportbets.service.community.CommunityWizardService;
+import sportbets.web.dto.community.CommunityDto;
 import sportbets.web.dto.community.CommunityWizardRecord;
+
+import java.util.List;
 
 @Service
 public class CommunityWizardServiceImpl implements CommunityWizardService {
 
-
     private static final Logger log = LoggerFactory.getLogger(CommunityWizardServiceImpl.class);
-    private final TipperRepository tipperRepository;
 
+    private final TipperRepository tipperRepository;
     private final CommunityRepository communityRepository;
     private final CompetitionRepository competitionRepository;
+    private final CommunityMembershipRepository membershipRepository;
 
-    public CommunityWizardServiceImpl(TipperRepository tipperRepository, CommunityRepository communityRepository, CompetitionRepository competitionRepository) {
+    public CommunityWizardServiceImpl(TipperRepository tipperRepository, CommunityRepository communityRepository, CompetitionRepository competitionRepository, CommunityMembershipRepository membershipRepository) {
         this.tipperRepository = tipperRepository;
         this.communityRepository = communityRepository;
         this.competitionRepository = competitionRepository;
+        this.membershipRepository = membershipRepository;
     }
 
 
     @Override
     @Transactional
-    public CommunityWizardRecord save(CommunityWizardRecord record) {
+    public CommunityDto save(CommunityWizardRecord record) {
         log.debug("save CommunityWizardRecord {}", record);
         // retrieve existing objects
-        Tipper tipper = tipperRepository.findByUsername(record.tipperUserName()).orElseThrow(() -> new EntityNotFoundException("tipper not found"));
-        Competition competition = competitionRepository.findById(record.compId()).orElseThrow(() -> new EntityNotFoundException("Competition not found"));
-
+        Tipper adminTipper = tipperRepository.findByUsername(record.tipperUserName()).orElseThrow(() -> new EntityNotFoundException("adminTipper not found"));
+        Competition savedComp = competitionRepository.findById(record.compId()).orElseThrow(() -> new EntityNotFoundException("Competition not found"));
         // prepare new community
-        Community comm = new Community(record.commName(), record.commDescription());
-        CommunityRole communityRole = new CommunityRole(comm.getName(), comm.getDescription(), comm);
-        comm.addCommunityRole(communityRole);
+        Community newComm = new Community(record.commName(), record.commDescription());
+        CommunityRole communityRole = new CommunityRole(newComm.getName(), newComm.getDescription(), newComm);
+        newComm.addCommunityRole(communityRole);
         // prepare community membership
-        CommunityMembership communityMembership = new CommunityMembership(comm, tipper);
+        CommunityMembership communityMembership = new CommunityMembership(newComm, adminTipper);
 
         // prepare competition membership
-        CompetitionMembership competitionMembership = new CompetitionMembership(comm, competition);
-        Community savedComm = communityRepository.save(comm);
-        log.debug("set tipper fields ");
-        tipper.setDefaultCommunityId(savedComm.getId());
-        tipper.addTipperRole(new TipperRole(communityRole, tipper));
+        CompetitionMembership competitionMembership = new CompetitionMembership(newComm, savedComp);
+        Community savedComm = communityRepository.save(newComm);
 
-        tipperRepository.save(tipper);
+        // set admin state:
+        adminTipper.setDefaultCompetitionId(savedComp.getId());
+        adminTipper.setDefaultCommunityId(savedComm.getId());
+        adminTipper.addTipperRole(new TipperRole(communityRole, adminTipper));
+        tipperRepository.save(adminTipper);
 
-        return new CommunityWizardRecord(savedComm.getName(), savedComm.getDescription(), competition.getId(), competition.getName(), tipper.getUsername());
+        List<Tipper> memberTippers = tipperRepository.findBySpecificIds(record.tipperIds());
+        for (Tipper tipper : memberTippers) {
+            tipper.setDefaultCommunityId(savedComm.getId());
+            membershipRepository.save(new CommunityMembership(savedComm, tipper));
+
+
+        }
+
+        CommunityDto communityDto = new CommunityDto(savedComm.getId(), savedComm.getName(), savedComm.getDescription());
+
+        log.debug("saved CommunityWizardRecord {}", communityDto);
+        return communityDto;
     }
 }

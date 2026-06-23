@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import java.util.List;
+
 public record CommunityWizardRecord(
 
         @NotBlank(message = "community Name must not be blank")
@@ -16,7 +18,8 @@ public record CommunityWizardRecord(
         @NotBlank(message = "competition Name must not be blank")
         String compName,
         @NotBlank(message = "tipper Name must not be blank")
-        String tipperUserName
+        String tipperUserName,
+        List<Long> tipperIds
 ) {
 
     public CommunityWizardRecord {

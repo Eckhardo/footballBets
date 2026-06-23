@@ -2,9 +2,12 @@ package sportbets.persistence.repository.community;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import sportbets.persistence.entity.community.Tipper;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -23,4 +26,7 @@ public interface TipperRepository extends JpaRepository<Tipper, Long> {
     Optional<Tipper> checkUserName(String username);
 
     boolean existsByUsername(String userName);
+
+    @Query("SELECT t FROM Tipper t WHERE t.id IN :ids")
+    List<Tipper> findBySpecificIds(@Param("ids") Collection<Long> ids);
 }

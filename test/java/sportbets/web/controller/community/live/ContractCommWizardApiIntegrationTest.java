@@ -28,6 +28,9 @@ import sportbets.web.dto.community.TipperDto;
 import sportbets.web.dto.competition.CompetitionDto;
 import sportbets.web.dto.competition.CompetitionFamilyDto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         classes = {FootballBetsApplication.class, TestProfileLiveTest.class})
 @ActiveProfiles("test")
@@ -53,6 +56,7 @@ public class ContractCommWizardApiIntegrationTest {
     CompetitionDto compDto = TestConstants.createValidCompetitionDto();
     CommunityDto commDto = TestConstants.createValidCommunityDto();
     CommunityWizardRecord wizardRecord;
+    List<Long> tipperIds = new ArrayList<>(List.of(10L));
 
     @BeforeEach
     public void setUp() {
@@ -125,7 +129,7 @@ public class ContractCommWizardApiIntegrationTest {
         Competition comp = compRepo.findByName(compDto.getName()).orElseThrow();
         Tipper tipper = tipperRepo.findByUsername(tipperDto.getUsername()).orElseThrow(() -> new EntityNotFoundException(tipperDto.getUsername()));
 
-        wizardRecord = new CommunityWizardRecord(commDto.getName(), commDto.getDescription(), comp.getId(), comp.getName(), tipper.getUsername());
+        wizardRecord = new CommunityWizardRecord(commDto.getName(), commDto.getDescription(), comp.getId(), comp.getName(), tipper.getUsername(), tipperIds);
 
         webClient.post()
                 .uri("/commWizard")
@@ -135,8 +139,10 @@ public class ContractCommWizardApiIntegrationTest {
                 .expectStatus()
                 .isCreated()
                 .expectBody()
-                .jsonPath("$.commName")
-                .exists();
+                .jsonPath("$.id")
+                .exists()
+                .jsonPath("$.name")
+                .isEqualTo(commDto.getName());
 
     }
 }
