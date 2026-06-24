@@ -71,10 +71,14 @@ public class CommunityWizardServiceImpl implements CommunityWizardService {
 
 
         }
+        for(Tipper tipper : memberTippers){
+            Tipper myTipper= tipperRepository.findById(tipper.getId()).orElseThrow(() -> new EntityNotFoundException("myTipper not found"));
+            log.info("myTipper {}", myTipper);
+        }
 
         CommunityDto communityDto = new CommunityDto(savedComm.getId(), savedComm.getName(), savedComm.getDescription());
 
-        log.debug("saved CommunityWizardRecord {}", communityDto);
+        log.debug("saved CommunityDto {}", communityDto);
         return communityDto;
     }
 }

@@ -52,6 +52,7 @@ public class ContractCommWizardApiIntegrationTest {
     CommunityRepository commRepo;
 
     TipperDto tipperDto = TipperConstants.createValidTipperDto();
+    TipperDto memberTipperDto = TipperConstants.createValidTipperDto2();
     CompetitionFamilyDto compFamilyDto = TestConstants.createValidFamilyDto();
     CompetitionDto compDto = TestConstants.createValidCompetitionDto();
     CommunityDto commDto = TestConstants.createValidCommunityDto();
@@ -94,6 +95,20 @@ public class ContractCommWizardApiIntegrationTest {
                 .jsonPath("$.username")
                 .isEqualTo(tipperDto.getUsername());
 
+        webClient.post()
+                .uri("/tipper")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(memberTipperDto)
+                .exchange()
+                .expectStatus()
+                .isCreated()
+                .expectBody()
+                .jsonPath("$.id")
+                .exists()
+                .jsonPath("$.username")
+                .isEqualTo(memberTipperDto.getUsername());
+
+
     }
 
     @AfterEach
@@ -107,10 +122,19 @@ public class ContractCommWizardApiIntegrationTest {
                 .expectStatus()
                 .isNoContent();
         Tipper tipper = tipperRepo.findByUsername(tipperDto.getUsername()).orElseThrow(() -> new EntityNotFoundException(tipperDto.getUsername()));
-        Long id = tipper.getId();
-        log.debug("delete tipper with id::{}", id);
+
+        log.debug("delete tipper with id::{}", tipper.getId());
         webClient.delete()
-                .uri("/tipper/" + id)
+                .uri("/tipper/" + tipper.getId())
+                .exchange()
+                .expectStatus()
+                .isNoContent();
+
+        Tipper tipper2 = tipperRepo.findByUsername(memberTipperDto.getUsername()).orElseThrow(() -> new EntityNotFoundException(memberTipperDto.getUsername()));
+
+        log.debug("delete tipper with id::{}", tipper2);
+        webClient.delete()
+                .uri("/tipper/" + tipper2.getId())
                 .exchange()
                 .expectStatus()
                 .isNoContent();
@@ -128,6 +152,8 @@ public class ContractCommWizardApiIntegrationTest {
     public void whenValidWizardIsSaved_thenResponseSucceeds() {
         Competition comp = compRepo.findByName(compDto.getName()).orElseThrow();
         Tipper tipper = tipperRepo.findByUsername(tipperDto.getUsername()).orElseThrow(() -> new EntityNotFoundException(tipperDto.getUsername()));
+        Tipper member = tipperRepo.findByUsername(memberTipperDto.getUsername()).orElseThrow(() -> new EntityNotFoundException(memberTipperDto.getUsername()));
+        tipperIds.add(member.getId());
 
         wizardRecord = new CommunityWizardRecord(commDto.getName(), commDto.getDescription(), comp.getId(), comp.getName(), tipper.getUsername(), tipperIds);
 
