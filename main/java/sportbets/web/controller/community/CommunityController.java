@@ -1,6 +1,7 @@
 package sportbets.web.controller.community;
 
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ import sportbets.web.dto.community.CommunityDto;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/communities")
@@ -41,13 +43,20 @@ public class CommunityController {
         return communityDtos;
     }
 
-    @GetMapping("/{id}")
-    public CommunityDto findOne(@PathVariable Long id) {
-        log.debug(":findOne::{}", id);
-        Community model = communityService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    @GetMapping("/{commId}")
+    public CommunityDto findOne(@PathVariable Long commId) {
+        log.debug(":findOne::{}", commId);
+        Optional<Community> model = communityService.findById(commId);
 
-        log.debug("Community found with {}", model);
-        return modelMapper.map(model, CommunityDto.class);
+        if (model.isPresent()) {
+            log.debug("Community found with {}", model.get().getName());
+            return modelMapper.map(model, CommunityDto.class);
+        }
+        else{
+            return null;
+        }
+
+
 
     }
 

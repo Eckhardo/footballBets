@@ -196,6 +196,33 @@ public class ContractCommApiIntegrationTest {
                 .isOk()
                 .expectBodyList(CommunityDto.class).contains(communityDto);
 
+    }
+    @Test
+    @Order(5)
+    void createNewCommunity_thenGetOne_isSuccess() {
+
+        log.debug("createNewCommunity_thenGetOne_isSuccess");
+        webClient.post()
+                .uri("/communities")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(communityDto)
+                .exchange()
+                .expectStatus()
+                .isCreated()
+                .expectBody()
+                .jsonPath("$.id")
+                .exists()
+                .jsonPath("$.name")
+                .isEqualTo(communityDto.getName());
+
+        Community community = communityRepository.findByName(communityDto.getName()).orElseThrow();
+
+
+        webClient.get()
+                .uri("/communities/"+ community.getId())
+                .exchange()
+                .expectStatus()
+                .isOk();
 
     }
 

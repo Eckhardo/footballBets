@@ -31,7 +31,9 @@ public class CommunityServiceImpl implements CommunityService {
 
     @Override
     public Optional<Community> findById(Long id) {
-        return communityRepo.findById(id);
+    Optional<Community> comm= communityRepo.findById(id);
+    log.debug(":find community: {}", comm.isPresent());
+    return comm;
     }
 
 

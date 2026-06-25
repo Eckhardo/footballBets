@@ -24,82 +24,73 @@ import java.util.Optional;
 public class CommunityMembershipServiceImpl implements CommunityMembershipService {
 
     private static final Logger log = LoggerFactory.getLogger(CommunityMembershipServiceImpl.class);
-    private final CommunityMembershipRepository membershipRepository;
-    private final CommunityRepository communityRepository;
-    private final TipperRepository tipperRepository;
+    private final CommunityMembershipRepository membershipRepo;
+    private final CommunityRepository commRepo;
+    private final TipperRepository tipperRepo;
 
-    public CommunityMembershipServiceImpl(CommunityMembershipRepository communityMembershipRepository, CommunityRepository communityRepository, TipperRepository tipperRepository) {
-        this.membershipRepository = communityMembershipRepository;
-        this.communityRepository = communityRepository;
-        this.tipperRepository = tipperRepository;
-
+    public CommunityMembershipServiceImpl(CommunityMembershipRepository membershipRepo, CommunityRepository commRepo, TipperRepository tipperRepo) {
+        this.membershipRepo = membershipRepo;
+        this.commRepo = commRepo;
+        this.tipperRepo = tipperRepo;
     }
 
     @Override
     public Optional<CommunityMembership> findById(Long id) {
-        return membershipRepository.findById(id);
+        return membershipRepo.findById(id);
     }
 
 
     @Override
     @Transactional
-    public CommunityMembership save(CommunityMembershipDto membershipDto) {
-        log.debug("Service save communityMembership {}", membershipDto);
-        Optional<CommunityMembership> entity = membershipRepository.findByCommIdAndTipperId(membershipDto.getCommId(), membershipDto.getTipperId());
-
+    public CommunityMembership save(CommunityMembershipDto dto) {
+        Optional<CommunityMembership> entity = membershipRepo.findByCommIdAndTipperId(dto.getCommId(), dto.getTipperId());
         if (entity.isPresent()) {
-            log.error("CommunityMembership already exists");
-            throw new EntityExistsException("CommunityMembership  already exist with given id:" + membershipDto.getId());
+            throw new EntityExistsException("CommunityMembership  already exist with given id:" + dto.getId());
         }
-        CommunityMembership model = new CommunityMembership();
-        Community community = communityRepository.findByName(membershipDto.getCommName()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        Tipper tipper = tipperRepository.findById(membershipDto.getTipperId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        model.setCommunity(community);
-        model.setTipper(tipper);
+        Community community = commRepo.findByName(dto.getCommName()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Tipper tipper = tipperRepo.findById(dto.getTipperId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return membershipRepo.save(new CommunityMembership(community, tipper));
 
-        log.debug("save CommunityMembership {}", model);
-        return membershipRepository.save(model);
     }
-
 
     @Override
     @Transactional
-    public Optional<CommunityMembership> update(Long id, CommunityMembershipDto membershipDto) {
+    public Optional<CommunityMembership> update(Long id, CommunityMembershipDto dto) {
 
-        log.debug("update CommunityMembership dto:: {}", membershipDto);
-        CommunityMembership updateModel = membershipRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("CommunityMembership  does not exits given id:" + membershipDto.getId()));
-
-
-        Community community = communityRepository.findByName(membershipDto.getCommName()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        Tipper tipper = tipperRepository.findById(membershipDto.getTipperId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        CommunityMembership updateModel = membershipRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("CommMemb  does not exits given id:" + dto.getId()));
+        Community community = commRepo.findByName(dto.getCommName()).orElseThrow(() -> new EntityNotFoundException("Comm does not exits given id:" + dto.getId()));
+        Tipper tipper = tipperRepo.findById(dto.getTipperId()).orElseThrow(() -> new EntityNotFoundException("Tipper does not exits given id:" + dto.getTipperId()));
         updateModel.setCommunity(community);
         updateModel.setTipper(tipper);
-        log.debug("updated CommunityMembership  with {}", updateModel);
-        return Optional.of(membershipRepository.save(updateModel));
+        return Optional.of(membershipRepo.save(updateModel));
     }
 
     @Override
     @Transactional
     public void deleteById(Long id) {
         // Idempotent check: If it is already gone, do nothing
-        if (membershipRepository.existsById(id)) {
-            membershipRepository.deleteById(id);
+        if (membershipRepo.existsById(id)) {
+            membershipRepo.deleteById(id);
         }
     }
 
-
     @Override
     public List<CommunityMembership> getAll() {
-        return membershipRepository.findAll();
+        return membershipRepo.findAll();
     }
 
     @Override
     public List<CommunityMembership> findCommunities(Long tipperId) {
-        return membershipRepository.findTipperCommunities(tipperId);
+        return membershipRepo.findTipperCommunities(tipperId);
     }
 
     @Override
     public Optional<CommunityMembership> findByCommIdAndTipperId(Long commId, Long tipperId) {
-        return membershipRepository.findByCommIdAndTipperId(commId, tipperId);
+        return membershipRepo.findByCommIdAndTipperId(commId, tipperId);
+    }
+
+    @Override
+    public List<Tipper> findTippers(Long communityId) {
+        return membershipRepo.findTippers(communityId);
     }
 }

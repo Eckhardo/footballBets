@@ -24,6 +24,7 @@ import sportbets.web.dto.community.CommunityDto;
 import sportbets.web.dto.community.CommunityMembershipDto;
 import sportbets.web.dto.community.TipperDto;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -58,10 +59,11 @@ public class CommunityMembershipServiceTest {
     public void setup() {
 
         savedCommunity = communityService.save(communityDto);
-
         savedCommunity2 = communityService.save(communityDto2);
+
         testTipper.setDefaultCommunityId(savedCommunity.getId());
         savedTipper = tipperService.save(testTipper);
+
         testTipper2.setDefaultCommunityId(savedCommunity2.getId());
         savedTipper2 = tipperService.save(testTipper2);
 
@@ -215,6 +217,32 @@ public class CommunityMembershipServiceTest {
         assertTrue(deleted.isEmpty());
         Optional<TipperRole> deletedTipperRole = tipperRoleService.findById(savedTipperRole.getId());
         assertTrue(deletedTipperRole.isEmpty());
+
+    }
+    @Test
+    public void whenCommunityIdIsProvided_ThenAllMemberTippersAreRetrieved() {
+        log.debug("deleteCommunityMembership");
+        assertNotNull(savedTipper);
+        assertNotNull(savedTipper2);
+        assertNotNull(savedCommunity);
+
+        dto.setTipperId(savedTipper.getId());
+        dto.setTipperName(savedTipper.getUsername());
+        dto.setCommId(savedCommunity.getId());
+        dto.setCommName(savedCommunity.getName());
+        CommunityMembership savedCommunityMembership = membershipService.save(dto);
+        assertNotNull(savedCommunityMembership);
+
+        dto.setTipperId(savedTipper2.getId());
+        dto.setTipperName(savedTipper2.getUsername());
+        dto.setCommId(savedCommunity.getId());
+        dto.setCommName(savedCommunity.getName());
+        CommunityMembership savedCommunityMembership2 = membershipService.save(dto);
+        assertNotNull(savedCommunityMembership2);
+
+        List<Tipper> tippers= membershipService.findTippers(savedCommunity.getId());
+        assertEquals(2,tippers.size());
+
 
     }
 }

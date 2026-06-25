@@ -68,8 +68,6 @@ public class CommunityWizardServiceImpl implements CommunityWizardService {
         for (Tipper tipper : memberTippers) {
             tipper.setDefaultCommunityId(savedComm.getId());
             membershipRepository.save(new CommunityMembership(savedComm, tipper));
-
-
         }
         for(Tipper tipper : memberTippers){
             Tipper myTipper= tipperRepository.findById(tipper.getId()).orElseThrow(() -> new EntityNotFoundException("myTipper not found"));

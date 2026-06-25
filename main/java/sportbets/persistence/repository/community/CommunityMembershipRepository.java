@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import sportbets.persistence.entity.community.CommunityMembership;
+import sportbets.persistence.entity.community.Tipper;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,4 +20,8 @@ public interface CommunityMembershipRepository extends JpaRepository<CommunityMe
     @Query(" select cm from CommunityMembership cm join cm.tipper t join cm.community c " +
             "where t.id=:tipperId   ")
     List<CommunityMembership> findTipperCommunities(Long tipperId);
+
+    @Query(" select t from CommunityMembership cm join cm.tipper t join cm.community c " +
+            "where c.id=:communityId   ")
+    List<Tipper> findTippers(Long communityId);
 }

@@ -72,8 +72,8 @@ class TipperController {
     public List<TipperDto> findAll() {
         List<Tipper> tippers = tipperService.getAll();
         List<TipperDto> tipperDtos = new ArrayList<>();
-        tippers.forEach(fam -> {
-            tipperDtos.add(modelMapper.map(fam, TipperDto.class));
+        tippers.forEach(tipper -> {
+            tipperDtos.add(modelMapper.map(tipper, TipperDto.class));
         });
         return tipperDtos;
     }

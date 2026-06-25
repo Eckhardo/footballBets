@@ -43,16 +43,12 @@ class TipperServiceImpl implements TipperService {
     @Override
     @Transactional
     public Tipper save(TipperDto dto) {
-        log.debug("Tipper to be save:: {}", dto);
-        Optional<Tipper> savedTipper = tipperRepo.findByUsername(dto.getUsername());
+         Optional<Tipper> savedTipper = tipperRepo.findByUsername(dto.getUsername());
         if (savedTipper.isPresent()) {
             throw new EntityExistsException("Tipper already exist with given username:" + savedTipper.get().getUsername());
         }
         Tipper model = modelMapper.map(dto, Tipper.class);
-
         return tipperRepo.save(model);
-
-
     }
 
     /**
@@ -66,13 +62,10 @@ class TipperServiceImpl implements TipperService {
         List<Tipper> savedTippers = new ArrayList<>();
         for (TipperDto tipperDto : dtos) {
             Optional<Tipper> entity = tipperRepo.findByUsername(tipperDto.getUsername());
-
             if (entity.isPresent()) {
-                log.error("Tipper already exists");
-                throw new EntityExistsException("CompTeam  already exist with given username:" + tipperDto.getUsername());
+                 throw new EntityExistsException("tipper  already exist with given username:" + tipperDto.getUsername());
             }
             Tipper model = modelMapper.map(tipperDto, Tipper.class);
-
             savedTippers.add(tipperRepo.save(model));
         }
         return savedTippers;
@@ -92,7 +85,6 @@ class TipperServiceImpl implements TipperService {
             throw new EntityNotFoundException("Tipper  DOES NOT exist with given id:" + id);
         }
         Tipper model = modelMapper.map(dto, Tipper.class);
-
         Tipper updated = updateFields(updateModel.get(), model);
         log.debug("updated Comp  with {}", updated);
         return Optional.of(tipperRepo.save(updated));
@@ -107,9 +99,7 @@ class TipperServiceImpl implements TipperService {
         base.setPasswortHint(base.getPasswortHint());
         base.setDefaultCompetitionId(model.getDefaultCompetitionId());
         return base;
-
     }
-
 
     @Override
     @Transactional
@@ -124,7 +114,6 @@ class TipperServiceImpl implements TipperService {
         tipperRepo.deleteAll();
     }
 
-
     @Override
     @Transactional
     public void deleteById(Long id) {
@@ -133,7 +122,6 @@ class TipperServiceImpl implements TipperService {
             tipperRepo.deleteById(id);
         }
     }
-
 
     @Override
     @Transactional
@@ -144,7 +132,6 @@ class TipperServiceImpl implements TipperService {
         }
     }
 
-
     @Override
     public List<Tipper> getAll() {
         return tipperRepo.findAll();
@@ -152,16 +139,12 @@ class TipperServiceImpl implements TipperService {
 
     @Override
     public Optional<Tipper> authenticate(String username, String password) {
-
         return tipperRepo.authenticateTipper(username, password);
-
     }
-
 
     @Override
     public boolean isUserNamePermitted(String username) {
         Optional<Tipper> tipper = tipperRepo.checkUserName(username);
         return tipper.isEmpty();
     }
-
 }

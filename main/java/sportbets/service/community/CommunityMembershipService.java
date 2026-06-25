@@ -1,6 +1,7 @@
 package sportbets.service.community;
 
 import sportbets.persistence.entity.community.CommunityMembership;
+import sportbets.persistence.entity.community.Tipper;
 import sportbets.web.dto.community.CommunityMembershipDto;
 
 import java.util.List;
@@ -21,4 +22,6 @@ public interface CommunityMembershipService {
     List<CommunityMembership> findCommunities(Long tipperId);
 
     Optional<CommunityMembership> findByCommIdAndTipperId(Long commId, Long tipperId);
+    List<Tipper> findTippers(Long communityId);
+
 }

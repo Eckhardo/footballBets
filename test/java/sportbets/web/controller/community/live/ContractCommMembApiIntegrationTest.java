@@ -142,13 +142,14 @@ public class ContractCommMembApiIntegrationTest {
                 .expectBody()
                 .jsonPath("$.id")
                 .exists()
-                .jsonPath("$.commName")
-                .isEqualTo(communityDto.getName())
-                .jsonPath("$.commId")
-                .exists()
+
                 .jsonPath("$.tipperName")
                 .isEqualTo(testTipper.getUsername())
                 .jsonPath("$.tipperId")
+                .exists()
+                .jsonPath("$.commName")
+                .isEqualTo(communityDto.getName())
+                .jsonPath("$.commId")
                 .exists();
     }
 
@@ -168,18 +169,7 @@ public class ContractCommMembApiIntegrationTest {
                 .bodyValue(dto)
                 .exchange()
                 .expectStatus()
-                .isCreated()
-                .expectBody()
-                .jsonPath("$.id")
-                .exists()
-                .jsonPath("$.commName")
-                .isEqualTo(communityDto.getName())
-                .jsonPath("$.commId")
-                .exists()
-                .jsonPath("$.tipperName")
-                .isEqualTo(testTipper.getUsername())
-                .jsonPath("$.tipperId")
-                .exists();
+                .isCreated();
 
         Tipper tipper2 = tipperRepo.findByUsername(testTipper2.getUsername()).orElseThrow();
         CommunityMembership commMemb = commMembRepo.findByCommIdAndTipperId(community.getId(), tipper.getId()).orElseThrow();
@@ -223,18 +213,7 @@ public class ContractCommMembApiIntegrationTest {
                 .bodyValue(dto)
                 .exchange()
                 .expectStatus()
-                .isCreated()
-                .expectBody()
-                .jsonPath("$.id")
-                .exists()
-                .jsonPath("$.commName")
-                .isEqualTo(communityDto.getName())
-                .jsonPath("$.commId")
-                .exists()
-                .jsonPath("$.tipperName")
-                .isEqualTo(testTipper.getUsername())
-                .jsonPath("$.tipperId")
-                .exists();
+                .isCreated();
 
         CommunityMembership commMemb = commMembRepo.findByCommIdAndTipperId(community.getId(), tipper.getId()).orElseThrow();
 
@@ -247,7 +226,7 @@ public class ContractCommMembApiIntegrationTest {
 
     @Test
     @Order(4)
-    void givenPreloadedData_whenGetSingleCommMemby_thenResponseContainsFields() {
+    void givenPreloadedData_whenGetSingleCommMemb_thenResponseContainsFields() {
         Tipper tipper = tipperRepo.findByUsername(testTipper.getUsername()).orElseThrow();
         Community community = communityRepository.findByName(communityDto.getName()).orElseThrow();
         dto.setTipperId(tipper.getId());
@@ -260,18 +239,7 @@ public class ContractCommMembApiIntegrationTest {
                 .bodyValue(dto)
                 .exchange()
                 .expectStatus()
-                .isCreated()
-                .expectBody()
-                .jsonPath("$.id")
-                .exists()
-                .jsonPath("$.commName")
-                .isEqualTo(communityDto.getName())
-                .jsonPath("$.commId")
-                .exists()
-                .jsonPath("$.tipperName")
-                .isEqualTo(testTipper.getUsername())
-                .jsonPath("$.tipperId")
-                .exists();
+                .isCreated();
 
         CommunityMembership commMemb = commMembRepo.findByCommIdAndTipperId(community.getId(), tipper.getId()).orElseThrow();
         webClient.get()
@@ -290,5 +258,43 @@ public class ContractCommMembApiIntegrationTest {
                 .isEqualTo(testTipper.getUsername())
                 .jsonPath("$.tipperId")
                 .exists();
+    }
+
+
+    @Test
+    @Order(5)
+    void createTwoCommunityMemberships_thenTwoTippsShouldBeFound() {
+        Tipper tipper = tipperRepo.findByUsername(testTipper.getUsername()).orElseThrow();
+        Community community = communityRepository.findByName(communityDto.getName()).orElseThrow();
+        dto.setTipperId(tipper.getId());
+        dto.setCommId(community.getId());
+        dto.setCommName(communityDto.getName());
+
+        webClient.post()
+                .uri("/commMembs")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(dto)
+                .exchange()
+                .expectStatus()
+                .isCreated();
+
+        Tipper tipper2 = tipperRepo.findByUsername(testTipper2.getUsername()).orElseThrow();
+        dto.setTipperId(tipper2.getId());
+        dto.setTipperName(tipper2.getUsername());
+        webClient.post()
+                .uri("/commMembs")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(dto)
+                .exchange()
+                .expectStatus()
+                .isCreated();
+
+        webClient.get()
+                .uri("/commMembs/" + community.getId()+"/tipper")
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBodyList(TipperDto.class).hasSize(2);
+
     }
 }
