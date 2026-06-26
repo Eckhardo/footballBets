@@ -28,21 +28,20 @@ class CompTeamController {
     private static final Logger log = LoggerFactory.getLogger(CompTeamController.class);
     private final CompService compService;
     private final CompTeamService compTeamService;
-    private final TeamService teamService;
+    private final ModelMapper myMapper;
 
-    public CompTeamController(CompService compService, CompTeamService compTeamService, TeamService teamService) {
+    public CompTeamController(CompService compService, CompTeamService compTeamService) {
         this.compService = compService;
         this.compTeamService = compTeamService;
-        this.teamService = teamService;
+        this.myMapper=MapperUtil.getModelMapperForCompTeam();
     }
 
     @GetMapping("/compTeam/{id}")
     public CompetitionTeamDto findOne(@PathVariable Long id) {
 
         CompetitionTeam model = compTeamService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        ModelMapper modelMapper = MapperUtil.getModelMapperForCompTeam();
         log.debug("CompetitionRound found with {}", model);
-        return modelMapper.map(model, CompetitionTeamDto.class);
+        return myMapper.map(model, CompetitionTeamDto.class);
 
     }
 
@@ -53,7 +52,6 @@ class CompTeamController {
 
 
         List<CompetitionTeamDto> competitionTeamDtos = new ArrayList<>();
-        ModelMapper myMapper = MapperUtil.getModelMapperForCompTeam();
         models.forEach(comp -> {
             competitionTeamDtos.add(myMapper.map(comp, CompetitionTeamDto.class));
         });
@@ -97,7 +95,6 @@ class CompTeamController {
 
 
         CompetitionTeam createdModel = compTeamService.save(dto);
-        ModelMapper myMapper = MapperUtil.getModelMapperForCompTeam();
         CompetitionTeamDto createdDto = myMapper.map(createdModel, CompetitionTeamDto.class);
         log.debug("Created comp team {}", createdDto);
         return createdDto;
@@ -140,7 +137,6 @@ class CompTeamController {
         CompetitionTeam updatedModel = compTeamService.update(id, dto)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         log.debug("Updated compTeam {}", updatedModel);
-        ModelMapper myMapper = MapperUtil.getModelMapperForCompTeam();
         return myMapper.map(updatedModel, CompetitionTeamDto.class);
 
     }

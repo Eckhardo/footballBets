@@ -32,16 +32,14 @@ public class TippServiceImpl implements TippService {
     private static final Logger log = LoggerFactory.getLogger(TippServiceImpl.class);
 
     private final ModelMapper modelMapper;
-    private final MapperUtilTipps mapperUtilTipp;
-    private final TippModusRepository tippModusRepo;
+     private final TippModusRepository tippModusRepo;
     private final CommunityMembershipRepository commMembRepo;
     private final SpielRepository spielRepo;
     private final TippRepository tippRepo;
 
-    public TippServiceImpl(ModelMapper modelMapper, MapperUtilTipps mapperUtilTipp, TippModusRepository tippModusRepo, CommunityMembershipRepository commMembRepo, SpielRepository spielRepo, TippRepository tippRepo) {
-        this.modelMapper = modelMapper;
-        this.mapperUtilTipp = mapperUtilTipp;
-        this.tippModusRepo = tippModusRepo;
+    public TippServiceImpl(ModelMapper modelMapper, TippModusRepository tippModusRepo, CommunityMembershipRepository commMembRepo, SpielRepository spielRepo, TippRepository tippRepo) {
+        this.modelMapper = new MapperUtilTipps().modelMapperForTipp();
+         this.tippModusRepo = tippModusRepo;
         this.commMembRepo = commMembRepo;
         this.spielRepo = spielRepo;
         this.tippRepo = tippRepo;
@@ -140,7 +138,7 @@ public class TippServiceImpl implements TippService {
         List<TippDto> updated = new ArrayList<>();
 
         for (TippDto dto : dtoList) {
-            Optional<TippDto> updatedDto = (this.updateOne(dto.getId(), dto));
+            Optional<TippDto> updatedDto = this.updateOne(dto.getId(), dto);
             updatedDto.ifPresent(updated::add);
         }
         return updated;
@@ -149,12 +147,13 @@ public class TippServiceImpl implements TippService {
     @Override
     @Transactional
     public void deleteById(Long id) {
-        tippRepo.deleteById(id);
+        if (tippRepo.existsById(id)) {
+            tippRepo.deleteById(id);
+        }
     }
 
     private TippDto convertToDto(Tipp entity) {
-        ModelMapper myMapper = mapperUtilTipp.modelMapperForTipp();
-        return myMapper.map(entity, TippDto.class);
+           return modelMapper.map(entity, TippDto.class);
     }
 
     private Tipp convertToEntity(TippDto dto, Spiel spiel, TippModus tippModus, CommunityMembership commMemb) {

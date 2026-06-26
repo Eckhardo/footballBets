@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import sportbets.persistence.entity.competition.Spiel;
 import sportbets.service.competition.SpielService;
-import sportbets.service.competition.SpieltagService;
 import sportbets.web.dto.MapperUtil;
 import sportbets.web.dto.competition.SpielDto;
 import sportbets.web.dto.competition.batch.MatchBatchRecord;
@@ -25,11 +24,11 @@ public class MatchController {
     private static final Logger log = LoggerFactory.getLogger(MatchController.class);
 
     private final SpielService spielService;
-    private final SpieltagService spieltagService;
+    private final ModelMapper myMapper;
 
-    public MatchController(SpielService spielService, SpieltagService spieltagService) {
+    public MatchController(SpielService spielService) {
         this.spielService = spielService;
-        this.spieltagService = spieltagService;
+        this.myMapper = MapperUtil.getModelMapperForSpiel();
     }
 
     @GetMapping("/matches/{id}")
@@ -38,9 +37,8 @@ public class MatchController {
 
         Spiel model = spielService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        ModelMapper modelMapper = MapperUtil.getModelMapperForSpiel();
         log.debug("Spiel found with {}", model);
-        return modelMapper.map(model, SpielDto.class);
+        return myMapper.map(model, SpielDto.class);
 
     }
 
@@ -48,8 +46,6 @@ public class MatchController {
     @ResponseStatus(HttpStatus.CREATED)
     public void postBatch(@RequestBody @Valid MatchBatchRecord matchBatchRecord) {
         log.info("New matches  {}", matchBatchRecord);
-
-
         spielService.saveBatch(matchBatchRecord);
 
     }
@@ -61,8 +57,7 @@ public class MatchController {
         log.debug("New match {}", spielDto);
 
         Spiel createdModel = spielService.save(spielDto);
-        ModelMapper myModelMapper = MapperUtil.getModelMapperForSpiel();
-        SpielDto createdDto = myModelMapper.map(createdModel, SpielDto.class);
+        SpielDto createdDto = myMapper.map(createdModel, SpielDto.class);
         log.debug("Spiel RETURN do {}", createdDto);
         return createdDto;
     }
@@ -78,8 +73,8 @@ public class MatchController {
         List<Spiel> createdModels = spielService.saveList(spieltagId, spielDtos);
 
         for (Spiel model : createdModels) {
-            ModelMapper myModelMapper = MapperUtil.getModelMapperForSpiel();
-            SpielDto createdDto = myModelMapper.map(model, SpielDto.class);
+
+            SpielDto createdDto = myMapper.map(model, SpielDto.class);
             log.debug("SpielDto saved {}", createdDto);
         }
         return createdDtos;
@@ -93,8 +88,7 @@ public class MatchController {
 
         Spiel updatedModel = spielService.updateOne(id, spielDto)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        ModelMapper myModelMapper = MapperUtil.getModelMapperForSpiel();
-        SpielDto updatedDto = myModelMapper.map(updatedModel, SpielDto.class);
+        SpielDto updatedDto = myMapper.map(updatedModel, SpielDto.class);
         log.debug("Spiel RETURN do {}", updatedDto);
         return updatedDto;
     }
@@ -102,8 +96,8 @@ public class MatchController {
     @DeleteMapping(value = "/matches/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
 
-            spielService.deleteById(id);
-            return ResponseEntity.noContent().build();
+        spielService.deleteById(id);
+        return ResponseEntity.noContent().build();
 
     }
 }

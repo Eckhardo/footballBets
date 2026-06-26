@@ -23,9 +23,10 @@ public class CompetitionMembershipController {
 
 
     private final CompetitionMembershipService compMembService;
-
+    private final ModelMapper myMapper;
     public CompetitionMembershipController(CompetitionMembershipService compMembService) {
         this.compMembService = compMembService;
+        this.myMapper = MapperUtil.getModelMapperForCompetitionMembership();
     }
 
 
@@ -34,9 +35,8 @@ public class CompetitionMembershipController {
         log.debug(":findAll");
         List<CompetitionMembership> compMembs = compMembService.getAll();
         List<CompetitionMembershipDto> commMembDtos = new ArrayList<>();
-        ModelMapper modelMapper = MapperUtil.getModelMapperForCompetitionMembership();
         compMembs.forEach(comp -> {
-            commMembDtos.add(modelMapper.map(comp, CompetitionMembershipDto.class));
+            commMembDtos.add(myMapper.map(comp, CompetitionMembershipDto.class));
         });
         return commMembDtos;
     }
@@ -45,9 +45,8 @@ public class CompetitionMembershipController {
     public CompetitionMembershipDto findOne(@PathVariable Long id) {
         log.debug(":findOne::{}", id);
         CompetitionMembership model = compMembService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        ModelMapper modelMapper = MapperUtil.getModelMapperForCompetitionMembership();
         log.debug("compMemb found with {}", model);
-        return modelMapper.map(model, CompetitionMembershipDto.class);
+        return myMapper.map(model, CompetitionMembershipDto.class);
 
     }
 
@@ -56,8 +55,7 @@ public class CompetitionMembershipController {
     public CompetitionMembershipDto post(@RequestBody @Valid CompetitionMembershipDto newCommMemb) {
         log.debug("New compMemb {}", newCommMemb);
         CompetitionMembership createdModel = compMembService.save(newCommMemb);
-        ModelMapper modelMapper = MapperUtil.getModelMapperForCompetitionMembership();
-        CompetitionMembershipDto createdDto = modelMapper.map(createdModel, CompetitionMembershipDto.class);
+        CompetitionMembershipDto createdDto = myMapper.map(createdModel, CompetitionMembershipDto.class);
         log.debug("compMemb RETURN do {}", createdDto);
         return createdDto;
     }
@@ -67,8 +65,7 @@ public class CompetitionMembershipController {
 
         CompetitionMembership updatedComm = this.compMembService.update(id, membershipDto).orElseThrow();
         log.debug("Updated compMemb entity {}", updatedComm);
-        ModelMapper modelMapper = MapperUtil.getModelMapperForCompetitionMembership();
-        CompetitionMembershipDto updatedDto = modelMapper.map(updatedComm, CompetitionMembershipDto.class);
+        CompetitionMembershipDto updatedDto = myMapper.map(updatedComm, CompetitionMembershipDto.class);
         log.debug("CompMembDto RETURN  {}", updatedDto);
         return updatedDto;
 

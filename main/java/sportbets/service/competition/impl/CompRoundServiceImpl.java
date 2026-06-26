@@ -27,7 +27,6 @@ public class CompRoundServiceImpl implements CompRoundService {
 
     public CompRoundServiceImpl(CompetitionRoundRepository roundRepository, CompetitionRepository compRepo, ModelMapper modelMapper) {
         this.roundRepository = roundRepository;
-
         this.compRepo = compRepo;
         this.modelMapper = modelMapper;
     }
@@ -57,17 +56,13 @@ public class CompRoundServiceImpl implements CompRoundService {
     @Transactional
     public Optional<CompetitionRound> updateRound(Long id, CompetitionRoundDto compRoundDto) {
 
-
         log.debug("updateCompRound  with {}", compRoundDto);
-        Optional<CompetitionRound> updateModel = roundRepository.findById(id);
-        if (updateModel.isEmpty()) {
-            throw new EntityNotFoundException("spiel  does not exits given id:" + compRoundDto.getId());
-        }
+        CompetitionRound updateModel = roundRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("spiel  does not exits given id:" + compRoundDto.getId()));
+
         Competition comp = compRepo.findById(compRoundDto.getCompId()).orElseThrow(() -> new EntityNotFoundException("comp not found "));
         CompetitionRound model = modelMapper.map(compRoundDto, CompetitionRound.class);
         model.setCompetition(comp);
-
-        CompetitionRound updatedCompRound = updateFields(updateModel.get(), model);
+        CompetitionRound updatedCompRound = updateFields(updateModel, model);
         log.debug("updated Comp  with {}", updatedCompRound);
         return Optional.of(roundRepository.save(updatedCompRound));
     }

@@ -26,9 +26,7 @@ public class SpieltagServiceImpl implements SpieltagService {
     private final ModelMapper modelMapper;
 
     public SpieltagServiceImpl(SpieltagRepository spieltagRepository, CompetitionRoundRepository compRoundRepo, ModelMapper modelMapper) {
-
         this.spieltagRepository = spieltagRepository;
-
         this.compRoundRepo = compRoundRepo;
         this.modelMapper = modelMapper;
     }
@@ -36,9 +34,7 @@ public class SpieltagServiceImpl implements SpieltagService {
     @Override
     @Transactional
     public List<Spieltag> getAll() {
-
         return spieltagRepository.findAll();
-
     }
 
     @Override
@@ -117,7 +113,6 @@ public class SpieltagServiceImpl implements SpieltagService {
     private Spieltag updateFields(Spieltag base, Spieltag updatedMatchDay) {
         base.setSpieltagNumber(updatedMatchDay.getSpieltagNumber());
         base.setStartDate(updatedMatchDay.getStartDate());
-
         return base;
     }
 

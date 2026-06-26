@@ -98,7 +98,9 @@ public class TippModusServiceImpl implements TippModusService {
     @Override
     @Transactional
     public void deleteById(Long id) {
-        repo.deleteById(id);
+        if (repo.existsById(id)) {
+            repo.deleteById(id);
+        }
     }
 
     @Override

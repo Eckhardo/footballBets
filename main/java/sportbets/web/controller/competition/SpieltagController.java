@@ -29,12 +29,12 @@ public class SpieltagController {
     private static final Logger log = LoggerFactory.getLogger(SpieltagController.class);
     private final SpieltagService spieltagService;
     private final SpielService spielService;
-
+    private final ModelMapper myMapper;
 
     public SpieltagController(SpieltagService spieltagService, SpielService spielService) {
         this.spieltagService = spieltagService;
         this.spielService = spielService;
-
+        this.myMapper = MapperUtil.getModelMapperForCompetitionRound();
     }
 
     @GetMapping("/matchdays")
@@ -42,12 +42,8 @@ public class SpieltagController {
         log.debug(" SpieltagDto:findAll::");
 
         List<Spieltag> matchdays = spieltagService.getAll();
-
-
         List<SpieltagDto> spieltagDtos = new ArrayList<>();
-        ModelMapper myMapper = MapperUtil.getModelMapperForCompetitionRound();
         matchdays.forEach(comp -> {
-
             spieltagDtos.add(myMapper.map(comp, SpieltagDto.class));
         });
         return spieltagDtos;
@@ -73,9 +69,8 @@ public class SpieltagController {
         log.debug("SpieltagDto:findOne::{}", id);
         Spieltag model = spieltagService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        ModelMapper modelMapper = MapperUtil.getModelMapperForCompetitionRound();
         log.debug("CompetitionRound found with {}", model);
-        return modelMapper.map(model, SpieltagDto.class);
+        return myMapper.map(model, SpieltagDto.class);
 
     }
 
@@ -116,8 +111,7 @@ public class SpieltagController {
 
 
         Spieltag createdModel = spieltagService.save(spieltagDto);
-        ModelMapper myModelMapper = MapperUtil.getModelMapperForCompetitionRound();
-        SpieltagDto createdDto = myModelMapper.map(createdModel, SpieltagDto.class);
+         SpieltagDto createdDto = myMapper.map(createdModel, SpieltagDto.class);
         log.debug("SpieltagDto RETURN do {}", createdDto);
         return createdDto;
     }
@@ -127,8 +121,7 @@ public class SpieltagController {
         log.debug("Update match day {}", spieltagDto);
         Spieltag updatedModel = spieltagService.updateMatchDay(id, spieltagDto)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        ModelMapper myModelMapper = MapperUtil.getModelMapperForCompetitionRound();
-        SpieltagDto updatedDto = myModelMapper.map(updatedModel, SpieltagDto.class);
+        SpieltagDto updatedDto = myMapper.map(updatedModel, SpieltagDto.class);
         log.debug("Competition RETURN do {}", updatedDto);
         return updatedDto;
     }
@@ -136,7 +129,7 @@ public class SpieltagController {
     @DeleteMapping(value = "/matchdays/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
 
-            spieltagService.deleteById(id);
+        spieltagService.deleteById(id);
         return ResponseEntity.noContent().build();
 
     }

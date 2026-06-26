@@ -27,18 +27,18 @@ public class CompRoundController {
     private static final Logger log = LoggerFactory.getLogger(CompRoundController.class);
     private final CompRoundService roundService;
     private final SpieltagService spieltagService;
-
+    private final ModelMapper myMapper;
     public CompRoundController(CompRoundService roundService, SpieltagService spieltagService) {
         this.roundService = roundService;
         this.spieltagService = spieltagService;
+        this.myMapper = MapperUtil.getModelMapperForCompetition();
     }
 
     @GetMapping("/rounds/{id}")
     public CompetitionRoundDto findOne(@PathVariable Long id) {
         CompetitionRound model = roundService.findById(id).orElseThrow(() -> new EntityNotFoundException("competition round with id " + id + " not found"));
-        ModelMapper modelMapper = MapperUtil.getModelMapperForCompetition();
         log.debug("CompetitionRound found with {}", model);
-        return modelMapper.map(model, CompetitionRoundDto.class);
+        return myMapper.map(model, CompetitionRoundDto.class);
 
     }
 
@@ -49,8 +49,7 @@ public class CompRoundController {
         log.info("CompetitionRound findByNameAndCompId:: {} ", compId);
         CompetitionRound model = roundService.findByNameAndCompId(name, compId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         log.info("CompetitionRound foundByName:: {} ", model);
-        ModelMapper modelMapper = MapperUtil.getModelMapperForCompetition();
-        return modelMapper.map(model, CompetitionRoundDto.class);
+         return myMapper.map(model, CompetitionRoundDto.class);
 
     }
 
@@ -60,8 +59,8 @@ public class CompRoundController {
         log.info("post: {}", roundDto);
 
         CompetitionRound createdModel = roundService.save(roundDto);
-        ModelMapper myModelMapper = MapperUtil.getModelMapperForCompetition();
-        CompetitionRoundDto createdDto = myModelMapper.map(createdModel, CompetitionRoundDto.class);
+
+        CompetitionRoundDto createdDto = myMapper.map(createdModel, CompetitionRoundDto.class);
         log.info("CompetitionRound RETURN do {}", createdDto);
         return createdDto;
     }
@@ -73,8 +72,7 @@ public class CompRoundController {
 
         CompetitionRound updatedModel = this.roundService.updateRound(id, roundDto)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        ModelMapper myModelMapper = MapperUtil.getModelMapperForCompetition();
-        CompetitionRoundDto updatedDto = myModelMapper.map(updatedModel, CompetitionRoundDto.class);
+         CompetitionRoundDto updatedDto = myMapper.map(updatedModel, CompetitionRoundDto.class);
         log.info("round updated RETURN do {}", updatedDto);
         return updatedDto;
     }

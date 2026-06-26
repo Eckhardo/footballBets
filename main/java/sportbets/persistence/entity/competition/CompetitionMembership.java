@@ -16,6 +16,7 @@ public class CompetitionMembership {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fk_comm_id", foreignKey = @ForeignKey(name = "FK_COMP_MEMB_TO_COMMUNITY"))
     @NotNull
@@ -28,7 +29,7 @@ public class CompetitionMembership {
 
     // Owning Side:
     @OneToMany(mappedBy = "competitionMembership", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Set<TippConfig> tippConfigs = new HashSet();
+    private Set<TippConfig> tippConfigs = new HashSet<>();
 
 
     public CompetitionMembership() {

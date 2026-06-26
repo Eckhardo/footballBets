@@ -50,17 +50,12 @@ public class CompetitionMembershipServiceImpl implements CompetitionMembershipSe
         Optional<CompetitionMembership> entity = membershipRepository.findByCommIdAndCompId(membershipDto.getCommId(), membershipDto.getCompId());
 
         if (entity.isPresent()) {
-            log.error("CompetitionMembership already exists");
             throw new EntityExistsException("CompetitionMembership  already exist with given id:" + membershipDto.getId());
         }
-        CompetitionMembership model = new CompetitionMembership();
+
         Community community = communityRepository.findByName(membershipDto.getCommName()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         Competition competition = compRepo.findById(membershipDto.getCompId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        model.setCommunity(community);
-        model.setCompetition(competition);
-
-        log.debug("save CompetitionMembership {}", model);
-        return membershipRepository.save(model);
+        return membershipRepository.save(new CompetitionMembership(community, competition));
     }
 
 
@@ -69,25 +64,25 @@ public class CompetitionMembershipServiceImpl implements CompetitionMembershipSe
     public Optional<CompetitionMembership> update(Long id, CompetitionMembershipDto membershipDto) {
 
         log.debug("update CompetitionMembership dto:: {}", membershipDto);
-        Optional<CompetitionMembership> updateModel = membershipRepository.findById(id);
-        if (updateModel.isEmpty()) {
-            throw new EntityNotFoundException("CompetitionMembership  does not exits given id:" + membershipDto.getId());
-        }
+        CompetitionMembership updateModel = membershipRepository.findById(id).orElseThrow(() ->
+         new EntityNotFoundException("CompetitionMembership  does not exits given id:" + membershipDto.getId()));
+
 
         Community community = communityRepository.findByName(membershipDto.getCommName()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         Competition competition = compRepo.findById(membershipDto.getCompId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        updateModel.get().setCommunity(community);
-        updateModel.get().setCompetition(competition);
-
-        log.debug("updated CompMemb  with {}", updateModel.get());
-        return Optional.of(membershipRepository.save(updateModel.get()));
+        updateModel.setCompetition(competition);
+        updateModel.setCommunity(community);
+        return Optional.of(membershipRepository.save(updateModel));
     }
 
 
     @Override
     @Transactional
     public void deleteById(Long id) {
-        membershipRepository.deleteById(id);
+        // Idempotent check: If it is already gone, do nothing
+        if (membershipRepository.existsById(id)) {
+            membershipRepository.deleteById(id);
+        }
     }
 
 
