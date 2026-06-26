@@ -15,7 +15,6 @@ import sportbets.persistence.entity.authorization.TipperRole;
 import sportbets.persistence.entity.community.Community;
 import sportbets.persistence.entity.community.CommunityMembership;
 import sportbets.persistence.entity.community.Tipper;
-import sportbets.persistence.entity.tipps.Tipp;
 import sportbets.service.authorization.CommunityRoleService;
 import sportbets.service.authorization.TipperRoleService;
 import sportbets.testdata.TestConstants;
@@ -92,6 +91,8 @@ public class CommunityMembershipServiceTest {
         CommunityMembership savedCommunityMembership = membershipService.save(dto);
         assertNotNull(savedCommunityMembership);
         assertEquals(savedTipper.getId(), savedCommunityMembership.getTipper().getId());
+        List<CommunityDto> comms= membershipService.findCommunities(savedTipper.getUsername());
+        assertEquals(1, comms.size());
         membershipService.deleteById(savedCommunityMembership.getId());
     }
 
@@ -191,6 +192,41 @@ public class CommunityMembershipServiceTest {
     @Test
     public void whenDeletedTipper_thenTipperRoleIsDeletedAndMembershipIsDeleted() {
         log.debug("deleteTipper");
+
+        assertNotNull(savedTipper);
+        assertNotNull(savedCommunity);
+        CommunityRole savedCommunityRole = communityRoleService.findByCommunityName(savedCommunity.getName()).orElseThrow();
+
+        TipperRoleDto tipperRoleDto = new TipperRoleDto(null, savedTipper.getId(), savedTipper.getUsername(), savedCommunityRole.getId(), savedCommunityRole.getName());
+
+
+        log.debug("\n");
+        TipperRole savedTipperRole = tipperRoleService.save(tipperRoleDto).orElseThrow(() -> new EntityNotFoundException("savedTipperRole not found"));
+        assertNotNull(savedTipperRole);
+
+        dto.setTipperId(savedTipper.getId());
+        dto.setCommId(savedCommunity.getId());
+        dto.setCommName(savedCommunity.getName());
+
+        CommunityMembership savedCommunityMembership = membershipService.save(dto);
+        assertNotNull(savedCommunityMembership);
+        tipperService.deleteById(savedTipper.getId());
+        log.debug("tipper deleted");
+        Optional<Tipper> deletedTipper = tipperService.findById(savedTipper.getId());
+        assertTrue(deletedTipper.isEmpty());
+        Optional<CommunityMembership> deleted = membershipService.findById(savedCommunityMembership.getId());
+        assertTrue(deleted.isEmpty());
+        Optional<TipperRole> deletedTipperRole = tipperRoleService.findById(savedTipperRole.getId());
+        assertTrue(deletedTipperRole.isEmpty());
+
+    }
+
+
+
+
+    @Test
+    public void whenDeletedCommunity_thenTipperRoleIsDeletedAndMembershipIsDeleted() {
+        log.debug("deleteCommunity");
 
         assertNotNull(savedTipper);
         assertNotNull(savedCommunity);

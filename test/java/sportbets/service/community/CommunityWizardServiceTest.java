@@ -93,4 +93,15 @@ public class CommunityWizardServiceTest {
         assertThat(saved.getName()).isEqualTo(commDto.getName());
 
     }
+    @Test
+    @Order(2)
+    void whenDeleteCommunityPreparedByWizard_thenCompetitionMembershipShouldBeCreated() {
+        testRecord = new CommunityWizardRecord(commDto.getName(), commDto.getDescription(), savedComp.getId(), savedComp.getName(), adminTipper.getUsername(),tipperIds);
+        CommunityDto saved = communityWizardService.save(testRecord);
+        assertThat(saved.getId()).isNotNull();
+        assertThat(saved.getName()).isEqualTo(commDto.getName());
+
+        communityService.deleteById(saved.getId());
+
+    }
 }

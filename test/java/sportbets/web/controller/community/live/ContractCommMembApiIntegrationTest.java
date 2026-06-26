@@ -142,7 +142,6 @@ public class ContractCommMembApiIntegrationTest {
                 .expectBody()
                 .jsonPath("$.id")
                 .exists()
-
                 .jsonPath("$.tipperName")
                 .isEqualTo(testTipper.getUsername())
                 .jsonPath("$.tipperId")
@@ -151,6 +150,14 @@ public class ContractCommMembApiIntegrationTest {
                 .isEqualTo(communityDto.getName())
                 .jsonPath("$.commId")
                 .exists();
+
+
+         webClient.get()
+                .uri("/commMembs/" + tipper.getUsername()+"/communities")
+                 .exchange()
+                 .expectStatus()
+                 .isOk()
+                 .expectBodyList(CommunityDto.class).hasSize(1);
     }
 
     @Test
