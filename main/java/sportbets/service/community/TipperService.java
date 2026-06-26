@@ -10,6 +10,7 @@ import java.util.Optional;
 public interface TipperService {
     Optional<Tipper> findById(Long id);
 
+    Optional<Tipper> findByUsername(String username);
 
     Tipper save(TipperDto dto);
 

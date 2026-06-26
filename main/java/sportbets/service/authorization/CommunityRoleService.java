@@ -11,9 +11,7 @@ public interface CommunityRoleService {
 
     Optional<CommunityRole> findById(Long id);
 
-
     CommunityRole save(CommunityRoleDto dto);
-
 
     Optional<CommunityRole> findByCommunityName(String name);
 
@@ -22,5 +20,4 @@ public interface CommunityRoleService {
     void deleteByName(String name);
 
     void deleteById(Long id);
-
 }

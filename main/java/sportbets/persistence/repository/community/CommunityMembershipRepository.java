@@ -3,6 +3,7 @@ package sportbets.persistence.repository.community;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import sportbets.persistence.entity.community.Community;
 import sportbets.persistence.entity.community.CommunityMembership;
 import sportbets.persistence.entity.community.Tipper;
 
@@ -19,9 +20,13 @@ public interface CommunityMembershipRepository extends JpaRepository<CommunityMe
 
     @Query(" select cm from CommunityMembership cm join cm.tipper t join cm.community c " +
             "where t.id=:tipperId   ")
-    List<CommunityMembership> findTipperCommunities(Long tipperId);
+    List<CommunityMembership> findTipperCommMembs(Long tipperId);
 
     @Query(" select t from CommunityMembership cm join cm.tipper t join cm.community c " +
             "where c.id=:communityId   ")
     List<Tipper> findTippers(Long communityId);
+
+    @Query(" select c from CommunityMembership cm join cm.tipper t join cm.community c " +
+            "where t.username=:username   ")
+    List<Community> findCommunities(String username);
 }

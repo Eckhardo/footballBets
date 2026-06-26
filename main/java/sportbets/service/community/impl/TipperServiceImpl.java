@@ -36,6 +36,11 @@ class TipperServiceImpl implements TipperService {
         return tipperRepo.findById(id);
     }
 
+    @Override
+    public Optional<Tipper> findByUsername(String username) {
+        return tipperRepo.findByUsername(username);
+    }
+
     /**
      * @param dto
      * @return
@@ -79,14 +84,14 @@ class TipperServiceImpl implements TipperService {
     @Override
     @Transactional
     public Optional<Tipper> update(Long id, TipperDto dto) {
-        log.debug("updateFamily:: {}", dto);
+        log.debug("update Tipper:: {}", dto);
         Optional<Tipper> updateModel = tipperRepo.findById(id);
         if (updateModel.isEmpty()) {
             throw new EntityNotFoundException("Tipper  DOES NOT exist with given id:" + id);
         }
         Tipper model = modelMapper.map(dto, Tipper.class);
         Tipper updated = updateFields(updateModel.get(), model);
-        log.debug("updated Comp  with {}", updated);
+        log.debug("updated Tipper  with {}", updated);
         return Optional.of(tipperRepo.save(updated));
     }
 
@@ -97,6 +102,7 @@ class TipperServiceImpl implements TipperService {
         base.setLastname(model.getLastname());
         base.setPasswort(base.getPasswort());
         base.setPasswortHint(base.getPasswortHint());
+        base.setDefaultCommunityId(model.getDefaultCommunityId());
         base.setDefaultCompetitionId(model.getDefaultCompetitionId());
         return base;
     }

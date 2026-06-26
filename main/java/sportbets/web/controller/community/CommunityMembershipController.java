@@ -12,6 +12,7 @@ import sportbets.persistence.entity.community.CommunityMembership;
 import sportbets.persistence.entity.community.Tipper;
 import sportbets.service.community.CommunityMembershipService;
 import sportbets.web.dto.MapperUtil;
+import sportbets.web.dto.community.CommunityDto;
 import sportbets.web.dto.community.CommunityMembershipDto;
 import sportbets.web.dto.community.TipperDto;
 
@@ -26,7 +27,6 @@ public class CommunityMembershipController {
     private static final Logger log = LoggerFactory.getLogger(CommunityMembershipController.class);
     private final CommunityMembershipService commMembService;
     ModelMapper myModelMapper = MapperUtil.getModelMapperForCommunityMembership();
-
 
 
     public CommunityMembershipController(CommunityMembershipService commMembService) {
@@ -49,7 +49,7 @@ public class CommunityMembershipController {
     public CommunityMembershipDto findOne(@PathVariable Long id) {
         log.debug(":findOne::{}", id);
         CommunityMembership model = commMembService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-         log.debug("Community found with {}", model);
+        log.debug("Community found with {}", model);
         return myModelMapper.map(model, CommunityMembershipDto.class);
 
     }
@@ -83,6 +83,7 @@ public class CommunityMembershipController {
         return ResponseEntity.noContent().build();
 
     }
+
     @GetMapping("/{commId}/tipper")
     public List<TipperDto> findTippers(@PathVariable Long commId) {
         log.debug(":find tippers");
@@ -93,5 +94,12 @@ public class CommunityMembershipController {
             tipperDtos.add(modelMapper.map(tipper, TipperDto.class));
         });
         return tipperDtos;
+    }
+
+    @GetMapping("/{username}/communities")
+    public List<CommunityDto> findTipperCommunities(@PathVariable String username) {
+        log.debug(":find communities for tipper {}", username);
+        return commMembService.findCommunities(username);
+
     }
 }

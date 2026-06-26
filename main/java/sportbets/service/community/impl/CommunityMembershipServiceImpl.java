@@ -2,6 +2,7 @@ package sportbets.service.community.impl;
 
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -15,8 +16,10 @@ import sportbets.persistence.repository.community.CommunityMembershipRepository;
 import sportbets.persistence.repository.community.CommunityRepository;
 import sportbets.persistence.repository.community.TipperRepository;
 import sportbets.service.community.CommunityMembershipService;
+import sportbets.web.dto.community.CommunityDto;
 import sportbets.web.dto.community.CommunityMembershipDto;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,11 +30,13 @@ public class CommunityMembershipServiceImpl implements CommunityMembershipServic
     private final CommunityMembershipRepository membershipRepo;
     private final CommunityRepository commRepo;
     private final TipperRepository tipperRepo;
+    private final ModelMapper mapper;
 
-    public CommunityMembershipServiceImpl(CommunityMembershipRepository membershipRepo, CommunityRepository commRepo, TipperRepository tipperRepo) {
+    public CommunityMembershipServiceImpl(CommunityMembershipRepository membershipRepo, CommunityRepository commRepo, TipperRepository tipperRepo, ModelMapper mapper) {
         this.membershipRepo = membershipRepo;
         this.commRepo = commRepo;
         this.tipperRepo = tipperRepo;
+        this.mapper = mapper;
     }
 
     @Override
@@ -80,8 +85,8 @@ public class CommunityMembershipServiceImpl implements CommunityMembershipServic
     }
 
     @Override
-    public List<CommunityMembership> findCommunities(Long tipperId) {
-        return membershipRepo.findTipperCommunities(tipperId);
+    public List<CommunityMembership> findCommMembs(Long tipperId) {
+        return membershipRepo.findTipperCommMembs(tipperId);
     }
 
     @Override
@@ -92,5 +97,17 @@ public class CommunityMembershipServiceImpl implements CommunityMembershipServic
     @Override
     public List<Tipper> findTippers(Long communityId) {
         return membershipRepo.findTippers(communityId);
+    }
+
+    @Override
+    public List<CommunityDto> findCommunities(String username) {
+        List<Community> communities = membershipRepo.findCommunities(username);
+
+        List<CommunityDto> communityDtos = new ArrayList<>();
+        for (Community community : communities) {
+            communityDtos.add(mapper.map(community, CommunityDto.class));
+
+        }
+        return communityDtos;
     }
 }

@@ -52,46 +52,50 @@ public class AuthController {
 
         Tipper tipper = tipperService.authenticate(loginRequest.getUserName(), loginRequest.getPassword()).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid username or password"));
 
-        UmsInfoDto umsInfo = new UmsInfoDto(
-                tipper.getDefaultCommunityId(),
-                tipper.getDefaultCompetitionId(),
-                tipper.isCommunityAdmin(),
-                tipper.isCompetitionAdmin(),
-                tipper.getUsername());
-        umsInfo.setLoggedIn(true);
-        // fetch communities and competitions where tipper has admin rights
-        List<TipperRole> tipperRoles = tipperRoleService.getAllForTipper(tipper.getId());
-        if (!tipperRoles.isEmpty()) {
-            for (TipperRole tipperRole : tipperRoles) {
-                if (tipperRole.getRole() instanceof CommunityRole) {
-                    umsInfo.getAdminCommunities().add(((CommunityRole) tipperRole.getRole()).getCommunity().getId());
-                  } else if( tipperRole.getRole() instanceof CompetitionRole){
-                    umsInfo.getAdminCompetitions().add(((CompetitionRole) tipperRole.getRole()).getCompetition().getId());
-                }
-                else{
-                    // do nothing
-                }
-
+        if (tipper.getDefaultCommunityId() == null) {
+            List<CommunityMembership> communities = communityMembershipService.findCommMembs(tipper.getId());
+            if (!communities.isEmpty()) {
+                tipper.setDefaultCommunityId(communities.get(0).getId());
             }
         }
-        if(umsInfo.getDefaultCompetitionId()!=null){
-            CompetitionFamily competitionFamily = compFamilyService.findByByCompId(umsInfo.getDefaultCompetitionId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Competition Family not found"));
-            umsInfo.setDefaultCountry(competitionFamily.getCountry());
+            UmsInfoDto umsInfo = new UmsInfoDto(
+                    tipper.getDefaultCommunityId(),
+                    tipper.getDefaultCompetitionId(),
+                    tipper.isCommunityAdmin(),
+                    tipper.isCompetitionAdmin(),
+                    tipper.getUsername());
+            umsInfo.setLoggedIn(true);
+            // fetch communities and competitions where tipper has admin rights
+            List<TipperRole> tipperRoles = tipperRoleService.getAllForTipper(tipper.getId());
+            if (!tipperRoles.isEmpty()) {
+                for (TipperRole tipperRole : tipperRoles) {
+                    if (tipperRole.getRole() instanceof CommunityRole) {
+                        umsInfo.getAdminCommunities().add(((CommunityRole) tipperRole.getRole()).getCommunity().getId());
+                    } else if (tipperRole.getRole() instanceof CompetitionRole) {
+                        umsInfo.getAdminCompetitions().add(((CompetitionRole) tipperRole.getRole()).getCompetition().getId());
+                    } else {
+                        // do nothing
+                    }
 
-        }
-        else{
-            umsInfo.setDefaultCountry(Country.GERMANY);
-        }
-          // fetch registered communities for common tipper
-        List<CommunityMembership> commMembs = communityMembershipService.findCommunities(tipper.getId());
-        if (!commMembs.isEmpty()) {
-            for (CommunityMembership communityMembership : commMembs) {
-                umsInfo.getTipperCommunities().add(communityMembership.getCommunity().getId());
+                }
             }
+            if (umsInfo.getDefaultCompetitionId() != null) {
+                CompetitionFamily competitionFamily = compFamilyService.findByByCompId(umsInfo.getDefaultCompetitionId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Competition Family not found"));
+                umsInfo.setDefaultCountry(competitionFamily.getCountry());
+
+            } else {
+                umsInfo.setDefaultCountry(Country.GERMANY);
+            }
+            // fetch registered communities for common tipper
+            List<CommunityMembership> commMembs = communityMembershipService.findCommMembs(tipper.getId());
+            if (!commMembs.isEmpty()) {
+                for (CommunityMembership communityMembership : commMembs) {
+                    umsInfo.getTipperCommunities().add(communityMembership.getCommunity().getId());
+                }
+            }
+            log.info("UmsInfoDto : {}", umsInfo);
+            return umsInfo;
+
+
         }
-        log.info("UmsInfoDto : {}", umsInfo);
-        return umsInfo;
-
-
     }
-}

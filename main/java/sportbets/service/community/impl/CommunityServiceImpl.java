@@ -8,7 +8,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.authorization.CommunityRole;
+import sportbets.persistence.entity.authorization.TipperRole;
 import sportbets.persistence.entity.community.Community;
+import sportbets.persistence.repository.authorization.RoleRepository;
+import sportbets.persistence.repository.authorization.TipperRoleRepository;
 import sportbets.persistence.repository.community.CommunityRepository;
 import sportbets.service.community.CommunityService;
 import sportbets.web.dto.community.CommunityDto;
@@ -21,19 +24,22 @@ public class CommunityServiceImpl implements CommunityService {
 
     private static final Logger log = LoggerFactory.getLogger(CommunityServiceImpl.class);
     private final CommunityRepository communityRepo;
+    private final RoleRepository roleRepo;
+    private final TipperRoleRepository tipperRoleRepo;
     private final ModelMapper modelMapper;
 
-    public CommunityServiceImpl(CommunityRepository communityRepo, ModelMapper modelMapper) {
+    public CommunityServiceImpl(CommunityRepository communityRepo, RoleRepository roleRepo, TipperRoleRepository tipperRoleRepo, ModelMapper modelMapper) {
         this.communityRepo = communityRepo;
-
+        this.roleRepo = roleRepo;
+        this.tipperRoleRepo = tipperRoleRepo;
         this.modelMapper = modelMapper;
     }
 
     @Override
     public Optional<Community> findById(Long id) {
-    Optional<Community> comm= communityRepo.findById(id);
-    log.debug(":find community: {}", comm.isPresent());
-    return comm;
+        Optional<Community> comm = communityRepo.findById(id);
+        log.debug(":find community: {}", comm.isPresent());
+        return comm;
     }
 
 
@@ -82,8 +88,21 @@ public class CommunityServiceImpl implements CommunityService {
     @Override
     @Transactional
     public void deleteById(Long id) {
+
         // Idempotent check: If it is already gone, do nothing
         if (communityRepo.existsById(id)) {
+
+            Community myCom = communityRepo.getCommunityById(id);
+            CommunityRole commRole = roleRepo.findByCommunityName(myCom.getName()).orElseThrow(() -> new EntityNotFoundException("no community role present for community:" + id));
+
+            if (tipperRoleRepo.existsByRoleId(commRole.getId())) {
+                log.debug("delete tipper role");
+                TipperRole tipperRole = tipperRoleRepo.getByRoleId(commRole.getId());
+                tipperRole.getTipper().setDefaultCommunityId(null);
+
+                tipperRoleRepo.delete(tipperRole);
+
+            }
             communityRepo.deleteById(id);
         }
 
@@ -94,8 +113,19 @@ public class CommunityServiceImpl implements CommunityService {
     public void deleteByName(String name) {
         // Idempotent check: If it is already gone, do nothing
         if (communityRepo.existsByName(name)) {
-            log.debug("Community exist with given name:{}", name);
-            communityRepo.deleteByName(name);
+
+            Community myCom = communityRepo.getByName(name);
+            CommunityRole commRole = roleRepo.findByCommunityName(myCom.getName()).orElseThrow(() -> new EntityNotFoundException("no community role present for community:" + name));
+
+            if (tipperRoleRepo.existsByRoleId(commRole.getId())) {
+                log.debug("delete tipper role");
+                TipperRole tipperRole = tipperRoleRepo.getByRoleId(commRole.getId());
+                tipperRole.getTipper().setDefaultCommunityId(null);
+
+                tipperRoleRepo.delete(tipperRole);
+
+            }
+            communityRepo.deleteById(myCom.getId());
         }
         log.debug("Community to be delete:: {}", name);
 

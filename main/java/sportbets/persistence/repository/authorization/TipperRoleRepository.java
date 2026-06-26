@@ -15,4 +15,7 @@ public interface TipperRoleRepository extends JpaRepository<TipperRole, Long> {
     List<TipperRole> getAllForTipper(Long tipperId);
 
 
+    boolean existsByRoleId(Long id);
+
+    TipperRole getByRoleId(Long id);
 }

@@ -17,4 +17,8 @@ public interface CommunityRepository extends JpaRepository<Community, Long> {
     boolean existsByName(String name);
 
     boolean existsById(@NotNull Long id);
+
+    Community getCommunityById(Long id);
+
+    Community getByName(String name);
 }

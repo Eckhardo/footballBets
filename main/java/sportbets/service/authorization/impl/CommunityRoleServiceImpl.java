@@ -73,6 +73,7 @@ public class CommunityRoleServiceImpl implements CommunityRoleService {
     }
 
 
+
     @Override
     @Transactional(readOnly = true)
     public List<CommunityRole> getAllCommunityRoles() {

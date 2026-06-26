@@ -15,6 +15,8 @@ import sportbets.web.dto.community.TipperDto;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
+
 @RestController
 @RequestMapping("/tipper")
 class TipperController {
@@ -28,16 +30,15 @@ class TipperController {
         this.modelMapper = modelMapper;
     }
 
-    @GetMapping("/{id}")
-    public TipperDto findOne(@PathVariable Long id) {
-        log.debug("TipperController:findOne::{}", id);
-        Tipper model = tipperService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    @GetMapping("/{username}")
+    public TipperDto findByUsername(@PathVariable String username) {
+        log.debug("TipperController:findByUsername::{}", username);
+        Tipper model = tipperService.findByUsername(username).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         log.debug("Tipper found with {}", model.getUsername());
         return modelMapper.map(model, TipperDto.class);
 
     }
-
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public TipperDto post(@RequestBody @Valid TipperDto newTipper) {
