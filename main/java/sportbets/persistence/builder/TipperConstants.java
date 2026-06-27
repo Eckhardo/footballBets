@@ -22,12 +22,12 @@ public class TipperConstants {
 
 
     public static TipperDto createValidTipperDto(){
-       return   new TipperDto(null, "Werner", "Wernersen", "Wernerdo", "banane", "frucht", "werner@gmx.de", null);
+       return   new TipperDto(null, "Werner", "Wernersen", "Wernerdo", "banane", "frucht", "werner@gmx.de", null, null);
 
     }
 
     public static TipperDto createValidTipperDto2(){
-        return   new TipperDto(null, "Otto", "Ottosen", "ottoso", "banane", "frucht", "werner@gmx.de", null);
+        return   new TipperDto(null, "Otto", "Ottosen", "ottoso", "banane", "frucht", "werner@gmx.de", null,null );
 
     }
 

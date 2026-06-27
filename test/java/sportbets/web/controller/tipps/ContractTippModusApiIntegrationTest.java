@@ -21,10 +21,7 @@ import sportbets.persistence.repository.community.CommunityRepository;
 import sportbets.persistence.repository.tipps.TippModusRepository;
 import sportbets.testdata.TestConstants;
 import sportbets.web.dto.community.CommunityDto;
-import sportbets.web.dto.tipps.TippModusDto;
-import sportbets.web.dto.tipps.TippModusPointDto;
-import sportbets.web.dto.tipps.TippModusResultDto;
-import sportbets.web.dto.tipps.TippModusTotoDto;
+import sportbets.web.dto.tipps.*;
 
 import java.util.List;
 
@@ -39,16 +36,14 @@ public class ContractTippModusApiIntegrationTest {
 
     private static final Logger log = LoggerFactory.getLogger(ContractTippModusApiIntegrationTest.class);
 
-    CommunityDto communityDto = TestConstants.createValidCommunityDto();
-
     @Autowired
     WebTestClient webClient = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();
     @Autowired
     CommunityRepository communityRepository;
-
-
     @Autowired
     TippModusRepository tippModusRepository;
+
+    private final   CommunityDto communityDto = TestConstants.createValidCommunityDto();
     private final TippModusTotoDto totoTest = TestConstants.createValidTippModusTotoDto();
     private final TippModusResultDto resultTest = TestConstants.createValidTippModusResultDto();
     private final TippModusPointDto pointTest = TestConstants.createValidTippModusPointDto();
@@ -105,7 +100,6 @@ public class ContractTippModusApiIntegrationTest {
                 .isEqualTo(communityDto.getName())
                 .jsonPath("$.type")
                 .isEqualTo(TippModusType.TIPPMODUS_TOTO.getDisplayName());
-        log.debug("SAVED: ");
 
         List<TippModusToto> totoList = tippModusRepository.findTippModusToto(community.getId());
         Long totoId = totoList.get(0).getId();
@@ -123,6 +117,7 @@ public class ContractTippModusApiIntegrationTest {
                 .isEqualTo(communityDto.getName())
                 .jsonPath("$.type")
                 .isEqualTo(TippModusType.TIPPMODUS_TOTO.getDisplayName());
+
         totoTest.setId(totoId);
         totoTest.setDeadline(5);
         webClient.put()
@@ -461,5 +456,13 @@ public class ContractTippModusApiIntegrationTest {
                 .expectStatus()
                 .isOk()
                 .expectBodyList(TippModusDto.class).hasSize(3);
+
+
+        webClient.get()
+                .uri("/tippModus/types")
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBodyList(TippModusIF.class).hasSize(3);
     }
 }

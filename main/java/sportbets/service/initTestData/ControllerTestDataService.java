@@ -45,7 +45,7 @@ public class ControllerTestDataService {
     public static CommunityDto TEST_COMM_DTO = new CommunityDto(null, "COMM_TEST", "Description of Community");
     public static CompetitionMembershipDto TEST_COMP_MEM_DTO = new CompetitionMembershipDto(null, TEST_COMP_DTO.getName(), null, TEST_COMM_DTO.getName());
 
-    public static TipperDto WERNER_DTO = new TipperDto(null, "Werner", "Wernersen", "Wernerle", "banane", "frucht", "werner@gmx.de", null);
+    public static TipperDto WERNER_DTO = new TipperDto(null, "Werner", "Wernersen", "Wernerle", "banane", "frucht", "werner@gmx.de", null, null);
     public static CommunityMembershipDto TEST_COMM_MEMB_DTO = new CommunityMembershipDto(null, null, WERNER_DTO.getUsername(), null, TEST_COMM_DTO.getName());
     @Autowired
     TipperService tipperService;

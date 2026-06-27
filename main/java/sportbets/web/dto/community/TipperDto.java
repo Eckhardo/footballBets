@@ -26,6 +26,8 @@ public class TipperDto implements Serializable {
     @Email(message = " invalid email")
     private String email;
 
+    private Long defaultCompetitionId;
+
 
     private Long defaultCommunityId;
 
@@ -34,7 +36,7 @@ public class TipperDto implements Serializable {
     }
 
 
-    public TipperDto(Long id, String firstname, String lastname, String username, String passwort, String passwortHint, String email, Long defaultCommunityId) {
+    public TipperDto(Long id, String firstname, String lastname, String username, String passwort, String passwortHint, String email, Long defaultCommunityId, Long defaultCompetitionId) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -43,6 +45,7 @@ public class TipperDto implements Serializable {
         this.passwortHint = passwortHint;
         this.email = email;
         this.defaultCommunityId = defaultCommunityId;
+        this.defaultCompetitionId = defaultCompetitionId;
 
     }
 
@@ -142,5 +145,13 @@ public class TipperDto implements Serializable {
                 "passwortHint = " + passwortHint + ", " +
                 "email = " + email + ", " +
                 "defaultCommunityId = " + defaultCommunityId + ")";
+    }
+
+    public Long getDefaultCompetitionId() {
+        return defaultCompetitionId;
+    }
+
+    public void setDefaultCompetitionId(Long defaultCompetitionId) {
+        this.defaultCompetitionId = defaultCompetitionId;
     }
 }

@@ -17,10 +17,7 @@ import sportbets.persistence.repository.community.CommunityRepository;
 import sportbets.persistence.repository.tipps.TippModusRepository;
 import sportbets.service.tipps.TippModusService;
 import sportbets.web.dto.MapperUtilTipps;
-import sportbets.web.dto.tipps.TippModusDto;
-import sportbets.web.dto.tipps.TippModusPointDto;
-import sportbets.web.dto.tipps.TippModusResultDto;
-import sportbets.web.dto.tipps.TippModusTotoDto;
+import sportbets.web.dto.tipps.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +53,11 @@ public class TippModusServiceImpl implements TippModusService {
     public Optional<TippModusDto> findByNameAndCommunity(String name, Long commId) {
         TippModus entity = repo.findByNameAndCommunity(name, commId).orElseThrow(() -> new EntityNotFoundException("TippModus not found"));
         return Optional.of(convertToDto(entity));
+    }
+
+    @Override
+    public List<TippModusIF> findTipModusTypes() {
+        return List.of(new TippModusPointDescription(),new TippModusResultDescription(),new TippModusTotoDescription());
     }
 
     @Override
@@ -178,4 +180,5 @@ public class TippModusServiceImpl implements TippModusService {
         }
         return entity;
     }
+
 }

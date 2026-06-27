@@ -12,6 +12,11 @@ import sportbets.persistence.entity.community.CommunityMembership;
 import sportbets.persistence.entity.community.Tipper;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionMembership;
+import sportbets.persistence.entity.tipps.TippModus;
+import sportbets.persistence.entity.tipps.TippModusPoint;
+import sportbets.persistence.entity.tipps.TippModusResult;
+import sportbets.persistence.entity.tipps.TippModusToto;
+import sportbets.persistence.entity.tipps.enums.TippModusType;
 import sportbets.persistence.repository.community.CommunityMembershipRepository;
 import sportbets.persistence.repository.community.CommunityRepository;
 import sportbets.persistence.repository.community.TipperRepository;
@@ -21,6 +26,7 @@ import sportbets.web.dto.community.CommunityDto;
 import sportbets.web.dto.community.CommunityWizardRecord;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class CommunityWizardServiceImpl implements CommunityWizardService {
@@ -51,6 +57,20 @@ public class CommunityWizardServiceImpl implements CommunityWizardService {
         Community newComm = new Community(record.commName(), record.commDescription());
         CommunityRole communityRole = new CommunityRole(newComm.getName(), newComm.getDescription(), newComm);
         newComm.addCommunityRole(communityRole);
+        List<String> tippModi = record.tippModi();
+        for (String modus : tippModi) {
+            TippModusType type = TippModusType.fromString(modus);
+            TippModus x = switch (Objects.requireNonNull(type)) {
+                case TIPPMODUS_TOTO ->
+                        new TippModusToto(TippModusType.fromEnum(type), TippModusType.TIPPMODUS_TOTO, 1, newComm);
+
+                case TIPPMODUS_POINT ->
+                        new TippModusPoint(TippModusType.fromEnum(type), TippModusType.TIPPMODUS_POINT, 1, newComm, 4);
+                case TIPPMODUS_RESULT ->
+                        new TippModusResult(TippModusType.fromEnum(type), TippModusType.TIPPMODUS_RESULT, 1, newComm, 2, 1);
+            };
+
+        }
         // prepare community membership
         CommunityMembership communityMembership = new CommunityMembership(newComm, adminTipper);
 
@@ -67,16 +87,11 @@ public class CommunityWizardServiceImpl implements CommunityWizardService {
         List<Tipper> memberTippers = tipperRepository.findBySpecificIds(record.tipperIds());
         for (Tipper tipper : memberTippers) {
             tipper.setDefaultCommunityId(savedComm.getId());
+            tipper.setDefaultCompetitionId(savedComp.getId());
             membershipRepository.save(new CommunityMembership(savedComm, tipper));
         }
-        for(Tipper tipper : memberTippers){
-            Tipper myTipper= tipperRepository.findById(tipper.getId()).orElseThrow(() -> new EntityNotFoundException("myTipper not found"));
-            log.info("myTipper {}", myTipper);
-        }
 
-        CommunityDto communityDto = new CommunityDto(savedComm.getId(), savedComm.getName(), savedComm.getDescription());
+        return new CommunityDto(savedComm.getId(), savedComm.getName(), savedComm.getDescription());
 
-        log.debug("saved CommunityDto {}", communityDto);
-        return communityDto;
     }
 }

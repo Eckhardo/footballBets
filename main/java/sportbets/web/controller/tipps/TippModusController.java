@@ -8,10 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import sportbets.service.tipps.TippModusService;
-import sportbets.web.dto.tipps.TippModusDto;
-import sportbets.web.dto.tipps.TippModusPointDto;
-import sportbets.web.dto.tipps.TippModusResultDto;
-import sportbets.web.dto.tipps.TippModusTotoDto;
+import sportbets.web.dto.tipps.*;
 
 import java.util.List;
 
@@ -119,5 +116,10 @@ class TippModusController {
 
             tippModusService.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+    @GetMapping("/types")
+    public List<TippModusIF> findTypes() {
+        log.debug("TippModusController:findTypes::");
+        return tippModusService.findTipModusTypes();
     }
 }

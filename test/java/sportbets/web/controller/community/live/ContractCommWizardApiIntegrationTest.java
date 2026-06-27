@@ -17,6 +17,7 @@ import sportbets.persistence.entity.community.Community;
 import sportbets.persistence.entity.community.Tipper;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
+import sportbets.persistence.entity.tipps.enums.TippModusType;
 import sportbets.persistence.repository.community.CommunityRepository;
 import sportbets.persistence.repository.community.TipperRepository;
 import sportbets.persistence.repository.competition.CompetitionFamilyRepository;
@@ -58,6 +59,7 @@ public class ContractCommWizardApiIntegrationTest {
     CommunityDto commDto = TestConstants.createValidCommunityDto();
     CommunityWizardRecord wizardRecord;
     List<Long> tipperIds = new ArrayList<>(List.of(10L));
+    List<String> tippModi = new ArrayList<>(List.of(TippModusType.TIPPMODUS_POINT.getDisplayName(),TippModusType.TIPPMODUS_TOTO.getDisplayName()));
 
     @BeforeEach
     public void setUp() {
@@ -155,7 +157,7 @@ public class ContractCommWizardApiIntegrationTest {
         Tipper member = tipperRepo.findByUsername(memberTipperDto.getUsername()).orElseThrow(() -> new EntityNotFoundException(memberTipperDto.getUsername()));
         tipperIds.add(member.getId());
 
-        wizardRecord = new CommunityWizardRecord(commDto.getName(), commDto.getDescription(), comp.getId(), comp.getName(), tipper.getUsername(), tipperIds);
+        wizardRecord = new CommunityWizardRecord(commDto.getName(), commDto.getDescription(), comp.getId(), comp.getName(), tipper.getUsername(), tipperIds,tippModi);
 
         webClient.post()
                 .uri("/commWizard")

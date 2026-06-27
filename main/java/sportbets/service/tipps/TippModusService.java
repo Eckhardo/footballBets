@@ -1,5 +1,6 @@
 package sportbets.service.tipps;
 
+import sportbets.web.dto.tipps.TippModusIF;
 import sportbets.web.dto.tipps.TippModusDto;
 
 import java.util.List;
@@ -27,5 +28,7 @@ public interface TippModusService {
     List<TippModusDto> findPointTypesForCommunity(Long id);
 
     Optional<TippModusDto> findByNameAndCommunity(String name, Long commId);
+    List<TippModusIF> findTipModusTypes();
+
 
 }

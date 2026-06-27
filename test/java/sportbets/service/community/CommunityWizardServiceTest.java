@@ -10,6 +10,7 @@ import sportbets.persistence.builder.TipperConstants;
 import sportbets.persistence.entity.community.Tipper;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
+import sportbets.persistence.entity.tipps.enums.TippModusType;
 import sportbets.service.competition.CompFamilyService;
 import sportbets.service.competition.CompService;
 import sportbets.testdata.TestConstants;
@@ -56,7 +57,7 @@ public class CommunityWizardServiceTest {
     private CommunityWizardRecord testRecord = null;
 
     private List<Long> tipperIds=new ArrayList<>();
-
+    List<String> tippModi = new ArrayList<>(List.of(TippModusType.TIPPMODUS_POINT.getDisplayName(),TippModusType.TIPPMODUS_TOTO.getDisplayName()));
     @BeforeEach
     public void setup() {
         log.info("setup");
@@ -87,7 +88,7 @@ public class CommunityWizardServiceTest {
     @Test
     @Order(1)
     void whenSaveCommunityWithGivenCompetition_thenCompetitionMembershipShouldBeCreated() {
-        testRecord = new CommunityWizardRecord(commDto.getName(), commDto.getDescription(), savedComp.getId(), savedComp.getName(), adminTipper.getUsername(),tipperIds);
+        testRecord = new CommunityWizardRecord(commDto.getName(), commDto.getDescription(), savedComp.getId(), savedComp.getName(), adminTipper.getUsername(),tipperIds,tippModi);
         CommunityDto saved = communityWizardService.save(testRecord);
         assertThat(saved.getId()).isNotNull();
         assertThat(saved.getName()).isEqualTo(commDto.getName());
@@ -96,7 +97,7 @@ public class CommunityWizardServiceTest {
     @Test
     @Order(2)
     void whenDeleteCommunityPreparedByWizard_thenCompetitionMembershipShouldBeCreated() {
-        testRecord = new CommunityWizardRecord(commDto.getName(), commDto.getDescription(), savedComp.getId(), savedComp.getName(), adminTipper.getUsername(),tipperIds);
+        testRecord = new CommunityWizardRecord(commDto.getName(), commDto.getDescription(), savedComp.getId(), savedComp.getName(), adminTipper.getUsername(),tipperIds,tippModi);
         CommunityDto saved = communityWizardService.save(testRecord);
         assertThat(saved.getId()).isNotNull();
         assertThat(saved.getName()).isEqualTo(commDto.getName());

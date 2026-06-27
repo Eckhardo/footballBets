@@ -6,6 +6,7 @@ import sportbets.persistence.entity.community.Community;
 import sportbets.persistence.entity.competition.Spiel;
 import sportbets.persistence.entity.tipps.converter.TippModusTypeAttributeConverter;
 import sportbets.persistence.entity.tipps.enums.TippModusType;
+import sportbets.web.dto.tipps.TippModusDto;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -15,14 +16,8 @@ import java.util.Set;
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class TippModus {
-    protected static final int HOMEWIN = 1;
-    protected static final int DRAW = 0;
-    protected static final int GUESTWIN = 2;
-    @Column(nullable = false)
-    private final LocalDateTime createdOn = LocalDateTime.now();
-    @OneToMany(mappedBy = "tippModus", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    Set<Tipp> tipps = new HashSet<>();
-    @Id
+
+     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
     @Column(name = "id", nullable = false)
     private Long id;
@@ -30,17 +25,20 @@ public abstract class TippModus {
     private String name;
     @Convert(converter = TippModusTypeAttributeConverter.class)
     private TippModusType type;
-    /**
-     * an Integer representation for the time when tipps have to be placed
-     * before the speiltag begind
-     */
+    @Column(nullable = false)
+    private final LocalDateTime createdOn = LocalDateTime.now();
     private Integer deadline;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fk_comm_id", foreignKey = @ForeignKey(name = "FK_TIPP_MODUS_TO_COMMUNITY"))
     @NotNull
     private Community community;
+
     @OneToMany(mappedBy = "tippModus", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Set<TippConfig> tippConfigs = new HashSet();
+    Set<Tipp> tipps = new HashSet<>();
+
+    @OneToMany(mappedBy = "tippModus", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<TippConfig> tippConfigs = new HashSet<>();
 
     /**
      * No-arg constructor for JavaBean tools.

@@ -19,7 +19,8 @@ public record CommunityWizardRecord(
         String compName,
         @NotBlank(message = "tipper Name must not be blank")
         String tipperUserName,
-        List<Long> tipperIds
+        List<Long> tipperIds,
+        List<String> tippModi
 ) {
 
     public CommunityWizardRecord {

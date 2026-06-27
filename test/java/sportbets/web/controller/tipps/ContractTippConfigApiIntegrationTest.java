@@ -71,7 +71,7 @@ public class ContractTippConfigApiIntegrationTest {
     TippModus savedPointModus;
     TippModus savedResultModus;
     Competition savedComp;
-    CompetitionMembership savedoCompMemb;
+    CompetitionMembership savedCompMemb;
 
     @BeforeEach
     public void setUp() {
@@ -96,7 +96,7 @@ public class ContractTippConfigApiIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isCreated();
-        Competition savedComp = competitionRepository.findByName(compDto.getName()).orElseThrow(() -> new EntityNotFoundException(compDto.getName()));
+        savedComp = competitionRepository.findByName(compDto.getName()).orElseThrow(() -> new EntityNotFoundException(compDto.getName()));
         compRoundDto.setCompId(savedComp.getId());
         compRoundDto.setCompName(savedComp.getName());
 
@@ -204,8 +204,8 @@ public class ContractTippConfigApiIntegrationTest {
                 .isEqualTo(compDto.getName())
                 .jsonPath("$.compId")
                 .exists();
-        savedoCompMemb = compMembRepo.findByCommIdAndCompId(savedCommunity.getId(), savedComp.getId()).orElseThrow();
-        assertNotNull(savedoCompMemb);
+        savedCompMemb = compMembRepo.findByCommIdAndCompId(savedCommunity.getId(), savedComp.getId()).orElseThrow();
+        assertNotNull(savedCompMemb);
 
     }
 
@@ -238,7 +238,7 @@ public class ContractTippConfigApiIntegrationTest {
     @Order(1)
     void saveRetrieveAndUpdateTippConfig_withValidInput_thenSuccess() {
         log.debug("saveRetrieveAndUpdateTippConfig_withValidInput_thenSuccess");
-        TippConfigDto tippConfigDto = new TippConfigDto(null, savedoCompMemb.getId(), savedMatchday.getId(), savedMatchday.getSpieltagNumber(), savedPointModus.getId());
+        TippConfigDto tippConfigDto = new TippConfigDto(null, savedCompMemb.getId(), savedMatchday.getId(), savedMatchday.getSpieltagNumber(), savedPointModus.getId());
         webClient.post()
                 .uri("/tippConfig")
                 .contentType(MediaType.APPLICATION_JSON)

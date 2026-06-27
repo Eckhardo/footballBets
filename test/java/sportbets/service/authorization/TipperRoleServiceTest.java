@@ -76,7 +76,7 @@ class TipperRoleServiceTest {
         savedCommunity = communityService.save(communityDto);
         assertNotNull(savedCommunity);
 
-        TipperDto testTipper = new TipperDto(null, "Werner", "Wernersen", TEST_USERNAME, "banane", "frucht", "werner@gmx.de", null);
+        TipperDto testTipper = new TipperDto(null, "Werner", "Wernersen", TEST_USERNAME, "banane", "frucht", "werner@gmx.de", null,savedComp.getId() );
 
         testTipper.setDefaultCommunityId(savedCommunity.getId());
         savedTipper = tipperService.save(testTipper);
