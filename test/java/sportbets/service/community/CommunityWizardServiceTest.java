@@ -19,6 +19,7 @@ import sportbets.web.dto.community.CommunityWizardRecord;
 import sportbets.web.dto.community.TipperDto;
 import sportbets.web.dto.competition.CompetitionDto;
 import sportbets.web.dto.competition.CompetitionFamilyDto;
+import sportbets.web.dto.competition.CompetitionMembershipDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +58,7 @@ public class CommunityWizardServiceTest {
     private CommunityWizardRecord testRecord = null;
 
     private List<Long> tipperIds=new ArrayList<>();
-    List<String> tippModi = new ArrayList<>(List.of(TippModusType.TIPPMODUS_POINT.getDisplayName(),TippModusType.TIPPMODUS_TOTO.getDisplayName()));
+    String tippModus =TippModusType.TIPPMODUS_POINT.getDisplayName();
     @BeforeEach
     public void setup() {
         log.info("setup");
@@ -88,21 +89,24 @@ public class CommunityWizardServiceTest {
     @Test
     @Order(1)
     void whenSaveCommunityWithGivenCompetition_thenCompetitionMembershipShouldBeCreated() {
-        testRecord = new CommunityWizardRecord(commDto.getName(), commDto.getDescription(), savedComp.getId(), savedComp.getName(), adminTipper.getUsername(),tipperIds,tippModi);
-        CommunityDto saved = communityWizardService.save(testRecord);
-        assertThat(saved.getId()).isNotNull();
-        assertThat(saved.getName()).isEqualTo(commDto.getName());
-
+        testRecord = new CommunityWizardRecord(commDto.getName(), commDto.getDescription(), savedComp.getId(), savedComp.getName(), adminTipper.getUsername(),tipperIds, tippModus);
+        CompetitionMembershipDto saved = communityWizardService.save(testRecord);
+        assertThat(saved.getCompId()).isNotNull();
+        assertThat(saved.getCommId()).isNotNull();
+        assertThat(saved.getCommName()).isEqualTo(commDto.getName());
+        assertThat(saved.getCompName()).isEqualTo(savedComp.getName());
     }
     @Test
     @Order(2)
     void whenDeleteCommunityPreparedByWizard_thenCompetitionMembershipShouldBeCreated() {
-        testRecord = new CommunityWizardRecord(commDto.getName(), commDto.getDescription(), savedComp.getId(), savedComp.getName(), adminTipper.getUsername(),tipperIds,tippModi);
-        CommunityDto saved = communityWizardService.save(testRecord);
-        assertThat(saved.getId()).isNotNull();
-        assertThat(saved.getName()).isEqualTo(commDto.getName());
+        testRecord = new CommunityWizardRecord(commDto.getName(), commDto.getDescription(), savedComp.getId(), savedComp.getName(), adminTipper.getUsername(),tipperIds, tippModus);
+        CompetitionMembershipDto saved = communityWizardService.save(testRecord);
+        assertThat(saved.getCompId()).isNotNull();
+        assertThat(saved.getCommId()).isNotNull();
+        assertThat(saved.getCommName()).isEqualTo(commDto.getName());
+        assertThat(saved.getCompName()).isEqualTo(savedComp.getName());
 
-        communityService.deleteById(saved.getId());
+        communityService.deleteById(saved.getCommId());
 
     }
 }

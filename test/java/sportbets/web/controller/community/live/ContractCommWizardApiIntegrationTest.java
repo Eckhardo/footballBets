@@ -59,7 +59,7 @@ public class ContractCommWizardApiIntegrationTest {
     CommunityDto commDto = TestConstants.createValidCommunityDto();
     CommunityWizardRecord wizardRecord;
     List<Long> tipperIds = new ArrayList<>(List.of(10L));
-    List<String> tippModi = new ArrayList<>(List.of(TippModusType.TIPPMODUS_POINT.getDisplayName(),TippModusType.TIPPMODUS_TOTO.getDisplayName()));
+    String tippModus = TippModusType.TIPPMODUS_POINT.getDisplayName();
 
     @BeforeEach
     public void setUp() {
@@ -157,7 +157,7 @@ public class ContractCommWizardApiIntegrationTest {
         Tipper member = tipperRepo.findByUsername(memberTipperDto.getUsername()).orElseThrow(() -> new EntityNotFoundException(memberTipperDto.getUsername()));
         tipperIds.add(member.getId());
 
-        wizardRecord = new CommunityWizardRecord(commDto.getName(), commDto.getDescription(), comp.getId(), comp.getName(), tipper.getUsername(), tipperIds,tippModi);
+        wizardRecord = new CommunityWizardRecord(commDto.getName(), commDto.getDescription(), comp.getId(), comp.getName(), tipper.getUsername(), tipperIds,tippModus);
 
         webClient.post()
                 .uri("/commWizard")
@@ -167,9 +167,11 @@ public class ContractCommWizardApiIntegrationTest {
                 .expectStatus()
                 .isCreated()
                 .expectBody()
-                .jsonPath("$.id")
+                .jsonPath("$.commId")
                 .exists()
-                .jsonPath("$.name")
+                .jsonPath("$.compId")
+                .exists()
+                .jsonPath("$.commName")
                 .isEqualTo(commDto.getName());
 
     }

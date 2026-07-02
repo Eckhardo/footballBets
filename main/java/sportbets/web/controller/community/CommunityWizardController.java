@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import sportbets.service.community.CommunityWizardService;
 import sportbets.web.dto.community.CommunityDto;
 import sportbets.web.dto.community.CommunityWizardRecord;
+import sportbets.web.dto.competition.CompetitionMembershipDto;
 
 @RestController
 @RequestMapping("/commWizard")
@@ -25,7 +26,7 @@ class CommunityWizardController {
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public CommunityDto post(@RequestBody @Valid CommunityWizardRecord communityWizardRecord) {
+    public CompetitionMembershipDto post(@RequestBody @Valid CommunityWizardRecord communityWizardRecord) {
         log.debug("save CommunityWizardRecord {}", communityWizardRecord);
         return wizardService.save(communityWizardRecord);
     }

@@ -100,6 +100,7 @@ public class SpieltagServiceImpl implements SpieltagService {
     @Override
     @Transactional(readOnly = true)
     public List<Spieltag> getAllForCompetition(Long id) {
+        log.debug("getAllForCompetition::{}", id);
         return spieltagRepository.findAllByCompId(id);
 
     }

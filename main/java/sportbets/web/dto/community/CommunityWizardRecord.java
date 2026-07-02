@@ -1,6 +1,7 @@
 package sportbets.web.dto.community;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -19,8 +20,10 @@ public record CommunityWizardRecord(
         String compName,
         @NotBlank(message = "tipper Name must not be blank")
         String tipperUserName,
+        @NotEmpty(message = "tipper list cannot be empty")
         List<Long> tipperIds,
-        List<String> tippModi
+        @NotNull(message = "tipp modus type must not be null")
+        String tippModus
 ) {
 
     public CommunityWizardRecord {

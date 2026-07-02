@@ -2,6 +2,7 @@ package sportbets.service.competition.impl;
 
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -15,8 +16,11 @@ import sportbets.persistence.repository.community.CommunityRepository;
 import sportbets.persistence.repository.competition.CompetitionMembershipRepository;
 import sportbets.persistence.repository.competition.CompetitionRepository;
 import sportbets.service.competition.CompetitionMembershipService;
+import sportbets.web.dto.MapperUtil;
+import sportbets.web.dto.competition.CompetitionDto;
 import sportbets.web.dto.competition.CompetitionMembershipDto;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -89,5 +93,16 @@ public class CompetitionMembershipServiceImpl implements CompetitionMembershipSe
     @Override
     public List<CompetitionMembership> getAll() {
         return membershipRepository.findAll();
+    }
+
+    @Override
+    public List<CompetitionDto> findCompetitions(Long commId) {
+       List<Competition> comps= membershipRepository.findCompetitions(commId);
+       List<CompetitionDto> compDtos = new ArrayList<>();
+       ModelMapper myMapper= MapperUtil.getModelMapperForFamily();
+       for(Competition comp:comps){
+           compDtos.add(myMapper.map(comp,CompetitionDto.class));
+       }
+       return compDtos;
     }
 }

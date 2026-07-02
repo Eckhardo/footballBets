@@ -26,7 +26,7 @@ public class CompController {
     private static final Logger log = LoggerFactory.getLogger(CompController.class);
     private final CompService compService;
     private final SpieltagService spieltagService;
-   private final ModelMapper myMapper;
+    private final ModelMapper myMapper;
 
     public CompController(CompService compService, SpieltagService spieltagService) {
         this.compService = compService;
@@ -51,7 +51,7 @@ public class CompController {
     public CompetitionDto findOne(@PathVariable Long id) {
         log.debug("CompController:findOne::{}", id);
         Competition model = compService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-         log.debug("Competition found with {}", model);
+        log.debug("Competition found with {}", model);
         return myMapper.map(model, CompetitionDto.class);
 
     }
@@ -67,11 +67,14 @@ public class CompController {
     @GetMapping("/{compId}/matchdays")
     public List<SpieltagDto> findAllForCompetition(@PathVariable Long compId) {
         log.info("SpieltagDto:findAll::{}", compId);
-        List<Spieltag> spieltags = spieltagService.getAllForCompetition(compId);
+        List<Spieltag> matchdays = spieltagService.getAllForCompetition(compId);
+        log.info("SpieltagDto:fundAll::{}", matchdays.size());
         List<SpieltagDto> spieltagDtos = new ArrayList<>();
-        spieltags.forEach(comp -> {
-            spieltagDtos.add(myMapper.map(comp, SpieltagDto.class));
+        matchdays.forEach(matchday -> {
+            log.info("add matchday::{}", matchday);
+            spieltagDtos.add(myMapper.map(matchday, SpieltagDto.class));
         });
+        log.info("return SpieltagDto:size::{}", spieltagDtos.size());
         return spieltagDtos;
     }
 
@@ -80,7 +83,7 @@ public class CompController {
         log.info("CompetitionDto:findAllCompsByFamId::{}", familyId);
         List<Competition> comps = compService.findByFamilyId(familyId);
         List<CompetitionDto> compDtos = new ArrayList<>();
-         comps.forEach(comp -> {
+        comps.forEach(comp -> {
             compDtos.add(myMapper.map(comp, CompetitionDto.class));
         });
         return compDtos;
@@ -92,7 +95,7 @@ public class CompController {
         log.debug(" CompetitionRoundDto:findAll for comp::");
         List<CompetitionRound> compRounds = compService.getAllFormComp(id);
         List<CompetitionRoundDto> roundDtos = new ArrayList<>();
-         compRounds.forEach(comp -> {
+        compRounds.forEach(comp -> {
             roundDtos.add(myMapper.map(comp, CompetitionRoundDto.class));
         });
         return roundDtos;
@@ -114,7 +117,7 @@ public class CompController {
 
         Competition createdModel = compService.save(newComp);
 
-         CompetitionDto createdDto = myMapper.map(createdModel, CompetitionDto.class);
+        CompetitionDto createdDto = myMapper.map(createdModel, CompetitionDto.class);
         log.debug("Competition RETURN do {}", createdDto);
         return createdDto;
     }
@@ -136,7 +139,7 @@ public class CompController {
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         log.debug("CompController.delete::{}", id);
-             compService.deleteById(id);
+        compService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 }

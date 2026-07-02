@@ -6,6 +6,6 @@ import sportbets.web.dto.competition.CompetitionMembershipDto;
 
 public interface CommunityWizardService {
 
-    CommunityDto save(CommunityWizardRecord record);
+    CompetitionMembershipDto save(CommunityWizardRecord record);
 
 }

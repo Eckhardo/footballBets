@@ -1,6 +1,7 @@
 package sportbets.service.competition;
 
 import sportbets.persistence.entity.competition.CompetitionMembership;
+import sportbets.web.dto.competition.CompetitionDto;
 import sportbets.web.dto.competition.CompetitionMembershipDto;
 
 import java.util.List;
@@ -16,4 +17,6 @@ public interface CompetitionMembershipService {
     void deleteById(Long id);
 
     List<CompetitionMembership> getAll();
+
+    List<CompetitionDto> findCompetitions(Long commId);
 }
