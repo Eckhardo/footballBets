@@ -17,7 +17,10 @@ import sportbets.persistence.repository.community.CommunityRepository;
 import sportbets.persistence.repository.tipps.TippModusRepository;
 import sportbets.service.tipps.TippModusService;
 import sportbets.web.dto.MapperUtilTipps;
-import sportbets.web.dto.tipps.*;
+import sportbets.web.dto.tipps.TippModusDto;
+import sportbets.web.dto.tipps.TippModusPointDto;
+import sportbets.web.dto.tipps.TippModusResultDto;
+import sportbets.web.dto.tipps.TippModusTotoDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,8 +59,13 @@ public class TippModusServiceImpl implements TippModusService {
     }
 
     @Override
-    public List<TippModusIF> findTipModusTypes() {
-        return List.of(new TippModusPointDescription(),new TippModusResultDescription(),new TippModusTotoDescription());
+    public List<TippModusDto> findTipModusTypes(Long commId) {
+        Community community = commRepo.findById(commId).orElseThrow(() -> new EntityNotFoundException("Community not found"));
+        TippModusPointDto point = new TippModusPointDto(null, null, TippModusType.TIPPMODUS_POINT.getDisplayName(), 0, community.getId(), community.getName(), 1);
+        TippModusResultDto result = new TippModusResultDto(null, null, TippModusType.TIPPMODUS_RESULT.getDisplayName(), 0, community.getId(), community.getName(),2,3);
+        TippModusTotoDto toto = new TippModusTotoDto(null, null, TippModusType.TIPPMODUS_TOTO.getDisplayName(), 0, community.getId(), community.getName());
+
+        return List.of(point,toto,result);
     }
 
     @Override

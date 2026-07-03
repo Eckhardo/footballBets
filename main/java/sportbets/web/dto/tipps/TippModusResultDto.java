@@ -41,7 +41,15 @@ public class TippModusResultDto extends TippModusDto implements Serializable {
     public void setBonusPoints(Integer bonusPoints) {
         this.bonusPoints = bonusPoints;
     }
+    public String getName() {
+        return " Ergebnis Tipp";
+    }
 
+    public String getDescription() {
+        return "Tendenz-Punkte: Sie tippen lediglich, welches Team gewinnt (Heimsieg, Auswärtssieg) oder ob es unentschieden ausgeht. \n " +
+                "Bonus-Punkte: für das exakte Ergebnis:\n" +
+                "Der Tipp stimmt exakt mit dem tatsächlichen Spielergebnis überein (Bsp: Sie tippen 2:1, das Spiel endet 2:1). ";
+    }
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;

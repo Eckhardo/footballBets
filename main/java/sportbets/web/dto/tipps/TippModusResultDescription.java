@@ -9,7 +9,7 @@
 package sportbets.web.dto.tipps;
 
 import sportbets.persistence.entity.tipps.enums.TippModusType;
-
+@Deprecated
 public class TippModusResultDescription implements TippModusIF {
 
     public TippModusResultDescription() {

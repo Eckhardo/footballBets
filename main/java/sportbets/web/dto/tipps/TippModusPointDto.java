@@ -30,6 +30,14 @@ public class TippModusPointDto extends TippModusDto implements Serializable {
         this.totalPoints = totalPoints;
     }
 
+    public String getName() {
+        return "Punkte Tipp";
+    }
+
+    public String getDescription() {
+        return "Verteilungspunkte: Sie bestimmen eine Anzahl von Punkten, die fei nach Wahl auf Heimsieg, Auswärtssieg oder unentschieden verteilt werden. " +
+                "Ist die Anzahl der Verteilungspunkte z. B. auf 4 festgelegt, können diese 4 Punkte in allen möglichen Variationen verteilt werden( z.B. 4:0:0, 0:0:4 oder auch 1:0:3 oder 2:2:0 ";
+    }
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;

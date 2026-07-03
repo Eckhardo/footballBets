@@ -21,6 +21,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @JsonSubTypes.Type(value = TippModusTotoDescription.class, name = "tippModusTotoDescription"),
         @JsonSubTypes.Type(value = TippModusResultDescription.class, name = "tippModusResultDescription")
 })
+@Deprecated
 public interface TippModusIF {
     String getType();
 

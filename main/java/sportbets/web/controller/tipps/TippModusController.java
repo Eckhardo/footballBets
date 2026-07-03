@@ -117,9 +117,9 @@ class TippModusController {
             tippModusService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
-    @GetMapping("/types")
-    public List<TippModusIF> findTypes() {
+    @GetMapping("/types/{id}")
+    public List<TippModusDto> findTypes(@PathVariable Long id) {
         log.debug("TippModusController:findTypes::");
-        return tippModusService.findTipModusTypes();
+        return tippModusService.findTipModusTypes(id);
     }
 }

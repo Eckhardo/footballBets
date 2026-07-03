@@ -9,7 +9,7 @@
 package sportbets.web.dto.tipps;
 
 import sportbets.persistence.entity.tipps.enums.TippModusType;
-
+@Deprecated
 public class TippModusPointDescription implements TippModusIF {
 
     public TippModusPointDescription() {
@@ -21,6 +21,7 @@ public class TippModusPointDescription implements TippModusIF {
     }
 
     @Override
+
     public String getName() {
         return "Punkte Tipp";
     }
