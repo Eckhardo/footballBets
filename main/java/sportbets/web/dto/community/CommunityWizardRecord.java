@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import sportbets.web.dto.tipps.TippModusDto;
 
 import java.util.List;
 
@@ -22,8 +23,8 @@ public record CommunityWizardRecord(
         String tipperUserName,
         @NotEmpty(message = "tipper list cannot be empty")
         List<Long> tipperIds,
-        @NotNull(message = "tipp modus type must not be null")
-        String tippModus
+        @NotEmpty(message = "tipp modi cannot be empty")
+        List<TippModusDto> tippModi
 ) {
 
     public CommunityWizardRecord {

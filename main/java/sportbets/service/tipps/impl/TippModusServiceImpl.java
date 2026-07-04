@@ -71,7 +71,7 @@ public class TippModusServiceImpl implements TippModusService {
     @Override
     @Transactional
     public TippModusDto save(TippModusDto dto) {
-        log.info("save tippModus");
+        log.info("save tippModus: {}",dto);
         Optional<TippModus> tippModus = repo.findByName(dto.getCommId(), dto.getName());
         if (tippModus.isPresent()) {
             throw new EntityExistsException("TippModus  already exists with name " + dto.getName());

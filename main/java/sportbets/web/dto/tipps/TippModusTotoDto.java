@@ -16,9 +16,7 @@ public class TippModusTotoDto extends TippModusDto implements Serializable {
     public TippModusTotoDto(Long id, String name, String type, Integer deadline, Long commId, String commName) {
         super(id, name, type, deadline, commId, commName);
     }
-    public String getName() {
-        return " Toto Tipp";
-    }
+
     public String getDescription() {
         return """
                 \

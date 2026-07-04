@@ -459,10 +459,10 @@ public class ContractTippModusApiIntegrationTest {
 
 
         webClient.get()
-                .uri("/tippModus/types")
+                .uri("/tippModus/types/" + community.getId())
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBodyList(TippModusIF.class).hasSize(3);
+                .expectBodyList(TippModusDto.class).hasSize(3);
     }
 }

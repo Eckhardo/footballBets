@@ -10,7 +10,6 @@ import sportbets.persistence.builder.TipperConstants;
 import sportbets.persistence.entity.community.Tipper;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
-import sportbets.persistence.entity.tipps.enums.TippModusType;
 import sportbets.service.competition.CompFamilyService;
 import sportbets.service.competition.CompService;
 import sportbets.testdata.TestConstants;
@@ -20,13 +19,14 @@ import sportbets.web.dto.community.TipperDto;
 import sportbets.web.dto.competition.CompetitionDto;
 import sportbets.web.dto.competition.CompetitionFamilyDto;
 import sportbets.web.dto.competition.CompetitionMembershipDto;
+import sportbets.web.dto.tipps.TippModusDto;
+import sportbets.web.dto.tipps.TippModusResultDto;
+import sportbets.web.dto.tipps.TippModusTotoDto;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ActiveProfiles("test")
@@ -56,9 +56,12 @@ public class CommunityWizardServiceTest {
     private Competition savedComp = null;
     private Tipper adminTipper = null;
     private CommunityWizardRecord testRecord = null;
+    TippModusTotoDto toto = TestConstants.createValidTippModusTotoDto();
+    TippModusResultDto result = TestConstants.createValidTippModusResultDto();
 
-    private List<Long> tipperIds=new ArrayList<>();
-    String tippModus =TippModusType.TIPPMODUS_POINT.getDisplayName();
+    private List<Long> tipperIds = new ArrayList<>();
+    List<TippModusDto> tippModdi = List.of(toto,result);
+
     @BeforeEach
     public void setup() {
         log.info("setup");
@@ -69,7 +72,7 @@ public class CommunityWizardServiceTest {
         savedComp = compService.save(compDto);
 
         adminTipper = tipperService.save(adminTipperDto);
-        Tipper memberTipper= tipperService.save(memberTipperDto);
+        Tipper memberTipper = tipperService.save(memberTipperDto);
         tipperIds.add(memberTipper.getId());
         log.info("setup end");
     }
@@ -89,17 +92,18 @@ public class CommunityWizardServiceTest {
     @Test
     @Order(1)
     void whenSaveCommunityWithGivenCompetition_thenCompetitionMembershipShouldBeCreated() {
-        testRecord = new CommunityWizardRecord(commDto.getName(), commDto.getDescription(), savedComp.getId(), savedComp.getName(), adminTipper.getUsername(),tipperIds, tippModus);
+        testRecord = new CommunityWizardRecord(commDto.getName(), commDto.getDescription(), savedComp.getId(), savedComp.getName(), adminTipper.getUsername(), tipperIds, tippModdi);
         CompetitionMembershipDto saved = communityWizardService.save(testRecord);
         assertThat(saved.getCompId()).isNotNull();
         assertThat(saved.getCommId()).isNotNull();
         assertThat(saved.getCommName()).isEqualTo(commDto.getName());
         assertThat(saved.getCompName()).isEqualTo(savedComp.getName());
     }
+
     @Test
     @Order(2)
     void whenDeleteCommunityPreparedByWizard_thenCompetitionMembershipShouldBeCreated() {
-        testRecord = new CommunityWizardRecord(commDto.getName(), commDto.getDescription(), savedComp.getId(), savedComp.getName(), adminTipper.getUsername(),tipperIds, tippModus);
+        testRecord = new CommunityWizardRecord(commDto.getName(), commDto.getDescription(), savedComp.getId(), savedComp.getName(), adminTipper.getUsername(), tipperIds, tippModdi);
         CompetitionMembershipDto saved = communityWizardService.save(testRecord);
         assertThat(saved.getCompId()).isNotNull();
         assertThat(saved.getCommId()).isNotNull();
