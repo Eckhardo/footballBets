@@ -18,6 +18,7 @@ import sportbets.web.dto.community.TipperDto;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/commMembs")
@@ -100,6 +101,17 @@ public class CommunityMembershipController {
     public List<CommunityDto> findTipperCommunities(@PathVariable String username) {
         log.debug(":find communities for tipper {}", username);
         return commMembService.findCommunities(username);
+
+    }
+
+    @GetMapping("/{commName}/community")
+    public CommunityDto findCommunityByName(@PathVariable String commName) {
+        log.debug(":find community for url {}", commName);
+        Optional<CommunityDto> dto = commMembService.findCommunity(commName);
+        if (dto.isPresent()) {
+            return dto.get();
+        }
+        return null;
 
     }
 }

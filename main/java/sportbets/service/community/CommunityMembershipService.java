@@ -26,4 +26,6 @@ public interface CommunityMembershipService {
     List<Tipper> findTippers(Long communityId);
 
     List<CommunityDto> findCommunities(String username);
+
+    Optional<CommunityDto>  findCommunity(String commName);
 }

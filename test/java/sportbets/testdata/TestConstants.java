@@ -12,6 +12,7 @@ import sportbets.persistence.entity.tipps.TippModusToto;
 import sportbets.persistence.entity.tipps.enums.TippModusType;
 import sportbets.web.dto.community.CommunityDto;
 import sportbets.web.dto.community.CommunityMembershipDto;
+import sportbets.web.dto.community.CommunityWizardTippModusRecord;
 import sportbets.web.dto.competition.*;
 import sportbets.web.dto.tipps.TippModusPointDto;
 import sportbets.web.dto.tipps.TippModusResultDto;
@@ -165,5 +166,21 @@ public class TestConstants {
     public static TippModusResult createValidTippModusResult() {
         return new TippModusResult("myNameResult", TippModusType.TIPPMODUS_RESULT, 1, createValidCommunity(), 3, 1);
 
+    }
+
+    public static CommunityWizardTippModusRecord createValidTippModusTotoRecord() {
+        return new CommunityWizardTippModusRecord("TotoTipp", TippModusType.TIPPMODUS_TOTO.getDisplayName(), 1, 0, 0, 0);
+    }
+
+    public static CommunityWizardTippModusRecord createValidTippModusResultRecord() {
+        return new CommunityWizardTippModusRecord("ResultTipp", TippModusType.TIPPMODUS_RESULT.getDisplayName(), 1, 3, 1, 0);
+    }
+
+    public static CommunityWizardTippModusRecord createValidTippModusResultRecord2() {
+        return new CommunityWizardTippModusRecord("ResultTipp2", TippModusType.TIPPMODUS_RESULT.getDisplayName(), 1, 3, 1, 0);
+    }
+
+    public static CommunityWizardTippModusRecord createValidTippModusPointRecord() {
+        return new CommunityWizardTippModusRecord("PointTipp", TippModusType.TIPPMODUS_POINT.getDisplayName(), 1, 0, 0, 4);
     }
 }

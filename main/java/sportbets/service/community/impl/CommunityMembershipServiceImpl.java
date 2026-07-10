@@ -110,4 +110,10 @@ public class CommunityMembershipServiceImpl implements CommunityMembershipServic
         }
         return communityDtos;
     }
+
+    @Override
+    public Optional<CommunityDto> findCommunity(String commName) {
+      Optional<Community> comm=   commRepo.findByName(commName);
+        return comm.map(community -> mapper.map(community, CommunityDto.class));
+    }
 }

@@ -25,6 +25,7 @@ import sportbets.persistence.repository.competition.CompetitionRepository;
 import sportbets.service.community.CommunityWizardService;
 import sportbets.web.dto.community.CommunityDto;
 import sportbets.web.dto.community.CommunityWizardRecord;
+import sportbets.web.dto.community.CommunityWizardTippModusRecord;
 import sportbets.web.dto.competition.CompetitionMembershipDto;
 import sportbets.web.dto.tipps.TippModusDto;
 import sportbets.web.dto.tipps.TippModusPointDto;
@@ -67,12 +68,13 @@ public class CommunityWizardServiceImpl implements CommunityWizardService {
         CommunityRole communityRole = new CommunityRole(newComm.getName(), newComm.getDescription(), newComm);
         newComm.addCommunityRole(communityRole);
 
-        List<TippModusDto> tippModus = record.tippModi();
+        List<CommunityWizardTippModusRecord> modi = record.tippModi();
         List<TippModus> tippModi=new ArrayList<>();
-        for (TippModusDto tippModusDto : tippModus) {
-            final TippModus entity = convertToEntity(tippModusDto);
-            entity.setType(TippModusType.fromString(tippModusDto.getType()));
-            entity.setCommunity(newComm);
+        for (CommunityWizardTippModusRecord modusRecord : modi) {
+            log.debug("modusRecord::{}", modusRecord);
+            final TippModus entity = convertToEntity(modusRecord,newComm);
+
+            log.debug("entity::{}", entity);
         }
 
 
@@ -100,16 +102,16 @@ public class CommunityWizardServiceImpl implements CommunityWizardService {
 
     }
 
-    private TippModus convertToEntity(TippModusDto dto) {
+    private TippModus convertToEntity(CommunityWizardTippModusRecord record,Community community) {
         TippModus entity;
-        if (dto instanceof TippModusTotoDto totoDto) {
-            entity = modelMapper.map(totoDto, TippModusToto.class);
-        } else if (dto instanceof TippModusPointDto pointDto) {
-            entity = modelMapper.map(pointDto, TippModusPoint.class);
-        } else if (dto instanceof TippModusResultDto resultDto) {
-            entity = modelMapper.map(resultDto, TippModusResult.class);
+        if (record.type().equals(TippModusType.fromEnum(TippModusType.TIPPMODUS_TOTO))) {
+            entity = new TippModusToto(record.name(),TippModusType.TIPPMODUS_TOTO, record.deadline(), community);
+        } else if (record.type().equals(TippModusType.fromEnum(TippModusType.TIPPMODUS_POINT))) {
+            entity = new TippModusPoint(record.name(),TippModusType.TIPPMODUS_POINT, record.deadline(), community, record.totalPoints());
+        } else if (record.type().equals(TippModusType.fromEnum(TippModusType.TIPPMODUS_RESULT))) {
+            entity =new TippModusResult(record.name(),TippModusType.TIPPMODUS_RESULT, record.deadline(), community, record.tendencyPoints(), record.bonusPoints());
         } else {
-            throw new RuntimeException("Unknown tippModus type " + dto.getClass());
+            throw new RuntimeException("Unknown tippModus type " + record.type());
         }
         return entity;
     }

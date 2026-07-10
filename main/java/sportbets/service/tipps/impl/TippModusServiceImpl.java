@@ -41,7 +41,6 @@ public class TippModusServiceImpl implements TippModusService {
         this.repo = repo;
         this.commRepo = commRepo;
         this.modelMapper = modelMapper;
-
         this.mapperUtilTipp = mapperUtilTipp;
     }
 

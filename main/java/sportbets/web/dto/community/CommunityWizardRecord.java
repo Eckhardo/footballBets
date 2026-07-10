@@ -24,7 +24,7 @@ public record CommunityWizardRecord(
         @NotEmpty(message = "tipper list cannot be empty")
         List<Long> tipperIds,
         @NotEmpty(message = "tipp modi cannot be empty")
-        List<TippModusDto> tippModi
+        List<CommunityWizardTippModusRecord> tippModi
 ) {
 
     public CommunityWizardRecord {

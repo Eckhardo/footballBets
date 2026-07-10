@@ -21,7 +21,10 @@ import sportbets.persistence.repository.community.CommunityRepository;
 import sportbets.persistence.repository.tipps.TippModusRepository;
 import sportbets.testdata.TestConstants;
 import sportbets.web.dto.community.CommunityDto;
-import sportbets.web.dto.tipps.*;
+import sportbets.web.dto.tipps.TippModusDto;
+import sportbets.web.dto.tipps.TippModusPointDto;
+import sportbets.web.dto.tipps.TippModusResultDto;
+import sportbets.web.dto.tipps.TippModusTotoDto;
 
 import java.util.List;
 
@@ -43,7 +46,7 @@ public class ContractTippModusApiIntegrationTest {
     @Autowired
     TippModusRepository tippModusRepository;
 
-    private final   CommunityDto communityDto = TestConstants.createValidCommunityDto();
+    private final CommunityDto communityDto = TestConstants.createValidCommunityDto();
     private final TippModusTotoDto totoTest = TestConstants.createValidTippModusTotoDto();
     private final TippModusResultDto resultTest = TestConstants.createValidTippModusResultDto();
     private final TippModusPointDto pointTest = TestConstants.createValidTippModusPointDto();
@@ -456,6 +459,7 @@ public class ContractTippModusApiIntegrationTest {
                 .expectStatus()
                 .isOk()
                 .expectBodyList(TippModusDto.class).hasSize(3);
+
 
 
         webClient.get()

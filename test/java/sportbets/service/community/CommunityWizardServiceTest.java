@@ -15,13 +15,11 @@ import sportbets.service.competition.CompService;
 import sportbets.testdata.TestConstants;
 import sportbets.web.dto.community.CommunityDto;
 import sportbets.web.dto.community.CommunityWizardRecord;
+import sportbets.web.dto.community.CommunityWizardTippModusRecord;
 import sportbets.web.dto.community.TipperDto;
 import sportbets.web.dto.competition.CompetitionDto;
 import sportbets.web.dto.competition.CompetitionFamilyDto;
 import sportbets.web.dto.competition.CompetitionMembershipDto;
-import sportbets.web.dto.tipps.TippModusDto;
-import sportbets.web.dto.tipps.TippModusResultDto;
-import sportbets.web.dto.tipps.TippModusTotoDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,11 +54,13 @@ public class CommunityWizardServiceTest {
     private Competition savedComp = null;
     private Tipper adminTipper = null;
     private CommunityWizardRecord testRecord = null;
-    TippModusTotoDto toto = TestConstants.createValidTippModusTotoDto();
-    TippModusResultDto result = TestConstants.createValidTippModusResultDto();
+    CommunityWizardTippModusRecord result = TestConstants.createValidTippModusResultRecord();
+    CommunityWizardTippModusRecord result2 = TestConstants.createValidTippModusResultRecord2();
 
-    private List<Long> tipperIds = new ArrayList<>();
-    List<TippModusDto> tippModdi = List.of(toto,result);
+
+
+    private final List<Long> tipperIds = new ArrayList<>();
+    List<CommunityWizardTippModusRecord> tippModi = List.of(result, result2);
 
     @BeforeEach
     public void setup() {
@@ -92,7 +92,7 @@ public class CommunityWizardServiceTest {
     @Test
     @Order(1)
     void whenSaveCommunityWithGivenCompetition_thenCompetitionMembershipShouldBeCreated() {
-        testRecord = new CommunityWizardRecord(commDto.getName(), commDto.getDescription(), savedComp.getId(), savedComp.getName(), adminTipper.getUsername(), tipperIds, tippModdi);
+        testRecord = new CommunityWizardRecord(commDto.getName(), commDto.getDescription(), savedComp.getId(), savedComp.getName(), adminTipper.getUsername(), tipperIds, tippModi);
         CompetitionMembershipDto saved = communityWizardService.save(testRecord);
         assertThat(saved.getCompId()).isNotNull();
         assertThat(saved.getCommId()).isNotNull();
@@ -103,7 +103,7 @@ public class CommunityWizardServiceTest {
     @Test
     @Order(2)
     void whenDeleteCommunityPreparedByWizard_thenCompetitionMembershipShouldBeCreated() {
-        testRecord = new CommunityWizardRecord(commDto.getName(), commDto.getDescription(), savedComp.getId(), savedComp.getName(), adminTipper.getUsername(), tipperIds, tippModdi);
+        testRecord = new CommunityWizardRecord(commDto.getName(), commDto.getDescription(), savedComp.getId(), savedComp.getName(), adminTipper.getUsername(), tipperIds, tippModi);
         CompetitionMembershipDto saved = communityWizardService.save(testRecord);
         assertThat(saved.getCompId()).isNotNull();
         assertThat(saved.getCommId()).isNotNull();

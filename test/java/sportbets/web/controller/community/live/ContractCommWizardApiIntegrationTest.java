@@ -25,6 +25,7 @@ import sportbets.persistence.repository.competition.CompetitionRepository;
 import sportbets.testdata.TestConstants;
 import sportbets.web.dto.community.CommunityDto;
 import sportbets.web.dto.community.CommunityWizardRecord;
+import sportbets.web.dto.community.CommunityWizardTippModusRecord;
 import sportbets.web.dto.community.TipperDto;
 import sportbets.web.dto.competition.CompetitionDto;
 import sportbets.web.dto.competition.CompetitionFamilyDto;
@@ -62,9 +63,9 @@ public class ContractCommWizardApiIntegrationTest {
     CommunityDto commDto = TestConstants.createValidCommunityDto();
     CommunityWizardRecord wizardRecord;
     List<Long> tipperIds = new ArrayList<>(List.of(10L));
-    TippModusTotoDto toto = TestConstants.createValidTippModusTotoDto();
-    TippModusResultDto result = TestConstants.createValidTippModusResultDto();
-    List<TippModusDto> tippModi = List.of(toto,result);
+    CommunityWizardTippModusRecord result = TestConstants.createValidTippModusResultRecord();
+    CommunityWizardTippModusRecord result2 = TestConstants.createValidTippModusResultRecord2();
+    List<CommunityWizardTippModusRecord> tippModi = List.of(result,result2);
 
     @BeforeEach
     public void setUp() {
