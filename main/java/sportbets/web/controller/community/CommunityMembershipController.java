@@ -104,14 +104,4 @@ public class CommunityMembershipController {
 
     }
 
-    @GetMapping("/{commName}/community")
-    public CommunityDto findCommunityByName(@PathVariable String commName) {
-        log.debug(":find community for url {}", commName);
-        Optional<CommunityDto> dto = commMembService.findCommunity(commName);
-        if (dto.isPresent()) {
-            return dto.get();
-        }
-        return null;
-
-    }
 }

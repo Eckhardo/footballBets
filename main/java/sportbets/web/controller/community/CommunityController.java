@@ -7,6 +7,7 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -55,9 +56,6 @@ public class CommunityController {
         else{
             return null;
         }
-
-
-
     }
 
     @PostMapping()
@@ -88,5 +86,21 @@ public class CommunityController {
         // Always returns 204 No Content to maintain idempotency
         communityService.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+
+
+    @GetMapping("/search")
+    public  ResponseEntity<CommunityDto>  findCommunityByName(@RequestParam String name) {
+        log.debug(":find community for url {}", name);
+        Optional<Community> model = communityService.findByName(name);
+        if (model.isPresent()) {
+            log.debug("Community found with {}", model.get().getName());
+          CommunityDto dto= modelMapper.map(model, CommunityDto.class);
+          return ResponseEntity.ok(dto);
+        }
+        else{
+            return ResponseEntity.noContent().build();
+        }
     }
 }
