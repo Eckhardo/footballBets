@@ -20,20 +20,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@RequestMapping(value = "/compMembs")
 public class CompetitionMembershipController {
 
     private static final Logger log = LoggerFactory.getLogger(CompetitionMembershipController.class);
-
-
     private final CompetitionMembershipService compMembService;
     private final ModelMapper myMapper;
+
+
     public CompetitionMembershipController(CompetitionMembershipService compMembService) {
         this.compMembService = compMembService;
         this.myMapper = MapperUtil.getModelMapperForCompetitionMembership();
     }
 
 
-    @GetMapping("/compMembs")
+    @GetMapping()
     public List<CompetitionMembershipDto> findAll() {
         log.debug(":findAll");
         List<CompetitionMembership> compMembs = compMembService.getAll();
@@ -44,7 +45,7 @@ public class CompetitionMembershipController {
         return commMembDtos;
     }
 
-    @GetMapping("/compMembs/{id}")
+    @GetMapping("/{id}")
     public CompetitionMembershipDto findOne(@PathVariable Long id) {
         log.debug(":findOne::{}", id);
         CompetitionMembership model = compMembService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -53,7 +54,7 @@ public class CompetitionMembershipController {
 
     }
 
-    @PostMapping("/compMembs")
+    @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public CompetitionMembershipDto post(@RequestBody @Valid CompetitionMembershipDto newCommMemb) {
         log.debug("New compMemb {}", newCommMemb);
@@ -63,7 +64,7 @@ public class CompetitionMembershipController {
         return createdDto;
     }
 
-    @PutMapping(value = "/compMembs/{id}")
+    @PutMapping(value = "/{id}")
     public CompetitionMembershipDto update(@PathVariable Long id, @RequestBody CompetitionMembershipDto membershipDto) {
 
         CompetitionMembership updatedComm = this.compMembService.update(id, membershipDto).orElseThrow();
@@ -75,7 +76,7 @@ public class CompetitionMembershipController {
 
     }
 
-    @DeleteMapping(value = "/compMembs/{id}")
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<HttpStatus> delete(@PathVariable Long id) {
         log.debug("CompetitionMembershipController.delete::{}", id);
         try {
@@ -90,6 +91,12 @@ public class CompetitionMembershipController {
     public List<CompetitionDto> findCompetitions(@PathVariable Long commId) {
         log.debug(":find competitiuons");
        return  compMembService.findCompetitions(commId);
+
+    }
+    @GetMapping("/{commId}/competition")
+    public CompetitionDto findCompetition(@PathVariable Long commId) {
+        log.debug(":find competitiuons");
+        return  compMembService.findCurrentCompetition(commId);
 
     }
 

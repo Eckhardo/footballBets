@@ -21,6 +21,7 @@ import sportbets.web.dto.competition.CompetitionDto;
 import sportbets.web.dto.competition.CompetitionMembershipDto;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,7 +70,7 @@ public class CompetitionMembershipServiceImpl implements CompetitionMembershipSe
 
         log.debug("update CompetitionMembership dto:: {}", membershipDto);
         CompetitionMembership updateModel = membershipRepository.findById(id).orElseThrow(() ->
-         new EntityNotFoundException("CompetitionMembership  does not exits given id:" + membershipDto.getId()));
+                new EntityNotFoundException("CompetitionMembership  does not exits given id:" + membershipDto.getId()));
 
 
         Community community = communityRepository.findByName(membershipDto.getCommName()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -97,12 +98,28 @@ public class CompetitionMembershipServiceImpl implements CompetitionMembershipSe
 
     @Override
     public List<CompetitionDto> findCompetitions(Long commId) {
-       List<Competition> comps= membershipRepository.findCompetitions(commId);
-       List<CompetitionDto> compDtos = new ArrayList<>();
-       ModelMapper myMapper= MapperUtil.getModelMapperForFamily();
-       for(Competition comp:comps){
-           compDtos.add(myMapper.map(comp,CompetitionDto.class));
-       }
-       return compDtos;
+        List<Competition> comps = membershipRepository.findCompetitions(commId);
+        List<CompetitionDto> compDtos = new ArrayList<>();
+        ModelMapper myMapper = MapperUtil.getModelMapperForFamily();
+        for (Competition comp : comps) {
+            compDtos.add(myMapper.map(comp, CompetitionDto.class));
+        }
+        return compDtos;
+    }
+
+    @Override
+    public CompetitionDto findCurrentCompetition(Long commId) {
+        List<Competition> comps = membershipRepository.findCompetitions(commId);
+        for(Competition comp : comps) {
+            log.debug("comp: {}{}",comp.getName(),comp.getCreatedOn().toString());
+        }
+        Competition currentComp = comps.stream().max(Comparator.comparing(Competition::getCreatedOn))
+                .orElse(null); // Returns null if the collection is empty
+        if (currentComp == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Competition Not Found");
+        }
+        log.debug("Current Competition Id:{}", currentComp.getName());
+        ModelMapper myMapper = MapperUtil.getModelMapperForFamily();
+        return myMapper.map(currentComp, CompetitionDto.class);
     }
 }

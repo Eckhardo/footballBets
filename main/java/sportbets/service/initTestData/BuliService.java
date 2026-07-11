@@ -43,6 +43,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import static sportbets.persistence.builder.CompetitionConstants.BUNDESLIGA_NAME_2025;
+import static sportbets.persistence.builder.CompetitionConstants.BUNDESLIGA_NAME_2026;
 
 @Service
 public class BuliService {
@@ -52,10 +53,6 @@ public class BuliService {
     CompTableRepository compTableRepo;
     @Autowired
     TippConfigRepository tippConfigRepository;
-    Competition savedComp = null;
-    CompetitionRound savedHinrunde = null;
-    CompetitionRound savedRückrunde = null;
-    Community savedCommunity = null;
     @Autowired
     private CompetitionFamilyRepository familyRepo;
     @Autowired
@@ -82,6 +79,10 @@ public class BuliService {
     private CompetitionMembershipRepository compMembRepo;
     @Autowired
     private CommunityMembershipRepository commMembRepo;
+    Competition savedComp = null;
+    CompetitionRound savedHinrunde = null;
+    CompetitionRound savedRückrunde = null;
+    Community savedCommunity = null;
 
     @Transactional
     public void execute() {
@@ -90,7 +91,7 @@ public class BuliService {
 
         savedHinrunde = compRoundRepo.save(new CompetitionRound(1, "Hinrunde", savedComp, false, 18, 17, 1));
         savedRückrunde = compRoundRepo.save(new CompetitionRound(2, "Rueckrunde", savedComp, false, 18, 17, 18));
-        compRepo.save(savedComp);
+
 
         Community community = new Community("Bulitipper", "Die Dinos des Tippens");
         savedCommunity = commRepo.save(community);
@@ -158,7 +159,14 @@ public class BuliService {
         }
         log.debug("save spiele:");
         List<Spiel> savedSpiele = retrieveSpiele();
-        log.debug("add spielformula ::" + savedSpiele.size());
+        log.debug("added spielformula ::" + savedSpiele.size());
+        Competition buli2026 = compRepo.save(new Competition(BUNDESLIGA_NAME_2026, "1. Deutsche Fussball Bundesliga Saison 2026/27", 3, 1, fam));
+        CompetitionRole savedBuli2026Role = roleRepo.save(new CompetitionRole(buli2026.getName(), buli2026.getDescription(), buli2026));
+        tipperRoleRepo.save(new TipperRole(savedBuli2026Role, ebi));
+
+        compMembRepo.save(new CompetitionMembership(savedCommunity, buli2026));
+
+
     }
 
     private void saveRoles(Tipper tipper) {

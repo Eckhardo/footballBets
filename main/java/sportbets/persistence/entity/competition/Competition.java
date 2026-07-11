@@ -170,6 +170,10 @@ public class Competition {
         this.remisMultiplicator = remisMultiplicator;
     }
 
+    public LocalDateTime getCreatedOn() {
+        return createdOn;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;

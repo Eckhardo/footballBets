@@ -166,7 +166,7 @@ public class ContractCompMembApiIntegrationTest {
 
     @Test
     @Order(2)
-    void updateNewCommunityMembership_withValidDtoInput_thenSuccess() {
+    void updateNewCompMembership_withValidDtoInput_thenSuccess() {
 
 
         Competition competition = compRepo.findByName(compDto.getName()).orElseThrow();
@@ -223,7 +223,7 @@ public class ContractCompMembApiIntegrationTest {
 
     @Test
     @Order(3)
-    void deleteExistingCommunityMembership_withValidDtoInput_thenSuccess() {
+    void deleteExistingCompMembership_withValidDtoInput_thenSuccess() {
 
         Competition competition = compRepo.findByName(compDto.getName()).orElseThrow();
         Community community = communityRepository.findByName(communityDto.getName()).orElseThrow();
@@ -262,7 +262,7 @@ public class ContractCompMembApiIntegrationTest {
 
     @Test
     @Order(4)
-    void givenPreloadedData_whenGetSingleCommMemby_thenResponseContainsFields() {
+    void givenPreloadedData_whenGetSingleCommMemb_thenResponseContainsFields() {
         Competition competition = compRepo.findByName(compDto.getName()).orElseThrow();
         Community community = communityRepository.findByName(communityDto.getName()).orElseThrow();
 
@@ -306,6 +306,69 @@ public class ContractCompMembApiIntegrationTest {
                 .jsonPath("$.compId")
                 .exists();
 
+
+    }
+    @Test
+    @Order(5)
+    void createTwoCompMembs_thenRetrieveNewestByDate() {
+
+        Competition competition = compRepo.findByName(compDto.getName()).orElseThrow();
+        Community community = communityRepository.findByName(communityDto.getName()).orElseThrow();
+
+        CompetitionMembershipDto dto = new CompetitionMembershipDto(competition.getId(), competition.getName(), community.getId(), community.getName());
+
+        webClient.post()
+                .uri("/compMembs")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(dto)
+                .exchange()
+                .expectStatus()
+                .isCreated()
+                .expectBody()
+                .jsonPath("$.id")
+                .exists()
+                .jsonPath("$.commName")
+                .isEqualTo(communityDto.getName())
+                .jsonPath("$.commId")
+                .exists()
+                .jsonPath("$.compName")
+                .isEqualTo(compDto.getName())
+                .jsonPath("$.compId")
+                .exists();
+
+        Competition competition2 = compRepo.findByName(compDto2.getName()).orElseThrow();
+        CompetitionMembershipDto dto2 = new CompetitionMembershipDto(competition2.getId(), competition2.getName(), community.getId(), community.getName());
+
+        webClient.post()
+                .uri("/compMembs")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(dto2)
+                .exchange()
+                .expectStatus()
+                .isCreated()
+                .expectBody()
+                .jsonPath("$.id")
+                .exists()
+                .jsonPath("$.commName")
+                .isEqualTo(communityDto.getName())
+                .jsonPath("$.commId")
+                .exists()
+                .jsonPath("$.compName")
+                .isEqualTo(compDto2.getName())
+                .jsonPath("$.compId")
+                .exists();
+
+
+        webClient.get()
+                .uri("/compMembs/" + community.getId()+"/competition")
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody()
+                .jsonPath("$.id")
+                .exists()
+                 .jsonPath("$.name")
+                .isEqualTo(compDto2.getName());
 
     }
 }

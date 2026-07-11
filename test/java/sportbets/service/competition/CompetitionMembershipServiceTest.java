@@ -196,4 +196,19 @@ public class CompetitionMembershipServiceTest {
         assertTrue(deleted.isEmpty());
 
     }
+    @Test
+    public void whenSelectCurrentCompetition_thenSuccess() {
+        log.debug("whenSelectCurrentCompetition_thenSuccess");
+        assertNotNull(savedComp);
+        assertNotNull(savedComp2);
+        CompetitionMembership savedCompMemb = membershipService.save(new CompetitionMembershipDto(savedComp.getId(), savedComp.getName(), savedCommunity.getId(), savedCommunity.getName()));
+        assertNotNull(savedCompMemb);
+        CompetitionMembership savedCompMemb2 = membershipService.save(new CompetitionMembershipDto(savedComp2.getId(), savedComp2.getName(), savedCommunity.getId(), savedCommunity.getName()));
+        assertNotNull(savedCompMemb2);
+        CompetitionDto result= membershipService.findCurrentCompetition(savedCommunity.getId());
+        assertNotNull(result);
+        assertEquals(savedComp2.getName(), result.getName());
+
+
+    }
 }

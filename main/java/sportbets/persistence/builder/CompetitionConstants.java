@@ -7,7 +7,7 @@ public class CompetitionConstants {
 
     public static final String BUNDESLIGA2_NAME_2025 = "2. Bundesliga Saison 2025";
     public static final String BUNDESLIGA_NAME_2025 = "1. Bundesliga Saison 2025";
-
+    public static final String BUNDESLIGA_NAME_2026 = "1. Bundesliga Saison 2026";
     public static Competition getBundesliga2025(CompetitionFamily fam) {
         return new Competition(BUNDESLIGA_NAME_2025, "1. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, fam);
     }
