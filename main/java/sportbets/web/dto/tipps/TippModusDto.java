@@ -19,7 +19,6 @@ public class TippModusDto implements Serializable {
     @Positive(message = "Must be positive value")
     private Integer deadline;
 
-    @NotNull(message = " community id cannot be null")
     private Long commId;
     private String commName;
 

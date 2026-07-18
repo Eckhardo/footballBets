@@ -28,7 +28,7 @@ public interface TippModusService {
     List<TippModusDto> findPointTypesForCommunity(Long id);
 
     Optional<TippModusDto> findByNameAndCommunity(String name, Long commId);
-    List<TippModusDto> findTipModusTypes(Long commId);
+    List<TippModusDto> findTipModusTypes();
 
 
 }

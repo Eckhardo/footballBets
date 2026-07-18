@@ -58,11 +58,10 @@ public class TippModusServiceImpl implements TippModusService {
     }
 
     @Override
-    public List<TippModusDto> findTipModusTypes(Long commId) {
-        Community community = commRepo.findById(commId).orElseThrow(() -> new EntityNotFoundException("Community not found"));
-        TippModusPointDto point = new TippModusPointDto(null, null, TippModusType.TIPPMODUS_POINT.getDisplayName(), 0, community.getId(), community.getName(), 1);
-        TippModusResultDto result = new TippModusResultDto(null, null, TippModusType.TIPPMODUS_RESULT.getDisplayName(), 0, community.getId(), community.getName(),2,3);
-        TippModusTotoDto toto = new TippModusTotoDto(null, null, TippModusType.TIPPMODUS_TOTO.getDisplayName(), 0, community.getId(), community.getName());
+    public List<TippModusDto> findTipModusTypes() {
+        TippModusPointDto point = new TippModusPointDto(null, null, TippModusType.TIPPMODUS_POINT.getDisplayName(), 0,null, null, 1);
+        TippModusResultDto result = new TippModusResultDto(null, null, TippModusType.TIPPMODUS_RESULT.getDisplayName(), 0, null, null,2,3);
+        TippModusTotoDto toto = new TippModusTotoDto(null, null, TippModusType.TIPPMODUS_TOTO.getDisplayName(), 0, null, null);
 
         return List.of(point,toto,result);
     }
