@@ -1,5 +1,6 @@
 package sportbets.service.community.impl;
 
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -35,6 +36,7 @@ import sportbets.web.dto.tipps.TippModusTotoDto;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class CommunityWizardServiceImpl implements CommunityWizardService {
@@ -63,6 +65,11 @@ public class CommunityWizardServiceImpl implements CommunityWizardService {
         // retrieve existing objects
         Tipper adminTipper = tipperRepository.findByUsername(record.tipperUserName()).orElseThrow(() -> new EntityNotFoundException("adminTipper not found"));
         Competition savedComp = competitionRepository.findById(record.compId()).orElseThrow(() -> new EntityNotFoundException("Competition not found"));
+        Optional<Community> community=communityRepository.findByName(record.commName());
+        if(community.isPresent()){
+            throw new EntityExistsException("Community already exist with given name:" + record.commName());
+
+        }
         // prepare new community
         Community newComm = new Community(record.commName(), record.commDescription());
         CommunityRole communityRole = new CommunityRole(newComm.getName(), newComm.getDescription(), newComm);
