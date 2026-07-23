@@ -107,7 +107,7 @@ public class ContractTippModusApiIntegrationTest {
         List<TippModusToto> totoList = tippModusRepository.findTippModusToto(community.getId());
         Long totoId = totoList.get(0).getId();
         webClient.get()
-                .uri("/tippModus/toto/" + totoId)
+                .uri("/tippModus/" + totoId)
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -177,7 +177,7 @@ public class ContractTippModusApiIntegrationTest {
         List<TippModusResult> resultList = tippModusRepository.findTippModusResult(community.getId());
         Long id = resultList.get(0).getId();
         webClient.get()
-                .uri("/tippModus/result/" + id)
+                .uri("/tippModus/" + id)
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -244,7 +244,7 @@ public class ContractTippModusApiIntegrationTest {
         List<TippModusPoint> pointList = tippModusRepository.findTippModusPoint(community.getId());
         Long id = pointList.get(0).getId();
         webClient.get()
-                .uri("/tippModus/point/" + id)
+                .uri("/tippModus/" + id)
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -309,7 +309,7 @@ public class ContractTippModusApiIntegrationTest {
         List<TippModusPoint> pointList = tippModusRepository.findTippModusPoint(community.getId());
         Long id = pointList.get(0).getId();
         webClient.get()
-                .uri("/tippModus/point/" + id)
+                .uri("/tippModus/" + id)
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -334,7 +334,7 @@ public class ContractTippModusApiIntegrationTest {
 
 
         webClient.get()
-                .uri("/tippModus/point/" + id)
+                .uri("/tippModus/" + id)
                 .exchange()
                 .expectStatus()
                 .isBadRequest()
@@ -390,7 +390,7 @@ public class ContractTippModusApiIntegrationTest {
                 .isEqualTo(TippModusType.TIPPMODUS_TOTO.getDisplayName());
 
         webClient.get()
-                .uri("/tippModus/toto/community/" + community.getId())
+                .uri("/tippModus/community/" + community.getId())
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -463,7 +463,7 @@ public class ContractTippModusApiIntegrationTest {
 
 
         webClient.get()
-                .uri("/tippModus/types/" + community.getId())
+                .uri("/tippModus/types")
                 .exchange()
                 .expectStatus()
                 .isOk()

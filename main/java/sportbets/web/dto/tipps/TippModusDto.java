@@ -2,6 +2,7 @@ package sportbets.web.dto.tipps;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -16,7 +17,7 @@ public class TippModusDto implements Serializable {
     @NotNull(message = " type cannot be null")
     private String type;
     @NotNull
-    @Positive(message = "Must be positive value")
+    @PositiveOrZero(message = "Must be positive value or zero")
     private Integer deadline;
 
     private Long commId;

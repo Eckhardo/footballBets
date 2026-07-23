@@ -8,10 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.community.Community;
-import sportbets.persistence.entity.tipps.TippModus;
-import sportbets.persistence.entity.tipps.TippModusPoint;
-import sportbets.persistence.entity.tipps.TippModusResult;
-import sportbets.persistence.entity.tipps.TippModusToto;
+import sportbets.persistence.entity.competition.Team;
+import sportbets.persistence.entity.tipps.*;
 import sportbets.persistence.entity.tipps.enums.TippModusType;
 import sportbets.persistence.repository.community.CommunityRepository;
 import sportbets.persistence.repository.tipps.TippModusRepository;
@@ -25,6 +23,7 @@ import sportbets.web.dto.tipps.TippModusTotoDto;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class TippModusServiceImpl implements TippModusService {
@@ -59,28 +58,31 @@ public class TippModusServiceImpl implements TippModusService {
 
     @Override
     public List<TippModusDto> findTipModusTypes() {
-        TippModusPointDto point = new TippModusPointDto(null, null, TippModusType.TIPPMODUS_POINT.getDisplayName(), 0,null, null, 1);
-        TippModusResultDto result = new TippModusResultDto(null, null, TippModusType.TIPPMODUS_RESULT.getDisplayName(), 0, null, null,2,3);
+        TippModusPointDto point = new TippModusPointDto(null, null, TippModusType.TIPPMODUS_POINT.getDisplayName(), 0, null, null, 1);
+        TippModusResultDto result = new TippModusResultDto(null, null, TippModusType.TIPPMODUS_RESULT.getDisplayName(), 0, null, null, 2, 3);
         TippModusTotoDto toto = new TippModusTotoDto(null, null, TippModusType.TIPPMODUS_TOTO.getDisplayName(), 0, null, null);
 
-        return List.of(point,toto,result);
+        return List.of(point, toto, result);
     }
 
     @Override
     @Transactional
     public TippModusDto save(TippModusDto dto) {
-        log.info("save tippModus: {}",dto);
+        log.info("save tippModus: {}", dto);
         Optional<TippModus> tippModus = repo.findByName(dto.getCommId(), dto.getName());
         if (tippModus.isPresent()) {
             throw new EntityExistsException("TippModus  already exists with name " + dto.getName());
         }
         Community community = commRepo.findById(dto.getCommId()).orElseThrow(() -> new EntityNotFoundException("Community not found"));
+
         final TippModus entity = convertToEntity(dto);
         entity.setType(TippModusType.fromString(dto.getType()));
         entity.setCommunity(community);
+
         TippModus saved = repo.save(entity);
-        log.info("saved tippModus");
+
         return convertToDto(saved);
+
 
     }
 
@@ -92,16 +94,23 @@ public class TippModusServiceImpl implements TippModusService {
 
         Community community = commRepo.findById(dto.getCommId()).orElseThrow(() -> new EntityNotFoundException("Community not found"));
         TippModus tippModus = repo.findById(id).orElseThrow(() -> new RuntimeException("TippModus not found"));
+        Set<TippConfig> configs=tippModus.getTippConfigs();
+
         final TippModus entity = convertToEntity(dto);
         entity.setCommunity(community);
         entity.setType(TippModusType.fromString(dto.getType()));
-        //  entity.setId(id);
+        for(TippConfig tc : configs) {
+            entity.addTippConfig(tc);
+        }
+
 
         TippModus updated = repo.save(entity);
         log.info("updated entity:{}", updated);
         return Optional.of(convertToDto(updated));
 
     }
+
+
 
     @Override
     @Transactional

@@ -27,20 +27,19 @@ class TippModusController {
     @GetMapping("/community/{id}")
     public List<TippModusDto> getAllForCommunity(@PathVariable Long id) {
         log.debug("TippModusController:getAllForCommunity::{}", id);
-        return tippModusService.getAllForCommunity(id);
+      List<TippModusDto> result= tippModusService.getAllForCommunity(id);
+
+      for(TippModusDto dto: result){
+          log.debug("TippModusController:getAllForCommunity::{}",dto);
+      }
+      return result;
     }
 
     // for tippmodus Toto
-    @GetMapping("/toto/{id}")
-    public TippModusDto findOneToto(@PathVariable Long id) {
+    @GetMapping("/{id}")
+    public TippModusDto findOne(@PathVariable Long id) {
         log.debug("TippModusController:findOneToto::{}", id);
         return tippModusService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-    }
-
-    @GetMapping("/toto/community/{id}")
-    public List<TippModusDto> findAllToto(@PathVariable Long id) {
-        log.debug("TippModusController:findAllToto::{}", id);
-        return tippModusService.findTotoTypesForCommunity(id);
     }
 
     @PostMapping("/toto")
@@ -57,18 +56,6 @@ class TippModusController {
     }
 
 
-    // for tippmodus Result
-    @GetMapping("/result/{id}")
-    public TippModusDto findOneResult(@PathVariable Long id) {
-        log.debug("TippModusController:findOneResult::{}", id);
-        return tippModusService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-    }
-
-    @GetMapping("/result/community/{id}")
-    public List<TippModusDto> findAllResult(@PathVariable Long id) {
-        log.debug("TippModusController:findAllResult::{}", id);
-        return tippModusService.findResultTypesForCommunity(id);
-    }
 
     @PostMapping("/result")
     @ResponseStatus(HttpStatus.CREATED)
@@ -83,19 +70,6 @@ class TippModusController {
         return tippModusService.update(id, resultDto).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-
-    // for tippmodus Point
-    @GetMapping("/point/{id}")
-    public TippModusDto findOnePoint(@PathVariable Long id) {
-        log.debug("TippModusController:findOneResult::{}", id);
-        return tippModusService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-    }
-
-    @GetMapping("/point/community/{id}")
-    public List<TippModusDto> findAllPoint(@PathVariable Long id) {
-        log.debug("TippModusController:findAllPoint::{}", id);
-        return tippModusService.findPointTypesForCommunity(id);
-    }
 
     @PostMapping("/point")
     @ResponseStatus(HttpStatus.CREATED)
