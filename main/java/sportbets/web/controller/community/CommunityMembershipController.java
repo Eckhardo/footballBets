@@ -18,7 +18,6 @@ import sportbets.web.dto.community.TipperDto;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/commMembs")

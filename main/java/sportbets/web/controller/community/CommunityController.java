@@ -1,16 +1,13 @@
 package sportbets.web.controller.community;
 
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import sportbets.persistence.entity.community.Community;
 import sportbets.service.community.CommunityService;
 import sportbets.web.dto.community.CommunityDto;

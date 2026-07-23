@@ -8,11 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import sportbets.persistence.entity.community.Tipper;
 import sportbets.persistence.entity.competition.CompetitionMembership;
 import sportbets.service.competition.CompetitionMembershipService;
 import sportbets.web.dto.MapperUtil;
-import sportbets.web.dto.community.TipperDto;
 import sportbets.web.dto.competition.CompetitionDto;
 import sportbets.web.dto.competition.CompetitionMembershipDto;
 

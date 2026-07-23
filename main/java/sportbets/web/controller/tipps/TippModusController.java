@@ -8,7 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import sportbets.service.tipps.TippModusService;
-import sportbets.web.dto.tipps.*;
+import sportbets.web.dto.tipps.TippModusDto;
+import sportbets.web.dto.tipps.TippModusPointDto;
+import sportbets.web.dto.tipps.TippModusResultDto;
+import sportbets.web.dto.tipps.TippModusTotoDto;
 
 import java.util.List;
 

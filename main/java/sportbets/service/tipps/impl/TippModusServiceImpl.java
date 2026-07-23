@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sportbets.persistence.entity.community.Community;
-import sportbets.persistence.entity.competition.Team;
 import sportbets.persistence.entity.tipps.*;
 import sportbets.persistence.entity.tipps.enums.TippModusType;
 import sportbets.persistence.repository.community.CommunityRepository;
@@ -103,14 +102,10 @@ public class TippModusServiceImpl implements TippModusService {
             entity.addTippConfig(tc);
         }
 
-
         TippModus updated = repo.save(entity);
         log.info("updated entity:{}", updated);
         return Optional.of(convertToDto(updated));
-
     }
-
-
 
     @Override
     @Transactional
@@ -130,7 +125,6 @@ public class TippModusServiceImpl implements TippModusService {
         }
         return dtos;
     }
-
 
     @Override
     @Transactional(readOnly = true)

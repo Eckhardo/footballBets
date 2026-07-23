@@ -10,7 +10,6 @@ package sportbets.web.dto.community;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.PositiveOrZero;
 
 public record CommunityWizardTippModusRecord(
         @NotNull(message = " name cannot be null")

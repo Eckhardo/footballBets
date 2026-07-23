@@ -3,12 +3,9 @@ package sportbets.web.controller.community;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import sportbets.service.community.CommunityWizardService;
-import sportbets.web.dto.community.CommunityDto;
 import sportbets.web.dto.community.CommunityWizardRecord;
 import sportbets.web.dto.competition.CompetitionMembershipDto;
 

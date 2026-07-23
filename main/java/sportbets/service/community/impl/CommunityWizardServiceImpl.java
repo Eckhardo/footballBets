@@ -24,18 +24,12 @@ import sportbets.persistence.repository.community.CommunityRepository;
 import sportbets.persistence.repository.community.TipperRepository;
 import sportbets.persistence.repository.competition.CompetitionRepository;
 import sportbets.service.community.CommunityWizardService;
-import sportbets.web.dto.community.CommunityDto;
 import sportbets.web.dto.community.CommunityWizardRecord;
 import sportbets.web.dto.community.CommunityWizardTippModusRecord;
 import sportbets.web.dto.competition.CompetitionMembershipDto;
-import sportbets.web.dto.tipps.TippModusDto;
-import sportbets.web.dto.tipps.TippModusPointDto;
-import sportbets.web.dto.tipps.TippModusResultDto;
-import sportbets.web.dto.tipps.TippModusTotoDto;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service

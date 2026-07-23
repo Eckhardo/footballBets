@@ -15,8 +15,6 @@ import sportbets.web.dto.community.TipperDto;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
-
 @RestController
 @RequestMapping("/tipper")
 class TipperController {

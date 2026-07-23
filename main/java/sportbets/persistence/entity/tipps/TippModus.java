@@ -6,7 +6,6 @@ import sportbets.persistence.entity.community.Community;
 import sportbets.persistence.entity.competition.Spiel;
 import sportbets.persistence.entity.tipps.converter.TippModusTypeAttributeConverter;
 import sportbets.persistence.entity.tipps.enums.TippModusType;
-import sportbets.web.dto.tipps.TippModusDto;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;

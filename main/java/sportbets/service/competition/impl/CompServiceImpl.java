@@ -15,7 +15,6 @@ import sportbets.persistence.entity.competition.Team;
 import sportbets.persistence.repository.competition.CompetitionFamilyRepository;
 import sportbets.persistence.repository.competition.CompetitionRepository;
 import sportbets.service.competition.CompService;
-import sportbets.web.dto.MapperUtil;
 import sportbets.web.dto.competition.CompetitionDto;
 import sportbets.web.dto.competition.TeamDto;
 
