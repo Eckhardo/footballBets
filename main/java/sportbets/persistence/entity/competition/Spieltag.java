@@ -41,8 +41,8 @@ public class Spieltag {
     private final Set<Spiel> spiele = new HashSet<>();
 
 
-    @OneToOne(mappedBy = "spieltag")
-    private TippConfig tippConfig;
+    @OneToMany(mappedBy = "spieltag", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private final Set<TippConfig> tippConfigs = new HashSet<>();
 
     public Spieltag() {
 
@@ -95,12 +95,12 @@ public class Spieltag {
         this.startDate = startDate;
     }
 
-    public TippConfig getTippConfig() {
-        return tippConfig;
+    public Set<TippConfig> getTippConfigs() {
+      return  tippConfigs;
     }
 
-    public void setTippConfig(TippConfig tippConfig) {
-        this.tippConfig = tippConfig;
+    public void addTippConfig(TippConfig config) {
+        tippConfigs.add(config);
     }
 
     public String getFormattedStartDate() {

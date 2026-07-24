@@ -11,7 +11,6 @@ import sportbets.persistence.entity.community.Community;
 import sportbets.persistence.entity.competition.*;
 import sportbets.persistence.entity.tipps.TippConfig;
 import sportbets.persistence.entity.tipps.TippModus;
-import sportbets.persistence.entity.tipps.enums.TippModusType;
 import sportbets.persistence.repository.tipps.TippModusRepository;
 import sportbets.persistence.rowObject.TippConfigRow;
 import sportbets.service.community.CommunityService;
@@ -152,8 +151,7 @@ public class TippConfigServiceTest {
         assertEquals(savedTippConfig.getId(), config.getId());
 
         Spieltag sp = spieltagService.findById(savedMatchday.getId()).orElseThrow();
-        TippConfig spConfigs = sp.getTippConfig();
-        assertEquals(savedTippConfig.getId(), spConfigs.getId());
+        Set<TippConfig> spConfigs = sp.getTippConfigs();
 
         TippModus modus = tippModusRepository.findById(savedTippModus.getId()).orElseThrow();
         Set<TippConfig> tmConfigs = modus.getTippConfigs();

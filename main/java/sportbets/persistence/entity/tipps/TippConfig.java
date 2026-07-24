@@ -2,6 +2,8 @@ package sportbets.persistence.entity.tipps;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sportbets.persistence.entity.competition.CompetitionMembership;
 import sportbets.persistence.entity.competition.Spieltag;
 
@@ -10,6 +12,9 @@ import java.util.Objects;
 
 @Entity
 public class TippConfig {
+
+
+    private static final Logger log = LoggerFactory.getLogger(TippConfig.class);
     @Column(nullable = false)
     private final LocalDateTime createdOn = LocalDateTime.now();
     @ManyToOne(fetch = FetchType.LAZY)
@@ -20,12 +25,13 @@ public class TippConfig {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     // Owning Side:
-    @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    @JoinColumn(name = "fk_spieltag_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fk_matchday_id", foreignKey = @ForeignKey(name = "FK_TIPP_CONFIG_TO_COMP_MEMB"))
+    @NotNull
     private Spieltag spieltag;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_comp_memb_id", foreignKey = @ForeignKey(name = "FK_TIPP_CONFIG_TO_COMP_MEMB"))
+    @JoinColumn(name = "fk_comp_memb_id", foreignKey = @ForeignKey(name = "FK_TIPP_CONFIG_TO_MATCHDAY"))
     @NotNull
     private CompetitionMembership competitionMembership;
 
@@ -34,10 +40,11 @@ public class TippConfig {
     }
 
     public TippConfig(Spieltag spieltag, CompetitionMembership competitionMembership, TippModus tippModus) {
+        log.debug("new TippConfig()");
         this.spieltag = spieltag;
         this.competitionMembership = competitionMembership;
         this.tippModus = tippModus;
-        spieltag.setTippConfig(this);
+        spieltag.addTippConfig(this);
         competitionMembership.addTippConfig(this);
         tippModus.addTippConfig(this);
     }

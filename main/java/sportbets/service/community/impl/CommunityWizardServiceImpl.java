@@ -2,7 +2,6 @@ package sportbets.service.community.impl;
 
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
-import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -14,15 +13,17 @@ import sportbets.persistence.entity.community.CommunityMembership;
 import sportbets.persistence.entity.community.Tipper;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionMembership;
-import sportbets.persistence.entity.tipps.TippModus;
-import sportbets.persistence.entity.tipps.TippModusPoint;
-import sportbets.persistence.entity.tipps.TippModusResult;
-import sportbets.persistence.entity.tipps.TippModusToto;
+import sportbets.persistence.entity.competition.Spieltag;
+import sportbets.persistence.entity.tipps.*;
 import sportbets.persistence.entity.tipps.enums.TippModusType;
 import sportbets.persistence.repository.community.CommunityMembershipRepository;
 import sportbets.persistence.repository.community.CommunityRepository;
 import sportbets.persistence.repository.community.TipperRepository;
+import sportbets.persistence.repository.competition.CompetitionMembershipRepository;
 import sportbets.persistence.repository.competition.CompetitionRepository;
+import sportbets.persistence.repository.competition.SpieltagRepository;
+import sportbets.persistence.repository.tipps.TippConfigRepository;
+import sportbets.persistence.repository.tipps.TippModusRepository;
 import sportbets.service.community.CommunityWizardService;
 import sportbets.web.dto.community.CommunityWizardRecord;
 import sportbets.web.dto.community.CommunityWizardTippModusRecord;
@@ -40,15 +41,21 @@ public class CommunityWizardServiceImpl implements CommunityWizardService {
     private final TipperRepository tipperRepository;
     private final CommunityRepository communityRepository;
     private final CompetitionRepository competitionRepository;
-    private final CommunityMembershipRepository membershipRepository;
-    private final ModelMapper modelMapper;
+    private final CommunityMembershipRepository commMembRepo;
+    private final CompetitionMembershipRepository compMembRepo;
+    private final SpieltagRepository spieltagRepository;
+    private final TippModusRepository modusRepo;
+    private final TippConfigRepository configRepo;
 
-    public CommunityWizardServiceImpl(TipperRepository tipperRepository, CommunityRepository communityRepository, CompetitionRepository competitionRepository, CommunityMembershipRepository membershipRepository, ModelMapper modelMapper) {
+    public CommunityWizardServiceImpl(TipperRepository tipperRepository, CommunityRepository communityRepository, CompetitionRepository competitionRepository, CommunityMembershipRepository membershipRepository, CompetitionMembershipRepository compMembRepo, SpieltagRepository spieltagRepository, TippModusRepository modusRepo, TippConfigRepository configRepo) {
         this.tipperRepository = tipperRepository;
         this.communityRepository = communityRepository;
         this.competitionRepository = competitionRepository;
-        this.membershipRepository = membershipRepository;
-        this.modelMapper = modelMapper;
+        this.commMembRepo = membershipRepository;
+        this.compMembRepo = compMembRepo;
+        this.spieltagRepository = spieltagRepository;
+        this.modusRepo = modusRepo;
+        this.configRepo = configRepo;
     }
 
 
@@ -59,8 +66,8 @@ public class CommunityWizardServiceImpl implements CommunityWizardService {
         // retrieve existing objects
         Tipper adminTipper = tipperRepository.findByUsername(record.tipperUserName()).orElseThrow(() -> new EntityNotFoundException("adminTipper not found"));
         Competition savedComp = competitionRepository.findById(record.compId()).orElseThrow(() -> new EntityNotFoundException("Competition not found"));
-        Optional<Community> community=communityRepository.findByName(record.commName());
-        if(community.isPresent()){
+        Optional<Community> community = communityRepository.findByName(record.commName());
+        if (community.isPresent()) {
             throw new EntityExistsException("Community already exist with given name:" + record.commName());
 
         }
@@ -68,24 +75,32 @@ public class CommunityWizardServiceImpl implements CommunityWizardService {
         Community newComm = new Community(record.commName(), record.commDescription());
         CommunityRole communityRole = new CommunityRole(newComm.getName(), newComm.getDescription(), newComm);
         newComm.addCommunityRole(communityRole);
+        Community savedComm = communityRepository.save(newComm);
 
         List<CommunityWizardTippModusRecord> modi = record.tippModi();
-        List<TippModus> tippModi=new ArrayList<>();
-        for (CommunityWizardTippModusRecord modusRecord : modi) {
-            log.debug("modusRecord::{}", modusRecord);
-            final TippModus entity = convertToEntity(modusRecord,newComm);
-
-            log.debug("entity::{}", entity);
-        }
 
 
         // prepare community membership
-        CommunityMembership communityMembership = new CommunityMembership(newComm, adminTipper);
-
+        commMembRepo.save(new CommunityMembership(savedComm, adminTipper));
         // prepare competition membership
-        CompetitionMembership competitionMembership = new CompetitionMembership(newComm, savedComp);
-        Community savedComm = communityRepository.save(newComm);
+        CompetitionMembership competitionMembership = new CompetitionMembership(savedComm, savedComp);
 
+        CompetitionMembership savedCompMemb = compMembRepo.save(competitionMembership);
+        List<TippModus> tippModi = new ArrayList<>();
+        for (CommunityWizardTippModusRecord modusRecord : modi) {
+            log.debug("modusRecord::{}", modusRecord);
+            final TippModus entity = convertToEntity(modusRecord, savedComm);
+            TippModus savedModus = modusRepo.save(entity);
+            tippModi.add(savedModus);
+            log.debug("tippModus::{}", savedModus);
+        }
+        List<Spieltag> matchdays = spieltagRepository.findAllByCompId(record.compId());
+        for (Spieltag spieltag : matchdays) {
+            log.debug("spieltag::{}", spieltag);
+            log.debug("tippModus::{}", spieltag);
+            log.debug("compMemb::{}", savedCompMemb);
+            configRepo.save(new TippConfig(spieltag, savedCompMemb, tippModi.get(0)));
+        }
         // set admin state:
         adminTipper.setDefaultCompetitionId(savedComp.getId());
         adminTipper.setDefaultCommunityId(savedComm.getId());
@@ -96,21 +111,21 @@ public class CommunityWizardServiceImpl implements CommunityWizardService {
         for (Tipper tipper : memberTippers) {
             tipper.setDefaultCommunityId(savedComm.getId());
             tipper.setDefaultCompetitionId(savedComp.getId());
-            membershipRepository.save(new CommunityMembership(savedComm, tipper));
+            commMembRepo.save(new CommunityMembership(savedComm, tipper));
         }
 
-        return new CompetitionMembershipDto(savedComp.getId(), savedComp.getName(), savedComm.getId(),savedComm.getName());
+        return new CompetitionMembershipDto(savedComp.getId(), savedComp.getName(), savedComm.getId(), savedComm.getName());
 
     }
 
-    private TippModus convertToEntity(CommunityWizardTippModusRecord record,Community community) {
+    private TippModus convertToEntity(CommunityWizardTippModusRecord record, Community community) {
         TippModus entity;
         if (record.type().equals(TippModusType.fromEnum(TippModusType.TIPPMODUS_TOTO))) {
-            entity = new TippModusToto(record.name(),TippModusType.TIPPMODUS_TOTO, record.deadline(), community);
+            entity = new TippModusToto(record.name(), TippModusType.TIPPMODUS_TOTO, record.deadline(), community);
         } else if (record.type().equals(TippModusType.fromEnum(TippModusType.TIPPMODUS_POINT))) {
-            entity = new TippModusPoint(record.name(),TippModusType.TIPPMODUS_POINT, record.deadline(), community, record.totalPoints());
+            entity = new TippModusPoint(record.name(), TippModusType.TIPPMODUS_POINT, record.deadline(), community, record.totalPoints());
         } else if (record.type().equals(TippModusType.fromEnum(TippModusType.TIPPMODUS_RESULT))) {
-            entity =new TippModusResult(record.name(),TippModusType.TIPPMODUS_RESULT, record.deadline(), community, record.tendencyPoints(), record.bonusPoints());
+            entity = new TippModusResult(record.name(), TippModusType.TIPPMODUS_RESULT, record.deadline(), community, record.tendencyPoints(), record.bonusPoints());
         } else {
             throw new RuntimeException("Unknown tippModus type " + record.type());
         }

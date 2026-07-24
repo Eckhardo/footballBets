@@ -35,7 +35,7 @@ public class TippConfigController {
 
 
     @GetMapping("/rows/{id}")
-    public List<TippConfigRow> findRows(@PathVariable Long id) {
+    public List<TippConfigRow> findRowsByCompMembId(@PathVariable Long id) {
         log.debug(":findRows::{}", id);
         return tippConfigService.findTippConfigRows(id);
     }

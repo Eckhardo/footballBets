@@ -93,12 +93,12 @@ public class TippModusServiceImpl implements TippModusService {
 
         Community community = commRepo.findById(dto.getCommId()).orElseThrow(() -> new EntityNotFoundException("Community not found"));
         TippModus tippModus = repo.findById(id).orElseThrow(() -> new RuntimeException("TippModus not found"));
-        Set<TippConfig> configs=tippModus.getTippConfigs();
+        Set<TippConfig> configs = tippModus.getTippConfigs();
 
         final TippModus entity = convertToEntity(dto);
         entity.setCommunity(community);
         entity.setType(TippModusType.fromString(dto.getType()));
-        for(TippConfig tc : configs) {
+        for (TippConfig tc : configs) {
             entity.addTippConfig(tc);
         }
 
