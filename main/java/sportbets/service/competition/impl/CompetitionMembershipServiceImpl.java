@@ -110,8 +110,8 @@ public class CompetitionMembershipServiceImpl implements CompetitionMembershipSe
     @Override
     public CompetitionDto findCurrentCompetition(Long commId) {
         List<Competition> comps = membershipRepository.findCompetitions(commId);
-        for(Competition comp : comps) {
-            log.debug("comp: {}{}",comp.getName(),comp.getCreatedOn().toString());
+        for (Competition comp : comps) {
+            log.debug("comp: {}{}", comp.getName(), comp.getCreatedOn().toString());
         }
         Competition currentComp = comps.stream().max(Comparator.comparing(Competition::getCreatedOn))
                 .orElse(null); // Returns null if the collection is empty
@@ -122,4 +122,16 @@ public class CompetitionMembershipServiceImpl implements CompetitionMembershipSe
         ModelMapper myMapper = MapperUtil.getModelMapperForFamily();
         return myMapper.map(currentComp, CompetitionDto.class);
     }
+
+    @Override
+    public CompetitionMembershipDto findCompMemb(Long commId, Long compId) {
+       CompetitionMembership entity = membershipRepository.findCompMemb(commId, compId).orElseThrow(()-> new EntityNotFoundException("compMemb not foud"));
+
+        ModelMapper mapper = MapperUtil.getModelMapperForCompetitionMembership();
+        return mapper.map(entity, CompetitionMembershipDto.class);
+
+
+
+    }
+
 }

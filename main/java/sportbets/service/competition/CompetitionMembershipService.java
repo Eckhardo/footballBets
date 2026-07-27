@@ -21,4 +21,6 @@ public interface CompetitionMembershipService {
     List<CompetitionDto> findCompetitions(Long commId);
 
     CompetitionDto findCurrentCompetition(Long commId);
+
+   CompetitionMembershipDto  findCompMemb(Long commId, Long compId);
 }

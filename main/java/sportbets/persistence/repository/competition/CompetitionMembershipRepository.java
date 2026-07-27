@@ -19,4 +19,8 @@ public interface CompetitionMembershipRepository extends JpaRepository<Competiti
     @Query(" select comp from CompetitionMembership cm join cm.competition comp join cm.community comm " +
             "where comm.id=:commId  ")
     List<Competition> findCompetitions(Long commId);
+
+    @Query(" select cm from CompetitionMembership cm join cm.competition comp join cm.community comm " +
+            "where comm.id=:commId and comp.id=:compId  ")
+    Optional<CompetitionMembership> findCompMemb(Long commId, Long compId);
 }

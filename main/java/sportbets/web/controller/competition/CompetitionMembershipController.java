@@ -97,5 +97,11 @@ public class CompetitionMembershipController {
         return  compMembService.findCurrentCompetition(commId);
 
     }
+    @GetMapping("/{commId}/compMemb/{compId}")
+    public CompetitionMembershipDto findCompMemb(@PathVariable Long commId,@PathVariable Long compId) {
+        log.debug(":find competitiuons");
+        return  compMembService.findCompMemb(commId,compId);
+
+    }
 
 }

@@ -21,10 +21,12 @@ import sportbets.persistence.entity.tipps.enums.TippModusType;
 import sportbets.persistence.repository.community.CommunityRepository;
 import sportbets.persistence.repository.competition.*;
 import sportbets.persistence.repository.tipps.TippModusRepository;
+import sportbets.persistence.rowObject.TippConfigRow;
 import sportbets.testdata.TestConstants;
 import sportbets.web.dto.community.CommunityDto;
 import sportbets.web.dto.competition.*;
 import sportbets.web.dto.tipps.TippConfigDto;
+import sportbets.web.dto.tipps.TippModusDto;
 import sportbets.web.dto.tipps.TippModusPointDto;
 import sportbets.web.dto.tipps.TippModusResultDto;
 
@@ -251,6 +253,14 @@ public class ContractTippConfigApiIntegrationTest {
                 .exists()
                 .jsonPath("$.id")
                 .exists();
+
+        log.debug("retrieveTippConfigRows_withValidCompMembId_thenSuccess");
+          webClient.get()
+                .uri("/tippConfig/rows/"+ savedCompMemb.getId())
+                  .exchange()
+                  .expectStatus()
+                  .isOk()
+                  .expectBodyList(TippConfigRow.class).hasSize(1);
 
     }
 }

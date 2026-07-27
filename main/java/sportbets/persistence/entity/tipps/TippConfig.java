@@ -40,7 +40,6 @@ public class TippConfig {
     }
 
     public TippConfig(Spieltag spieltag, CompetitionMembership competitionMembership, TippModus tippModus) {
-        log.debug("new TippConfig()");
         this.spieltag = spieltag;
         this.competitionMembership = competitionMembership;
         this.tippModus = tippModus;

@@ -88,17 +88,11 @@ public class CommunityWizardServiceImpl implements CommunityWizardService {
         CompetitionMembership savedCompMemb = compMembRepo.save(competitionMembership);
         List<TippModus> tippModi = new ArrayList<>();
         for (CommunityWizardTippModusRecord modusRecord : modi) {
-            log.debug("modusRecord::{}", modusRecord);
             final TippModus entity = convertToEntity(modusRecord, savedComm);
-            TippModus savedModus = modusRepo.save(entity);
-            tippModi.add(savedModus);
-            log.debug("tippModus::{}", savedModus);
+            tippModi.add(modusRepo.save(entity));
         }
         List<Spieltag> matchdays = spieltagRepository.findAllByCompId(record.compId());
         for (Spieltag spieltag : matchdays) {
-            log.debug("spieltag::{}", spieltag);
-            log.debug("tippModus::{}", spieltag);
-            log.debug("compMemb::{}", savedCompMemb);
             configRepo.save(new TippConfig(spieltag, savedCompMemb, tippModi.get(0)));
         }
         // set admin state:

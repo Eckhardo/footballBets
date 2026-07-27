@@ -1,5 +1,6 @@
 package sportbets.service.competition;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -196,6 +197,7 @@ public class CompetitionMembershipServiceTest {
         assertTrue(deleted.isEmpty());
 
     }
+
     @Test
     public void whenSelectCurrentCompetition_thenSuccess() {
         log.debug("whenSelectCurrentCompetition_thenSuccess");
@@ -205,9 +207,24 @@ public class CompetitionMembershipServiceTest {
         assertNotNull(savedCompMemb);
         CompetitionMembership savedCompMemb2 = membershipService.save(new CompetitionMembershipDto(savedComp2.getId(), savedComp2.getName(), savedCommunity.getId(), savedCommunity.getName()));
         assertNotNull(savedCompMemb2);
-        CompetitionDto result= membershipService.findCurrentCompetition(savedCommunity.getId());
+        CompetitionDto result = membershipService.findCurrentCompetition(savedCommunity.getId());
         assertNotNull(result);
         assertEquals(savedComp2.getName(), result.getName());
+
+
+    }
+
+
+    @Test
+    public void whenFindCompMembByCommIdAndCompId_thenSuccess() {
+        log.debug("whenFindCompMembByCommIdAndCompId_thenSuccess");
+        assertNotNull(savedComp);
+        assertNotNull(savedCommunity);
+        CompetitionMembership savedCompMemb = membershipService.save(new CompetitionMembershipDto(savedComp.getId(), savedComp.getName(), savedCommunity.getId(), savedCommunity.getName()));
+        assertNotNull(savedCompMemb);
+        CompetitionMembershipDto result = membershipService.findCompMemb(savedCommunity.getId(), savedComp.getId());
+        assertNotNull(result);
+        assertEquals(savedComp.getName(), result.getCompName());
 
 
     }
