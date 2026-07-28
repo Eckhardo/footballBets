@@ -22,26 +22,20 @@ import sportbets.web.dto.tipps.TippConfigDto;
 import sportbets.web.dto.tipps.TippModusTotoDto;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@Transactional // mandatory to check ref integrity
+@Transactional
 public class TippConfigServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(TippConfigServiceTest.class);
-    static CompetitionFamilyDto competitionFamily = TestConstants.createValidFamilyDto();
-    static CommunityDto communityDto = TestConstants.createValidCommunityDto();
-    static Spieltag savedMatchday;
-    static CompetitionMembership savedCompMemb;
-    static TippModusTotoDto savedTippModus;
-    static CompetitionRound savedCompRound;
     private static CompFamilyService familyService;
     private static CompService compService; // Real service being tested
     private static CompRoundService compRoundService;
@@ -49,6 +43,14 @@ public class TippConfigServiceTest {
     private static CommunityService communityService;
     private static TippModusService tippModusService;
     private static CompetitionMembershipService membershipService;
+    static CompetitionFamilyDto competitionFamily = TestConstants.createValidFamilyDto();
+    static CommunityDto communityDto = TestConstants.createValidCommunityDto();
+    static Spieltag savedMatchday;
+    static CompetitionMembership savedCompMemb;
+    static TippModusTotoDto savedTippModus;
+    static TippModusTotoDto savedTippModus2;
+    static CompetitionRound savedCompRound;
+
     @Autowired
     TippConfigService tippConfigService;
     @Autowired
@@ -78,6 +80,10 @@ public class TippConfigServiceTest {
         tippModusTotoDto.setCommId(savedComm.getId());
         tippModusTotoDto.setCommName(savedComm.getName());
         savedTippModus = (TippModusTotoDto) tippModusService.save(tippModusTotoDto);
+        TippModusTotoDto tippModusTotoDto2 = TestConstants.createValidTippModusTotoDto2();
+        tippModusTotoDto2.setCommId(savedComm.getId());
+        tippModusTotoDto2.setCommName(savedComm.getName());
+        savedTippModus2 = (TippModusTotoDto) tippModusService.save(tippModusTotoDto2);
 
     }
 
@@ -170,5 +176,34 @@ public class TippConfigServiceTest {
         TippConfigDto retrievedByParents = tippConfigService.findByParents(savedCompMemb.getId(), savedTippModus.getId(), savedMatchday.getId()).orElseThrow();
         assertNotNull(retrievedByParents);
         assertEquals(savedTippConfig.getId(), retrievedByParents.getId());
+    }
+
+
+    @Test
+    @Order(5)
+    public void ifTippConfigIsUpdated_ThenSucceeds() {
+        log.debug("ifTippConfigIsUpdated_ThenSucceeds");
+        TippConfigDto tippConfigDto = new TippConfigDto(null, savedCompMemb.getId(), savedMatchday.getId(), savedMatchday.getSpieltagNumber(), savedTippModus.getId());
+
+        TippConfigDto savedTippConfig = tippConfigService.save(tippConfigDto);
+        assertNotNull(savedTippConfig.getId());
+        List<TippConfigRow> configRows=tippConfigService.findTippConfigRows(savedCompMemb.getId());
+        assertFalse(configRows.isEmpty());
+        assertEquals(1, configRows.size());
+        TippConfigRow row=configRows.stream().findFirst().orElseThrow();
+        assertEquals(savedTippConfig.getId(), row.getId());
+        assertEquals(savedTippModus.getId(), row.getTippModusId());
+       TippConfigRow updatedRow=new TippConfigRow(row.getId(),row.getCompetitionName(),row.getCompMembId(),row.getRoundName(),savedTippModus2.getId(),savedTippModus2.getName(),savedMatchday.getId(),savedMatchday.getSpieltagNumber());
+        Optional<TippConfigDto> updatedDto= tippConfigService.update(updatedRow.getId(),updatedRow);
+        assertTrue(updatedDto.isPresent());
+        TippConfigDto updated=updatedDto.get();
+        assertEquals(savedTippModus2.getId(), updated.getTippModusId());
+        List<TippConfigRow> configRows2=tippConfigService.findTippConfigRows(savedCompMemb.getId());
+        assertFalse(configRows2.isEmpty());
+        assertEquals(1, configRows2.size());
+        TippConfigRow row2=configRows2.stream().findFirst().orElseThrow();
+        assertEquals(savedTippModus2.getName(), row2.getTippModusName());
+        assertEquals(savedTippModus2.getId(), row2.getTippModusId());
+
     }
 }

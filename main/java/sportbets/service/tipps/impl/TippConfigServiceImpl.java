@@ -35,7 +35,7 @@ public class TippConfigServiceImpl implements TippConfigService {
     private final SpieltagRepository spieltagRepo;
     private final TippModusRepository tippModusRepo;
 
-    public TippConfigServiceImpl(TippConfigRepository tippConfigRepo,  CompetitionMembershipRepository compMembRepo, SpieltagRepository spieltagRepo, TippModusRepository tippModusRepo) {
+    public TippConfigServiceImpl(TippConfigRepository tippConfigRepo, CompetitionMembershipRepository compMembRepo, SpieltagRepository spieltagRepo, TippModusRepository tippModusRepo) {
         this.tippConfigRepo = tippConfigRepo;
         this.modelMapper = new MapperUtilTipps().modelMapperForTippConfig();
         this.compMembRepo = compMembRepo;
@@ -55,7 +55,7 @@ public class TippConfigServiceImpl implements TippConfigService {
     @Override
     @Transactional
     public TippConfigDto save(TippConfigDto dto) {
-        log.debug("save dto: {}", dto);
+        log.debug("save dto: {}", dto.getTippModusId());
 
         Optional<TippConfig> entity = tippConfigRepo.findByParents(dto.getCompMembId(), dto.getTippModusId(), dto.getSpieltagId());
         if (entity.isPresent()) {
@@ -70,6 +70,34 @@ public class TippConfigServiceImpl implements TippConfigService {
         spieltagRepo.save(spieltag);
         return convertToDto(saved);
 
+    }
+
+    @Override
+    @Transactional
+    public Optional<TippConfigDto> update(Long id, TippConfigRow dto) {
+        log.debug("update dto: {}", dto.getTippModusId());
+        TippConfig tippConfig = tippConfigRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("Entity not found with id:" + id));
+        CompetitionMembership compMemb = compMembRepo.findById(dto.getCompMembId()).orElseThrow(() -> new EntityNotFoundException("CompMemb not found with id:" + dto.getCompMembId()));
+        Spieltag spieltag = spieltagRepo.findById(dto.getSpieltagId()).orElseThrow(() -> new EntityNotFoundException("Spieltag not found with id:" + dto.getSpieltagId()));
+
+        log.debug("tippConfig dto: {}", tippConfig);
+        TippModus tippModus = tippModusRepo.findById(dto.getTippModusId()).orElseThrow(() -> new EntityNotFoundException("TippModus not found with id:" + dto.getTippModusId()));
+        log.debug("tippModus dto: {}", tippModus);
+        tippConfig.setTippModus(tippModus);
+//        log.debug("compMemb.getTippConfigs() size: {}", compMemb.getTippConfigs().size());
+//        compMemb.getTippConfigs().removeIf(config -> config.getId().equals(id));
+//        log.debug("compMemb.getTippConfigs() size: {}", compMemb.getTippConfigs().size());
+//        compMemb.addTippConfig(tippConfig);
+//        log.debug("compMemb.getTippConfigs() size: {}", compMemb.getTippConfigs().size());
+//        log.debug(" spieltag.getTippConfigs() size: {}",  spieltag.getTippConfigs().size());
+//        spieltag.getTippConfigs().removeIf(config -> config.getId().equals(id));
+//        log.debug(" spieltag.getTippConfigs() size: {}",  spieltag.getTippConfigs().size());
+//        spieltag.addTippConfig(tippConfig);
+//        log.debug(" spieltag.getTippConfigs() size: {}",  spieltag.getTippConfigs().size());
+//        spieltagRepo.save(spieltag);
+//        compMembRepo.save(compMemb);
+        TippConfig saved = tippConfigRepo.save(tippConfig);
+        return Optional.ofNullable(convertToDto(saved));
     }
 
     @Override
@@ -104,7 +132,7 @@ public class TippConfigServiceImpl implements TippConfigService {
 
 
     private TippConfigDto convertToDto(TippConfig entity) {
-         return modelMapper.map(entity, TippConfigDto.class);
+        return modelMapper.map(entity, TippConfigDto.class);
     }
 
 

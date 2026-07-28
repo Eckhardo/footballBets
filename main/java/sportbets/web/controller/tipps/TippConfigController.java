@@ -50,6 +50,14 @@ public class TippConfigController {
     }
 
 
+    @PutMapping("/{id}")
+    public TippConfigDto update(@PathVariable Long id, @RequestBody @Valid TippConfigRow dto) {
+        log.debug("update tipp config  {}", dto);
+        TippConfigDto saved = tippConfigService.update(id, dto).orElseThrow();
+        log.debug("updated tipp config  {}", saved);
+        return saved;
+    }
+
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         log.debug(".delete::{}", id);

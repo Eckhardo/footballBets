@@ -12,6 +12,7 @@ public interface TippConfigService {
     Optional<TippConfigDto> findById(Long id);
 
     TippConfigDto save(TippConfigDto dto);
+    Optional<TippConfigDto> update(Long id, TippConfigRow dto);
 
     void deleteById(Long id);
 

@@ -154,6 +154,10 @@ public class TestConstants {
         return new TippModusTotoDto(null, "TotoTest", TippModusType.TIPPMODUS_TOTO.getDisplayName(), 1, null, createValidCommunityDto().getName());
     }
 
+    public static TippModusTotoDto createValidTippModusTotoDto2() {
+        return new TippModusTotoDto(null, "TotoTest2", TippModusType.TIPPMODUS_TOTO.getDisplayName(), 100, null, createValidCommunityDto().getName());
+    }
+
     public static TippModusToto createValidTippModusToto() {
         return new TippModusToto("TotoTipp", TippModusType.TIPPMODUS_TOTO, 2, createValidCommunity());
 

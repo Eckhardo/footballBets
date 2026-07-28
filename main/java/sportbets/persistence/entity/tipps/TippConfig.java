@@ -84,20 +84,21 @@ public class TippConfig {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         TippConfig config = (TippConfig) o;
-        return Objects.equals(createdOn, config.createdOn) && Objects.equals(spieltag.getSpieltagNumber(), config.spieltag.getSpieltagNumber());
+        return Objects.equals(createdOn, config.createdOn) && Objects.equals(tippModus.getId(), config.tippModus.getId()) && Objects.equals(spieltag.getId(), config.spieltag.getId()) && Objects.equals(competitionMembership.getId(), config.competitionMembership.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(createdOn, spieltag.getSpieltagNumber());
+        return Objects.hash(createdOn, tippModus.getId(), spieltag.getId(), competitionMembership.getId());
     }
 
     @Override
     public String toString() {
         return "TippConfig{" +
                 "createdOn=" + createdOn +
-                ", spieltagNumber=" + spieltag.getSpieltagNumber() +
-                ", competition=" + competitionMembership.getCompetition().getName() +
+                ", tippModusId=" + tippModus.getId() +
+                ", spieltagId=" + spieltag.getId() +
+                ", competitionMembershipId=" + competitionMembership.getId() +
                 '}';
     }
 }

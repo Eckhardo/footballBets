@@ -13,7 +13,7 @@ public interface TippConfigRepository extends JpaRepository<TippConfig, Long> {
 
     @Query(" select new sportbets.persistence.rowObject.TippConfigRow"
             + " ("
-            + "  c.name, cr.id , cr.name, tm.name,cm.id, sp.spieltagNumber"
+            + " tc.id, c.name, cm.id, cr.name,tm.id, tm.name, sp.id, sp.spieltagNumber"
             + ") "
             + " from TippConfig tc  join tc.competitionMembership cm join tc.spieltag sp " +
             "  join sp.competitionRound cr join cr.competition c join tc.tippModus tm"
@@ -23,7 +23,7 @@ public interface TippConfigRepository extends JpaRepository<TippConfig, Long> {
 
     @Query(" select new sportbets.persistence.rowObject.TippConfigRow"
             + " ("
-            + "  c.name, cr.id , cr.name, tm.name,cm.id, sp.spieltagNumber"
+            + " tc.id, c.name, cm.id, cr.name,tm.id, tm.name, sp.id, sp.spieltagNumber"
             + ") "
             + " from TippConfig tc  join tc.competitionMembership cm join tc.spieltag sp " +
             "  join sp.competitionRound cr join cr.competition c join tc.tippModus tm"
@@ -32,7 +32,7 @@ public interface TippConfigRepository extends JpaRepository<TippConfig, Long> {
 
     @Query(" select new sportbets.persistence.rowObject.TippConfigRow"
             + " ("
-            + "  c.name, cr.id , cr.name, tm.name,cm.id, sp.spieltagNumber"
+            + " tc.id, c.name, cm.id, cr.name,tm.id, tm.name, sp.id, sp.spieltagNumber"
             + ") "
             + " from TippConfig tc  join tc.competitionMembership cm join tc.spieltag sp " +
             "  join sp.competitionRound cr join cr.competition c join tc.tippModus tm"
