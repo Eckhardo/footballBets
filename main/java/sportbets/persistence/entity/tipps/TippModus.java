@@ -149,13 +149,12 @@ public abstract class TippModus {
 
     @Override
     public String toString() {
-        return "TippModus{" +
+        return
                 "id=" + id +
                 ", name=" + name +
                 ", type=" + type +
                 ", deadline=" + deadline +
                 ", createdOn=" + createdOn +
-                ", community=" + community +
-                '}';
+                ", community=" + community;
     }
 }

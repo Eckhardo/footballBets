@@ -154,7 +154,7 @@ public class ReadJSONTest {
                 Integer homeGoals = heimTor != null ? heimTor.intValue() : 0;
                 Integer guestGoals = gastTor != null ? gastTor.intValue() : 0;
 
-                Spieltag spieltag = spieltagRepo.findByNumber(k);
+                Spieltag spieltag = spieltagRepo.findByNumber(k,1L);
 
                 Team heimTeam = teamRepository.findByName(heim).orElseThrow();
                 Team gastTeam = teamRepository.findByName(auswärts).orElseThrow();

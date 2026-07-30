@@ -34,12 +34,17 @@ public class TippController {
     }
 
 
-    @GetMapping("/rows/{id}")
-    public List<TippRow> findRows(@PathVariable Long id) {
-        log.debug(":findRows::{}", id);
-        return tippService.findTippRows(id);
+    @GetMapping("/rows/{spieltagId}")
+    public List<TippRow> findEmptyTippRowsForTipper(@PathVariable Long spieltagId) {
+        log.debug(":find empty Rows::{}", spieltagId);
+        return tippService.findEmptyTippRowsForTipper(spieltagId);
     }
 
+    @GetMapping("/rows/{spieltagId}/commMemb/{commMembId}")
+    public List<TippRow> findTippRowsForTipper(@PathVariable Long spieltagId,@PathVariable Long commMembId) {
+        log.debug(":findRows fpr tipper::{} {}", spieltagId,commMembId);
+        return tippService.findTippRowsForTipper(spieltagId,commMembId);
+    }
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public TippDto post(@RequestBody @Valid TippDto newDto) {

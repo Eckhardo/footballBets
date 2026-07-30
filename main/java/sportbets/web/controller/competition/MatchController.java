@@ -57,9 +57,7 @@ public class MatchController {
         log.debug("New match {}", spielDto);
 
         Spiel createdModel = spielService.save(spielDto);
-        SpielDto createdDto = myMapper.map(createdModel, SpielDto.class);
-        log.debug("Spiel RETURN do {}", createdDto);
-        return createdDto;
+        return myMapper.map(createdModel, SpielDto.class);
     }
 
     @PostMapping("/matches/matchday")
@@ -75,6 +73,7 @@ public class MatchController {
         for (Spiel model : createdModels) {
 
             SpielDto createdDto = myMapper.map(model, SpielDto.class);
+            createdDtos.add(createdDto);
             log.debug("SpielDto saved {}", createdDto);
         }
         return createdDtos;

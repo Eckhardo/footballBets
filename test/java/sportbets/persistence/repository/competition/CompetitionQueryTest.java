@@ -15,7 +15,6 @@ import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
 import sportbets.persistence.entity.competition.CompetitionRound;
 import sportbets.persistence.entity.competition.Team;
-import sportbets.persistence.rowObject.CompRow;
 import sportbets.testdata.TestConstants;
 
 import java.util.List;
@@ -56,14 +55,6 @@ public class CompetitionQueryTest {
 
     }
 
-    @Test
-    public void findByName() {
-
-        CompRow comp = compRepo.findCompByNameAndFamily(TEST_LIGA_SAISON_2025_26, testFamily.getId());
-        assertNotNull(comp);
-
-
-    }
 
     @Test
     public void findByIdJoinFetchRounds() {

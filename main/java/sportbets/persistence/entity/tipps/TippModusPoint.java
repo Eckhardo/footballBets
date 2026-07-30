@@ -92,4 +92,12 @@ public class TippModusPoint extends TippModus {
         }
         return sum;
     }
+
+    @Override
+    public String toString() {
+        return  "TippModusPoint {"+
+                "totalPoints=" + totalPoints +
+                super.toString() +
+                '}';
+    }
 }

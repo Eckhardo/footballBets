@@ -1,0 +1,327 @@
+/*
+ * Copyright (c) 2026. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+ * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
+ * Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
+ * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
+ * Vestibulum commodo. Ut rhoncus gravida arcu.
+ */
+
+package sportbets.service.initTestData;
+
+import com.github.cliftonlabs.json_simple.JsonArray;
+import com.github.cliftonlabs.json_simple.JsonException;
+import com.github.cliftonlabs.json_simple.JsonObject;
+import com.github.cliftonlabs.json_simple.Jsoner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import sportbets.common.DateUtil;
+import sportbets.persistence.builder.CompFamilyConstants;
+import sportbets.persistence.builder.SpieltagConstants;
+import sportbets.persistence.builder.TeamConstants;
+import sportbets.persistence.builder.TipperConstants;
+import sportbets.persistence.entity.authorization.CommunityRole;
+import sportbets.persistence.entity.authorization.CompetitionRole;
+import sportbets.persistence.entity.authorization.Role;
+import sportbets.persistence.entity.authorization.TipperRole;
+import sportbets.persistence.entity.community.Community;
+import sportbets.persistence.entity.community.CommunityMembership;
+import sportbets.persistence.entity.community.Tipper;
+import sportbets.persistence.entity.competition.*;
+import sportbets.persistence.entity.tipps.TippConfig;
+import sportbets.persistence.entity.tipps.TippModus;
+import sportbets.persistence.entity.tipps.TippModusPoint;
+import sportbets.persistence.entity.tipps.enums.TippModusType;
+import sportbets.persistence.repository.authorization.RoleRepository;
+import sportbets.persistence.repository.authorization.TipperRoleRepository;
+import sportbets.persistence.repository.community.CommunityMembershipRepository;
+import sportbets.persistence.repository.community.CommunityRepository;
+import sportbets.persistence.repository.community.TipperRepository;
+import sportbets.persistence.repository.competition.*;
+import sportbets.persistence.repository.tipps.TippConfigRepository;
+import sportbets.persistence.repository.tipps.TippModusRepository;
+
+import java.io.FileReader;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.*;
+
+import static sportbets.persistence.builder.CompetitionConstants.BUNDESLIGA_NAME_2025;
+import static sportbets.persistence.builder.CompetitionConstants.BUNDESLIGA_NAME_2026;
+@Service
+public class BuliService26_27 {
+
+        private static final Logger log = LoggerFactory.getLogger(sportbets.service.initTestData.BuliService26_27.class);
+        @Autowired
+        TippModusRepository tippModusRepo;
+        @Autowired
+        TippConfigRepository tippConfigRepository;
+        @Autowired
+        private CompetitionFamilyRepository familyRepo;
+        @Autowired
+        private CompetitionTeamRepository compTeamRepo;
+        @Autowired
+        private CompetitionRepository compRepo;
+        @Autowired
+        private CompetitionRoundRepository compRoundRepo;
+        @Autowired
+        private SpieltagRepository spieltagRepo;
+        @Autowired
+        private SpielRepository spielRepo;
+        @Autowired
+        private TeamRepository teamRepository;
+        @Autowired
+        private TipperRepository tipperRepo;
+        @Autowired
+        private TipperRoleRepository tipperRoleRepo;
+        @Autowired
+        private RoleRepository roleRepo;
+        @Autowired
+        private CommunityRepository commRepo;
+        @Autowired
+        private CompetitionMembershipRepository compMembRepo;
+        @Autowired
+        private CommunityMembershipRepository commMembRepo;
+        Competition savedComp = null;
+        CompetitionRound savedHinrunde = null;
+        CompetitionRound savedRückrunde = null;
+        Community savedCommunity = null;
+
+        @Transactional
+        public void execute() {
+            CompetitionFamily fam = familyRepo.save(CompFamilyConstants.BUNDESLIGA);
+            savedComp = compRepo.save(new Competition(BUNDESLIGA_NAME_2026, "1. Deutsche Fussball Bundesliga Saison 2026/27", 3, 1, fam));
+
+            savedHinrunde = compRoundRepo.save(new CompetitionRound(1, "Hinrunde", savedComp, false, 18, 17, 1));
+            savedRückrunde = compRoundRepo.save(new CompetitionRound(2, "Rueckrunde", savedComp, false, 18, 17, 18));
+
+
+            Community  savedCommunity = commRepo.findByName("Bulitipper").orElseThrow(()-> new RuntimeException("Bulitipper not found"));
+            CompetitionRole savedCompRole = roleRepo.save(new CompetitionRole(savedComp.getName(), savedComp.getDescription(), savedComp));
+            
+            
+            Tipper ebi=tipperRepo.findByUsername("Eckhardo").orElseThrow(()-> new RuntimeException("Eckhardo not found"));
+            tipperRoleRepo.save(new TipperRole(savedCompRole, ebi));
+
+
+            CompetitionMembership compMemb = new CompetitionMembership(savedCommunity, savedComp);
+            compMembRepo.save(compMemb);
+
+            saveCompTeams();
+
+
+            SortedMap<Integer, LocalDateTime> sortedMap = retrieveSpieltage();
+            List<LocalDateTime> hinDates = new ArrayList<>();
+            List<LocalDateTime> rueckDates = new ArrayList<>();
+
+            for (Map.Entry<Integer, LocalDateTime> entry : sortedMap.entrySet()) {
+
+                if (entry.getKey() <= 17) {
+                    hinDates.add(entry.getValue());
+                } else {
+                    rueckDates.add(entry.getValue());
+                }
+            }
+
+            List<Spieltag> spieltagHin = spieltagRepo.saveAll(SpieltagConstants.getSpieltageHinrunde(savedHinrunde, hinDates));
+            List<Spieltag> spieltagRueck = spieltagRepo.saveAll(SpieltagConstants.getSpieltageRueckrunde(savedRückrunde, rueckDates));
+
+            TippModus buliModus = tippModusRepo.save(new TippModusPoint("name26", TippModusType.TIPPMODUS_POINT, 2, savedCommunity, 4));
+            TippModus buliModus2 =  tippModusRepo.save(new TippModusPoint("name27", TippModusType.TIPPMODUS_POINT, 2, savedCommunity, 6));
+
+            log.debug("save matchdays");
+            for (Spieltag spTagHin : spieltagHin) {
+                Spieltag mySp = spieltagRepo.findByNumberWithRoundId(spTagHin.getSpieltagNumber(), savedHinrunde.getId()).orElseThrow();
+                TippConfig tippConfig = new TippConfig(mySp, compMemb, buliModus);
+                tippConfigRepository.save(tippConfig);
+                log.debug("save matchdays hin");
+            }
+            for (Spieltag sptagRueck : spieltagRueck) {
+                Spieltag mySp = spieltagRepo.findByNumberWithRoundId(sptagRueck.getSpieltagNumber(), savedRückrunde.getId()).orElseThrow();
+                TippConfig tippConfig = new TippConfig(mySp, compMemb, buliModus2);
+                tippConfigRepository.save(tippConfig);
+                log.debug("save matchdays rueck");
+            }
+            log.debug("save spiele:");
+            List<Spiel> savedSpiele = retrieveSpiele();
+            log.debug("added spielformula ::" + savedSpiele.size());
+           
+
+        }
+
+        private void saveRoles(Tipper tipper) {
+            CompetitionRole competitionRole = new CompetitionRole(savedComp.getName(), savedComp.getDescription(), savedComp);
+            CommunityRole communityRole = new CommunityRole(savedCommunity.getName(), savedCommunity.getDescription(), savedCommunity);
+
+            Role savedCompetitionRole = roleRepo.save(competitionRole);
+            Role savedCommmunityRole = roleRepo.save(communityRole);
+            TipperRole tipperCompRole = new TipperRole(savedCompetitionRole, tipper);
+            TipperRole tipperCommRole = new TipperRole(savedCommmunityRole, tipper);
+            tipperRoleRepo.save(tipperCommRole);
+            tipperRoleRepo.save(tipperCompRole);
+        }
+
+
+        private void saveCompTeams() {
+
+            List<Team> teams = teamRepository.findAllClubTeams();
+            for (Team team : teams) {
+                CompetitionTeam ct = new CompetitionTeam(team, savedComp);
+                savedComp.addCompetitionTeam(ct);
+                teamRepository.saveAndFlush(team);
+            }
+
+        }
+
+
+        SortedMap<Integer, LocalDateTime> retrieveSpieltage() {
+            String filePath = "src/test/java/sportbets/testdata/bl26_27.json";
+
+            SortedMap<Integer, LocalDateTime> spieltags = new TreeMap<>(
+                    Comparator.nullsFirst(Comparator.naturalOrder())
+            );
+
+            try (FileReader reader = new FileReader(filePath)) {
+
+                JsonObject jsonObject = (JsonObject) Jsoner.deserialize(reader);
+
+                // read value one by one manually
+                System.out.println((String) jsonObject.get("name"));
+
+                // loops the array
+                JsonArray msg = (JsonArray) jsonObject.get("matches");
+
+                int i = 1;
+                String lastSpieltag = null;
+                for (Object o : msg) {
+                    JsonObject nestedObj = (JsonObject) o;
+                    String spieltag = (String) nestedObj.get("round");
+                    if (lastSpieltag == null || !lastSpieltag.equals(spieltag)) {
+
+                        String anpfiffTag = (String) nestedObj.get("date");
+                        String time = (String) nestedObj.get("time");
+                        if (time == null) {
+                            time = "15:30";
+                        }
+                        String anpfiffDate = " 20:30";
+                        LocalDateTime dt = DateUtil.formatDate(anpfiffTag + " " + time);
+                        lastSpieltag = spieltag;
+
+                        spieltags.put(i, dt);
+
+                        i++;
+                    }
+
+
+                }
+
+
+            } catch (IOException | JsonException e) {
+                System.out.println("##" + e.getMessage());
+                throw new RuntimeException(e);
+            }
+
+            System.out.println("size::" + spieltags.size());
+            for (Map.Entry<Integer, LocalDateTime> entry : spieltags.entrySet()) {
+                System.out.println(entry.getKey() + " => " + entry.getValue());
+            }
+            return spieltags;
+        }
+
+        List<Spiel> retrieveSpiele() {
+            String filePath = "src/test/java/sportbets/testdata/bl26_27.json";
+            Competition comp = compRepo.findByName(BUNDESLIGA_NAME_2026).orElseThrow();
+
+            List<Spiel> spiele = new ArrayList<>();
+            try (FileReader reader = new FileReader(filePath)) {
+
+                JsonObject jsonObject = (JsonObject) Jsoner.deserialize(reader);
+
+                // read value one by one manually
+                System.out.println((String) jsonObject.get("name"));
+
+                // loops the array
+                JsonArray msg = (JsonArray) jsonObject.get("matches");
+
+                int i = 1;
+                int k = 1;
+                String lastSpieltag = null;
+                for (Object o : msg) {
+                    JsonObject nestedObj = (JsonObject) o;
+
+                    String anpfiffTag = (String) nestedObj.get("date");
+                    String time = (String) nestedObj.get("time");
+                    if (time == null) {
+                        time = "15:30";
+                    }
+                    LocalDateTime dt = DateUtil.formatDate(anpfiffTag + " " + time);
+
+                    String heim = (String) nestedObj.get("team1");
+
+
+                    String auswärts = (String) nestedObj.get("team2");
+                    log.debug("{}-{}", heim, auswärts);
+                    JsonObject scores = (JsonObject) nestedObj.get("score");
+                    log.debug("Spieltag {}", k);
+                    JsonArray fts = (JsonArray) scores.get("ft");
+                    BigDecimal heimTor = null;
+                    BigDecimal gastTor = null;
+                    if (fts != null) {
+                        int j = 1;
+                        for (Object ft : fts) {
+
+                            if (j == 1) {
+                                heimTor = (BigDecimal) ft;
+                                j++;
+                            } else if (j == 2) {
+                                gastTor = (BigDecimal) ft;
+                                j = 1;
+                            }
+
+                        }
+                    }
+
+                    //    System.out.println(dt + " - " + heim + "-  " + auswärts + " " + (heimTor != null ? heimTor.intValue() : null) + " " + (gastTor != null ? gastTor.intValue() : null));
+                    boolean stattgefunden = false;
+                    Integer homeGoals =  0;
+                    Integer guestGoals =  0;
+                    Spieltag spieltag = spieltagRepo.findByNumber(k,savedComp.getId());
+
+                    Team heimTeam = teamRepository.findByName(heim).orElseThrow();
+                    Team gastTeam = teamRepository.findByName(auswärts).orElseThrow();
+                    Spiel spiel = new Spiel(spieltag, i, dt, heimTeam, gastTeam, homeGoals, guestGoals, stattgefunden);
+                    spiele.add(spiel);
+
+
+                    SpielFormula heimFormel = new SpielFormula(spiel, heimTeam.getName(), heimTeam.getAcronym(),
+                            true, spiel.getHeimTore(), spiel
+                            .getGastTore(), 0);
+                    heimFormel.calcWinPoints(spiel.isStattgefunden(), comp.getWinMultiplicator(), comp.getRemisMultiplicator());
+                    heimFormel.calcTrend(heimFormel.getHeimTore(), heimFormel.getGastTore(), spiel.isStattgefunden());
+
+                    //  spielFormulaRepo.save(heimFormel);
+
+                    SpielFormula gastFormel = new SpielFormula(spiel, gastTeam.getName(), gastTeam.getAcronym(),
+                            false, spiel.getGastTore(), spiel
+                            .getHeimTore(), 0);
+                    gastFormel.calcWinPoints(spiel.isStattgefunden(), comp.getWinMultiplicator(), comp.getRemisMultiplicator());
+                    gastFormel.calcTrend(gastFormel.getHeimTore(), gastFormel.getGastTore(), spiel.isStattgefunden());
+                    if (i % 9 == 0) {
+
+                        log.info("" + k);
+                        k++;
+                    }
+                    i++;
+                }
+            } catch (IOException | JsonException e) {
+                System.out.println("##" + e.getMessage());
+                throw new RuntimeException(e);
+            }
+            System.out.println("size::" + spiele.size());
+            return spielRepo.saveAll(spiele);
+        }
+    }
+

@@ -46,8 +46,8 @@ public class TippServiceTest {
     Spieltag savedMatchday = null;
     Spiel savedSpiel = null;
     Spiel savedSpiel2 = null;
-    TippModusTotoDto savedTippModusToto = null;
     TippModusPointDto savedTippModusPoint = null;
+    TippModusPointDto savedTippModusPoint2 = null;
     Community savedCommunity = null;
     Tipper savedTipper = null;
     CompetitionMembership savedCompMemb = null;
@@ -111,13 +111,13 @@ public class TippServiceTest {
         assertNotNull(savedCommunity);
         CompetitionMembershipDto competitionMembershipDto = new CompetitionMembershipDto(savedComp.getId(), savedComp.getName(), savedCommunity.getId(), savedCommunity.getName());
         savedCompMemb = competitionMembershipService.save(competitionMembershipDto);
-        TippModusTotoDto tippModusTotoDto = TestConstants.createValidTippModusTotoDto();
-        tippModusTotoDto.setCommId(savedCommunity.getId());
-        savedTippModusToto = (TippModusTotoDto) tippModusService.save(tippModusTotoDto);
-
         TippModusPointDto tippModusPointDto = TestConstants.createValidTippModusPointDto();
         tippModusPointDto.setCommId(savedCommunity.getId());
         savedTippModusPoint = (TippModusPointDto) tippModusService.save(tippModusPointDto);
+
+        TippModusPointDto tippModusPointDto2 = TestConstants.createValidTippModusPointDto2();
+        tippModusPointDto2.setCommId(savedCommunity.getId());
+        savedTippModusPoint2 = (TippModusPointDto) tippModusService.save(tippModusPointDto2);
 
         TipperDto testTipper = TipperConstants.createValidTipperDto();
         savedTipper = tipperService.save(testTipper);
@@ -204,14 +204,14 @@ public class TippServiceTest {
     public void whenSaveTipp_thenWinPointsAreCalculatedCorrectlyForTotoTipp() {
         log.debug("saveOrUpdateTipp_thenRetrievalSucceeds");
 
-        TippDto tippDto = new TippDto(null, 1, 0, 0, null);
+        TippDto tippDto = new TippDto(null, 5, 1, 0, null);
         tippDto.setSpielId(savedSpiel.getId());
         tippDto.setSpielNumber(savedSpiel.getSpielNumber());
         tippDto.setCommMembId(savedCommunityMembership.getId());
-        tippDto.setTippModusId(savedTippModusToto.getId());
-        tippDto.setTippModusType(savedTippModusToto.getType());
+        tippDto.setTippModusId(savedTippModusPoint2.getId());
+        tippDto.setTippModusType(savedTippModusPoint2.getType());
         TippDto savedTippDto = tippService.saveOne(tippDto);
-        assertEquals(1, savedTippDto.getWinPoints());
+        assertEquals(5, savedTippDto.getWinPoints());
 
 
     }

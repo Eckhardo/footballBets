@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 
 public class TippRow {
@@ -32,9 +33,6 @@ public class TippRow {
     private Integer spieltagNumber;
     private String roundName;
     private String competitionName;
-
-    private String groupName;
-
     // tipp fields
 
     private Long tippId;
@@ -45,8 +43,6 @@ public class TippRow {
     private Integer winPoints;
 
     private Long commMembId;
-
-    private Integer totoTippInput;
 
     //	********************** Constructors ********************** //
 
@@ -70,19 +66,6 @@ public class TippRow {
         this.competitionName = competitionName;
     }
 
-    /**
-     * NOT placed tipps yet !
-     */
-
-    public TippRow(Long spielId, LocalDateTime anpfiffdate, Integer heimtore,
-                   Integer gasttore, Boolean stattgefunden, String heimName,
-                   String gastName, Integer spieltagNumber, String roundName,
-                   String competitionName, String groupName) {
-        this(spielId, anpfiffdate, heimtore, gasttore, stattgefunden, heimName,
-                gastName, spieltagNumber, roundName, competitionName);
-        this.groupName = groupName;
-
-    }
 
     /**
      * FOR UPDATE TIPPS & VIEW TIPPS
@@ -97,28 +80,6 @@ public class TippRow {
                    Long commMembId) {
         this(spielId, anpfiffdate, heimtore, gasttore, stattgefunden, heimName,
                 gastName, spieltagNumber, roundName, competitionName);
-        this.tippId = tippId;
-        this.heimTipp = heimTipp;
-        this.remisTipp = remisTipp;
-        this.gastTipp = gastTipp;
-        this.winPoints = winPoints;
-        this.commMembId = commMembId;
-
-    }
-
-    /**
-     * FOR UPDATE TIPPS & VIEW TIPPS
-     * <p>
-     * Full constructor for single tipper tipps for comp with groups
-     */
-    public TippRow(Long spielId, LocalDateTime anpfiffdate, Integer heimtore,
-                   Integer gasttore, Boolean stattgefunden, String heimName,
-                   String gastName, Integer spieltagNumber, String roundName,
-                   String competitionName, String groupName, Long tippId,
-                   Integer heimTipp, Integer remisTipp, Integer gastTipp,
-                   Integer winPoints, Long commMembId) {
-        this(spielId, anpfiffdate, heimtore, gasttore, stattgefunden, heimName,
-                gastName, spieltagNumber, roundName, competitionName, groupName);
         this.tippId = tippId;
         this.heimTipp = heimTipp;
         this.remisTipp = remisTipp;
@@ -210,14 +171,6 @@ public class TippRow {
         this.competitionName = competitionName;
     }
 
-    public String getGroupName() {
-        return groupName;
-    }
-
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
-    }
-
     public Long getTippId() {
         return tippId;
     }
@@ -266,46 +219,41 @@ public class TippRow {
         this.commMembId = commMembId;
     }
 
-    //	********************** Business Methods ********************** //
+    //	********************** Methods ********************** //
 
-    /**
-     * @return Returns the totoTippInput.
-     */
-    public Integer getTotoTippInput() {
-        if (heimTipp != null && heimTipp == 1) {
-            return 1;
-        } else if (remisTipp != null && remisTipp == 1) {
-            return 0;
-        } else if (gastTipp != null && gastTipp == 1) {
-            return 2;
-        } else {
-            return null;
-        }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        TippRow tippRow = (TippRow) o;
+        return Objects.equals(spielId, tippRow.spielId) && Objects.equals(anpfiffdate, tippRow.anpfiffdate) && Objects.equals(spieltagNumber, tippRow.spieltagNumber) && Objects.equals(tippId, tippRow.tippId) && Objects.equals(commMembId, tippRow.commMembId);
     }
 
-    /**
-     * @param totoTippInput The totoTippInput to set.
-     */
-    public void setTotoTippInput(Integer totoTippInput) {
-        if (totoTippInput != null && totoTippInput == 1) {
-            heimTipp = 1;
-            remisTipp = 0;
-            gastTipp = 0;
+    @Override
+    public int hashCode() {
+        return Objects.hash(spielId, anpfiffdate, spieltagNumber, tippId, commMembId);
+    }
 
-        } else if (totoTippInput != null && totoTippInput == 0) {
-            heimTipp = 0;
-            remisTipp = 1;
-            gastTipp = 0;
-        } else if (totoTippInput != null && totoTippInput == 2) {
-            heimTipp = 0;
-            remisTipp = 0;
-            gastTipp = 1;
-        } else {
-            heimTipp = 0;
-            remisTipp = 0;
-            gastTipp = 0;
-        }
+    @Override
+    public String toString() {
+        return "TippRow{" +
+                "spielId=" + spielId +
+                ", anpfiffdate=" + anpfiffdate +
+                ", heimTore=" + heimTore +
+                ", gastTore=" + gastTore +
+                ", hasStattgefunden=" + hasStattgefunden +
+                ", heimName='" + heimName + '\'' +
+                ", gastName='" + gastName + '\'' +
+                ", spieltagNumber=" + spieltagNumber +
+                ", roundName='" + roundName + '\'' +
+                ", competitionName='" + competitionName + '\'' +
+                ", tippId=" + tippId +
+                ", heimTipp=" + heimTipp +
+                ", remisTipp=" + remisTipp +
+                ", gastTipp=" + gastTipp +
+                ", winPoints=" + winPoints +
+                ", commMembId=" + commMembId +
 
+                '}';
     }
 }

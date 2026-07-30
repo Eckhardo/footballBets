@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionRound;
 import sportbets.persistence.entity.competition.Team;
-import sportbets.persistence.rowObject.CompRow;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -38,12 +38,6 @@ public interface CompetitionRepository extends JpaRepository<Competition, Long> 
             + " order by t.acronym asc")
     List<Team> findTeamsForComp(@Param("compId") Long id);
 
-
-    @Query(" select new sportbets.persistence.rowObject.CompRow("
-            + "  c.name , c.description, cf.id )"
-            + "from Competition c join c.competitionFamily cf"
-            + " where c.name = :name and cf.id=:familyId ")
-    CompRow findCompByNameAndFamily(String name, @Param("familyId") Long id);
 
     @Query("select cr from CompetitionRound cr join cr.competition c where c.id=:compId")
     List<CompetitionRound> findAllForComp(@Param("compId") Long id);

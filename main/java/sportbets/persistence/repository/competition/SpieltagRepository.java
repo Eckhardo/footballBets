@@ -19,10 +19,10 @@ public interface SpieltagRepository extends JpaRepository<Spieltag, Long> {
             + " and cr.id=:id")
     Optional<Spieltag> findByNumberWithRoundId(int number, Long id);
 
-    @Query("select  sp from Spieltag sp "
-            + " where sp.spieltagNumber =:number")
-    @QueryHints(@QueryHint(name = "org.hibernate.cacheable", value = "true"))
-    Spieltag findByNumber(int number);
+    @Query("select  sp from Spieltag sp join fetch  sp.competitionRound cr join fetch cr.competition c"
+            + " where sp.spieltagNumber =:number"
+            + " and c.id=:compId")
+     Spieltag findByNumber(int number,Long compId);
 
 
     @Query("select  sp from Spieltag sp join fetch sp.competitionRound cr "

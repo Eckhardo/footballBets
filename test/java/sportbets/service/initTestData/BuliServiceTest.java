@@ -22,12 +22,14 @@ public class BuliServiceTest {
 
     @Autowired
     BuliService buliService;
+    @Autowired
+    BuliService26_27 buliService2627;
 
     @Test
     @Order(1)
     public void saveBuliData() {
         log.debug("saveBuliData");
-       // buliService.execute();
-
+     //   buliService.execute();
+      //  buliService2627.execute();
     }
 }

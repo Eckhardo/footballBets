@@ -161,12 +161,6 @@ public class BuliService {
         log.debug("save spiele:");
         List<Spiel> savedSpiele = retrieveSpiele();
         log.debug("added spielformula ::" + savedSpiele.size());
-        Competition buli2026 = compRepo.save(new Competition(BUNDESLIGA_NAME_2026, "1. Deutsche Fussball Bundesliga Saison 2026/27", 3, 1, fam));
-        CompetitionRole savedBuli2026Role = roleRepo.save(new CompetitionRole(buli2026.getName(), buli2026.getDescription(), buli2026));
-        tipperRoleRepo.save(new TipperRole(savedBuli2026Role, ebi));
-
-        compMembRepo.save(new CompetitionMembership(savedCommunity, buli2026));
-
 
     }
 
@@ -306,7 +300,7 @@ public class BuliService {
                 boolean stattgefunden = heimTor != null && gastTor != null;
                 Integer homeGoals = heimTor != null ? heimTor.intValue() : 0;
                 Integer guestGoals = gastTor != null ? gastTor.intValue() : 0;
-                Spieltag spieltag = spieltagRepo.findByNumber(k);
+                Spieltag spieltag = spieltagRepo.findByNumber(k,savedComp.getId());
 
                 Team heimTeam = teamRepository.findByName(heim).orElseThrow();
                 Team gastTeam = teamRepository.findByName(auswärts).orElseThrow();

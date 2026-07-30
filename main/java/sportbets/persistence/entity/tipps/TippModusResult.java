@@ -124,4 +124,13 @@ public class TippModusResult extends TippModus {
         return 0;
 
     }
+
+    @Override
+    public String toString() {
+        return "TippModusResult {" +
+                "tendencyPoints=" + tendencyPoints +
+                ", bonusPoints=" + bonusPoints +
+                super.toString() +
+                '}';
+    }
 }

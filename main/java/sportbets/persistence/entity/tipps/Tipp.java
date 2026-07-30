@@ -52,12 +52,12 @@ public class Tipp {
 
     }
 
-    public Tipp(Spiel spiel, CommunityMembership commMemb, TippModus tippModus, Integer heimTipp, Integer remisTipp, Integer gastTipp, Integer winPoints) {
+    public Tipp(Spiel spiel, CommunityMembership commMemb, TippModus tippModus, Integer heimTipp, Integer remisTipp, Integer gastTipp) {
         this(spiel, commMemb, tippModus);
         this.heimTipp = heimTipp;
         this.remisTipp = remisTipp;
         this.gastTipp = gastTipp;
-        this.winPoints = winPoints;
+
     }
 
     public Long getId() {

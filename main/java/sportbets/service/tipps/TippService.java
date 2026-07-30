@@ -16,6 +16,8 @@ public interface TippService {
 
     List<TippDto> saveList(List<TippDto> dtoList);
 
+    void saveRowList(List<TippRow> rowList);
+
 
     Optional<TippDto> updateOne(Long id, TippDto dto);
 
@@ -24,5 +26,9 @@ public interface TippService {
 
     void deleteById(Long id);
 
-    List<TippRow> findTippRows(Long id);
+    List<TippRow> findEmptyTippRowsForTipper(Long spieltagId);
+
+    List<TippRow> findTippRowsForTipper(Long spieltagId, Long commMembId);
+
+    void deleteAll();
 }

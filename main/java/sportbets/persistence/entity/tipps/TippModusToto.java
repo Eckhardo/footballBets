@@ -64,4 +64,12 @@ public class TippModusToto extends TippModus {
         }
 
     }
+
+    @Override
+    public String toString() {
+        return  "TippModusToto {"+
+                super.toString() +
+                '}';
+
+    }
 }

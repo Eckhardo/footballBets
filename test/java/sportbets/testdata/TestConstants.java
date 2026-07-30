@@ -31,7 +31,7 @@ public class TestConstants {
     private static final String TEAM_NAME_TEST1 = "TestName";
     private static final String TEAM_NAME_TEST2 = "TestName2";
     private static final String TEAM_NAME_TEST3 = "TestName3";
-    public static final Tipp TEST_TIPP_ENTITY = new Tipp(createValidSpiel(), createValidCommunityMembership(), createValidTippModusPoint(), 4, 0, 0, 4);
+    public static final Tipp TEST_TIPP_ENTITY = new Tipp(createValidSpiel(), createValidCommunityMembership(), createValidTippModusPoint(), 4, 0, 0);
 
     // Returns a fresh object every time it is called
     public static CompetitionFamilyDto createValidFamilyDto() {
@@ -145,11 +145,15 @@ public class TestConstants {
     public static TippModusPointDto createValidTippModusPointDto() {
         return new TippModusPointDto(null, "myNamePoint", TippModusType.TIPPMODUS_POINT.getDisplayName(), 1, null, createValidCommunityDto().getName(), 4);
     }
-
+    public static TippModusPointDto createValidTippModusPointDto2() {
+        return new TippModusPointDto(null, "myNamePoint2", TippModusType.TIPPMODUS_POINT.getDisplayName(), 1, null, createValidCommunityDto().getName(), 6);
+    }
     public static TippModusPoint createValidTippModusPoint() {
         return new TippModusPoint("myNamePoint", TippModusType.TIPPMODUS_POINT, 1, createValidCommunity(), 4);
     }
-
+    public static TippModusPoint createValidTippModusPoint2() {
+        return new TippModusPoint("myNamePoint2", TippModusType.TIPPMODUS_POINT, 1, createValidCommunity(), 6);
+    }
     public static TippModusTotoDto createValidTippModusTotoDto() {
         return new TippModusTotoDto(null, "TotoTest", TippModusType.TIPPMODUS_TOTO.getDisplayName(), 1, null, createValidCommunityDto().getName());
     }
