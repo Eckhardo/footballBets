@@ -49,6 +49,7 @@ public class ContractCompRoundApiIntegrationTest {
     CompetitionRepository competitionRepository;
     @Autowired
     CompetitionRoundRepository competitionRoundRepository;
+    Competition savedComp = null;
 
     @AfterEach
     public void cleanup() {
@@ -95,7 +96,7 @@ public class ContractCompRoundApiIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isCreated();
-        CompetitionRound round = competitionRoundRepository.findByName(compRoundDto.getName()).orElseThrow(() -> new EntityNotFoundException(compRoundDto.getName()));
+        CompetitionRound round = competitionRoundRepository.findByNameAndCompId(compRoundDto.getName(), comp.getId()).orElseThrow(() -> new EntityNotFoundException(compRoundDto.getName()));
         matchDayDto.setCompRoundId(round.getId());
         matchDayDto.setCompRoundName(round.getName());
 
@@ -114,9 +115,9 @@ public class ContractCompRoundApiIntegrationTest {
     @Test
     @Order(1)
     void createNewRound_withValidDtoInput_thenSuccess() {
-        Competition comp = competitionRepository.findByName(compDto.getName()).orElseThrow(() -> new EntityNotFoundException(compDto.getName()));
-        compRoundDto2.setCompId(comp.getId());
-        compRoundDto2.setCompName(comp.getName());
+        savedComp = competitionRepository.findByName(compDto.getName()).orElseThrow(() -> new EntityNotFoundException(compDto.getName()));
+        compRoundDto2.setCompId(savedComp.getId());
+        compRoundDto2.setCompName(savedComp.getName());
 
         webClient.post()
                 .uri("/rounds")
@@ -139,8 +140,9 @@ public class ContractCompRoundApiIntegrationTest {
     @Order(2)
     void givenPreloadedData_whenGetSingleRound_thenResponseContainsFields() {
 
+        savedComp = competitionRepository.findByName(compDto.getName()).orElseThrow(() -> new EntityNotFoundException(compDto.getName()));
 
-        CompetitionRound entity = competitionRoundRepository.findByName(compRoundDto.getName()).orElseThrow(() -> new EntityNotFoundException(compRoundDto.getName()));
+        CompetitionRound entity = competitionRoundRepository.findByNameAndCompId(compRoundDto.getName(), savedComp.getId()).orElseThrow(() -> new EntityNotFoundException(compRoundDto.getName()));
         Long id = entity.getId();
         webClient.get()
                 .uri("/rounds/" + id)
@@ -165,8 +167,9 @@ public class ContractCompRoundApiIntegrationTest {
     @Test
     @Order(3)
     void updateRound_withValidCompJsonInput_thenSuccess() {
+        savedComp = competitionRepository.findByName(compDto.getName()).orElseThrow(() -> new EntityNotFoundException(compDto.getName()));
 
-        CompetitionRound entity = competitionRoundRepository.findByName(compRoundDto.getName()).orElseThrow(() -> new EntityNotFoundException(compRoundDto.getName()));
+        CompetitionRound entity = competitionRoundRepository.findByNameAndCompId(compRoundDto.getName(), savedComp.getId()).orElseThrow(() -> new EntityNotFoundException(compRoundDto.getName()));
         compRoundDto.setCompId(entity.getCompetition().getId());
         // given
         compRoundDto.setRoundNumber(100);

@@ -46,10 +46,7 @@ public class CompServiceImpl implements CompService {
 
     }
 
-    /**
-     * @param name
-     * @return
-     */
+
     @Override
     public Optional<Competition> findByName(String name) {
         return compRepository.findByName(name);
@@ -159,10 +156,6 @@ public class CompServiceImpl implements CompService {
         }
     }
 
-    /**
-     * @param id
-     * @return
-     */
     @Override
     @Transactional
     public Optional<Competition> findByIdTest(Long id) {
@@ -175,14 +168,15 @@ public class CompServiceImpl implements CompService {
                     log.debug("round of current comp found with {}", round);
                 }
             }
-        }
-
-        Set<CompetitionRole> roles = model.get().getCompetitionRoles();
-        if (!roles.isEmpty()) {
-            for (CompetitionRole role : roles) {
-                log.debug("role of current comp found with {}", role);
+            Set<CompetitionRole> roles = model.get().getCompetitionRoles();
+            if (!roles.isEmpty()) {
+                for (CompetitionRole role : roles) {
+                    log.debug("role of current comp found with {}", role);
+                }
             }
         }
+
+
         log.debug("\n");
         return model;
     }

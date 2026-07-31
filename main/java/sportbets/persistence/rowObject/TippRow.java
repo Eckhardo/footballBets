@@ -5,11 +5,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 
-public class TippRow {
+public class TippRow implements Serializable {
     private static final Logger log = LoggerFactory.getLogger(TippRow.class);
     //	********************** Fields ********************** //
 
@@ -45,6 +46,7 @@ public class TippRow {
     private Long commMembId;
 
     //	********************** Constructors ********************** //
+    public TippRow() {}
 
     /**
      * NOT placed tipps yet !

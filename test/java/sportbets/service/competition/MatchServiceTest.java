@@ -13,7 +13,6 @@ import sportbets.web.dto.MapperUtil;
 import sportbets.web.dto.competition.*;
 import sportbets.web.dto.competition.batch.MatchBatchRecord;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;

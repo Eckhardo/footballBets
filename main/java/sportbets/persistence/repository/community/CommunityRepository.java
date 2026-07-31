@@ -1,6 +1,6 @@
 package sportbets.persistence.repository.community;
 
-import org.jetbrains.annotations.NotNull;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import sportbets.persistence.entity.community.Community;

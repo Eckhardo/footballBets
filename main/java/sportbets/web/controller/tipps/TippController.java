@@ -27,40 +27,39 @@ public class TippController {
     }
 
 
-    @GetMapping("/{id}")
-    public TippDto findOne(@PathVariable Long id) {
-        log.debug(":findOne::{}", id);
-        return tippService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    @PostMapping()
+    public ResponseEntity<Void> postRowList(@RequestBody List<TippRow> rows) {
+        log.debug("save tipp rows   {}", rows.size());
+        tippService.createOrUpdateRowList(null,rows);
+        log.debug("saved tipp rows  ");
+        return new ResponseEntity<>(HttpStatus.CREATED);
+
     }
 
+    @PutMapping("{spieltagId}")
+    public ResponseEntity<Void> updateRowList(@PathVariable Long spieltagId, @RequestBody List<TippRow> rows) {
+        log.debug("save tipp rows   {}", rows.size());
+        tippService.createOrUpdateRowList(spieltagId,rows);
+        log.debug("saved tipp rows  ");
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
-    @GetMapping("/rows/{spieltagId}")
-    public List<TippRow> findEmptyTippRowsForTipper(@PathVariable Long spieltagId) {
-        log.debug(":find empty Rows::{}", spieltagId);
-        return tippService.findEmptyTippRowsForTipper(spieltagId);
     }
 
-    @GetMapping("/rows/{spieltagId}/commMemb/{commMembId}")
-    public List<TippRow> findTippRowsForTipper(@PathVariable Long spieltagId,@PathVariable Long commMembId) {
-        log.debug(":findRows fpr tipper::{} {}", spieltagId,commMembId);
-        return tippService.findTippRowsForTipper(spieltagId,commMembId);
-    }
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public TippDto post(@RequestBody @Valid TippDto newDto) {
-        log.debug("save tipp config  {}", newDto);
-        TippDto saved = tippService.saveOne(newDto);
-        log.debug("saved tipp   {}", saved);
-        return saved;
+    @GetMapping("{spieltagId}/rows/{commMembId}")
+    public List<TippRow> findTippRowsForTipper(@PathVariable Long spieltagId, @PathVariable Long commMembId) {
+        log.debug(":findRows fpr tipper::{} {}", spieltagId, commMembId);
+        List<TippRow> rows = tippService.findTippRowsForTipper(spieltagId, commMembId);
+        if (rows.isEmpty()) {
+            return tippService.findEmptyTippRowsForTipper(spieltagId);
+        }
+        return rows;
     }
 
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         log.debug(".delete::{}", id);
-
         tippService.deleteById(id);
-
         return ResponseEntity.noContent().build();
     }
 

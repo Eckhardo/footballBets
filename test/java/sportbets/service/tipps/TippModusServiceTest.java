@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import sportbets.persistence.entity.community.Community;
-import sportbets.persistence.entity.tipps.enums.TippModusType;
 import sportbets.service.community.CommunityService;
 import sportbets.testdata.TestConstants;
 import sportbets.web.dto.community.CommunityDto;
@@ -30,7 +29,6 @@ public class TippModusServiceTest {
     private static final Logger log = LoggerFactory.getLogger(TippModusServiceTest.class);
 
     private final CommunityDto communityDto = TestConstants.createValidCommunityDto();
-    private final CommunityDto communityDto2 = TestConstants.createValidCommunityDto2();
     private final TippModusTotoDto tippModusTotoDto = TestConstants.createValidTippModusTotoDto();
     private final TippModusResultDto tippModusResultDto = TestConstants.createValidTippModusResultDto();
     private final TippModusPointDto tippModusPointDto = TestConstants.createValidTippModusPointDto();

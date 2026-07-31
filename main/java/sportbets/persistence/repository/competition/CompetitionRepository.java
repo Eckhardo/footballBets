@@ -9,7 +9,6 @@ import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionRound;
 import sportbets.persistence.entity.competition.Team;
 
-
 import java.util.List;
 import java.util.Optional;
 

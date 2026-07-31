@@ -1,5 +1,6 @@
 package sportbets.persistence.repository.competition;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,20 +41,24 @@ public class SpieltagRepositoryTest {
     private CompetitionRoundRepository compRoundRepo;
     @Autowired
     private SpieltagRepository spieltagRepo;
-
+    Competition savedComp = null;
+    CompetitionFamily savedFam=null;
 
     @Before
     public void setUp() {
         // Initialize test data before test methods
         CompetitionFamily testFamily = TestConstants.createValidFamily();
+         savedFam = familyRepo.save(testFamily);
         testComp = new Competition("Saison 2025/26", "2. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, testFamily);
+        savedComp=compRepo.save(testComp);
         testRound = new CompetitionRound(1, "Vorrunde", testComp, false, 18, 17, 1);
         Spieltag testSpieltag = new Spieltag(1, LocalDateTime.now(), testRound);
         Spieltag testSpieltag2 = new Spieltag(2, LocalDateTime.now(), testRound);
         testRound.addSpieltag(testSpieltag);
         testRound.addSpieltag(testSpieltag2);
+        compRoundRepo.save(testRound);
         System.out.println("Save all cascade");
-        CompetitionFamily savedFam = familyRepo.save(testFamily);
+
         //  competitionDAO.save(testComp);
     }
 
@@ -65,7 +70,7 @@ public class SpieltagRepositoryTest {
 
     @Test
     public void givenRound_whenFindByNameCalled_thenSpieltagIsFound() {
-        CompetitionRound foundRound = compRoundRepo.findByName(testRound.getName()).orElse(null);
+        CompetitionRound foundRound = compRoundRepo.findByNameAndCompId(testRound.getName(), savedComp.getId()).orElseThrow(() -> new EntityNotFoundException(testRound.getName()));
 
         assertNotNull(foundRound);
 

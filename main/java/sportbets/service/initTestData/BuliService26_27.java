@@ -20,14 +20,11 @@ import org.springframework.transaction.annotation.Transactional;
 import sportbets.common.DateUtil;
 import sportbets.persistence.builder.CompFamilyConstants;
 import sportbets.persistence.builder.SpieltagConstants;
-import sportbets.persistence.builder.TeamConstants;
-import sportbets.persistence.builder.TipperConstants;
 import sportbets.persistence.entity.authorization.CommunityRole;
 import sportbets.persistence.entity.authorization.CompetitionRole;
 import sportbets.persistence.entity.authorization.Role;
 import sportbets.persistence.entity.authorization.TipperRole;
 import sportbets.persistence.entity.community.Community;
-import sportbets.persistence.entity.community.CommunityMembership;
 import sportbets.persistence.entity.community.Tipper;
 import sportbets.persistence.entity.competition.*;
 import sportbets.persistence.entity.tipps.TippConfig;
@@ -49,7 +46,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import static sportbets.persistence.builder.CompetitionConstants.BUNDESLIGA_NAME_2025;
 import static sportbets.persistence.builder.CompetitionConstants.BUNDESLIGA_NAME_2026;
 @Service
 public class BuliService26_27 {

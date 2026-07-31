@@ -74,64 +74,6 @@ public class ControllerTestDataService {
     @Autowired
     private SpielService matchService;
 
-    @Transactional
-    public Optional<Competition> initCompWithGames() {
-
-        CompetitionFamily savedFam = familyService.save(TEST_COMP_FAM_DTO);
-
-        TEST_COMP_DTO.setFamilyId(savedFam.getId());
-        Competition savedComp = compService.save(TEST_COMP_DTO);
-        TEST_COMP_ROUND_DTO.setCompId(savedComp.getId());
-        CompetitionRound savedCompRound = compRoundService.save(TEST_COMP_ROUND_DTO);
-        TEST_MATCH_DAY_DTO.setCompRoundId(savedCompRound.getId());
-        Spieltag savedMatchday = spieltagService.save(TEST_MATCH_DAY_DTO);
-        TeamDto savedTeam1 = teamService.save(TEAM_DTO_1);
-        TeamDto savedTeam2 = teamService.save(TEAM_DTO_2);
-
-        compTeamService.save(new CompetitionTeamDto(null, savedComp.getId(), savedComp.getName(), savedTeam1.getId(), savedTeam1.getName(), true));
-        compTeamService.save(new CompetitionTeamDto(null, savedComp.getId(), savedComp.getName(), savedTeam2.getId(), savedTeam2.getName(), true));
-
-        TEST_SPIEL_DTO.setSpieltagId(savedMatchday.getId());
-        TEST_SPIEL_DTO.setHeimTeamId(savedTeam1.getId());
-        TEST_SPIEL_DTO.setGastTeamId(savedTeam2.getId());
-        Spiel savedSpiel = matchService.save(TEST_SPIEL_DTO);
-        TEST_SPIEL_DTO_2.setSpieltagId(savedMatchday.getId());
-        TEST_SPIEL_DTO_2.setHeimTeamId(savedTeam2.getId());
-        TEST_SPIEL_DTO_2.setGastTeamId(savedTeam1.getId());
-        Spiel savedSpiel2 = matchService.save(TEST_SPIEL_DTO_2);
-
-        TEST_SPIEL_DTO_3.setSpieltagId(savedMatchday.getId());
-        TEST_SPIEL_DTO_3.setHeimTeamId(savedTeam2.getId());
-        TEST_SPIEL_DTO_3.setGastTeamId(savedTeam1.getId());
-        Spiel savedSpiel3 = matchService.save(TEST_SPIEL_DTO_3);
-
-
-        Community savedCommunity = communityService.save(TEST_COMM_DTO);
-
-        TEST_COMP_MEM_DTO.setCommId(savedComp.getId());
-        TEST_COMP_MEM_DTO.setCompId(savedComp.getId());
-        CompetitionMembership savedCompMemb = competitionMembershipService.save(TEST_COMP_MEM_DTO);
-
-
-        TippModusTotoDto tippModusTotoDto = new TippModusTotoDto(null, "TotoTest", TippModusType.TIPPMODUS_TOTO.getDisplayName(), 1, savedCommunity.getId(), savedCommunity.getName());
-        TippModusTotoDto savedTippModusToto = (TippModusTotoDto) tippModusService.save(tippModusTotoDto);
-        TippModusPointDto tippModusPointDto = new TippModusPointDto(null, "PunkteTest", TippModusType.TIPPMODUS_POINT.getDisplayName(), 1, savedCommunity.getId(), savedCommunity.getName(), 4);
-        TippModusPointDto savedTippModusPoint = (TippModusPointDto) tippModusService.save(tippModusPointDto);
-
-
-        Tipper savedTipper = tipperService.save(WERNER_DTO);
-        TEST_COMM_MEMB_DTO.setTipperId(savedTipper.getId());
-        TEST_COMM_MEMB_DTO.setCommId(savedCommunity.getId());
-        CommunityMembership savedCommunityMembership = communityMembershipService.save(TEST_COMM_MEMB_DTO);
-        log.debug("tippConfigDto: {}", TIPP_CONFIG_DTO);
-        TIPP_CONFIG_DTO.setSpieltagId(savedMatchday.getId());
-        TIPP_CONFIG_DTO.setCompMembId(savedCompMemb.getId());
-        TIPP_CONFIG_DTO.setTippModusId(savedTippModusPoint.getId());
-        TippConfigDto savedTippConfig = tippConfigService.save(TIPP_CONFIG_DTO);
-        return Optional.of(savedComp);
-
-    }
-
 
     public TippRecord initCompWithGamesWitFamAndComp(CompetitionFamilyDto fam, CompetitionDto comp) {
 

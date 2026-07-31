@@ -51,6 +51,7 @@ public class ContractMatchDayApiIntegrationTest {
     @Autowired
     CompetitionRoundRepository competitionRoundRepository;
     CompetitionRound savedRound;
+    Competition savedComp = null;
 
     @AfterEach
     public void cleanup() {
@@ -85,9 +86,9 @@ public class ContractMatchDayApiIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isCreated();
-        Competition comp = competitionRepository.findByName(compDto.getName()).orElseThrow(() -> new EntityNotFoundException(compDto.getName()));
-        compRoundDto.setCompId(comp.getId());
-        compRoundDto.setCompName(comp.getName());
+        savedComp = competitionRepository.findByName(compDto.getName()).orElseThrow(() -> new EntityNotFoundException(compDto.getName()));
+        compRoundDto.setCompId(savedComp.getId());
+        compRoundDto.setCompName(savedComp.getName());
 
         webClient.post()
                 .uri("/rounds")
@@ -99,7 +100,9 @@ public class ContractMatchDayApiIntegrationTest {
                 .exists();
 
 
-        savedRound = competitionRoundRepository.findByName(compRoundDto.getName()).orElseThrow(() -> new EntityNotFoundException(compRoundDto.getName()));
+
+        savedRound = competitionRoundRepository.findByNameAndCompId(compRoundDto.getName(), savedComp.getId()).orElseThrow(() -> new EntityNotFoundException(compRoundDto.getName()));
+
         matchDayDto.setCompRoundId(savedRound.getId());
         matchDayDto.setCompRoundName(savedRound.getName());
         webClient.post()

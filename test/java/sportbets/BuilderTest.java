@@ -8,8 +8,9 @@ import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
 
 public class BuilderTest {
-    Logger logger = LoggerFactory.getLogger(BuilderTest.class);
 
+
+    private static final Logger log = LoggerFactory.getLogger(BuilderTest.class);
 
     @Test
     public void buildCompFamily() {

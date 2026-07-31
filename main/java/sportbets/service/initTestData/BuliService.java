@@ -26,7 +26,6 @@ import sportbets.persistence.entity.competition.*;
 import sportbets.persistence.entity.tipps.TippConfig;
 import sportbets.persistence.entity.tipps.TippModus;
 import sportbets.persistence.entity.tipps.TippModusPoint;
-import sportbets.persistence.entity.tipps.TippModusToto;
 import sportbets.persistence.entity.tipps.enums.TippModusType;
 import sportbets.persistence.repository.authorization.RoleRepository;
 import sportbets.persistence.repository.authorization.TipperRoleRepository;
@@ -44,7 +43,6 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import static sportbets.persistence.builder.CompetitionConstants.BUNDESLIGA_NAME_2025;
-import static sportbets.persistence.builder.CompetitionConstants.BUNDESLIGA_NAME_2026;
 
 @Service
 public class BuliService {

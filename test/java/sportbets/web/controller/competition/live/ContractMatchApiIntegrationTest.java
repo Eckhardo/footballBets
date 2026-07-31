@@ -25,7 +25,6 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static sportbets.testdata.TestConstants.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         classes = {FootballBetsApplication.class, TestProfileLiveTest.class})
@@ -63,7 +62,7 @@ public class ContractMatchApiIntegrationTest {
     @Autowired
     SpielRepository spielRepository;
 
-
+Competition savedComp;
     Spieltag savedSpieltag;
     Team savedTeam1;
     Team savedTeam2;
@@ -128,9 +127,9 @@ public class ContractMatchApiIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isCreated();
-        Competition comp = competitionRepository.findByName(compDto.getName()).orElseThrow(() -> new EntityNotFoundException(compDto.getName()));
-        compRoundDto.setCompId(comp.getId());
-        compRoundDto.setCompName(comp.getName());
+        savedComp = competitionRepository.findByName(compDto.getName()).orElseThrow(() -> new EntityNotFoundException(compDto.getName()));
+        compRoundDto.setCompId(savedComp.getId());
+        compRoundDto.setCompName(savedComp.getName());
 
         webClient.post()
                 .uri("/rounds")
@@ -142,7 +141,7 @@ public class ContractMatchApiIntegrationTest {
                 .exists();
 
 
-        CompetitionRound round = competitionRoundRepository.findByName(compRoundDto.getName()).orElseThrow(() -> new EntityNotFoundException(compRoundDto.getName()));
+        CompetitionRound round = competitionRoundRepository.findByNameAndCompId(compRoundDto.getName(), savedComp.getId()).orElseThrow(() -> new EntityNotFoundException(compRoundDto.getName()));
         matchDayDto.setCompRoundId(round.getId());
         matchDayDto.setCompRoundName(round.getName());
         webClient.post()
@@ -224,7 +223,7 @@ public class ContractMatchApiIntegrationTest {
                 .expectStatus()
                 .isCreated();
 
-        CompetitionRound round = competitionRoundRepository.findByName(compRoundDto.getName()).orElseThrow(() -> new EntityNotFoundException(compRoundDto.getName()));
+        CompetitionRound round = competitionRoundRepository.findByNameAndCompId(compRoundDto.getName(), savedComp.getId()).orElseThrow(() -> new EntityNotFoundException(compRoundDto.getName()));
         assertNotNull(round);
         Spieltag spieltag = spieltagRepository.findByNumberWithRoundId(TEST_MATCH_DAY, round.getId()).orElseThrow(() -> new EntityNotFoundException(String.valueOf(TEST_MATCH_DAY)));
         assertNotNull(spieltag);
@@ -268,7 +267,7 @@ public class ContractMatchApiIntegrationTest {
                 .expectStatus()
                 .isCreated();
 
-        CompetitionRound round = competitionRoundRepository.findByName(compRoundDto.getName()).orElseThrow(() -> new EntityNotFoundException(compRoundDto.getName()));
+        CompetitionRound round = competitionRoundRepository.findByNameAndCompId(compRoundDto.getName(), savedComp.getId()).orElseThrow(() -> new EntityNotFoundException(compRoundDto.getName()));
         assertNotNull(round);
         Spieltag spieltag = spieltagRepository.findByNumberWithRoundId(TEST_MATCH_DAY, round.getId()).orElseThrow(() -> new EntityNotFoundException(String.valueOf(TEST_MATCH_DAY)));
         assertNotNull(spieltag);
@@ -327,7 +326,7 @@ public class ContractMatchApiIntegrationTest {
                 .isCreated();
 
         Competition comp = competitionRepository.findByName(compDto.getName()).orElseThrow(() -> new EntityNotFoundException(compDto.getName()));
-        CompetitionRound round = competitionRoundRepository.findByName(compRoundDto.getName()).orElseThrow(() -> new EntityNotFoundException(compRoundDto.getName()));
+        CompetitionRound round = competitionRoundRepository.findByNameAndCompId(compRoundDto.getName(), savedComp.getId()).orElseThrow(() -> new EntityNotFoundException(compRoundDto.getName()));
         assertNotNull(round);
 
         compRoundDto.setCompId(comp.getId());
@@ -386,7 +385,7 @@ public class ContractMatchApiIntegrationTest {
                 .isCreated();
 
 
-        CompetitionRound round = competitionRoundRepository.findByName(compRoundDto.getName()).orElseThrow(() -> new EntityNotFoundException(compRoundDto.getName()));
+        CompetitionRound round = competitionRoundRepository.findByNameAndCompId(compRoundDto.getName(), savedComp.getId()).orElseThrow(() -> new EntityNotFoundException(compRoundDto.getName()));
         assertNotNull(round);
         Spieltag spieltag = spieltagRepository.findByNumberWithRoundId(TEST_MATCH_DAY, round.getId()).orElseThrow(() -> new EntityNotFoundException(String.valueOf(TEST_MATCH_DAY)));
         assertNotNull(spieltag);

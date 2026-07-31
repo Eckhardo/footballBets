@@ -44,19 +44,11 @@ public class TippRowServiceTest {
     @Autowired
     private CompRoundService compRoundService;
     @Autowired
-    private TeamService teamService;
-    @Autowired
     private SpieltagService spieltagService;
-    @Autowired
-    private SpielService matchService;
-    @Autowired
+     @Autowired
     private CommunityService communityService;
     @Autowired
     private CommunityMembershipService communityMembershipService;
-    @Autowired
-    private CompetitionMembershipService competitionMembershipService;
-    @Autowired
-    private TippModusService tippModusService;
     @Autowired
     private TippService tippService;
 
@@ -107,7 +99,7 @@ public class TippRowServiceTest {
             row.setGastTipp(0);
             row.setCommMembId(savedCommunityMembership.getId());
         }
-        tippService.saveRowList(savedTippRows);
+        tippService.createOrUpdateRowList(null,savedTippRows);
 
         List<TippRow> rows = tippService.findTippRowsForTipper(savedMatchday.getId(), savedCommunityMembership.getId());
         assertEquals(9, rows.size());

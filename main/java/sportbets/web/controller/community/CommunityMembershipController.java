@@ -54,6 +54,15 @@ public class CommunityMembershipController {
 
     }
 
+    @GetMapping("/{communityId}/tipper/{tipperId}")
+    public CommunityMembershipDto findCommMemb(@PathVariable Long communityId,@PathVariable Long tipperId) {
+        log.debug(":findCommMemb::{}", tipperId);
+        CommunityMembership model = commMembService. findByCommIdAndTipperId(communityId,tipperId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        log.debug("Community found with {}", model);
+        return myModelMapper.map(model, CommunityMembershipDto.class);
+
+    }
+
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public CommunityMembershipDto post(@RequestBody @Valid CommunityMembershipDto newCommMemb) {

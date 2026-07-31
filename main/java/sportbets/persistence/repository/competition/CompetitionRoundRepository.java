@@ -9,7 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface CompetitionRoundRepository extends JpaRepository<CompetitionRound, Long> {
-    Optional<CompetitionRound> findByName(String name);
 
     @Query("select  cr from CompetitionRound cr"
             + " join  cr.competition c"

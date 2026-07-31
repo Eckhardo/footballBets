@@ -12,7 +12,6 @@ import sportbets.persistence.entity.community.Community;
 import sportbets.persistence.entity.community.CommunityMembership;
 import sportbets.persistence.entity.community.Tipper;
 import sportbets.persistence.entity.competition.*;
-import sportbets.persistence.entity.tipps.enums.TippModusType;
 import sportbets.service.community.CommunityMembershipService;
 import sportbets.service.community.CommunityService;
 import sportbets.service.community.TipperService;
@@ -24,7 +23,6 @@ import sportbets.web.dto.community.TipperDto;
 import sportbets.web.dto.competition.*;
 import sportbets.web.dto.tipps.TippDto;
 import sportbets.web.dto.tipps.TippModusPointDto;
-import sportbets.web.dto.tipps.TippModusTotoDto;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

@@ -1,7 +1,5 @@
 package sportbets.persistence.rowObject;
 
-import jakarta.validation.constraints.NotNull;
-
 import java.io.Serializable;
 
 public class TippConfigRow implements Serializable {

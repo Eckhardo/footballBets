@@ -64,7 +64,7 @@ public class TippModusPoint extends TippModus {
         int heim = tipp.getHeimTipp() == null ? 0 : tipp.getHeimTipp();
         int remis = tipp.getRemisTipp() == null ? 0 : tipp.getRemisTipp();
         int gast = tipp.getGastTipp() == null ? 0 : tipp.getGastTipp();
-
+        log.debug("heim:{}, remis:{}, gast:{}, totalPoints :{}", heim, remis, gast,totalPoints);
         return heim + remis + gast == totalPoints;
     }
 

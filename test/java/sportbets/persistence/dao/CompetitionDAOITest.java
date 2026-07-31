@@ -9,11 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
-import sportbets.persistence.entity.competition.enums.Country;
 import sportbets.persistence.dao.impl.CompetitionDAOImpl;
 import sportbets.persistence.dao.impl.CompetitionFamilyDAOImpl;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionFamily;
+import sportbets.persistence.entity.competition.enums.Country;
 
 import java.util.List;
 

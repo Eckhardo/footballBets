@@ -305,7 +305,6 @@ public class SpielServiceImpl implements SpielService {
 
     }
 
-    @Transactional
     public Team retrieveTeam(Long id) {
         return teamRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("Team heim not found"));
     }

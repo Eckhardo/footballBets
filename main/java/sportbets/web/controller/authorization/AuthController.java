@@ -53,17 +53,19 @@ public class AuthController {
         Tipper tipper = tipperService.authenticate(loginRequest.getUserName(), loginRequest.getPassword()).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid username or password"));
 
         if (tipper.getDefaultCommunityId() == null) {
-            List<CommunityMembership> communities = communityMembershipService.findCommMembs(tipper.getId());
-            if (!communities.isEmpty()) {
-                tipper.setDefaultCommunityId(communities.get(0).getId());
+            List<CommunityMembership> commMembs = communityMembershipService.findCommMembs(tipper.getId());
+            if (!commMembs.isEmpty()) {
+                tipper.setDefaultCommunityId(commMembs.get(0).getCommunity().getId());
             }
         }
             UmsInfoDto umsInfo = new UmsInfoDto(
                     tipper.getDefaultCommunityId(),
                     tipper.getDefaultCompetitionId(),
+                   null,
                     tipper.isCommunityAdmin(),
                     tipper.isCompetitionAdmin(),
-                    tipper.getUsername());
+                    tipper.getUsername(),
+                    tipper.getId());
             umsInfo.setLoggedIn(true);
             // fetch communities and competitions where tipper has admin rights
             List<TipperRole> tipperRoles = tipperRoleService.getAllForTipper(tipper.getId());

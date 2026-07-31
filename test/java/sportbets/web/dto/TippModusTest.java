@@ -12,7 +12,6 @@ import sportbets.persistence.entity.community.Community;
 import sportbets.persistence.entity.tipps.TippModusPoint;
 import sportbets.persistence.entity.tipps.TippModusResult;
 import sportbets.persistence.entity.tipps.TippModusToto;
-import sportbets.persistence.entity.tipps.enums.TippModusType;
 import sportbets.testdata.TestConstants;
 import sportbets.web.dto.tipps.TippModusPointDto;
 import sportbets.web.dto.tipps.TippModusResultDto;

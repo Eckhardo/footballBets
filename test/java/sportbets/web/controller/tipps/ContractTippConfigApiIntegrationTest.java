@@ -26,7 +26,6 @@ import sportbets.testdata.TestConstants;
 import sportbets.web.dto.community.CommunityDto;
 import sportbets.web.dto.competition.*;
 import sportbets.web.dto.tipps.TippConfigDto;
-import sportbets.web.dto.tipps.TippModusDto;
 import sportbets.web.dto.tipps.TippModusPointDto;
 import sportbets.web.dto.tipps.TippModusResultDto;
 
@@ -112,7 +111,8 @@ public class ContractTippConfigApiIntegrationTest {
                 .exists();
 
 
-        CompetitionRound round = roundRepository.findByName(compRoundDto.getName()).orElseThrow(() -> new EntityNotFoundException(compRoundDto.getName()));
+        CompetitionRound round = roundRepository.findByNameAndCompId(compRoundDto.getName(), savedComp.getId()).orElseThrow(() -> new EntityNotFoundException(compRoundDto.getName()));
+
         matchDayDto.setCompRoundId(round.getId());
         matchDayDto.setCompRoundName(round.getName());
         webClient.post()
