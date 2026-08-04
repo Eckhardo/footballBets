@@ -19,9 +19,9 @@ public class SpieltagDto implements Serializable {
     @NotNull(message = " spieltag number cannot be null")
     private int spieltagNumber;
 
-    @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
+
     // Specifies the format for JSON serialization (when the entity is returned as a response)
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
     private LocalDateTime startDate;
     @NotNull(message = " round id cannot be null")
     private Long compRoundId;

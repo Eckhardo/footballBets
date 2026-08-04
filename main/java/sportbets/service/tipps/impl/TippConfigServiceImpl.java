@@ -84,18 +84,6 @@ public class TippConfigServiceImpl implements TippConfigService {
         TippModus tippModus = tippModusRepo.findById(dto.getTippModusId()).orElseThrow(() -> new EntityNotFoundException("TippModus not found with id:" + dto.getTippModusId()));
         log.debug("tippModus dto: {}", tippModus);
         tippConfig.setTippModus(tippModus);
-//        log.debug("compMemb.getTippConfigs() size: {}", compMemb.getTippConfigs().size());
-//        compMemb.getTippConfigs().removeIf(config -> config.getId().equals(id));
-//        log.debug("compMemb.getTippConfigs() size: {}", compMemb.getTippConfigs().size());
-//        compMemb.addTippConfig(tippConfig);
-//        log.debug("compMemb.getTippConfigs() size: {}", compMemb.getTippConfigs().size());
-//        log.debug(" spieltag.getTippConfigs() size: {}",  spieltag.getTippConfigs().size());
-//        spieltag.getTippConfigs().removeIf(config -> config.getId().equals(id));
-//        log.debug(" spieltag.getTippConfigs() size: {}",  spieltag.getTippConfigs().size());
-//        spieltag.addTippConfig(tippConfig);
-//        log.debug(" spieltag.getTippConfigs() size: {}",  spieltag.getTippConfigs().size());
-//        spieltagRepo.save(spieltag);
-//        compMembRepo.save(compMemb);
         TippConfig saved = tippConfigRepo.save(tippConfig);
         return Optional.ofNullable(convertToDto(saved));
     }
@@ -105,6 +93,17 @@ public class TippConfigServiceImpl implements TippConfigService {
     public Optional<TippConfigDto> findByParents(Long compMembId, Long tippModusId, Long spieltagId) {
         TippConfig entity = tippConfigRepo.findByParents(compMembId, tippModusId, spieltagId).orElseThrow(() -> new EntityNotFoundException("tipp config not found"));
         return Optional.of(convertToDto(entity));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public TippConfigDto findByMatchdayAndCompMemb(Long spieltagId, Long compMembId) {
+        TippConfig entity = tippConfigRepo.findByMatchdayAndCompMemb(spieltagId, compMembId).orElseThrow(() -> new EntityNotFoundException("tipp config not found"));
+        log.debug("tippConfig entity: {}", entity);
+        TippConfigDto dto = convertToDto(entity);
+
+        log.debug("tippConfig dto: {}", dto);
+        return dto;
     }
 
     @Override

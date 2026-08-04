@@ -23,4 +23,6 @@ public interface TippConfigService {
     Optional<TippConfigRow> findTippConfig(Long spieltagId, Long compMembId);
 
     Optional<TippConfigDto> findByParents(Long compMembId, Long tippModusId, Long spieltagId);
+
+    TippConfigDto findByMatchdayAndCompMemb( Long spieltagId,Long compMembId);
 }

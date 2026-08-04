@@ -41,6 +41,11 @@
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.2.0</version> <!-- Nutze die aktuellste Version -->
+        </dependency>
+        <dependency>
             <groupId>io.swagger.core.v3</groupId>
             <artifactId>swagger-annotations-jakarta</artifactId>
             <version>2.2.15</version>
@@ -55,6 +60,7 @@
             <artifactId>hibernate-jcache</artifactId>
             <version>6.6.33.Final</version> <!-- Use the version matching your hibernate-core -->
         </dependency>
+
         <dependency>
             <groupId>org.ehcache</groupId>
             <artifactId>ehcache</artifactId>

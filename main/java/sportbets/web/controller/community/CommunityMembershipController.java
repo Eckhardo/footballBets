@@ -56,7 +56,7 @@ public class CommunityMembershipController {
 
     @GetMapping("/{communityId}/tipper/{tipperId}")
     public CommunityMembershipDto findCommMemb(@PathVariable Long communityId,@PathVariable Long tipperId) {
-        log.debug(":findCommMemb::{}", tipperId);
+        log.debug(":findCommMemb:: tipperId:{}, commId:{}", tipperId,communityId);
         CommunityMembership model = commMembService. findByCommIdAndTipperId(communityId,tipperId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         log.debug("Community found with {}", model);
         return myModelMapper.map(model, CommunityMembershipDto.class);

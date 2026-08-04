@@ -19,7 +19,7 @@ public class UmsInfoDto {
     private boolean compAdmin;
     private Long defaultCommunityId;
     private Long defaultCompetitionId;
-            private Long  defaultCommMembId;
+    private Long  defaultCommMembId;
     private Country defaultCountry;
     /**
      * a set of competitions where tipper has admin rights
@@ -51,9 +51,16 @@ public class UmsInfoDto {
         return adminCommunities;
     }
 
+    public void setAdminCommunities(Set<Long> adminCommunities) {
+        this.adminCommunities = adminCommunities;
+    }
 
     public Set<Long> getAdminCompetitions() {
         return adminCompetitions;
+    }
+
+    public void setAdminCompetitions(Set<Long> adminCompetitions) {
+        this.adminCompetitions = adminCompetitions;
     }
 
     public Long getDefaultCommunityId() {
@@ -68,6 +75,9 @@ public class UmsInfoDto {
         return defaultCompetitionId;
     }
 
+    public void setDefaultCompetitionId(Long defaultCompetitionId) {
+        this.defaultCompetitionId = defaultCompetitionId;
+    }
 
     public Long getDefaultCommMembId() {
         return defaultCommMembId;
@@ -77,9 +87,28 @@ public class UmsInfoDto {
         this.defaultCommMembId = defaultCommMembId;
     }
 
+    public boolean isCommAdmin() {
+        return commAdmin;
+    }
+
+    public void setCommAdmin(boolean commAdmin) {
+        this.commAdmin = commAdmin;
+    }
+
+    public boolean getCompAdmin() {
+        return compAdmin;
+    }
+
+    public void setCompAdmin(boolean compAdmin) {
+        this.compAdmin = compAdmin;
+    }
 
     public Set<Long> getTipperCommunities() {
         return tipperCommunities;
+    }
+
+    public void setTipperCommunities(Set<Long> tipperCommunities) {
+        this.tipperCommunities = tipperCommunities;
     }
 
     public String getUsername() {
@@ -92,6 +121,10 @@ public class UmsInfoDto {
 
     public long getUserId() {
         return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
     public boolean isLoggedIn() {

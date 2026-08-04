@@ -76,16 +76,19 @@ public class CommunityWizardServiceImpl implements CommunityWizardService {
         CommunityRole communityRole = new CommunityRole(newComm.getName(), newComm.getDescription(), newComm);
         newComm.addCommunityRole(communityRole);
         Community savedComm = communityRepository.save(newComm);
-
-        List<CommunityWizardTippModusRecord> modi = record.tippModi();
+        adminTipper.setDefaultCompetitionId(savedComp.getId());
+        adminTipper.setDefaultCommunityId(savedComm.getId());
+        adminTipper.addTipperRole(new TipperRole(communityRole, adminTipper));
+        tipperRepository.save(adminTipper);
 
 
         // prepare community membership
         commMembRepo.save(new CommunityMembership(savedComm, adminTipper));
         // prepare competition membership
         CompetitionMembership competitionMembership = new CompetitionMembership(savedComm, savedComp);
-
         CompetitionMembership savedCompMemb = compMembRepo.save(competitionMembership);
+
+        List<CommunityWizardTippModusRecord> modi = record.tippModi();
         List<TippModus> tippModi = new ArrayList<>();
         for (CommunityWizardTippModusRecord modusRecord : modi) {
             final TippModus entity = convertToEntity(modusRecord, savedComm);
@@ -96,13 +99,13 @@ public class CommunityWizardServiceImpl implements CommunityWizardService {
             configRepo.save(new TippConfig(spieltag, savedCompMemb, tippModi.get(0)));
         }
         // set admin state:
-        adminTipper.setDefaultCompetitionId(savedComp.getId());
-        adminTipper.setDefaultCommunityId(savedComm.getId());
-        adminTipper.addTipperRole(new TipperRole(communityRole, adminTipper));
-        tipperRepository.save(adminTipper);
+
 
         List<Tipper> memberTippers = tipperRepository.findBySpecificIds(record.tipperIds());
         for (Tipper tipper : memberTippers) {
+            if(tipper.getUsername().equals(adminTipper.getUsername())) {
+                continue;
+            }
             tipper.setDefaultCommunityId(savedComm.getId());
             tipper.setDefaultCompetitionId(savedComp.getId());
             commMembRepo.save(new CommunityMembership(savedComm, tipper));

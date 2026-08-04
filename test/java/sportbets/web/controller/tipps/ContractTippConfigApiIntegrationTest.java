@@ -16,10 +16,12 @@ import sportbets.FootballBetsApplication;
 import sportbets.config.TestProfileLiveTest;
 import sportbets.persistence.entity.community.Community;
 import sportbets.persistence.entity.competition.*;
+import sportbets.persistence.entity.tipps.TippConfig;
 import sportbets.persistence.entity.tipps.TippModus;
 import sportbets.persistence.entity.tipps.enums.TippModusType;
 import sportbets.persistence.repository.community.CommunityRepository;
 import sportbets.persistence.repository.competition.*;
+import sportbets.persistence.repository.tipps.TippConfigRepository;
 import sportbets.persistence.repository.tipps.TippModusRepository;
 import sportbets.persistence.rowObject.TippConfigRow;
 import sportbets.testdata.TestConstants;
@@ -30,7 +32,9 @@ import sportbets.web.dto.tipps.TippModusPointDto;
 import sportbets.web.dto.tipps.TippModusResultDto;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -61,6 +65,8 @@ public class ContractTippConfigApiIntegrationTest {
     CompetitionMembershipRepository compMembRepo;
     @Autowired
     TippModusRepository tippModusRepository;
+    @Autowired
+    TippConfigRepository configRepo;
     CommunityDto communityDto = TestConstants.createValidCommunityDto();
 
     final TippModusResultDto resultTest = TestConstants.createValidTippModusResultDto();
@@ -255,12 +261,80 @@ public class ContractTippConfigApiIntegrationTest {
                 .exists();
 
         log.debug("retrieveTippConfigRows_withValidCompMembId_thenSuccess");
-          webClient.get()
-                .uri("/tippConfig/rows/"+ savedCompMemb.getId())
-                  .exchange()
-                  .expectStatus()
-                  .isOk()
-                  .expectBodyList(TippConfigRow.class).hasSize(1);
+        webClient.get()
+                .uri("/tippConfig/rows/" + savedCompMemb.getId())
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBodyList(TippConfigRow.class).hasSize(1);
 
     }
+
+    @Test
+    @Order(2)
+    void saveRetrieveTippConfig_withValidInput_thenSuccess() {
+        log.debug("saveRetrieveAndUpdateTippConfig_withValidInput_thenSuccess");
+        TippConfigDto tippConfigDto = new TippConfigDto(null, savedCompMemb.getId(), savedMatchday.getId(), savedMatchday.getSpieltagNumber(), savedPointModus.getId());
+        webClient.post()
+                .uri("/tippConfig")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(tippConfigDto)
+                .exchange()
+                .expectStatus()
+                .isCreated()
+                .expectBody()
+                .jsonPath("$.spieltagNumber")
+                .exists()
+                .jsonPath("$.id")
+                .exists();
+
+        Optional<TippConfig> tippConfig = configRepo.findByMatchdayAndCompMemb(savedMatchday.getId(), savedCompMemb.getId());
+        Long id = null;
+        if (tippConfig.isPresent()) {
+            id = tippConfig.get().getId();
+        }
+        webClient.get()
+                .uri("/tippConfig/" + id)
+                .exchange()
+                .expectStatus()
+                .isOk();
+
+    }
+
+    @Test
+    @Order(3)
+    void retrieveTippConfig_withMatchdayAndCompMemb_thenSuccess() {
+        log.debug("saveRetrieveAndUpdateTippConfig_withValidInput_thenSuccess");
+        TippConfigDto tippConfigDto = new TippConfigDto(null, savedCompMemb.getId(), savedMatchday.getId(), savedMatchday.getSpieltagNumber(), savedPointModus.getId());
+        webClient.post()
+                .uri("/tippConfig")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(tippConfigDto)
+                .exchange()
+                .expectStatus()
+                .isCreated()
+                .expectBody()
+                .jsonPath("$.spieltagNumber")
+                .exists()
+                .jsonPath("$.id")
+                .exists();
+
+        Optional<TippConfig> tippConfig = configRepo.findByMatchdayAndCompMemb(savedMatchday.getId(), savedCompMemb.getId());
+        TippConfig entity = new TippConfig();
+        if (tippConfig.isPresent()) {
+            entity = tippConfig.get();
+        }
+        webClient.get()
+                .uri("/tippConfig/" + savedMatchday.getId() + "/compMemb/" + savedCompMemb.getId())
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody()
+                .jsonPath("$.id")
+                .value(Long.class, equalTo(entity.getId()))
+                .jsonPath("$.tippModusId")
+                .value(Long.class, equalTo(entity.getTippModus().getId()));
+
+    }
+
 }

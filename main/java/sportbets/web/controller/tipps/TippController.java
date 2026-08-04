@@ -1,16 +1,13 @@
 package sportbets.web.controller.tipps;
 
 
-import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import sportbets.persistence.rowObject.TippRow;
 import sportbets.service.tipps.TippService;
-import sportbets.web.dto.tipps.TippDto;
 
 import java.util.List;
 
@@ -30,8 +27,7 @@ public class TippController {
     @PostMapping()
     public ResponseEntity<Void> postRowList(@RequestBody List<TippRow> rows) {
         log.debug("save tipp rows   {}", rows.size());
-        tippService.createOrUpdateRowList(null,rows);
-        log.debug("saved tipp rows  ");
+        tippService.createOrUpdateRowList(null, rows);
         return new ResponseEntity<>(HttpStatus.CREATED);
 
     }
@@ -39,7 +35,7 @@ public class TippController {
     @PutMapping("{spieltagId}")
     public ResponseEntity<Void> updateRowList(@PathVariable Long spieltagId, @RequestBody List<TippRow> rows) {
         log.debug("save tipp rows   {}", rows.size());
-        tippService.createOrUpdateRowList(spieltagId,rows);
+        tippService.createOrUpdateRowList(spieltagId, rows);
         log.debug("saved tipp rows  ");
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 

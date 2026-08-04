@@ -36,9 +36,15 @@ public interface TippConfigRepository extends JpaRepository<TippConfig, Long> {
             + ") "
             + " from TippConfig tc  join tc.competitionMembership cm join tc.spieltag sp " +
             "  join sp.competitionRound cr join cr.competition c join tc.tippModus tm"
-            + " where cm.id= :compMembId and sp.id=:spieltagId order by tc.id ")
+            + " where cm.id= :compMembId and sp.id=:spieltagId ")
     Optional<TippConfigRow> findTippConfig(Long spieltagId, Long compMembId);
 
+
+    @Query("select tc from TippConfig tc"
+            + " join  tc.competitionMembership cm join tc.tippModus join tc.spieltag"
+            + " where tc.competitionMembership.id=:compMembId"
+            + " and tc.spieltag.id=:spieltagId")
+    Optional<TippConfig> findByMatchdayAndCompMemb(Long spieltagId,Long compMembId);
 
     @Query("select tc from TippConfig tc"
             + " join  tc.competitionMembership cm join tc.tippModus join tc.spieltag"

@@ -29,7 +29,7 @@ public class BuliServiceTest {
     @Order(1)
     public void saveBuliData() {
         log.debug("saveBuliData");
-     //   buliService.execute();
+   //  buliService.execute();
       //  buliService2627.execute();
     }
 }

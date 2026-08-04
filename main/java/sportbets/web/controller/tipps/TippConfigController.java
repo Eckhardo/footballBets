@@ -13,6 +13,7 @@ import sportbets.service.tipps.TippConfigService;
 import sportbets.web.dto.tipps.TippConfigDto;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/tippConfig")
@@ -31,6 +32,15 @@ public class TippConfigController {
     public TippConfigDto findOne(@PathVariable Long id) {
         log.debug(":findOne::{}", id);
         return tippConfigService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
+    @GetMapping("/{matchdayId}/compMemb/{compMembId}")
+    public TippConfigDto findByMatchdayAndCompMemb(@PathVariable Long matchdayId,@PathVariable Long compMembId) {
+        log.debug(":findByMatchdayAndCompMemb::{} {}", matchdayId,compMembId);
+        TippConfigDto dto=tippConfigService.findByMatchdayAndCompMemb(matchdayId,compMembId);
+        log.debug(":return dto::{}", dto);
+        return dto;
+
     }
 
 

@@ -27,9 +27,6 @@ public class Spieltag {
     @PositiveOrZero
     @Column(nullable = false)
     private int spieltagNumber;
-    @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
-    // Specifies the format for JSON serialization (when the entity is returned as a response)
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
     private LocalDateTime startDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
