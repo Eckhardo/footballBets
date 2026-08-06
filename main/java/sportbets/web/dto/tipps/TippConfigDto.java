@@ -85,6 +85,7 @@ public class TippConfigDto implements Serializable {
     @Override
     public String toString() {
         return "TippConfigDto{" +
+                "id=" + id +
                 "compMembId=" + compMembId +
                 ", spieltagId=" + spieltagId +
                 ", spieltagNumber=" + spieltagNumber +

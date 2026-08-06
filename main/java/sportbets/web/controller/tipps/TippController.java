@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sportbets.persistence.rowObject.TippRow;
 import sportbets.service.tipps.TippService;
+import sportbets.web.dto.tipps.TippsContainerDto;
 
 import java.util.List;
 
@@ -27,6 +28,7 @@ public class TippController {
     @PostMapping()
     public ResponseEntity<Void> postRowList(@RequestBody List<TippRow> rows) {
         log.debug("save tipp rows   {}", rows.size());
+        rows.forEach(System.out::println);
         tippService.createOrUpdateRowList(null, rows);
         return new ResponseEntity<>(HttpStatus.CREATED);
 
@@ -34,7 +36,8 @@ public class TippController {
 
     @PutMapping("{spieltagId}")
     public ResponseEntity<Void> updateRowList(@PathVariable Long spieltagId, @RequestBody List<TippRow> rows) {
-        log.debug("save tipp rows   {}", rows.size());
+        log.debug("update tipp rows   {}", rows.size());
+        rows.forEach(System.out::println);
         tippService.createOrUpdateRowList(spieltagId, rows);
         log.debug("saved tipp rows  ");
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -49,6 +52,24 @@ public class TippController {
             return tippService.findEmptyTippRowsForTipper(spieltagId);
         }
         return rows;
+    }
+
+    @GetMapping("{spieltagId}/container/{commMembId}")
+    public TippsContainerDto findTippContainerForTipper(@PathVariable Long spieltagId, @PathVariable Long commMembId) {
+        log.debug(":findTippContainerForTipper r::{} {}", spieltagId, commMembId);
+        TippsContainerDto container = null;
+        List<TippRow> updateableRows = tippService.findTippRowsForTipper(spieltagId, commMembId);
+        if (updateableRows.isEmpty()) {
+            log.debug(":empty::{} {}", spieltagId, commMembId);
+            List<TippRow> rows = tippService.findEmptyTippRowsForTipper(spieltagId);
+            rows.forEach(row -> row.setCommMembId(commMembId));
+            container = new TippsContainerDto(rows, false, commMembId, spieltagId);
+        } else {
+
+            container = new TippsContainerDto(updateableRows, true, commMembId, spieltagId);
+            log.debug(":full::{} {}", spieltagId, container.isUpdate());
+        }
+        return container;
     }
 
 

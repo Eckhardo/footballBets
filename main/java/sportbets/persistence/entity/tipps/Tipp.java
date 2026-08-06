@@ -136,6 +136,8 @@ public class Tipp {
                 "id=" + id +
                 ", spielNumber=" + spiel.getSpielNumber() +
                 ", createdOn=" + createdOn +
+                ", heimTeam=" + spiel.getHeimTeam().getName()+
+                ", gastTeam=" + spiel.getGastTeam().getName() +
                 ", heimTipp=" + heimTipp +
                 ", remisTipp=" + remisTipp +
                 ", gastTipp=" + gastTipp +

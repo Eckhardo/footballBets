@@ -20,6 +20,7 @@ public class UmsInfoDto {
     private Long defaultCommunityId;
     private Long defaultCompetitionId;
     private Long  defaultCommMembId;
+    private Long  defaultCompMembId;
     private Country defaultCountry;
     /**
      * a set of competitions where tipper has admin rights
@@ -37,10 +38,11 @@ public class UmsInfoDto {
     private Set<Long> tipperCommunities = new HashSet<>();
 
 
-    public UmsInfoDto(Long defaultCommunityId, Long defaultCompetitionId, Long defaultCommMembId, boolean isCommunityAdmin, boolean isCompetitionAdmin, String username, Long userId) {
+    public UmsInfoDto(Long defaultCommunityId, Long defaultCompetitionId, Long defaultCommMembId,Long defaultCompMembId, boolean isCommunityAdmin, boolean isCompetitionAdmin, String username, Long userId) {
         this.defaultCommunityId = defaultCommunityId;
         this.defaultCompetitionId = defaultCompetitionId;
         this.defaultCommMembId = defaultCommMembId;
+        this.defaultCompMembId = defaultCompMembId;
         this.commAdmin = isCommunityAdmin;
         this.compAdmin = isCompetitionAdmin;
         this.username = username;
@@ -85,6 +87,14 @@ public class UmsInfoDto {
 
     public void setDefaultCommMembId(Long defaultCommMembId) {
         this.defaultCommMembId = defaultCommMembId;
+    }
+
+    public Long getDefaultCompMembId() {
+        return defaultCompMembId;
+    }
+
+    public void setDefaultCompMembId(Long defaultCompMembId) {
+        this.defaultCompMembId = defaultCompMembId;
     }
 
     public boolean isCommAdmin() {

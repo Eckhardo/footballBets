@@ -74,10 +74,13 @@ public class TippModusResult extends TippModus {
     //	 ********************** Business Methods ********************** //
     @Override
     public boolean isTippValid(@NotNull Tipp tipp) {
-        log.debug("validate result");
-        boolean heim = tipp.getHeimTipp() != null;
-        boolean gast = tipp.getGastTipp() != null;
-        return heim && gast;
+        log.debug("validate tipp");
+        int heim = tipp.getHeimTipp() == null ? 0 : tipp.getHeimTipp();
+        int gast = tipp.getGastTipp() == null ? 0 : tipp.getGastTipp();
+        tipp.setHeimTipp(heim);
+        tipp.setGastTipp(gast);
+
+        return true;
     }
 
     @Override

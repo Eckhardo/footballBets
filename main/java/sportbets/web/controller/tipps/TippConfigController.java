@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/tippConfig")
+@RequestMapping("/config")
 public class TippConfigController {
 
     private static final Logger log = LoggerFactory.getLogger(TippConfigController.class);
@@ -31,7 +31,9 @@ public class TippConfigController {
     @GetMapping("/{id}")
     public TippConfigDto findOne(@PathVariable Long id) {
         log.debug(":findOne::{}", id);
-        return tippConfigService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        TippConfigDto dto= tippConfigService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        log.debug(":return dto::{}", dto);
+        return dto;
     }
 
     @GetMapping("/{matchdayId}/compMemb/{compMembId}")
@@ -43,37 +45,5 @@ public class TippConfigController {
 
     }
 
-
-    @GetMapping("/rows/{id}")
-    public List<TippConfigRow> findRowsByCompMembId(@PathVariable Long id) {
-        log.debug(":findRows::{}", id);
-        return tippConfigService.findTippConfigRows(id);
-    }
-
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public TippConfigDto post(@RequestBody @Valid TippConfigDto newDto) {
-        log.debug("save tipp config  {}", newDto);
-        TippConfigDto saved = tippConfigService.save(newDto);
-        log.debug("saved tipp config  {}", saved);
-        return saved;
-    }
-
-
-    @PutMapping("/{id}")
-    public TippConfigDto update(@PathVariable Long id, @RequestBody @Valid TippConfigRow dto) {
-        log.debug("update tipp config  {}", dto);
-        TippConfigDto saved = tippConfigService.update(id, dto).orElseThrow();
-        log.debug("updated tipp config  {}", saved);
-        return saved;
-    }
-
-    @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        log.debug(".delete::{}", id);
-
-        tippConfigService.deleteById(id);
-        return ResponseEntity.noContent().build();
-    }
 
 }

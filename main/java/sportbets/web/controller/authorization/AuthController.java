@@ -62,6 +62,7 @@ public class AuthController {
                     tipper.getDefaultCommunityId(),
                     tipper.getDefaultCompetitionId(),
                    null,
+                    null,
                     tipper.isCommunityAdmin(),
                     tipper.isCompetitionAdmin(),
                     tipper.getUsername(),
