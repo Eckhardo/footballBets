@@ -45,6 +45,7 @@ public class TippRow implements Serializable {
 
     private Long commMembId;
 
+    private Long selectedToto;
     //	********************** Constructors ********************** //
     public TippRow() {}
 
@@ -221,7 +222,14 @@ public class TippRow implements Serializable {
         this.commMembId = commMembId;
     }
 
-    //	********************** Methods ********************** //
+    public Long getSelectedToto() {
+        return selectedToto;
+    }
+
+    public void setSelectedToto(Long selectedToto) {
+        this.selectedToto = selectedToto;
+    }
+//	********************** Methods ********************** //
 
 
     @Override
@@ -253,6 +261,7 @@ public class TippRow implements Serializable {
                 ", heimTipp=" + heimTipp +
                 ", remisTipp=" + remisTipp +
                 ", gastTipp=" + gastTipp +
+                ", selectedToto=" + selectedToto +
                 ", winPoints=" + winPoints +
                 ", commMembId=" + commMembId +
 

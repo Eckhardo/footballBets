@@ -194,6 +194,7 @@ public class TippServiceImpl implements TippService {
     private void saveTipps(List<TippRow> tippRows, CommunityMembership commMemb, TippModus tippModus) {
         log.debug("saving tipp rows   {}", tippRows.size());
         for (TippRow createRow : tippRows) {
+            log.debug("saving tipp   {}", createRow);
             Spiel spiel = spielRepo.findById(createRow.getSpielId()).orElseThrow(() -> new EntityNotFoundException("spiel with id" + createRow.getSpielId() + " does not exist"));
 
             Tipp tipp = new Tipp(spiel, commMemb, tippModus, createRow

@@ -36,7 +36,8 @@ public class TippModusToto extends TippModus {
 
     @Override
     public boolean isTippValid(@NotNull Tipp tipp) {
-        int heim = tipp.getHeimTipp() == null ? 0 : tipp.getHeimTipp();
+        log.debug("isTotoTippValid {}", tipp);
+        int heim = tipp == null ? 0 : tipp.getHeimTipp();
         int remis = tipp.getRemisTipp() == null ? 0 : tipp.getRemisTipp();
         int gast = tipp.getGastTipp() == null ? 0 : tipp.getGastTipp();
         return heim + remis + gast == 1;
