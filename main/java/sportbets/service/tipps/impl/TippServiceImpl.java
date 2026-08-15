@@ -24,6 +24,7 @@ import sportbets.persistence.repository.tipps.TippConfigRepository;
 import sportbets.persistence.repository.tipps.TippModusRepository;
 import sportbets.persistence.repository.tipps.TippRepository;
 import sportbets.persistence.rowObject.TippRow;
+import sportbets.persistence.rowObject.TippsRow;
 import sportbets.service.tipps.TippService;
 import sportbets.web.dto.MapperUtilTipps;
 import sportbets.web.dto.tipps.TippDto;
@@ -241,6 +242,11 @@ public class TippServiceImpl implements TippService {
     @Override
     public List<TippRow> findTippRowsForTipper(Long spieltagId, Long commMembId) {
         return tippRepo.findTippRowsForTipper(spieltagId, commMembId);
+    }
+
+    @Override
+    public List<TippsRow> findTippsRowsForCommunity(Long spieltagId, Long commId) {
+        return tippRepo.findTippsRowsForCommunity(spieltagId, commId);
     }
 
     @Override

@@ -33,6 +33,8 @@ import sportbets.persistence.repository.competition.CompetitionRoundRepository;
 import sportbets.persistence.repository.competition.SpieltagRepository;
 import sportbets.persistence.repository.tipps.TippRepository;
 import sportbets.persistence.rowObject.TippRow;
+import sportbets.persistence.rowObject.TippsRow;
+import sportbets.web.dto.tipps.TippVO;
 import sportbets.web.dto.tipps.TippsContainerDto;
 
 import java.util.List;
@@ -97,98 +99,8 @@ public class ContractTippRowsApiIntegrationTest {
         tippRepo.deleteAll();
 
     }
+
     @Order(1)
-    @Test
-    public void whenEmptyTippRowsAreRetrieved_thenFillingThemSucceedsInCreation_AndUpdatingThemAlsoSucceeds() {
-        log.info("whenEmptyTippRowsAreRetrieved_thenFillingThemSucceedsInCreation_AndUpdatingThemAlsoSucceeds");
-        EntityExchangeResult<List<TippRow>> result = webClient.get()
-                .uri("/tipps/" + savedSpieltag.getId() + "/rows/" + savedCommunityMembership.getId())
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .expectBodyList(TippRow.class).returnResult();
-        List<TippRow> actualBody = result.getResponseBody();
-
-        assertNotNull(actualBody);
-        assertEquals(9, actualBody.size());
-        for (TippRow tippRow : actualBody) {
-            assertThat(tippRow.getCompetitionName()).isEqualTo(BUNDESLIGA_NAME_2025);
-            assertThat(tippRow.getRoundName()).isEqualTo("Hinrunde");
-            assertThat(tippRow.getCommMembId()).isNull();
-            assertThat(tippRow.getHeimTipp()).isNull();
-
-        }
-
-        for (TippRow row : actualBody) {
-            row.setHeimTipp(4);
-            row.setRemisTipp(0);
-            row.setGastTipp(0);
-            row.setCommMembId(savedCommunityMembership.getId());
-        }
-        log.info("create tipps");
-        webClient.post()
-                .uri("/tipps")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(actualBody)
-                .exchange()
-                .expectStatus()
-                .isCreated();
-
-        EntityExchangeResult<List<TippRow>> resultCreate = webClient.get()
-                .uri("/tipps/" + savedSpieltag.getId() + "/rows/" + savedCommunityMembership.getId())
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .expectBodyList(TippRow.class).returnResult();
-        List<TippRow> actualBodyCreate = resultCreate.getResponseBody();
-        log.debug("created tipps behave as expected");
-        assertNotNull(actualBodyCreate);
-        for (TippRow tippRow : actualBodyCreate) {
-            assertThat(tippRow.getCompetitionName()).isEqualTo(BUNDESLIGA_NAME_2025);
-            assertThat(tippRow.getRoundName()).isEqualTo("Hinrunde");
-            assertThat(tippRow.getCommMembId()).isEqualTo(savedCommunityMembership.getId());
-            assertThat(tippRow.getHeimTipp()).isEqualTo(4);
-
-        }
-
-        for (TippRow row : actualBodyCreate) {
-            row.setHeimTipp(2);
-            row.setRemisTipp(1);
-            row.setGastTipp(1);
-
-        }
-        log.info("update tipps");
-
-        webClient.put()
-                .uri("/tipps/" + savedSpieltag.getId())
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(actualBodyCreate)
-                .exchange()
-                .expectStatus()
-                .isNoContent();
-
-
-        EntityExchangeResult<List<TippRow>> resultUpdate =
-                webClient.get()
-                        .uri("/tipps/" + savedSpieltag.getId() + "/rows/" + savedCommunityMembership.getId())
-                        .exchange()
-                        .expectStatus()
-                        .isOk()
-                        .expectBodyList(TippRow.class).returnResult();
-        List<TippRow> actualBodyUpdate = resultUpdate.getResponseBody();
-
-        assertNotNull(actualBodyUpdate);
-        log.debug("updated tipps behave as expected");
-        for (TippRow tippRow : actualBodyUpdate) {
-            assertThat(tippRow.getCompetitionName()).isEqualTo(BUNDESLIGA_NAME_2025);
-            assertThat(tippRow.getRoundName()).isEqualTo("Hinrunde");
-            assertThat(tippRow.getCommMembId()).isEqualTo(savedCommunityMembership.getId());
-            assertThat(tippRow.getHeimTipp()).isEqualTo(2);
-
-        }
-
-    }
-    @Order(2)
     @Test
     public void whenTippRowsInContainerAreRetrieved_thenFillingThemSucceedsInCreation_AndUpdatingThemAlsoSucceeds() {
         log.info("whenEmptyTippRowsAreRetrieved_thenFillingThemSucceedsInCreation_AndUpdatingThemAlsoSucceeds");
@@ -283,5 +195,29 @@ public class ContractTippRowsApiIntegrationTest {
 
         }
 
+    }
+    @Order(2)
+    @Test
+    public void whenTippsRowsAreRetrieved_thenSortedListIsReturned() {
+        log.info("whenTippsRowsAreRetrieved_thenSortedListIsReturned");
+        TippVO vo=new TippVO(null,null,savedSpieltag.getId(),savedCommunity.getId(),null,null,null);
+        EntityExchangeResult<List> result =
+                webClient.get()
+                        .uri(uriBuilder -> uriBuilder
+                                .path("/tipps")
+                                .queryParam("spieltagId", savedSpieltag.getId())
+                                .queryParam("commId", savedCommunity.getId())
+                                .build())
+                        .exchange()
+                        .expectStatus().isOk()
+                        .expectBody(List.class).returnResult();
+        List<TippsRow> actualBody = result.getResponseBody();
+        assertNotNull(actualBody);
+          log.debug("updated tipps behave as expected");
+        for (TippsRow tippsRow : actualBody) {
+            assertThat(tippsRow.getRoundName()).isEqualTo("Hinrunde");
+
+
+        }
     }
 }

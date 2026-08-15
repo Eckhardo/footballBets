@@ -6,19 +6,15 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-/*
- * Created on 26.09.2005 by eckhard
- *
- * for Bulitipper Software Solutions
- *
- */
 package sportbets.persistence.rowObject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * Represents  the whole picture table" for tipp result for tippers of a bet community
@@ -30,56 +26,22 @@ public class TippsRow implements Serializable {
     //	********************** Fields ********************** //
 
     private Long spielId;
-
-    /**
-     * the Date from the DB
-     */
-    private Date anpfiffdate;
-
-    /**
-     * displays the startdate
-     */
-    private String anpfiffdateDisplay;
+    private LocalDateTime anpfiffdate;
 
     private Integer heimTore;
 
     private Integer gastTore;
-
-    // commMemb fields
     private String username;
 
-    // team fields
     private String heimName;
 
     private String gastName;
-
-    /**
-     * the name of the round
-     */
     private String roundName;
-
-    /**
-     * the name of the group
-     */
     private String groupName;
-
-    // tipp fields
-
     private Long tippId;
-
-    /**
-     * home team wins
-     */
     private Integer heimTipp;
 
-    /**
-     * a draw
-     */
     private Integer remisTipp;
-
-    /**
-     * guest team wins
-     */
     private Integer gastTipp;
 
     private Integer winPoints;
@@ -92,7 +54,7 @@ public class TippsRow implements Serializable {
 
     }
 
-    public TippsRow(Long spielId, Date anpfiffDate, Integer heimtore,
+    public TippsRow(Long spielId, LocalDateTime anpfiffDate, Integer heimtore,
                     Integer gasttore, String username, String heimName,
                     String gastName, String roundName) {
         this.spielId = spielId;
@@ -105,41 +67,8 @@ public class TippsRow implements Serializable {
         this.roundName = roundName;
     }
 
-    /**
-     * @param spielId
-     * @param anpfiffDate
-     * @param heimtore
-     * @param gasttore
-     * @param username
-     * @param heimName
-     * @param gastName
-     * @param roundName
-     * @param groupName
-     */
-    public TippsRow(Long spielId, Date anpfiffDate, Integer heimtore,
-                    Integer gasttore, String username, String heimName,
-                    String gastName, String roundName, String groupName) {
-        this(spielId, anpfiffDate, heimtore, gasttore, username, heimName,
-                gastName, roundName);
-        this.groupName = groupName;
-    }
 
-    /**
-     * @param spielId
-     * @param anpfiffDate
-     * @param heimtore
-     * @param gasttore
-     * @param username
-     * @param heimName
-     * @param gastName
-     * @param roundName
-     * @param tippId
-     * @param heimTipp
-     * @param remisTipp
-     * @param gastTipp
-     * @param winPoints
-     */
-    public TippsRow(Long spielId, Date anpfiffDate, Integer heimtore,
+    public TippsRow(Long spielId, LocalDateTime anpfiffDate, Integer heimtore,
                     Integer gasttore, String username, String heimName,
                     String gastName, String roundName, Long tippId, Integer heimTipp,
                     Integer remisTipp, Integer gastTipp, Integer winPoints) {
@@ -153,246 +82,99 @@ public class TippsRow implements Serializable {
 
     }
 
-    /**
-     * @param spielId
-     * @param anpfiffDate
-     * @param heimtore
-     * @param gasttore
-     * @param username
-     * @param heimName
-     * @param gastName
-     * @param roundName
-     * @param groupName
-     * @param tippId
-     * @param heimTipp
-     * @param remisTipp
-     * @param gastTipp
-     * @param winPoints
-     */
-    public TippsRow(Long spielId, Date anpfiffDate, Integer heimtore,
-                    Integer gasttore, String username, String heimName,
-                    String gastName, String roundName, String groupName, Long tippId,
-                    Integer heimTipp, Integer remisTipp, Integer gastTipp,
-                    Integer winPoints) {
-        this(spielId, anpfiffDate, heimtore, gasttore, username, heimName,
-                gastName, roundName, tippId, heimTipp, remisTipp, gastTipp,
-                winPoints);
-        this.groupName = groupName;
-
-    }
 
     //	********************** Getter/Setter Methods ********************** //
 
-
-    /**
-     * @return Returns the anpfiffdate.
-     */
-    public Date getAnpfiffdate() {
-        return anpfiffdate;
-    }
-
-    /**
-     * @param anpfiffdate The anpfiffdate to set.
-     */
-    public void setAnpfiffdate(Date anpfiffdate) {
-        this.anpfiffdate = anpfiffdate;
-    }
-
-
-    /**
-     * @return Returns the gastName.
-     */
-    public String getGastName() {
-        return gastName;
-    }
-
-    /**
-     * @param gastName The gastName to set.
-     */
-    public void setGastName(String gastName) {
-        this.gastName = gastName;
-    }
-
-    /**
-     * @return Returns the gastTipp.
-     */
-    public Integer getGastTipp() {
-        return gastTipp;
-    }
-
-    /**
-     * @param gastTipp The gastTipp to set.
-     */
-    public void setGastTipp(Integer gastTipp) {
-        this.gastTipp = gastTipp;
-    }
-
-    /**
-     * @return Returns the gastTore.
-     */
-    public Integer getGastTore() {
-        return gastTore;
-    }
-
-    /**
-     * @param gastTore The gastTore to set.
-     */
-    public void setGastTore(Integer gastTore) {
-        this.gastTore = gastTore;
-    }
-
-    /**
-     * @return Returns the groupName.
-     */
-    public String getGroupName() {
-        return groupName;
-    }
-
-    /**
-     * @param groupName The groupName to set.
-     */
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
-    }
-
-    /**
-     * @return Returns the heimName.
-     */
-    public String getHeimName() {
-        return heimName;
-    }
-
-    /**
-     * @param heimName The heimName to set.
-     */
-    public void setHeimName(String heimName) {
-        this.heimName = heimName;
-    }
-
-    /**
-     * @return Returns the heimTipp.
-     */
-    public Integer getHeimTipp() {
-        return heimTipp;
-    }
-
-    /**
-     * @param heimTipp The heimTipp to set.
-     */
-    public void setHeimTipp(Integer heimTipp) {
-        this.heimTipp = heimTipp;
-    }
-
-    /**
-     * @return Returns the heimTore.
-     */
-    public Integer getHeimTore() {
-        return heimTore;
-    }
-
-    /**
-     * @param heimTore The heimTore to set.
-     */
-    public void setHeimTore(Integer heimTore) {
-        this.heimTore = heimTore;
-    }
-
-    /**
-     * @return Returns the remisTipp.
-     */
-    public Integer getRemisTipp() {
-        return remisTipp;
-    }
-
-    /**
-     * @param remisTipp The remisTipp to set.
-     */
-    public void setRemisTipp(Integer remisTipp) {
-        this.remisTipp = remisTipp;
-    }
-
-    /**
-     * @return Returns the roundName.
-     */
-    public String getRoundName() {
-        return roundName;
-    }
-
-    /**
-     * @param roundName The roundName to set.
-     */
-    public void setRoundName(String roundName) {
-        this.roundName = roundName;
-    }
-
-    /**
-     * @return Returns the spielId.
-     */
     public Long getSpielId() {
         return spielId;
     }
 
-    /**
-     * @param spielId The spielId to set.
-     */
-    public void setSpielId(Long spielId) {
-        this.spielId = spielId;
+    public LocalDateTime getAnpfiffdate() {
+        return anpfiffdate;
     }
 
-    /**
-     * @return Returns the tippId.
-     */
-    public Long getTippId() {
-        return tippId;
+    public Integer getHeimTore() {
+        return heimTore;
     }
 
-    /**
-     * @param tippId The tippId to set.
-     */
-    public void setTippId(Long tippId) {
-        this.tippId = tippId;
+    public Integer getGastTore() {
+        return gastTore;
     }
 
-    /**
-     * @return Returns the username.
-     */
     public String getUsername() {
         return username;
     }
 
-    /**
-     * @param username The username to set.
-     */
-    public void setUsername(String username) {
-        this.username = username;
+    public String getHeimName() {
+        return heimName;
     }
 
-    /**
-     * @return Returns the winPoints.
-     */
+    public String getGastName() {
+        return gastName;
+    }
+
+    public String getRoundName() {
+        return roundName;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public Long getTippId() {
+        return tippId;
+    }
+
+    public Integer getHeimTipp() {
+        return heimTipp;
+    }
+
+    public Integer getRemisTipp() {
+        return remisTipp;
+    }
+
+    public Integer getGastTipp() {
+        return gastTipp;
+    }
+
     public Integer getWinPoints() {
         return winPoints;
     }
 
-    /**
-     * @param winPoints The winPoints to set.
-     */
-    public void setWinPoints(Integer winPoints) {
-        this.winPoints = winPoints;
-    }
-
-
-    /**
-     * @return Returns the sumWinPoints.
-     */
     public Integer getSumWinPoints() {
         return sumWinPoints;
     }
 
-    /**
-     * @param sumWinPoints The sumWinPoints to set.
-     */
-    public void setSumWinPoints(Integer sumWinPoints) {
-        this.sumWinPoints = sumWinPoints;
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        TippsRow tippsRow = (TippsRow) o;
+        return Objects.equals(spielId, tippsRow.spielId) && Objects.equals(anpfiffdate, tippsRow.anpfiffdate) && Objects.equals(username, tippsRow.username) && Objects.equals(heimName, tippsRow.heimName) && Objects.equals(gastName, tippsRow.gastName) && Objects.equals(tippId, tippsRow.tippId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(spielId, anpfiffdate, username, heimName, gastName, tippId);
+    }
+
+    @Override
+    public String toString() {
+        return "TippsRow{" +
+                "spielId=" + spielId +
+                ", anpfiffdate=" + anpfiffdate +
+                ", heimTore=" + heimTore +
+                ", gastTore=" + gastTore +
+                ", username='" + username + '\'' +
+                ", heimName='" + heimName + '\'' +
+                ", gastName='" + gastName + '\'' +
+                ", roundName='" + roundName + '\'' +
+                ", groupName='" + groupName + '\'' +
+                ", tippId=" + tippId +
+                ", heimTipp=" + heimTipp +
+                ", remisTipp=" + remisTipp +
+                ", gastTipp=" + gastTipp +
+                ", winPoints=" + winPoints +
+                ", sumWinPoints=" + sumWinPoints +
+                '}';
     }
 }

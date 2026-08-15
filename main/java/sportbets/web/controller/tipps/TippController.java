@@ -7,7 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sportbets.persistence.rowObject.TippRow;
+import sportbets.persistence.rowObject.TippsRow;
 import sportbets.service.tipps.TippService;
+import sportbets.web.dto.tipps.TippVO;
 import sportbets.web.dto.tipps.TippsContainerDto;
 
 import java.util.List;
@@ -44,14 +46,15 @@ public class TippController {
 
     }
 
-    @GetMapping("{spieltagId}/rows/{commMembId}")
-    public List<TippRow> findTippRowsForTipper(@PathVariable Long spieltagId, @PathVariable Long commMembId) {
-        log.debug(":findRows fpr tipper::{} {}", spieltagId, commMembId);
-        List<TippRow> rows = tippService.findTippRowsForTipper(spieltagId, commMembId);
-        if (rows.isEmpty()) {
-            return tippService.findEmptyTippRowsForTipper(spieltagId);
-        }
+    @GetMapping()
+    public   List<TippsRow> findTippRowsForCommunity(@ModelAttribute TippVO tippVO) {
+        log.debug(":findTippRowsForCommunity tippVO::{}", tippVO);
+
+        List<TippsRow> rows = tippService.findTippsRowsForCommunity(tippVO.spieltagId(), tippVO.commId());
+
+        log.debug(":return::{}", rows.size());
         return rows;
+
     }
 
     @GetMapping("{spieltagId}/container/{commMembId}")

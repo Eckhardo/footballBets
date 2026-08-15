@@ -1,6 +1,7 @@
 package sportbets.service.tipps;
 
 import sportbets.persistence.rowObject.TippRow;
+import sportbets.persistence.rowObject.TippsRow;
 import sportbets.web.dto.tipps.TippDto;
 
 import java.util.List;
@@ -28,7 +29,7 @@ public interface TippService {
     List<TippRow> findEmptyTippRowsForTipper(Long spieltagId);
 
     List<TippRow> findTippRowsForTipper(Long spieltagId, Long commMembId);
-
+ List<TippsRow> findTippsRowsForCommunity(Long spieltagId, Long commId);
     void deleteAll();
 
 }
