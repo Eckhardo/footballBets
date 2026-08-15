@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sportbets.persistence.rowObject.TippRow;
 import sportbets.persistence.rowObject.TippsRow;
+import sportbets.service.tipps.TippEqualizerService;
 import sportbets.service.tipps.TippService;
 import sportbets.web.dto.tipps.TippVO;
 import sportbets.web.dto.tipps.TippsContainerDto;
@@ -15,7 +16,7 @@ import sportbets.web.dto.tipps.TippsContainerDto;
 import java.util.List;
 
 @RestController
-@RequestMapping("/tipps")
+@RequestMapping("/equalize")
 public class TippController {
 
     private static final Logger log = LoggerFactory.getLogger(TippController.class);
@@ -24,8 +25,8 @@ public class TippController {
 
     public TippController(TippService tippService) {
         this.tippService = tippService;
-    }
 
+    }
 
     @PostMapping()
     public ResponseEntity<Void> postRowList(@RequestBody List<TippRow> rows) {
@@ -49,11 +50,7 @@ public class TippController {
     @GetMapping()
     public   List<TippsRow> findTippRowsForCommunity(@ModelAttribute TippVO tippVO) {
         log.debug(":findTippRowsForCommunity tippVO::{}", tippVO);
-
-        List<TippsRow> rows = tippService.findTippsRowsForCommunity(tippVO.spieltagId(), tippVO.commId());
-
-        log.debug(":return::{}", rows.size());
-        return rows;
+        return tippService.findTippsRowsForCommunity(tippVO.spieltagId(), tippVO.commId());
 
     }
 

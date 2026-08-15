@@ -85,39 +85,43 @@ public class TippModusResult extends TippModus {
 
     @Override
     public int calculateWinPoints(Tipp tipp, Spiel spiel) {
-        log.debug("calculate result");
+        log.debug("calculate result {}", this.bonusPoints);
         if (!spiel.isStattgefunden()) {
             return 0;
         }
 
-        int bonusPoints = 0;
 
         int heim = tipp.getHeimTipp() == null ? 0 : tipp.getHeimTipp();
         int gast = tipp.getGastTipp() == null ? 0 : tipp.getGastTipp();
+        int winPoints = 0;
 
         TotoTrend trend = spiel.retrieveTotoTrend();
+
         switch (trend) {
             case HOME_VICTORY:
                 if (heim > gast) {
-                    bonusPoints = this.bonusPoints;
+                    winPoints = this.tendencyPoints;
                 }
                 break;
             case DRAW:
                 if (heim == gast) {
-                    bonusPoints = this.bonusPoints;
+                    winPoints = this.tendencyPoints;
                 }
                 break;
 
             case GUEST_VICTORY:
                 if (heim < gast) {
-                    bonusPoints = this.bonusPoints;
+                    winPoints = this.tendencyPoints;
                 }
                 break;
             default:
 
 
         }
-        return bonusPoints + this.calculateTendencyPoints(heim, gast, spiel);
+        int bonus=this.calculateTendencyPoints(heim, gast, spiel);
+        log.debug("bonus point: {}", bonus);
+        log.debug("tendencyPoints points: {}", winPoints);
+        return winPoints +bonus ;
     }
 
     private int calculateTendencyPoints(int heim, int gast, Spiel spiel) {
