@@ -16,7 +16,7 @@ import sportbets.web.dto.tipps.TippsContainerDto;
 import java.util.List;
 
 @RestController
-@RequestMapping("/equalize")
+@RequestMapping("/tipps")
 public class TippController {
 
     private static final Logger log = LoggerFactory.getLogger(TippController.class);

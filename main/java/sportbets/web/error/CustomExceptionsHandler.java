@@ -49,6 +49,14 @@ public class CustomExceptionsHandler extends ResponseEntityExceptionHandler {
         problemDetail.setTitle("duplicate entity");
         return problemDetail;
     }
+    @ExceptionHandler({TippValidationException.class})
+    public ProblemDetail resolveTippValidationException(Exception ex, ServletRequest request, HttpServletResponse response) {
+
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Invalid Bet: " + ex.getMessage());
+        problemDetail.setType(URI.create("https://example.com/errors/invalid-associated-entity"));
+        problemDetail.setTitle("Invalid Bet: ");
+        return problemDetail;
+    }
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(

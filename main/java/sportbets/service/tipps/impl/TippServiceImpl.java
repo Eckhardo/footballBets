@@ -207,7 +207,7 @@ public class TippServiceImpl implements TippService {
                 tippRepo.save(tipp);
 
             } else {
-                throw new TippValidationException("tipp is not valid");
+                throw new TippValidationException("Bet for game "+ spiel.getHeimTeam().getAcronym() + "-"+ spiel.getGastTeam().getAcronym() +" is not valid");
             }
 
         }
