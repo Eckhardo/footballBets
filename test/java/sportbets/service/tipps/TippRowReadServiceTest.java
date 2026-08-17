@@ -19,7 +19,10 @@ import sportbets.persistence.entity.community.CommunityMembership;
 import sportbets.persistence.entity.community.Tipper;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionRound;
+import sportbets.persistence.entity.competition.Spiel;
 import sportbets.persistence.entity.competition.Spieltag;
+import sportbets.persistence.repository.competition.SpielRepository;
+import sportbets.persistence.repository.competition.SpieltagRepository;
 import sportbets.persistence.rowObject.TippRow;
 import sportbets.service.community.CommunityMembershipService;
 import sportbets.service.community.CommunityService;
@@ -34,7 +37,7 @@ import static sportbets.persistence.builder.CompetitionConstants.BUNDESLIGA_NAME
 @SpringBootTest
 @ActiveProfiles("test")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class TippRowServiceTest {
+public class TippRowReadServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(TippRowServiceTest.class);
     @Autowired
@@ -45,12 +48,14 @@ public class TippRowServiceTest {
     private CompRoundService compRoundService;
     @Autowired
     private SpieltagService spieltagService;
-     @Autowired
+    @Autowired
     private CommunityService communityService;
     @Autowired
     private CommunityMembershipService communityMembershipService;
     @Autowired
     private TippService tippService;
+    @Autowired
+    private SpielRepository spielRepo;
 
     Competition savedComp = null;
 
@@ -59,7 +64,6 @@ public class TippRowServiceTest {
     Community savedCommunity = null;
     Tipper savedTipper = null;
     CommunityMembership savedCommunityMembership = null;
-    List<TippRow> savedTippRows = null;
 
     @BeforeEach
     public void setUp() {
@@ -89,21 +93,34 @@ public class TippRowServiceTest {
     @Test
     public void retrieveTippRows() {
 
-        savedTippRows = tippService.findEmptyTippRowsForTipper(savedMatchday.getId());
-        assertEquals(9, savedTippRows.size());
-
-        for (TippRow row : savedTippRows) {
-            row.setHeimTipp(4);
-            row.setRemisTipp(0);
-            row.setGastTipp(0);
-            row.setCommMembId(savedCommunityMembership.getId());
-        }
-        tippService.createOrUpdateRowList(null,savedTippRows);
-
         List<TippRow> rows = tippService.findTippRowsForTipper(savedMatchday.getId(), savedCommunityMembership.getId());
 
         rows.forEach(System.out::println);
         assertEquals(9, rows.size());
+
+    }
+
+
+    @Test
+    public void retrieveTippRowsAfterOneMatchOfMatchdaySaved() {
+        List<TippRow> myRows = tippService.findTippRowsForTipper(savedMatchday.getId(), savedCommunityMembership.getId());
+        assertEquals(9, myRows.size());
+        Spiel savedMatch = spielRepo.findById(307L).orElseThrow(()-> new RuntimeException(""));
+        savedMatch.setHeimTore(5);
+        savedMatch.setGastTore(0);
+        savedMatch.setStattgefunden(true);
+        Spiel updatedMatch= spielRepo.save(savedMatch);
+        List<TippRow> rows = tippService.findTippRowsForTipper(savedMatchday.getId(), savedCommunityMembership.getId());
+
+        rows.forEach(System.out::println);
+        assertEquals(9, rows.size());
+
+        updatedMatch.setHeimTore(0);
+        updatedMatch.setGastTore(0);
+        updatedMatch.setStattgefunden(false);
+        spielRepo.save(updatedMatch);
+        List<TippRow> updatedRows = tippService.findTippRowsForTipper(savedMatchday.getId(), savedCommunityMembership.getId());
+        assertEquals(9, updatedRows.size());
 
     }
 }

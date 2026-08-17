@@ -99,11 +99,7 @@ public class TippConfigServiceImpl implements TippConfigService {
     @Transactional(readOnly = true)
     public TippConfigDto findByMatchdayAndCompMemb(Long spieltagId, Long compMembId) {
         TippConfig entity = tippConfigRepo.findByMatchdayAndCompMemb(spieltagId, compMembId).orElseThrow(() -> new EntityNotFoundException("tipp config not found"));
-        log.debug("tippConfig entity: {}", entity);
-        TippConfigDto dto = convertToDto(entity);
-
-        log.debug("tippConfig dto: {}", dto);
-        return dto;
+       return convertToDto(entity);
     }
 
     @Override

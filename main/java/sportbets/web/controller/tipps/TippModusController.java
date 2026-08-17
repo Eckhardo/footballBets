@@ -41,14 +41,12 @@ class TippModusController {
     // for tippmodus Toto
     @GetMapping("/{id}")
     public TippModusDto findOne(@PathVariable Long id) {
-        log.debug("TippModusController:findOneToto::{}", id);
         return tippModusService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping("/toto")
     @ResponseStatus(HttpStatus.CREATED)
     public TippModusDto postToto(@RequestBody @Valid TippModusTotoDto newToto) {
-        log.debug("New tipp modus toto  {}", newToto);
         return tippModusService.save(newToto);
     }
 

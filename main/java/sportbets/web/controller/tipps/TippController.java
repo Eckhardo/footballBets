@@ -59,13 +59,14 @@ public class TippController {
         log.debug(":findTippContainerForTipper r::{} {}", spieltagId, commMembId);
         TippsContainerDto container = null;
         List<TippRow> updateableRows = tippService.findTippRowsForTipper(spieltagId, commMembId);
+        log.debug(":updateableRows:: {}",updateableRows.size());
         if (updateableRows.isEmpty()) {
             log.debug(":empty::{} {}", spieltagId, commMembId);
             List<TippRow> rows = tippService.findEmptyTippRowsForTipper(spieltagId);
+            log.debug(":emptyRows:: {}",rows.size());
             rows.forEach(row -> row.setCommMembId(commMembId));
             container = new TippsContainerDto(rows, false, commMembId, spieltagId);
         } else {
-
             container = new TippsContainerDto(updateableRows, true, commMembId, spieltagId);
             log.debug(":full::{} {}", spieltagId, container.isUpdate());
         }

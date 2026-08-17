@@ -68,10 +68,8 @@ public class CompController {
     public List<SpieltagDto> findAllForCompetition(@PathVariable Long compId) {
         log.info("SpieltagDto:findAll::{}", compId);
         List<Spieltag> matchdays = spieltagService.getAllForCompetition(compId);
-        log.info("SpieltagDto:fundAll::{}", matchdays.size());
         List<SpieltagDto> spieltagDtos = new ArrayList<>();
         matchdays.forEach(matchday -> {
-            log.info("add matchday::{}", matchday);
             spieltagDtos.add(myMapper.map(matchday, SpieltagDto.class));
         });
         log.info("return SpieltagDto:size::{}", spieltagDtos.size());
