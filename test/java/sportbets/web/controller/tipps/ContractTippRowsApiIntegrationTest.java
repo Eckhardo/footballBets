@@ -84,7 +84,7 @@ public class ContractTippRowsApiIntegrationTest {
     @BeforeEach
     public void setup() {
         log.info("setup");
-        savedComp = compRepo.findByName(BUNDESLIGA_NAME_2025).orElseThrow(() -> new RuntimeException("Competition not found!"));
+        savedComp = compRepo.findByName(BUNDESLIGA_NAME_2026).orElseThrow(() -> new RuntimeException("Competition not found!"));
         savedRound = compRoundRepo.findByNameAndCompId("Hinrunde", savedComp.getId()).orElseThrow(() -> new RuntimeException("Round not found!"));
         savedTipper = tipperRepo.findByUsername("Eckhardo").orElseThrow(() -> new RuntimeException("Tipper not found!"));
         log.debug("savedTipper={}", savedTipper);
@@ -118,7 +118,7 @@ public class ContractTippRowsApiIntegrationTest {
 
         assertEquals(9, actualBody.getTippRows().size());
         for (TippRow tippRow : actualBody.getTippRows()) {
-            assertThat(tippRow.getCompetitionName()).isEqualTo(BUNDESLIGA_NAME_2025);
+            assertThat(tippRow.getCompetitionName()).isEqualTo(BUNDESLIGA_NAME_2026);
             assertThat(tippRow.getRoundName()).isEqualTo("Hinrunde");
             assertThat(tippRow.getCommMembId()).isEqualTo(savedCommunityMembership.getId());
             assertThat(tippRow.getHeimTipp()).isNull();
@@ -141,7 +141,7 @@ public class ContractTippRowsApiIntegrationTest {
                 .isCreated();
 
         EntityExchangeResult<List<TippRow>> resultCreate = webClient.get()
-                .uri("/tipps/" + savedSpieltag.getId() + "/rows/" + savedCommunityMembership.getId())
+                .uri("/tipps/" + savedSpieltag.getId() + "/container/" + savedCommunityMembership.getId())
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -149,15 +149,28 @@ public class ContractTippRowsApiIntegrationTest {
         List<TippRow> actualBodyCreate = resultCreate.getResponseBody();
         log.debug("created tipps behave as expected");
         assertNotNull(actualBodyCreate);
-        for (TippRow tippRow : actualBodyCreate) {
-            assertThat(tippRow.getCompetitionName()).isEqualTo(BUNDESLIGA_NAME_2025);
+        EntityExchangeResult<TippsContainerDto> resultRead =
+                webClient.get()
+                        .uri("/tipps/" + savedSpieltag.getId() + "/container/" + savedCommunityMembership.getId())
+                        .exchange()
+                        .expectStatus()
+                        .isOk()
+                        .expectBody(TippsContainerDto.class).returnResult();
+        TippsContainerDto actualCreateBody = resultRead.getResponseBody();
+        assertNotNull(actualCreateBody);
+        assertThat(actualCreateBody.getMatchdayId().equals(savedSpieltag.getId()));
+        assertThat(actualCreateBody.getCommMembId().equals(savedCommunityMembership.getId()));
+        assertTrue(actualCreateBody.isUpdate());
+        log.debug("updated tipps behave as expected");
+        for (TippRow tippRow : actualCreateBody.getTippRows()) {
+            assertThat(tippRow.getCompetitionName()).isEqualTo(BUNDESLIGA_NAME_2026);
             assertThat(tippRow.getRoundName()).isEqualTo("Hinrunde");
             assertThat(tippRow.getCommMembId()).isEqualTo(savedCommunityMembership.getId());
             assertThat(tippRow.getHeimTipp()).isEqualTo(4);
 
         }
 
-        for (TippRow row : actualBodyCreate) {
+        for (TippRow row : actualCreateBody.getTippRows()) {
             row.setHeimTipp(2);
             row.setRemisTipp(1);
             row.setGastTipp(1);
@@ -168,7 +181,7 @@ public class ContractTippRowsApiIntegrationTest {
         webClient.put()
                 .uri("/tipps/" + savedSpieltag.getId())
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(actualBodyCreate)
+                .bodyValue(actualCreateBody.getTippRows())
                 .exchange()
                 .expectStatus()
                 .isNoContent();
@@ -188,7 +201,7 @@ public class ContractTippRowsApiIntegrationTest {
         assertTrue(actualUpdateBody.isUpdate());
         log.debug("updated tipps behave as expected");
         for (TippRow tippRow : actualUpdateBody.getTippRows()) {
-            assertThat(tippRow.getCompetitionName()).isEqualTo(BUNDESLIGA_NAME_2025);
+            assertThat(tippRow.getCompetitionName()).isEqualTo(BUNDESLIGA_NAME_2026);
             assertThat(tippRow.getRoundName()).isEqualTo("Hinrunde");
             assertThat(tippRow.getCommMembId()).isEqualTo(savedCommunityMembership.getId());
             assertThat(tippRow.getHeimTipp()).isEqualTo(2);

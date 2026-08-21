@@ -243,6 +243,7 @@ public class Spiel {
 
     public void addTipp(Tipp tipp) {
         this.tipps.add(tipp);
+
     }
 
     @Override

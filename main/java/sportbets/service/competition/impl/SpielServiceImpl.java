@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import sportbets.persistence.entity.competition.*;
+import sportbets.persistence.entity.tipps.Tipp;
 import sportbets.persistence.repository.competition.*;
 import sportbets.service.competition.SpielService;
 import sportbets.web.dto.competition.SpielDto;
@@ -19,6 +20,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class SpielServiceImpl implements SpielService {
@@ -189,7 +191,7 @@ public class SpielServiceImpl implements SpielService {
 
         log.debug("update Match dto:: {}", spielDto);
         Spiel savedSpiel = spielRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("spiel  does not exist given id:" + spielDto.getId()));
-
+        Set<Tipp> tips = savedSpiel.getTipps();
         Competition savedComp = competitionRepo.findBySpieltagId(spielDto.getSpieltagId()).orElseThrow(() -> new EntityNotFoundException("Competition not found"));
 
         Spieltag spieltag = spieltagRepo.findById(spielDto.getSpieltagId()).orElseThrow(() -> new EntityNotFoundException("Matchday not found"));
@@ -199,6 +201,7 @@ public class SpielServiceImpl implements SpielService {
         model.setSpieltag(spieltag);
         model.setHeimTeam(heimTeam);
         model.setGastTeam(gastTeam);
+        tips.forEach(model::addTipp);
 
         Spiel updated = updateFields(savedSpiel, model);
         log.debug("updated Match dto:: {}", updated);

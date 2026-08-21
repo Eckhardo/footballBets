@@ -294,7 +294,7 @@ public class ContractTippConfigApiIntegrationTest {
             id = tippConfig.get().getId();
         }
         webClient.get()
-                .uri("/tippConfig/" + id)
+                .uri("/config/" + id)
                 .exchange()
                 .expectStatus()
                 .isOk();
@@ -325,7 +325,7 @@ public class ContractTippConfigApiIntegrationTest {
             entity = tippConfig.get();
         }
         webClient.get()
-                .uri("/tippConfig/" + savedMatchday.getId() + "/compMemb/" + savedCompMemb.getId())
+                .uri("/config/" + savedMatchday.getId() + "/compMemb/" + savedCompMemb.getId())
                 .exchange()
                 .expectStatus()
                 .isOk()

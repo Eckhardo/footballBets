@@ -203,7 +203,6 @@ public class TippServiceImpl implements TippService {
                     .getGastTipp());
             log.debug("save tipp   {}", tipp);
             if (tippModus.isTippValid(tipp)) {
-
                 tippRepo.save(tipp);
 
             } else {

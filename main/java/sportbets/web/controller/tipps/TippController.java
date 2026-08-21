@@ -68,7 +68,7 @@ public class TippController {
             container = new TippsContainerDto(rows, false, commMembId, spieltagId);
         } else {
             container = new TippsContainerDto(updateableRows, true, commMembId, spieltagId);
-            log.debug(":full::{} {}", spieltagId, container.isUpdate());
+            log.debug(":full::{} {}", container.getTippRows().size(), container.isUpdate());
         }
         return container;
     }

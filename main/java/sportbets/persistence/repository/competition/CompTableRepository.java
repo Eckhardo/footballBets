@@ -19,7 +19,7 @@ public interface CompTableRepository extends JpaRepository<SpielFormula, Long> {
             + ") "
             + " from SpielFormula sf  join sf.spiel s join s.spieltag st join s.heimTeam ht join s.gastTeam gt  "
             + " join st.competitionRound cr  join cr.competition c  "
-            + " where c.id=:compId  and st.spieltagNumber between :firstSp and :lastSp"
+            + " where s.stattgefunden=true  and  c.id=:compId  and st.spieltagNumber between :firstSp and :lastSp"
             + " group by sf.teamName ")
     List<TeamPositionSummaryRow> findTableForLigaModus(Long compId, int firstSp, int lastSp);
 
