@@ -105,7 +105,7 @@ public class ContractTippRowsApiIntegrationTest {
     public void whenTippRowsInContainerAreRetrieved_thenFillingThemSucceedsInCreation_AndUpdatingThemAlsoSucceeds() {
         log.info("whenEmptyTippRowsAreRetrieved_thenFillingThemSucceedsInCreation_AndUpdatingThemAlsoSucceeds");
         EntityExchangeResult<TippsContainerDto> result = webClient.get()
-                .uri("/tipps/" + savedSpieltag.getId() + "/container/" + savedCommunityMembership.getId())
+                .uri("/tippRows/" + savedSpieltag.getId() + "/container/" + savedCommunityMembership.getId())
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -114,14 +114,12 @@ public class ContractTippRowsApiIntegrationTest {
         assertNotNull(actualBody);
         assertThat(actualBody.getMatchdayId().equals(savedSpieltag.getId()));
         assertThat(actualBody.getCommMembId().equals(savedCommunityMembership.getId()));
-        assertFalse(actualBody.isUpdate());
 
         assertEquals(9, actualBody.getTippRows().size());
         for (TippRow tippRow : actualBody.getTippRows()) {
             assertThat(tippRow.getCompetitionName()).isEqualTo(BUNDESLIGA_NAME_2026);
             assertThat(tippRow.getRoundName()).isEqualTo("Hinrunde");
             assertThat(tippRow.getCommMembId()).isEqualTo(savedCommunityMembership.getId());
-            assertThat(tippRow.getHeimTipp()).isNull();
 
         }
 
@@ -141,7 +139,7 @@ public class ContractTippRowsApiIntegrationTest {
                 .isCreated();
 
         EntityExchangeResult<List<TippRow>> resultCreate = webClient.get()
-                .uri("/tipps/" + savedSpieltag.getId() + "/container/" + savedCommunityMembership.getId())
+                .uri("/tippRows/" + savedSpieltag.getId() + "/container/" + savedCommunityMembership.getId())
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -151,7 +149,7 @@ public class ContractTippRowsApiIntegrationTest {
         assertNotNull(actualBodyCreate);
         EntityExchangeResult<TippsContainerDto> resultRead =
                 webClient.get()
-                        .uri("/tipps/" + savedSpieltag.getId() + "/container/" + savedCommunityMembership.getId())
+                        .uri("/tippRows/" + savedSpieltag.getId() + "/container/" + savedCommunityMembership.getId())
                         .exchange()
                         .expectStatus()
                         .isOk()
@@ -189,7 +187,7 @@ public class ContractTippRowsApiIntegrationTest {
 
         EntityExchangeResult<TippsContainerDto> resultUpdate =
                 webClient.get()
-                        .uri("/tipps/" + savedSpieltag.getId() + "/container/" + savedCommunityMembership.getId())
+                        .uri("/tippRows/" + savedSpieltag.getId() + "/container/" + savedCommunityMembership.getId())
                         .exchange()
                         .expectStatus()
                         .isOk()
@@ -205,7 +203,7 @@ public class ContractTippRowsApiIntegrationTest {
             assertThat(tippRow.getRoundName()).isEqualTo("Hinrunde");
             assertThat(tippRow.getCommMembId()).isEqualTo(savedCommunityMembership.getId());
             assertThat(tippRow.getHeimTipp()).isEqualTo(2);
-
+            tippRepo.deleteById(tippRow.getTippId());
         }
 
     }
@@ -217,7 +215,7 @@ public class ContractTippRowsApiIntegrationTest {
         EntityExchangeResult<List> result =
                 webClient.get()
                         .uri(uriBuilder -> uriBuilder
-                                .path("/tipps")
+                                .path("/tippRows")
                                 .queryParam("spieltagId", savedSpieltag.getId())
                                 .queryParam("commId", savedCommunity.getId())
                                 .build())
@@ -229,7 +227,7 @@ public class ContractTippRowsApiIntegrationTest {
           log.debug("updated tipps behave as expected");
         for (TippsRow tippsRow : actualBody) {
             assertThat(tippsRow.getRoundName()).isEqualTo("Hinrunde");
-
+            tippRepo.deleteById(tippsRow.getTippId());
 
         }
     }

@@ -19,29 +19,32 @@ import sportbets.persistence.entity.community.CommunityMembership;
 import sportbets.persistence.entity.community.Tipper;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionRound;
-import sportbets.persistence.entity.competition.Spiel;
 import sportbets.persistence.entity.competition.Spieltag;
 import sportbets.persistence.repository.competition.SpielRepository;
-import sportbets.persistence.repository.competition.SpieltagRepository;
 import sportbets.persistence.rowObject.SumWinPointsRow;
-import sportbets.persistence.rowObject.TippRow;
+import sportbets.persistence.rowObject.SumWinPointsSummaryRow;
 import sportbets.service.community.CommunityMembershipService;
 import sportbets.service.community.CommunityService;
 import sportbets.service.community.TipperService;
-import sportbets.service.competition.*;
+import sportbets.service.competition.CompRoundService;
+import sportbets.service.competition.CompService;
+import sportbets.service.competition.SpieltagService;
+import sportbets.web.dto.tipps.TippVO;
 
 import java.util.List;
 
-import static org.hibernate.validator.internal.util.Contracts.assertNotEmpty;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static sportbets.persistence.builder.CompetitionConstants.BUNDESLIGA_NAME_2026;
 
 @SpringBootTest
 @ActiveProfiles("test")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class TippRowReadServiceTest {
+public class TippTableServiceTest {
 
-    private static final Logger log = LoggerFactory.getLogger(TippRowServiceTest.class);
+
+    private static final Logger log = LoggerFactory.getLogger(TippTableServiceTest.class);
+    @Autowired
+    private TippTableService tippTableService;
     @Autowired
     TipperService tipperService;
     @Autowired
@@ -54,8 +57,6 @@ public class TippRowReadServiceTest {
     private CommunityService communityService;
     @Autowired
     private CommunityMembershipService communityMembershipService;
-    @Autowired
-    private TippService tippService;
     @Autowired
     private SpielRepository spielRepo;
 
@@ -78,51 +79,35 @@ public class TippRowReadServiceTest {
         savedCommunityMembership = communityMembershipService.findByCommIdAndTipperId(savedCommunity.getId(), savedTipper.getId()).orElseThrow(() -> new RuntimeException("Membership not found!"));
     }
 
-    @AfterEach
-    public void tearDown() {
-        log.debug("tearDown");
+    @Test
+    @Order(1)
+    public void retrieveSumWinPointRows() {
+
+        List<SumWinPointsRow> rows = tippTableService.findSumWinPointsRows(savedMatchday.getId(), savedCommunityMembership.getId());
+
+        rows.forEach(System.out::println);
+        assertFalse(rows.isEmpty());
+
     }
 
     @Test
-    public void retrieveEmptyTippRows() {
+    @Order(2)
+    public void retrieveSumWinPointRowsForPeriod() {
 
-        List<TippRow> rows = tippService.findEmptyTippRowsForTipper(savedMatchday.getId());
-        assertEquals(9, rows.size());
+        List<SumWinPointsRow> rows = tippTableService.findSumWinPointsRowsForMatchdays(1,34, savedCommunityMembership.getId());
+
         rows.forEach(System.out::println);
+        assertFalse(rows.isEmpty());
 
     }
-
     @Test
-    public void retrieveTippRows() {
-
-        List<TippRow> rows = tippService.findTippRowsForTipper(savedMatchday.getId(), savedCommunityMembership.getId());
-
+    @Order(3)
+    public void retrieveTippTable() {
+        TippVO vo=new TippVO(null,null,null,savedCommunity.getId(),null,1,2);
+        List<SumWinPointsSummaryRow> rows = tippTableService.retrieveTippTable(vo);
+        log.debug("\n");
         rows.forEach(System.out::println);
-        assertEquals(9, rows.size());
-
-    }
-
-
-    @Test
-    public void retrieveTippRowsAfterOneMatchOfMatchdaySaved() {
-        List<TippRow> myRows = tippService.findTippRowsForTipper(savedMatchday.getId(), savedCommunityMembership.getId());
-        assertEquals(9, myRows.size());
-        Spiel savedMatch = spielRepo.findById(307L).orElseThrow(()-> new RuntimeException(""));
-        savedMatch.setHeimTore(5);
-        savedMatch.setGastTore(0);
-        savedMatch.setStattgefunden(true);
-        Spiel updatedMatch= spielRepo.save(savedMatch);
-        List<TippRow> rows = tippService.findTippRowsForTipper(savedMatchday.getId(), savedCommunityMembership.getId());
-
-        rows.forEach(System.out::println);
-        assertEquals(9, rows.size());
-
-        updatedMatch.setHeimTore(0);
-        updatedMatch.setGastTore(0);
-        updatedMatch.setStattgefunden(false);
-        spielRepo.save(updatedMatch);
-        List<TippRow> updatedRows = tippService.findTippRowsForTipper(savedMatchday.getId(), savedCommunityMembership.getId());
-        assertEquals(9, updatedRows.size());
+        assertFalse(rows.isEmpty());
 
     }
 

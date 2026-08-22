@@ -111,42 +111,4 @@ public class ContractTippApiIntegrationTest {
 
     }
 
-    @Test
-    @Order(2)
-    void saveTipps_withValidInput_thenSuccess() {
-        log.debug("saveTipps_withValidInput_thenSuccess");
-
-
-        tippDtoHomeWin.setSpielId(homeWin.getId());
-        tippDtoHomeWin.setSpielNumber(homeWin.getSpielNumber());
-        tippDtoHomeWin.setCommMembId(commMemb.getId());
-        tippDtoHomeWin.setTippModusId(tippModusPointDto.getId());
-        tippDtoHomeWin.setTippModusType(tippModusPointDto.getType());
-        TippDto savedTippDto = tippService.saveOne(tippDtoHomeWin);
-        assertThat(savedTippDto).isNotNull();
-
-
-        // remis tipp
-
-
-        tippDtoRemis.setSpielId(remis.getId());
-        tippDtoRemis.setSpielNumber(remis.getSpielNumber());
-        tippDtoRemis.setCommMembId(commMemb.getId());
-        tippDtoRemis.setTippModusId(tippModusPointDto.getId());
-        tippDtoRemis.setTippModusType(tippModusPointDto.getType());
-        TippDto savedTippDtoRemis = tippService.saveOne(tippDtoRemis);
-        assertThat(savedTippDtoRemis).isNotNull();
-
-
-        tippDtoGuestWin.setSpielId(guestWin.getId());
-        tippDtoGuestWin.setSpielNumber(guestWin.getSpielNumber());
-        tippDtoGuestWin.setCommMembId(commMemb.getId());
-        tippDtoGuestWin.setTippModusId(tippModusPointDto.getId());
-        tippDtoGuestWin.setTippModusType(tippModusPointDto.getType());
-        TippDto savedTippDtGuest = tippService.saveOne(tippDtoGuestWin);
-        assertThat(savedTippDtGuest).isNotNull();
-
-
-    }
-
 }

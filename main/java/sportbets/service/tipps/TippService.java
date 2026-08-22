@@ -1,8 +1,11 @@
 package sportbets.service.tipps;
 
+import sportbets.persistence.rowObject.SumWinPointsRow;
+import sportbets.persistence.rowObject.SumWinPointsSummaryRow;
 import sportbets.persistence.rowObject.TippRow;
 import sportbets.persistence.rowObject.TippsRow;
 import sportbets.web.dto.tipps.TippDto;
+import sportbets.web.dto.tipps.TippVO;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,24 +15,16 @@ public interface TippService {
 
 
     Optional<TippDto> findById(Long id);
+   void createOrUpdateRowList(Long spieltagId, List<TippRow> rows);
 
-    TippDto saveOne(TippDto dto);
-
-    List<TippDto> saveList(List<TippDto> dtoList);
-
-    void createOrUpdateRowList(Long spieltagId, List<TippRow> rows);
-
-    Optional<TippDto> updateOne(Long id, TippDto dto);
-
-    List<TippDto> updateList(List<TippDto> dtoList);
-
-
+    void deleteAll();
     void deleteById(Long id);
 
     List<TippRow> findEmptyTippRowsForTipper(Long spieltagId);
 
     List<TippRow> findTippRowsForTipper(Long spieltagId, Long commMembId);
- List<TippsRow> findTippsRowsForCommunity(Long spieltagId, Long commId);
-    void deleteAll();
+
+    List<TippsRow> findTippsRowsForCommunity(Long spieltagId, Long commId);
+
 
 }

@@ -23,14 +23,18 @@ import sportbets.persistence.repository.competition.SpieltagRepository;
 import sportbets.persistence.repository.tipps.TippConfigRepository;
 import sportbets.persistence.repository.tipps.TippModusRepository;
 import sportbets.persistence.repository.tipps.TippRepository;
+import sportbets.persistence.rowObject.SumWinPointsRow;
+import sportbets.persistence.rowObject.SumWinPointsSummaryRow;
 import sportbets.persistence.rowObject.TippRow;
 import sportbets.persistence.rowObject.TippsRow;
 import sportbets.service.tipps.TippService;
 import sportbets.web.dto.MapperUtilTipps;
 import sportbets.web.dto.tipps.TippDto;
+import sportbets.web.dto.tipps.TippVO;
 import sportbets.web.error.TippValidationException;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -68,80 +72,6 @@ public class TippServiceImpl implements TippService {
     public Optional<TippDto> findById(Long id) {
         Tipp entity = tippRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("Tipp not found"));
         return Optional.of(convertToDto(entity));
-    }
-
-    @Override
-    @Transactional
-    public TippDto saveOne(TippDto dto) {
-        log.debug("save tipp");
-
-        Optional<Tipp> entity = tippRepo.findByParents(dto.getCommMembId(), dto.getTippModusId(), dto.getSpielId());
-        if (entity.isPresent()) {
-            throw new EntityExistsException("Tipp for spielId:" + dto.getSpielId() + " for commMembId " + dto.getCommMembId() + " already exists");
-        }
-        TippModus tippModus = tippModusRepo.findById(dto.getTippModusId()).orElseThrow(() -> new EntityNotFoundException("tippModus with id" + dto.getSpielId() + " does not exist"));
-        Spiel spiel = spielRepo.findById(dto.getSpielId()).orElseThrow(() -> new EntityNotFoundException("spiel with id" + dto.getSpielId() + " does not exist"));
-        CommunityMembership commMemb = commMembRepo.findById(dto.getCommMembId()).orElseThrow(() -> new EntityNotFoundException("commMemb with id" + dto.getCommMembId() + "does not exist"));
-        Tipp tipp = convertToEntity(dto, spiel, tippModus, commMemb);
-        tipp.setCommunityMembership(commMemb);
-        tipp.setTippModus(tippModus);
-        tipp.setSpiel(spiel);
-        boolean isValid = tippModus.isTippValid(tipp);
-        if (!isValid) {
-            log.error("Tipp  not valid: {}", dto);
-            throw new TippValidationException("Tipp is not valid:  " + dto);
-        }
-
-        int winPoints = tippModus.calculateWinPoints(tipp, spiel);
-        log.info("######## winPoints: {}", winPoints);
-        tipp.setWinPoints(winPoints);
-
-        log.debug("tipp to save:{}", tipp);
-        Tipp savedEntity = tippRepo.save(tipp);
-        return convertToDto(savedEntity);
-    }
-
-
-    @Override
-    @Transactional
-    public Optional<TippDto> updateOne(Long id, TippDto tippDto) {
-        log.debug("update tipp {}", tippDto);
-
-        Tipp entity = tippRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("Tipp with id:" + tippDto.getId() + "does not exist"));
-        TippModus tippModus = tippModusRepo.findById(tippDto.getTippModusId()).orElseThrow(() -> new EntityNotFoundException("tippModus with id" + tippDto.getSpielId() + " does not exist"));
-
-        Spiel spiel = spielRepo.findById(tippDto.getSpielId()).orElseThrow(() -> new EntityNotFoundException("spiel with id" + tippDto.getSpielId() + " does not exist"));
-        CommunityMembership commMemb = commMembRepo.findById(tippDto.getCommMembId()).orElseThrow(() -> new EntityNotFoundException("commMemb with id" + tippDto.getCommMembId() + "does not exist"));
-
-
-        Tipp toUpdate = convertToEntity(tippDto, spiel, tippModus, commMemb);
-        entity.setId(id);
-        toUpdate.setCommunityMembership(commMemb);
-        toUpdate.setSpiel(spiel);
-        toUpdate.setTippModus(tippModus);
-        boolean isValid = tippModus.isTippValid(toUpdate);
-        if (!isValid) {
-            throw new TippValidationException("Tipp is not valid");
-        }
-        int winPoints = tippModus.calculateWinPoints(toUpdate, spiel);
-        toUpdate.setWinPoints(winPoints);
-        log.debug("tipp to update:{}", toUpdate);
-        Tipp updated = tippRepo.save(toUpdate);
-
-        return Optional.of(convertToDto(updated));
-
-    }
-
-    @Override
-    @Transactional
-    public List<TippDto> saveList(List<TippDto> dtoList) {
-        List<TippDto> saved = new ArrayList<>();
-
-        for (TippDto dto : dtoList) {
-            log.debug("save dto {}", dto);
-            saved.add(this.saveOne(dto));
-        }
-        return saved;
     }
 
     @Override
@@ -213,17 +143,6 @@ public class TippServiceImpl implements TippService {
     }
 
 
-    @Override
-    @Transactional
-    public List<TippDto> updateList(List<TippDto> dtoList) {
-        List<TippDto> updated = new ArrayList<>();
-
-        for (TippDto dto : dtoList) {
-            Optional<TippDto> updatedDto = this.updateOne(dto.getId(), dto);
-            updatedDto.ifPresent(updated::add);
-        }
-        return updated;
-    }
 
     @Override
     @Transactional
@@ -231,6 +150,11 @@ public class TippServiceImpl implements TippService {
         if (tippRepo.existsById(id)) {
             tippRepo.deleteById(id);
         }
+    }
+
+    @Override
+    public void deleteAll() {
+        tippRepo.deleteAll();
     }
 
     @Override
@@ -246,11 +170,6 @@ public class TippServiceImpl implements TippService {
     @Override
     public List<TippsRow> findTippsRowsForCommunity(Long spieltagId, Long commId) {
         return tippRepo.findTippsRowsForCommunity(spieltagId, commId);
-    }
-
-    @Override
-    public void deleteAll() {
-        tippRepo.deleteAll();
     }
 
     private TippDto convertToDto(Tipp entity) {

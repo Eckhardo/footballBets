@@ -47,33 +47,6 @@ public class TippController {
 
     }
 
-    @GetMapping()
-    public   List<TippsRow> findTippRowsForCommunity(@ModelAttribute TippVO tippVO) {
-        log.debug(":findTippRowsForCommunity tippVO::{}", tippVO);
-        return tippService.findTippsRowsForCommunity(tippVO.spieltagId(), tippVO.commId());
-
-    }
-
-    @GetMapping("{spieltagId}/container/{commMembId}")
-    public TippsContainerDto findTippContainerForTipper(@PathVariable Long spieltagId, @PathVariable Long commMembId) {
-        log.debug(":findTippContainerForTipper r::{} {}", spieltagId, commMembId);
-        TippsContainerDto container = null;
-        List<TippRow> updateableRows = tippService.findTippRowsForTipper(spieltagId, commMembId);
-        log.debug(":updateableRows:: {}",updateableRows.size());
-        if (updateableRows.isEmpty()) {
-            log.debug(":empty::{} {}", spieltagId, commMembId);
-            List<TippRow> rows = tippService.findEmptyTippRowsForTipper(spieltagId);
-            log.debug(":emptyRows:: {}",rows.size());
-            rows.forEach(row -> row.setCommMembId(commMembId));
-            container = new TippsContainerDto(rows, false, commMembId, spieltagId);
-        } else {
-            container = new TippsContainerDto(updateableRows, true, commMembId, spieltagId);
-            log.debug(":full::{} {}", container.getTippRows().size(), container.isUpdate());
-        }
-        return container;
-    }
-
-
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         log.debug(".delete::{}", id);
