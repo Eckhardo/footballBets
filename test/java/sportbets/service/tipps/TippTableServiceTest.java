@@ -103,7 +103,7 @@ public class TippTableServiceTest {
     @Test
     @Order(3)
     public void retrieveTippTable() {
-        TippVO vo=new TippVO(null,null,null,savedCommunity.getId(),null,1,2);
+        TippVO vo=new TippVO(null,null,null,savedCommunity.getId(),null,1,1);
         List<SumWinPointsSummaryRow> rows = tippTableService.retrieveTippTable(vo);
         log.debug("\n");
         rows.forEach(System.out::println);

@@ -54,9 +54,9 @@ public class Tipp {
 
     public Tipp(Spiel spiel, CommunityMembership commMemb, TippModus tippModus, Integer heimTipp, Integer remisTipp, Integer gastTipp) {
         this(spiel, commMemb, tippModus);
-        this.heimTipp = heimTipp;
-        this.remisTipp = remisTipp;
-        this.gastTipp = gastTipp;
+        this.heimTipp = heimTipp==null ? 0:heimTipp;
+        this.remisTipp = remisTipp==null ? 0:remisTipp;
+        this.gastTipp = gastTipp==null ? 0:gastTipp;
 
     }
 

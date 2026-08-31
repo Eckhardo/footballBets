@@ -10,39 +10,37 @@ package sportbets.persistence.rowObject;
 
 public class SumWinPointsSummaryRow {
     //	********************** Fields ********************** //
-    // commMemb fields
+
+    private Integer position;
+    private Integer positionLast;
     private String username;
-
-    private Integer sumWinPointsNow;
-
-    private Integer sumWinPointsLast;
-    private Integer userPositionLast;
+    private Integer sumWinPoints;
     private Integer diffAbsolute;
     private Integer diffRelative;
 
     //	********************** Constructors ********************** //
-    public SumWinPointsSummaryRow(String username, Integer sumWinPointsNow,
-                                  Integer sumWinPointsLast,Integer userPositionLast) {
+    public SumWinPointsSummaryRow(String username, Integer sumWinPoints,
+                                  Integer position, Integer positionLast) {
         this.username = username;
-        this.sumWinPointsNow = sumWinPointsNow;
-        this.sumWinPointsLast = sumWinPointsLast;
-        this.userPositionLast=userPositionLast;
+        this.sumWinPoints = sumWinPoints;
+        this.position = position;
+        this.positionLast = positionLast;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public Integer getSumWinPointsNow() {
-        return sumWinPointsNow;
+    public Integer getSumWinPoints() {
+        return sumWinPoints;
     }
 
-    public Integer getSumWinPointsLast() {
-        return sumWinPointsLast;
+    public Integer getPosition() {
+        return position;
     }
 
-    public Integer getUserPositionLast() {
-        return userPositionLast;
+    public Integer getPositionLast() {
+        return positionLast;
     }
 
     public Integer getDiffAbsolute() {
@@ -61,17 +59,17 @@ public class SumWinPointsSummaryRow {
         this.diffRelative = diffRelative;
     }
 
-    public void setSumWinPointsNow(Integer sumWinPointsNow) {
-        this.sumWinPointsNow = sumWinPointsNow;
+    public void setSumWinPoints(Integer sumWinPointsNow) {
+        this.sumWinPoints = sumWinPointsNow;
     }
 
     @Override
     public String toString() {
         return "SumWinPointsSummaryRow{" +
                 "username='" + username + '\'' +
-                ", sumWinPointsNow=" + sumWinPointsNow +
-                ", sumWinPointsLast=" + sumWinPointsLast +
-                ", userPositionLast=" + userPositionLast +
+                ", sumWinPoints=" + sumWinPoints +
+                ", position=" + position +
+                ", positionLast=" + positionLast +
                 ", diffAbsolute=" + diffAbsolute +
                 ", diffRelative=" + diffRelative +
                 '}';
