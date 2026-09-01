@@ -56,9 +56,9 @@ public class SpieltagController {
 
 
         List<SpielDto> spielDtos = new ArrayList<>();
-        ModelMapper myMapper = MapperUtil.getModelMapperForSpiel();
+        ModelMapper modelMapper = MapperUtil.getModelMapperForSpiel();
         matches.forEach(match -> {
-            spielDtos.add(myMapper.map(match, SpielDto.class));
+            spielDtos.add(modelMapper.map(match, SpielDto.class));
         });
         return spielDtos;
     }

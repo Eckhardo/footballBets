@@ -58,62 +58,89 @@ public class TippTableServiceImpl implements TippTableService {
         assert tippVO.commId() != null;
         assert tippVO.startSpieltag() != null;
         assert tippVO.stopSpieltag() != null;
-
-        // fill result rows with data from matchday before
-        if (tippVO.stopSpieltag() == 1) {
-            return fillTippTableForMatchdayOne(tippVO);
-        }
-
         List<String> usernames = new ArrayList<>();
-
-        List<SumWinPointsSummaryRow> result = preFillTippTable(tippVO, usernames);
-        fillTippTable(tippVO, result);
-
-        // now set diffAbs and diffRel
-
-        int sumWinPointsFirst = 0;
-        int sumWinPointsBefore = 0;
-        boolean isFirstRow = true;
-        for (SumWinPointsSummaryRow sumRow : result) {
-            if (isFirstRow) {
-                sumRow.setDiffAbsolute(0);
-                sumRow.setDiffRelative(0);
-                isFirstRow = false;
-                sumWinPointsFirst = sumRow.getSumWinPoints();
-                sumWinPointsBefore = sumRow.getSumWinPoints();
-
-            } else {
-                int sumWinPointsNow = sumRow.getSumWinPoints();
-                sumRow.setDiffAbsolute(sumWinPointsNow - sumWinPointsFirst);
-                sumRow.setDiffRelative(sumWinPointsNow - sumWinPointsBefore);
-                sumWinPointsBefore = sumWinPointsNow;
-            }
-
+        if (tippVO.stopSpieltag() == 1) {
+            return fillTippTableForMatchdayOne(tippVO.commId(), tippVO.startSpieltag(), tippVO.stopSpieltag());
         }
 
-        fillDummies(tippVO, usernames, sumWinPointsFirst, sumWinPointsBefore, result);
+
+        // fill summary rows with data from matchday before
+        List<SumWinPointsSummaryRow> result = preFillTippTable(tippVO, usernames);
+        log.debug(" preFill size:: {}", result.size());
+        for (SumWinPointsSummaryRow sumWinPointsSummaryRow : result) {
+            log.debug("sum:: {}", sumWinPointsSummaryRow);
+        }
+        log.debug(" postFill size:: {}", result.size());
+        log.debug("");
+        fillTippTable(tippVO, result);
         result.sort(Comparator.comparing(SumWinPointsSummaryRow::getSumWinPoints).reversed());
+        for (SumWinPointsSummaryRow sumWinPointsSummaryRow : result) {
+            log.debug("fill:: {}", sumWinPointsSummaryRow);
+        }
+        log.debug(" postFill size:: {}", result.size());
+        log.debug("");
         return result;
     }
 
-    private void fillTippTable(TippVO tippVO, List<SumWinPointsSummaryRow> result) {
+    private void fillTippTable(TippVO tippVO, List<SumWinPointsSummaryRow> sumRows) {
         // fill result rows with data from matchday now (just one field)
         List<SumWinPointsRow> latest = tippRepo.findSumWinPointsRowsForMatchdays(tippVO.startSpieltag(), tippVO.stopSpieltag(), tippVO.commId());
         log.debug("sumWinPoints size : {}", latest.size());
         latest.sort(Comparator.comparing(SumWinPointsRow::getUsername));
         Iterator<SumWinPointsRow> nowIterator = latest.iterator();
-        result.sort(Comparator.comparing(SumWinPointsSummaryRow::getUsername));
-        Iterator<SumWinPointsSummaryRow> resultIterator = result.iterator();
-
+        sumRows.sort(Comparator.comparing(SumWinPointsSummaryRow::getUsername));
+        Iterator<SumWinPointsSummaryRow> resultIterator = sumRows.iterator();
+        int winPointsFirst = 0;
+        int winPointsNow = 0;
+        int winPointsLatest = 0;
+        boolean isFirstRow = true;
         while (nowIterator.hasNext() && resultIterator.hasNext()) {
             SumWinPointsRow winPointsRow = nowIterator.next();
             log.debug("winPointsRow  : {}", winPointsRow);
             SumWinPointsSummaryRow sumWinPointsSummaryRow = resultIterator.next();
-            Long sumWinPoints = winPointsRow.getSumWinPoints() != null ? winPointsRow.getSumWinPoints() : 0L;
+            if (isFirstRow) {
+                winPointsFirst = winPointsRow.getSumWinPoints().intValue();
+                winPointsLatest = winPointsRow.getSumWinPoints().intValue();
+                sumWinPointsSummaryRow.setSumWinPoints(winPointsFirst);
+                sumWinPointsSummaryRow.setDiffAbsolute(0);
+                sumWinPointsSummaryRow.setDiffRelative(0);
+                isFirstRow = false;
+            } else {
+                winPointsNow= winPointsRow.getSumWinPoints().intValue();
+                sumWinPointsSummaryRow.setSumWinPoints(winPointsNow);
+                sumWinPointsSummaryRow.setDiffAbsolute(winPointsNow - winPointsFirst);
+                sumWinPointsSummaryRow.setDiffRelative(winPointsNow - winPointsLatest);
+                winPointsLatest = winPointsNow;
+            }
 
-            sumWinPointsSummaryRow.setSumWinPoints(sumWinPoints.intValue());
+
         }
-        result.sort(Comparator.comparing(SumWinPointsSummaryRow::getSumWinPoints).reversed());
+        sumRows.sort(Comparator.comparing(SumWinPointsSummaryRow::getSumWinPoints).reversed());
+        winPointsNow = 0;
+        winPointsFirst = 0;
+        winPointsLatest = 0;
+        int position = 1;
+        int samePosition = 0;
+        isFirstRow = true;
+        for (SumWinPointsSummaryRow sumRow : sumRows) {
+            if (isFirstRow) {
+                sumRow.setPosition(position);
+                isFirstRow = false;
+                winPointsLatest=sumRow.getSumWinPoints();
+            }
+            else {
+                winPointsNow = sumRow.getSumWinPoints();
+                if (winPointsNow < winPointsLatest) {
+                    position = ++position + samePosition;
+                } else if (winPointsNow == winPointsLatest) {
+                    ++samePosition;
+                }
+                sumRow.setPosition(position);
+                winPointsLatest = winPointsNow;
+            }
+        }
+
+
     }
 
     private void fillDummies(TippVO tippVO, List<String> usernames, int sumWinPointsFirst, int sumWinPointsBefore, List<SumWinPointsSummaryRow> result) {
@@ -156,14 +183,14 @@ public class TippTableServiceImpl implements TippTableService {
             if (isFirstRow) {
                 winPointsNow = sumRow.getSumWinPoints().intValue();
                 winPointsBefore = sumRow.getSumWinPoints().intValue();
-                row = new SumWinPointsSummaryRow(sumRow.getUsername(), winPointsNow, winPointsBefore, position);
+                row = new SumWinPointsSummaryRow(sumRow.getUsername(), winPointsNow, 0, position);
                 isFirstRow = false;
                 tippTableRows.add(row);
                 usernames.add(sumRow.getUsername());
             } else {
                 winPointsNow = sumRow.getSumWinPoints().intValue();
                 int latestPosition = calculatePosition(winPointsNow, winPointsBefore, position);
-                row = new SumWinPointsSummaryRow(sumRow.getUsername(), winPointsNow, winPointsBefore, latestPosition);
+                row = new SumWinPointsSummaryRow(sumRow.getUsername(), winPointsNow, 0, latestPosition);
                 tippTableRows.add(row);
                 winPointsBefore = sumRow.getSumWinPoints().intValue();
                 position = latestPosition;
@@ -171,19 +198,20 @@ public class TippTableServiceImpl implements TippTableService {
             }
 
         }
+        log.debug("finished preFillTippTable tippVO");
         return tippTableRows;
     }
 
     /**
-     * fill TippTable rows with data from current matchday
-     *
-     * @param tippVO
+     * @param commId
+     * @param startSpieltag
+     * @param stopSpieltag
      * @return
      */
-    private List<SumWinPointsSummaryRow> fillTippTableForMatchdayOne(TippVO tippVO) {
+    private List<SumWinPointsSummaryRow> fillTippTableForMatchdayOne(Long commId, Integer startSpieltag, Integer stopSpieltag) {
         log.debug("fillTippTableForMatchdayOne:");
         List<SumWinPointsSummaryRow> tippTableRows = new ArrayList<>();
-        List<SumWinPointsRow> sumWinPointsRows = tippRepo.findSumWinPointsRowsForMatchdays(tippVO.startSpieltag(), tippVO.stopSpieltag(), tippVO.commId());
+        List<SumWinPointsRow> sumWinPointsRows = tippRepo.findSumWinPointsRowsForMatchdays(startSpieltag, stopSpieltag, commId);
 
         List<String> usernames = new ArrayList<>();
         if (!sumWinPointsRows.isEmpty()) {
@@ -211,29 +239,33 @@ public class TippTableServiceImpl implements TippTableService {
                     }
                     log.debug("winPointsLatest {} winPointsNow {}", winPointsLatest, winPointsNow);
                     SumWinPointsSummaryRow summaryRow = new SumWinPointsSummaryRow(sumRow.getUsername(), winPointsNow, position, 1);
-                    summaryRow.setDiffAbsolute(winPointsNow-winPointsFirst);
-                    summaryRow.setDiffRelative(winPointsNow-winPointsLatest);
+                    summaryRow.setDiffAbsolute(winPointsNow - winPointsFirst);
+                    summaryRow.setDiffRelative(winPointsNow - winPointsLatest);
                     tippTableRows.add(summaryRow);
                     winPointsLatest = winPointsNow;
                 }
                 firstRow = false;
-
-
                 usernames.add(sumRow.getUsername());
             }
         }
 
-        List<Tipper> tippers = commMembRepo.findTippers(tippVO.commId());
+        List<Tipper> tippers = commMembRepo.findTippers(commId);
         for (Tipper tipper : tippers) {
             String username = tipper.getUsername();
             if (!usernames.contains(username)) {
-                tippTableRows.add(new SumWinPointsSummaryRow(username, 0, 0, 1));
+                tippTableRows.add(new SumWinPointsSummaryRow(username, 0, tippers.size(), 1));
                 usernames.add(username);
             }
         }
         return tippTableRows;
     }
 
+    /**
+     * @param winPointsNow
+     * @param winPointsBefore
+     * @param position
+     * @return
+     */
     private int calculatePosition(int winPointsNow, int winPointsBefore, int position) {
         if (winPointsNow == winPointsBefore) {
             return position;

@@ -69,8 +69,9 @@ public class CompController {
         log.info("SpieltagDto:findAll::{}", compId);
         List<Spieltag> matchdays = spieltagService.getAllForCompetition(compId);
         List<SpieltagDto> spieltagDtos = new ArrayList<>();
+        ModelMapper modelMapper = MapperUtil.getModelMapperForCompetitionRound();
         matchdays.forEach(matchday -> {
-            spieltagDtos.add(myMapper.map(matchday, SpieltagDto.class));
+            spieltagDtos.add(modelMapper.map(matchday, SpieltagDto.class));
         });
         log.info("return SpieltagDto:size::{}", spieltagDtos.size());
         return spieltagDtos;
@@ -90,12 +91,17 @@ public class CompController {
 
     @GetMapping("/{id}/rounds")
     public List<CompetitionRoundDto> findAllRounds(@PathVariable Long id) {
-        log.debug(" CompetitionRoundDto:findAll for comp::");
+        log.debug(" CompetitionRoundDto:findAll for comp:{}:",id);
         List<CompetitionRound> compRounds = compService.getAllFormComp(id);
         List<CompetitionRoundDto> roundDtos = new ArrayList<>();
+        ModelMapper modelMapper = MapperUtil.getModelMapperForCompetition();
         compRounds.forEach(comp -> {
-            roundDtos.add(myMapper.map(comp, CompetitionRoundDto.class));
+            roundDtos.add(modelMapper.map(comp, CompetitionRoundDto.class));
+
         });
+        for(CompetitionRoundDto roundDto : roundDtos) {
+            log.debug("Round found with {}", roundDto);
+        }
         return roundDtos;
     }
 

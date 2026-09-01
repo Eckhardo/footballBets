@@ -63,6 +63,9 @@ public class SumWinPointsSummaryRow {
         this.sumWinPoints = sumWinPointsNow;
     }
 
+    public void setPosition(int position) {
+        this.position=position;
+    }
     @Override
     public String toString() {
         return "SumWinPointsSummaryRow{" +
@@ -74,4 +77,5 @@ public class SumWinPointsSummaryRow {
                 ", diffRelative=" + diffRelative +
                 '}';
     }
+
 }
