@@ -24,7 +24,9 @@ import sportbets.persistence.rowObject.TippRow;
 import sportbets.service.community.CommunityMembershipService;
 import sportbets.service.community.CommunityService;
 import sportbets.service.community.TipperService;
-import sportbets.service.competition.*;
+import sportbets.service.competition.CompRoundService;
+import sportbets.service.competition.CompService;
+import sportbets.service.competition.SpieltagService;
 
 import java.util.List;
 

@@ -25,7 +25,6 @@ import sportbets.web.dto.tipps.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 
 @Service

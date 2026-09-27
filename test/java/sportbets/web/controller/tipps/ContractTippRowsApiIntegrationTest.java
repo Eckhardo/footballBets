@@ -41,7 +41,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static sportbets.persistence.builder.CompetitionConstants.BUNDESLIGA_NAME_2025;
 import static sportbets.persistence.builder.CompetitionConstants.BUNDESLIGA_NAME_2026;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,

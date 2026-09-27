@@ -1,6 +1,5 @@
 package sportbets.service.tipps.impl;
 
-import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -23,18 +22,13 @@ import sportbets.persistence.repository.competition.SpieltagRepository;
 import sportbets.persistence.repository.tipps.TippConfigRepository;
 import sportbets.persistence.repository.tipps.TippModusRepository;
 import sportbets.persistence.repository.tipps.TippRepository;
-import sportbets.persistence.rowObject.SumWinPointsRow;
-import sportbets.persistence.rowObject.SumWinPointsSummaryRow;
 import sportbets.persistence.rowObject.TippRow;
 import sportbets.persistence.rowObject.TippsRow;
 import sportbets.service.tipps.TippService;
 import sportbets.web.dto.MapperUtilTipps;
 import sportbets.web.dto.tipps.TippDto;
-import sportbets.web.dto.tipps.TippVO;
 import sportbets.web.error.TippValidationException;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 

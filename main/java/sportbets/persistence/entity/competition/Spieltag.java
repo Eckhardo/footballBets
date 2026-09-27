@@ -1,12 +1,10 @@
 package sportbets.persistence.entity.competition;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.format.annotation.DateTimeFormat;
 import sportbets.common.DateUtil;
 import sportbets.persistence.entity.tipps.TippConfig;
 

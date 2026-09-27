@@ -22,18 +22,17 @@ import sportbets.persistence.entity.competition.CompetitionRound;
 import sportbets.persistence.entity.competition.Spiel;
 import sportbets.persistence.entity.competition.Spieltag;
 import sportbets.persistence.repository.competition.SpielRepository;
-import sportbets.persistence.repository.competition.SpieltagRepository;
-import sportbets.persistence.rowObject.SumWinPointsRow;
 import sportbets.persistence.rowObject.TippRow;
 import sportbets.service.community.CommunityMembershipService;
 import sportbets.service.community.CommunityService;
 import sportbets.service.community.TipperService;
-import sportbets.service.competition.*;
+import sportbets.service.competition.CompRoundService;
+import sportbets.service.competition.CompService;
+import sportbets.service.competition.SpieltagService;
 
 import java.util.List;
 
-import static org.hibernate.validator.internal.util.Contracts.assertNotEmpty;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static sportbets.persistence.builder.CompetitionConstants.BUNDESLIGA_NAME_2026;
 
 @SpringBootTest

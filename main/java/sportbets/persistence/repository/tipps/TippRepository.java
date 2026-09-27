@@ -6,7 +6,6 @@ import sportbets.persistence.entity.tipps.Tipp;
 import sportbets.persistence.rowObject.SumWinPointsRow;
 import sportbets.persistence.rowObject.TippRow;
 import sportbets.persistence.rowObject.TippsRow;
-import sportbets.web.dto.tipps.TippVO;
 
 import java.util.List;
 import java.util.Optional;
