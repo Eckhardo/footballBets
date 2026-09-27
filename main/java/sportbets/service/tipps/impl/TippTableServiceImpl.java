@@ -66,17 +66,9 @@ public class TippTableServiceImpl implements TippTableService {
 
         // fill summary rows with data from matchday before
         List<SumWinPointsSummaryRow> result = preFillTippTable(tippVO, usernames);
-        log.debug(" preFill size:: {}", result.size());
-        for (SumWinPointsSummaryRow sumWinPointsSummaryRow : result) {
-            log.debug("sum:: {}", sumWinPointsSummaryRow);
-        }
-        log.debug(" postFill size:: {}", result.size());
-        log.debug("");
+
         fillTippTable(tippVO, result);
         result.sort(Comparator.comparing(SumWinPointsSummaryRow::getSumWinPoints).reversed());
-        for (SumWinPointsSummaryRow sumWinPointsSummaryRow : result) {
-            log.debug("fill:: {}", sumWinPointsSummaryRow);
-        }
         log.debug(" postFill size:: {}", result.size());
         log.debug("");
         return result;
