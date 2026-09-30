@@ -115,9 +115,7 @@ public class CompServiceImpl implements CompService {
         List<Team> teams = compRepository.findTeamsForComp(compId);
         List<TeamDto> teamDtos = new ArrayList<>();
 
-        teams.forEach(team -> {
-            teamDtos.add(modelMapper.map(team, TeamDto.class));
-        });
+        teams.forEach(team -> teamDtos.add(modelMapper.map(team, TeamDto.class)));
         return teamDtos;
     }
 

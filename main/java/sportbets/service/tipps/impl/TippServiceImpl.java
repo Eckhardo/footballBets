@@ -78,7 +78,7 @@ public class TippServiceImpl implements TippService {
         TippRow row = tippRows.get(0);
         Spieltag matchday;
         if (spieltagId == null) {
-            Spiel spiel = spielRepo.findById(row.getSpielId()).orElseThrow(() -> new EntityNotFoundException("spiel with id" + row.getSpielId() + " does not exist"));
+            final Spiel spiel = getSpiel(row);
             matchday = spiel.getSpieltag();
 
         } else {
@@ -97,6 +97,7 @@ public class TippServiceImpl implements TippService {
             updateTipps(tippRows, tippModus);
         }
     }
+
 
     private void updateTipps(List<TippRow> tippRows, TippModus tippModus) {
         log.debug("updating tipp rows   {}", tippRows.size());
@@ -120,7 +121,7 @@ public class TippServiceImpl implements TippService {
         log.debug("saving tipp rows   {}", tippRows.size());
         for (TippRow createRow : tippRows) {
             log.debug("saving tipp   {}", createRow);
-            Spiel spiel = spielRepo.findById(createRow.getSpielId()).orElseThrow(() -> new EntityNotFoundException("spiel with id" + createRow.getSpielId() + " does not exist"));
+            final Spiel spiel = getSpiel(createRow);
 
             Tipp tipp = new Tipp(spiel, commMemb, tippModus, createRow
                     .getHeimTipp(), createRow.getRemisTipp(), createRow
@@ -170,9 +171,7 @@ public class TippServiceImpl implements TippService {
         return modelMapper.map(entity, TippDto.class);
     }
 
-    private Tipp convertToEntity(TippDto dto, Spiel spiel, TippModus tippModus, CommunityMembership commMemb) {
-        return new Tipp(spiel, commMemb, tippModus, dto.getHeimTipp(), dto.getRemisTipp(), dto.getGastTipp());
-
+    private Spiel getSpiel(TippRow row) {
+        return spielRepo.findById(row.getSpielId()).orElseThrow(() -> new EntityNotFoundException("spiel with id" + row.getSpielId() + " does not exist"));
     }
-
 }

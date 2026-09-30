@@ -85,16 +85,14 @@ public class SpielServiceImpl implements SpielService {
                 SpielFormula heimFormel = new SpielFormula(spiel, heimTeam.getName(), heimTeam.getAcronym(),
                         true, spiel.getHeimTore(), spiel
                         .getGastTore(), 0);
-                heimFormel.calcWinPoints(spiel.isStattgefunden(), comp.getWinMultiplicator(), comp.getRemisMultiplicator());
-                heimFormel.calcTrend(heimFormel.getHeimTore(), heimFormel.getGastTore(), spiel.isStattgefunden());
+                calculateWinPointsAndTrends(heimFormel, spiel, comp);
 
                 //  spielFormulaRepo.save(heimFormel);
 
                 SpielFormula gastFormel = new SpielFormula(spiel, gastTeam.getName(), gastTeam.getAcronym(),
                         false, spiel.getGastTore(), spiel
                         .getHeimTore(), 0);
-                gastFormel.calcWinPoints(spiel.isStattgefunden(), comp.getWinMultiplicator(), comp.getRemisMultiplicator());
-                gastFormel.calcTrend(gastFormel.getHeimTore(), gastFormel.getGastTore(), spiel.isStattgefunden());
+                calculateWinPointsAndTrends(gastFormel, spiel, comp);
 
                 spiele.add(spiel);
             }
@@ -110,12 +108,9 @@ public class SpielServiceImpl implements SpielService {
     @Transactional
     public Spiel save(SpielDto spielDto) {
         log.debug("save SpielDto :: {}", spielDto);
-        Optional<Spiel> optionalSpiel = spielRepo.findByNumberWithSpieltagId(spielDto.getSpielNumber(), spielDto.getSpieltagId());
-        if (optionalSpiel.isPresent()) {
-            throw new EntityExistsException("Spiel  already exist with given spiel number:" + spielDto.getSpielNumber() + "for spieltag " + spielDto.getSpieltagId());
-        }
-        Competition comp = competitionRepo.findBySpieltagId(spielDto.getSpieltagId()).orElseThrow(() -> new EntityNotFoundException("Competition not found"));
-        Spieltag spieltag = spieltagRepo.findById(spielDto.getSpieltagId()).orElseThrow(() -> new EntityNotFoundException("Matchday not found"));
+        checkIfSpielIsAlreadyPresent(spielDto);
+        final Competition comp = getCompetition(spielDto.getSpieltagId());
+        final Spieltag spieltag = getSpieltag(spielDto.getSpieltagId());
         Team heimTeam = retrieveTeam(spielDto.getHeimTeamId());
         Team gastTeam = retrieveTeam(spielDto.getGastTeamId());
         Spiel model = modelMapper.map(spielDto, Spiel.class);
@@ -128,36 +123,31 @@ public class SpielServiceImpl implements SpielService {
         SpielFormula heimFormel = new SpielFormula(model, heimTeam.getName(), heimTeam.getAcronym(),
                 true, model.getHeimTore(), model
                 .getGastTore(), 0);
-        heimFormel.calcWinPoints(model.isStattgefunden(), comp.getWinMultiplicator(), comp.getRemisMultiplicator());
-        heimFormel.calcTrend(heimFormel.getHeimTore(), heimFormel.getGastTore(), model.isStattgefunden());
+        calculateWinPointsAndTrends(heimFormel, model, comp);
 
         //  spielFormulaRepo.save(heimFormel);
 
         SpielFormula gastFormel = new SpielFormula(model, gastTeam.getName(), gastTeam.getAcronym(),
                 false, model.getGastTore(), model
                 .getHeimTore(), 0);
-        gastFormel.calcWinPoints(model.isStattgefunden(), comp.getWinMultiplicator(), comp.getRemisMultiplicator());
-        gastFormel.calcTrend(gastFormel.getHeimTore(), gastFormel.getGastTore(), model.isStattgefunden());
+        calculateWinPointsAndTrends(gastFormel, model, comp);
 
         log.debug("finally save Spiel :: {}", model);
         return spielRepo.save(model);
 
     }
 
+
     @Override
     @Transactional
     public List<Spiel> saveList(Long spieltagId, List<SpielDto> dtos) {
 
         log.debug("saveForSpieltag :: {}", dtos);
-        Spieltag spieltag = spieltagRepo.findById(spieltagId).orElseThrow(() -> new EntityNotFoundException("Matchday not found"));
-        Competition comp = competitionRepo.findBySpieltagId(spieltagId).orElseThrow(() -> new EntityNotFoundException("Competition not found"));
-
+        final Spieltag spieltag = getSpieltag(spieltagId);
+        final Competition comp = getCompetition(spieltagId);
         List<Spiel> toSaveList = new ArrayList<>();
         for (SpielDto spielDto : dtos) {
-            Optional<Spiel> optionalSpiel = spielRepo.findByNumberWithSpieltagId(spielDto.getSpielNumber(), spielDto.getSpieltagId());
-            if (optionalSpiel.isPresent()) {
-                throw new EntityExistsException("Spiel  already exist with given spiel number:" + spielDto.getSpielNumber() + "for spieltag " + spielDto.getSpieltagId());
-            }
+            checkIfSpielIsAlreadyPresent(spielDto);
             Team heimTeam = retrieveTeam(spielDto.getHeimTeamId());
             Team gastTeam = retrieveTeam(spielDto.getGastTeamId());
             Spiel model = modelMapper.map(spielDto, Spiel.class);
@@ -169,16 +159,14 @@ public class SpielServiceImpl implements SpielService {
             SpielFormula heimFormel = new SpielFormula(model, heimTeam.getName(), heimTeam.getAcronym(),
                     true, model.getHeimTore(), model
                     .getGastTore(), 0);
-            heimFormel.calcWinPoints(model.isStattgefunden(), comp.getWinMultiplicator(), comp.getRemisMultiplicator());
-            heimFormel.calcTrend(heimFormel.getHeimTore(), heimFormel.getGastTore(), model.isStattgefunden());
+            calculateWinPointsAndTrends(heimFormel, model, comp);
 
             //  spielFormulaRepo.save(heimFormel);
 
             SpielFormula gastFormel = new SpielFormula(model, gastTeam.getName(), gastTeam.getAcronym(),
                     false, model.getGastTore(), model
                     .getHeimTore(), 0);
-            gastFormel.calcWinPoints(model.isStattgefunden(), comp.getWinMultiplicator(), comp.getRemisMultiplicator());
-            gastFormel.calcTrend(gastFormel.getHeimTore(), gastFormel.getGastTore(), model.isStattgefunden());
+            calculateWinPointsAndTrends(gastFormel, model, comp);
 
             toSaveList.add(model);
         }
@@ -192,9 +180,9 @@ public class SpielServiceImpl implements SpielService {
         log.debug("update Match dto:: {}", spielDto);
         Spiel savedSpiel = spielRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("spiel  does not exist given id:" + spielDto.getId()));
         Set<Tipp> tips = savedSpiel.getTipps();
-        Competition savedComp = competitionRepo.findBySpieltagId(spielDto.getSpieltagId()).orElseThrow(() -> new EntityNotFoundException("Competition not found"));
+        final Competition savedComp = getCompetition(spielDto.getSpieltagId());
 
-        Spieltag spieltag = spieltagRepo.findById(spielDto.getSpieltagId()).orElseThrow(() -> new EntityNotFoundException("Matchday not found"));
+        final Spieltag spieltag = getSpieltag(spielDto.getSpieltagId());
         Team heimTeam = retrieveTeam(spielDto.getHeimTeamId());
         Team gastTeam = retrieveTeam(spielDto.getGastTeamId());
         Spiel model = modelMapper.map(spielDto, Spiel.class);
@@ -210,8 +198,7 @@ public class SpielServiceImpl implements SpielService {
         SpielFormula heim = savedSpiel.getSpielFormulaForHeim().orElseThrow();
         heim.setHeimTore(updated.getHeimTore());
         heim.setGastTore(updated.getGastTore());
-        heim.calcWinPoints(updated.isStattgefunden(), savedComp.getWinMultiplicator(), savedComp.getRemisMultiplicator());
-        heim.calcTrend(heim.getHeimTore(), heim.getGastTore(), updated.isStattgefunden());
+        calculateWinPointsAndTrends(heim, updated, savedComp);
         log.debug("heim formula:: {}", heim);
         model.addSpielFormula(heim);
 
@@ -219,8 +206,7 @@ public class SpielServiceImpl implements SpielService {
         SpielFormula gast = savedSpiel.getSpielFormulaForGast().orElseThrow();
         gast.setHeimTore(updated.getGastTore());
         gast.setGastTore(updated.getHeimTore());
-        gast.calcWinPoints(updated.isStattgefunden(), savedComp.getWinMultiplicator(), savedComp.getRemisMultiplicator());
-        gast.calcTrend(gast.getHeimTore(), gast.getGastTore(), updated.isStattgefunden());
+        calculateWinPointsAndTrends(gast, updated, savedComp);
         log.debug("gast formula:: {}", gast);
         model.addSpielFormula(gast);
 
@@ -230,6 +216,7 @@ public class SpielServiceImpl implements SpielService {
 
     }
 
+
     @Override
     @Transactional
     public List<Spiel> updateList(Long spieltagId, List<SpielDto> spielDtos) {
@@ -237,8 +224,8 @@ public class SpielServiceImpl implements SpielService {
 
         List<Spiel> spieleToSave = new ArrayList<>();
 
-        Competition savedComp = competitionRepo.findBySpieltagId(spieltagId).orElseThrow(() -> new EntityNotFoundException("Competition not found"));
-        Spieltag spieltag = spieltagRepo.findById(spieltagId).orElseThrow(() -> new EntityNotFoundException("Matchday not found"));
+        Competition savedComp = getCompetition(spieltagId);
+        final Spieltag spieltag = getSpieltag(spieltagId);
         for (SpielDto spielDto : spielDtos) {
 
             log.debug("update Match dto:: {}", spielDto);
@@ -258,8 +245,7 @@ public class SpielServiceImpl implements SpielService {
             SpielFormula heim = savedSpiel.getSpielFormulaForHeim().orElseThrow();
             heim.setHeimTore(updated.getHeimTore());
             heim.setGastTore(updated.getGastTore());
-            heim.calcWinPoints(updated.isStattgefunden(), savedComp.getWinMultiplicator(), savedComp.getRemisMultiplicator());
-            heim.calcTrend(heim.getHeimTore(), heim.getGastTore(), updated.isStattgefunden());
+            calculateWinPointsAndTrends(heim, updated, savedComp);
 
             log.debug("heim formula:: {}", heim);
             model.addSpielFormula(heim);
@@ -269,8 +255,7 @@ public class SpielServiceImpl implements SpielService {
 
             gast.setHeimTore(updated.getGastTore());
             gast.setGastTore(updated.getHeimTore());
-            gast.calcWinPoints(updated.isStattgefunden(), savedComp.getWinMultiplicator(), savedComp.getRemisMultiplicator());
-            gast.calcTrend(gast.getHeimTore(), gast.getGastTore(), updated.isStattgefunden());
+            calculateWinPointsAndTrends(gast, updated, savedComp);
             log.debug("gast formula:: {}", gast);
             model.addSpielFormula(gast);
             spieleToSave.add(model);
@@ -308,7 +293,28 @@ public class SpielServiceImpl implements SpielService {
 
     }
 
-    public Team retrieveTeam(Long id) {
+    private Team retrieveTeam(Long id) {
         return teamRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("Team heim not found"));
     }
+
+    private Competition getCompetition(Long spieltagId) {
+        return competitionRepo.findBySpieltagId(spieltagId).orElseThrow(() -> new EntityNotFoundException("Competition not found"));
+    }
+
+    private Spieltag getSpieltag(Long spieltagId) {
+        return spieltagRepo.findById(spieltagId).orElseThrow(() -> new EntityNotFoundException("Matchday not found"));
+    }
+
+    private static void calculateWinPointsAndTrends(SpielFormula formula, Spiel model, Competition comp) {
+        formula.calcWinPoints(model.isStattgefunden(), comp.getWinMultiplicator(), comp.getRemisMultiplicator());
+        formula.calcTrend(formula.getHeimTore(), formula.getGastTore(), model.isStattgefunden());
+    }
+
+    private void checkIfSpielIsAlreadyPresent(SpielDto spielDto) {
+        Optional<Spiel> optionalSpiel = spielRepo.findByNumberWithSpieltagId(spielDto.getSpielNumber(), spielDto.getSpieltagId());
+        if (optionalSpiel.isPresent()) {
+            throw new EntityExistsException("Spiel  already exist with given spiel number:" + spielDto.getSpielNumber() + "for spieltag " + spielDto.getSpieltagId());
+        }
+    }
+
 }

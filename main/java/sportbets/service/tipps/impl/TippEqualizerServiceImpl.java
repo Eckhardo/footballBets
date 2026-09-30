@@ -23,12 +23,12 @@ public class TippEqualizerServiceImpl implements TippEqualizerService {
 
     private final TippRepository tippRepo;
     private final SpielRepository spielRepo;
-    private final SpieltagRepository spieltagRepo;
 
-    public TippEqualizerServiceImpl(TippRepository tippRepository, SpielRepository spielRepository, SpieltagRepository spieltagRepository) {
+
+    public TippEqualizerServiceImpl(TippRepository tippRepository, SpielRepository spielRepo) {
         this.tippRepo = tippRepository;
-        this.spielRepo = spielRepository;
-        this.spieltagRepo = spieltagRepository;
+        this.spielRepo = spielRepo;
+    
     }
 
     @Override
@@ -40,7 +40,6 @@ public class TippEqualizerServiceImpl implements TippEqualizerService {
                 Set<Tipp> tipps = spiel.getTipps();
                 for (Tipp tipp : tipps) {
                     TippModus tippModus = tipp.getTippModus();
-                    CommunityMembership cm = tipp.getCommunityMembership();
                     int winPoints = tippModus.calculateWinPoints(tipp, spiel);
                     tipp.setWinPoints(winPoints);
                     tippRepo.save(tipp);

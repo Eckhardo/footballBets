@@ -45,12 +45,11 @@ public class CompRoundServiceImpl implements CompRoundService {
         if (round.isPresent()) {
             throw new EntityExistsException("Comp Round already exist for comp " + compRoundDto.getCompName() + " with given name:" + compRoundDto.getName());
         }
-        Competition comp = compRepo.findById(compRoundDto.getCompId()).orElseThrow(() -> new EntityNotFoundException("comp not found "));
-        CompetitionRound model = modelMapper.map(compRoundDto, CompetitionRound.class);
-        model.setCompetition(comp);
+        final CompetitionRound model = getCompetitionRound(compRoundDto);
         log.debug("Saving competition round {}", model.getName());
         return roundRepository.save(model);
     }
+
 
     @Override
     @Transactional
@@ -59,9 +58,7 @@ public class CompRoundServiceImpl implements CompRoundService {
         log.debug("updateCompRound  with {}", compRoundDto);
         CompetitionRound updateModel = roundRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("spiel  does not exits given id:" + compRoundDto.getId()));
 
-        Competition comp = compRepo.findById(compRoundDto.getCompId()).orElseThrow(() -> new EntityNotFoundException("comp not found "));
-        CompetitionRound model = modelMapper.map(compRoundDto, CompetitionRound.class);
-        model.setCompetition(comp);
+        final CompetitionRound model = getCompetitionRound(compRoundDto);
         CompetitionRound updatedCompRound = updateFields(updateModel, model);
         log.debug("updated Comp  with {}", updatedCompRound);
         return Optional.of(roundRepository.save(updatedCompRound));
@@ -105,5 +102,12 @@ public class CompRoundServiceImpl implements CompRoundService {
         base.setTeamsSize(updatedRound.getTeamsSize());
 
         return base;
+    }
+
+    private CompetitionRound getCompetitionRound(CompetitionRoundDto compRoundDto) {
+        Competition comp = compRepo.findById(compRoundDto.getCompId()).orElseThrow(() -> new EntityNotFoundException("comp not found "));
+        CompetitionRound model = modelMapper.map(compRoundDto, CompetitionRound.class);
+        model.setCompetition(comp);
+        return model;
     }
 }

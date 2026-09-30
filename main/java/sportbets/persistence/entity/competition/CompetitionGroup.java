@@ -19,7 +19,7 @@ public class CompetitionGroup {
     private String name;
     private int groupNumber;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "fk_comp_round_id")
+    @JoinColumn(name = "fk_compRound")
     @NotNull
     private CompetitionRound competitionRound;
 

@@ -2,7 +2,6 @@ package sportbets.service.competition.impl;
 
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
-import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -29,19 +28,16 @@ public class CompTeamServiceImpl implements CompTeamService {
     private final CompetitionTeamRepository compTeamRepo;
     private final CompetitionRepository compRepo;
     private final TeamRepository teamRepo;
-    private final ModelMapper modelMapper;
-
-    public CompTeamServiceImpl(CompetitionTeamRepository compTeamRepo, CompetitionRepository compRepo, TeamRepository teamRepo, ModelMapper modelMapper) {
+    public CompTeamServiceImpl(CompetitionTeamRepository compTeamRepo, CompetitionRepository compRepo, TeamRepository teamRepo) {
         this.compTeamRepo = compTeamRepo;
-
         this.compRepo = compRepo;
         this.teamRepo = teamRepo;
-        this.modelMapper = modelMapper;
+
     }
 
     /**
-     * @param id
-     * @return
+     * @param id - the com team id
+     * @return - return optional of a competition team
      */
     @Override
     @Transactional
@@ -59,12 +55,12 @@ public class CompTeamServiceImpl implements CompTeamService {
     public CompetitionTeam save(CompetitionTeamDto compTeamDto) {
         log.debug("Service save compTeam {}", compTeamDto);
 
-        Optional<CompetitionTeam> entity = compTeamRepo.findByTeamIdAndCompId(compTeamDto.getTeamId(), compTeamDto.getCompId());
+        final Optional<CompetitionTeam> entity = getCompetitionTeam(compTeamDto);
         if (entity.isPresent()) {
             throw new EntityExistsException("CompTeam  already exist with given id:" + compTeamDto.getId());
         }
-        Competition comp = compRepo.findByName(compTeamDto.getCompName()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        Team team = teamRepo.findById(compTeamDto.getTeamId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        final Competition comp = getCompetition(compTeamDto);
+        final Team team = getTeam(compTeamDto);
         return compTeamRepo.save(new CompetitionTeam(team, comp));
 
 
@@ -81,14 +77,14 @@ public class CompTeamServiceImpl implements CompTeamService {
 
         List<CompetitionTeam> savedTeams = new ArrayList<>();
         for (CompetitionTeamDto compTeamDto : compTeamDtos) {
-            Optional<CompetitionTeam> entity = compTeamRepo.findByTeamIdAndCompId(compTeamDto.getTeamId(), compTeamDto.getCompId());
+            final Optional<CompetitionTeam> entity = getCompetitionTeam(compTeamDto);
 
             if (entity.isPresent()) {
                 log.error("CompetitionTeam already exists");
                 throw new EntityExistsException("CompTeam  already exist with given id:" + compTeamDto.getId());
             }
-            Competition comp = compRepo.findByName(compTeamDto.getCompName()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-            Team team = teamRepo.findById(compTeamDto.getTeamId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+            final Competition comp = getCompetition(compTeamDto);
+            final Team team = getTeam(compTeamDto);
             savedTeams.add(compTeamRepo.save(new CompetitionTeam(team, comp)));
         }
         return savedTeams;
@@ -106,8 +102,8 @@ public class CompTeamServiceImpl implements CompTeamService {
         log.debug("update Match dto:: {}", competitionTeamDto);
         CompetitionTeam updateModel = compTeamRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("compTeam  does not exits given id:" + competitionTeamDto.getId()));
 
-        Competition comp = compRepo.findByName(competitionTeamDto.getCompName()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        Team team = teamRepo.findById(competitionTeamDto.getTeamId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        final Competition comp = getCompetition(competitionTeamDto);
+        final Team team = getTeam(competitionTeamDto);
         updateModel.setTeam(team);
         updateModel.setCompetition(comp);
         return Optional.of(compTeamRepo.save(updateModel));
@@ -116,8 +112,7 @@ public class CompTeamServiceImpl implements CompTeamService {
     }
 
     /**
-     * @param ids
-     * @return
+     * @param ids - the com team ids to be deleted
      */
     @Override
     @Transactional
@@ -172,4 +167,17 @@ public class CompTeamServiceImpl implements CompTeamService {
     public Optional<CompetitionTeam> findByTeamIdAndCompId(Long teamId, Long compId) {
         return compTeamRepo.findByTeamIdAndCompId(teamId, compId);
     }
+
+    private Team getTeam(CompetitionTeamDto compTeamDto) {
+        return teamRepo.findById(compTeamDto.getTeamId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
+    private Competition getCompetition(CompetitionTeamDto compTeamDto) {
+        return compRepo.findByName(compTeamDto.getCompName()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
+    private Optional<CompetitionTeam> getCompetitionTeam(CompetitionTeamDto compTeamDto) {
+        return compTeamRepo.findByTeamIdAndCompId(compTeamDto.getTeamId(), compTeamDto.getCompId());
+    }
+
 }

@@ -24,7 +24,7 @@ public class CompetitionRound {
     private int firstMatchday;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "fk_comp_id", foreignKey = @ForeignKey(name = "FK_ROUND_TO_COMP"))
+    @JoinColumn(name = "fk_comp", foreignKey = @ForeignKey(name = "FK_ROUND_TO_COMP"))
     @NotNull
     private Competition competition;
     @OneToMany(mappedBy = "competitionRound", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

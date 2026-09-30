@@ -70,8 +70,6 @@ public class TeamServiceImpl implements TeamService {
     public Optional<TeamDto> updateTeam(Long id, TeamDto teamDto) {
         log.debug("updateDto:: {}", teamDto);
         Team entity = teamRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Team not found"));
-
-
         Team updatedEntity = updateFields(entity, teamDto);
         Team savedEntity = teamRepository.save(updatedEntity);
         log.debug("updated Team  with {}", savedEntity);
@@ -110,28 +108,22 @@ public class TeamServiceImpl implements TeamService {
         log.info("getAll");
 
         List<Team> teams = teamRepository.findAll();
-        List<TeamDto> teamDtos = new ArrayList<>();
-        for (Team team : teams) {
-            TeamDto teamDto = modelMapper.map(team, TeamDto.class);
-            teamDtos.add(teamDto);
-        }
-        return teamDtos;
+        return convertToDTO(teams);
     }
 
     @Override
     public List<TeamDto> getAllClubTeams() {
         List<Team> teams = teamRepository.findAllClubTeams();
-        List<TeamDto> teamDtos = new ArrayList<>();
-        for (Team team : teams) {
-            TeamDto teamDto =modelMapper.map(team, TeamDto.class);
-            teamDtos.add(teamDto);
-        }
-        return teamDtos;
+        return convertToDTO(teams);
     }
 
     @Override
     public List<TeamDto> getAllNationTeams() {
         List<Team> teams = teamRepository.findAllNationTeams();
+        return convertToDTO(teams);
+    }
+
+    private List<TeamDto> convertToDTO(List<Team> teams) {
         List<TeamDto> teamDtos = new ArrayList<>();
         for (Team team : teams) {
             TeamDto teamDto = modelMapper.map(team, TeamDto.class);

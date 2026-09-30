@@ -72,8 +72,7 @@ public class TippModusServiceImpl implements TippModusService {
         if (tippModus.isPresent()) {
             throw new EntityExistsException("TippModus  already exists with name " + dto.getName());
         }
-        Community community = commRepo.findById(dto.getCommId()).orElseThrow(() -> new EntityNotFoundException("Community not found"));
-
+        final Community community = getCommunity(dto);
         final TippModus entity = convertToEntity(dto);
         entity.setType(TippModusType.fromString(dto.getType()));
         entity.setCommunity(community);
@@ -85,13 +84,17 @@ public class TippModusServiceImpl implements TippModusService {
 
     }
 
+    private Community getCommunity(TippModusDto dto) {
+        return commRepo.findById(dto.getCommId()).orElseThrow(() -> new EntityNotFoundException("Community not found"));
+    }
+
 
     @Override
     @Transactional
     public Optional<TippModusDto> update(Long id, TippModusDto dto) {
         log.info("update tippModus: {}", dto);
 
-        Community community = commRepo.findById(dto.getCommId()).orElseThrow(() -> new EntityNotFoundException("Community not found"));
+        final Community community = getCommunity(dto);
         TippModus tippModus = repo.findById(id).orElseThrow(() -> new RuntimeException("TippModus not found"));
         Set<TippConfig> configs = tippModus.getTippConfigs();
 

@@ -12,7 +12,6 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table(name = "tipper")
 public class Tipper {
     private static final Logger log = LoggerFactory.getLogger(Tipper.class);
     @Id

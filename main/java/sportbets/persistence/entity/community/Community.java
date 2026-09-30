@@ -14,7 +14,6 @@ import java.util.Optional;
 import java.util.Set;
 
 @Entity
-@Table(name = "community")
 public class Community {
     private static final Logger log = LoggerFactory.getLogger(Community.class);
 
@@ -37,7 +36,7 @@ public class Community {
     private final Set<TippModus> tippModi = new HashSet<>();
 
     @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    Set<CommunityRole> communityRoles = new HashSet<>();
+     Set<CommunityRole> communityRoles = new HashSet<>();
 
     public Community() {
 
@@ -95,17 +94,6 @@ public class Community {
         this.getCommunityRoles().add(role);
     }
 
-    public void removeCommunityRole(CommunityRole role) {
-        if (role == null) {
-            throw new IllegalArgumentException("Can't add a null Community role.");
-        }
-        this.getCommunityRoles().remove(role);
-    }
-
-    public Set<TippModus> getTippModi() {
-        return tippModi;
-    }
-
     public void addTippModus(TippModus tippModus) {
         this.tippModi.add(tippModus);
     }
@@ -131,12 +119,6 @@ public class Community {
             throw new IllegalArgumentException("Can't add a null CompetitionMembership role.");
         }
         this.getCompetitionMemberships().add(compMemb);
-    }
-
-    //------------------------------------------- Business methods -----------------------------------------
-    boolean isCommunityAdmin() {
-        return communityRoles.stream().anyMatch(item -> item.getName().equals(this.name));
-
     }
 
     //---------------------------------------- - equals hascode and toString -----------------------------------

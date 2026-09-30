@@ -12,8 +12,8 @@ public class SumWinPointsSummaryRow {
     //	********************** Fields ********************** //
 
     private Integer position;
-    private Integer positionLast;
-    private String username;
+    private final Integer positionLast;
+    private final String username;
     private Integer sumWinPoints;
     private Integer diffAbsolute;
     private Integer diffRelative;

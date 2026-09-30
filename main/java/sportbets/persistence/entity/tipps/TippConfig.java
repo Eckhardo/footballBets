@@ -18,7 +18,7 @@ public class TippConfig {
     @Column(nullable = false)
     private final LocalDateTime createdOn = LocalDateTime.now();
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_tippModus_id", foreignKey = @ForeignKey(name = "FK_TIPP_CONFIG_TO_MODUS"))
+    @JoinColumn(name = "fk_tippModus", foreignKey = @ForeignKey(name = "FK_TIPP_CONFIG_TO_MODUS"))
     @NotNull
     TippModus tippModus;
     @Id
@@ -26,12 +26,12 @@ public class TippConfig {
     private Long id;
     // Owning Side:
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_matchday_id", foreignKey = @ForeignKey(name = "FK_TIPP_CONFIG_TO_COMP_MEMB"))
+    @JoinColumn(name = "fk_matchday", foreignKey = @ForeignKey(name = "FK_TIPP_CONFIG_TO_COMP_MEMB"))
     @NotNull
     private Spieltag spieltag;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_comp_memb_id", foreignKey = @ForeignKey(name = "FK_TIPP_CONFIG_TO_MATCHDAY"))
+    @JoinColumn(name = "fk_comp_memb", foreignKey = @ForeignKey(name = "FK_TIPP_CONFIG_TO_MATCHDAY"))
     @NotNull
     private CompetitionMembership competitionMembership;
 

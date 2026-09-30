@@ -1,7 +1,6 @@
 package sportbets.service.competition;
 
 import sportbets.persistence.entity.competition.Spiel;
-import sportbets.persistence.entity.competition.Team;
 import sportbets.web.dto.competition.SpielDto;
 import sportbets.web.dto.competition.batch.MatchBatchRecord;
 
@@ -27,6 +26,5 @@ public interface SpielService {
 
     List<Spiel> saveBatch(MatchBatchRecord matchBatchRecord);
 
-    Team retrieveTeam(Long id);
 
 }

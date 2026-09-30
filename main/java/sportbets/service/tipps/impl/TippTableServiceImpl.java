@@ -1,10 +1,4 @@
-/*
- * Copyright (c) 2026. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
- * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
- * Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
- * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
- * Vestibulum commodo. Ut rhoncus gravida arcu.
- */
+
 
 package sportbets.service.tipps.impl;
 
@@ -138,7 +132,7 @@ public class TippTableServiceImpl implements TippTableService {
     private void fillDummies(TippVO tippVO, List<String> usernames, int sumWinPointsFirst, int sumWinPointsBefore, List<SumWinPointsSummaryRow> result) {
         List<Tipper> tippers = commMembRepo.findTippers(tippVO.commId());
 
-        // if no tipps are present for one of tipppers of the community, set dummy
+        // if no tipps are present for one of tippers of the community, set dummy
         for (Tipper tipper : tippers) {
             String username = tipper.getUsername();
             if (!usernames.contains(username)) {

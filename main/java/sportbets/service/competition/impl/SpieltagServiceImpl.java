@@ -58,9 +58,7 @@ public class SpieltagServiceImpl implements SpieltagService {
         if (optionalSpieltag.isPresent()) {
             throw new EntityExistsException("Spieltag  already exist with given number:" + spieltagDto.getSpieltagNumber());
         }
-        CompetitionRound competitionRound = compRoundRepo.findById(spieltagDto.getCompRoundId()).orElseThrow(() -> new EntityNotFoundException("round not found "));
-        Spieltag model = modelMapper.map(spieltagDto, Spieltag.class);
-        model.setCompetitionRound(competitionRound);
+        final Spieltag model = getSpieltag(spieltagDto);
 
         return spieltagRepository.save(model);
 
@@ -71,9 +69,7 @@ public class SpieltagServiceImpl implements SpieltagService {
     @Transactional
     public Optional<Spieltag> updateMatchDay(Long id, SpieltagDto spieltagDto) {
         log.debug("updateMatchday:: {}", spieltagDto);
-        CompetitionRound competitionRound = compRoundRepo.findById(spieltagDto.getCompRoundId()).orElseThrow(() -> new EntityNotFoundException("round not found "));
-        Spieltag model = modelMapper.map(spieltagDto, Spieltag.class);
-        model.setCompetitionRound(competitionRound);
+        final Spieltag model = getSpieltag(spieltagDto);
 
 
         Optional<Spieltag> updateModel = spieltagRepository.findById(id);
@@ -121,4 +117,12 @@ public class SpieltagServiceImpl implements SpieltagService {
     public Optional<Integer> findLastMatchdayForRound(Long id) {
         return spieltagRepository.findLastMatchdayForRound(id);
     }
+
+    private Spieltag getSpieltag(SpieltagDto spieltagDto) {
+        CompetitionRound competitionRound = compRoundRepo.findById(spieltagDto.getCompRoundId()).orElseThrow(() -> new EntityNotFoundException("round not found "));
+        Spieltag model = modelMapper.map(spieltagDto, Spieltag.class);
+        model.setCompetitionRound(competitionRound);
+        return model;
+    }
+
 }

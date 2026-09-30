@@ -158,7 +158,7 @@ public class BuliService {
         }
         log.debug("save spiele:");
         List<Spiel> savedSpiele = retrieveSpiele();
-        log.debug("added spielformula ::" + savedSpiele.size());
+        log.debug("added spielformula ::{}", savedSpiele.size());
 
     }
 
@@ -325,7 +325,7 @@ public class BuliService {
 
                 if (i % 9 == 0) {
 
-                    log.info("" + k);
+                    log.info("{}", k);
                     k++;
                 }
                 i++;

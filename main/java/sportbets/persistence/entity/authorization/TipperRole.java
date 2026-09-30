@@ -7,7 +7,6 @@ import sportbets.persistence.entity.community.Tipper;
 import java.util.Objects;
 
 @Entity
-
 public class TipperRole {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

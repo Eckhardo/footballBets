@@ -131,10 +131,6 @@ public class CommunityServiceImpl implements CommunityService {
 
     }
 
-    @Override
-    public void deleteAll() {
-        communityRepo.deleteAll();
-    }
 
     @Override
     public List<Community> getAll() {

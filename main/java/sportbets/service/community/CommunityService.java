@@ -20,8 +20,6 @@ public interface CommunityService {
 
     void deleteByName(String name);
 
-    void deleteAll();
-
     List<Community> getAll();
 
 }
