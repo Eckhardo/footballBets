@@ -42,9 +42,7 @@ class TipperController {
     public TipperDto post(@RequestBody @Valid TipperDto newTipper) {
         log.debug("TipperController.create::{}", newTipper);
         Tipper createdModel = tipperService.save(newTipper);
-        TipperDto tipperDto = modelMapper.map(createdModel, TipperDto.class);
-        log.debug("return save::{}", tipperDto);
-        return tipperDto;
+        return getTipperDto(createdModel);
     }
 
 
@@ -52,9 +50,7 @@ class TipperController {
     public TipperDto update(@PathVariable Long id, @RequestBody @Valid TipperDto tipperDto) {
         log.debug("TipperController.update::{}", tipperDto.toString());
         Tipper updatedModel = tipperService.update(id, tipperDto).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        TipperDto dto = modelMapper.map(updatedModel, TipperDto.class);
-        log.debug("return save::{}", dto);
-        return dto;
+        return getTipperDto(updatedModel);
     }
 
 
@@ -71,9 +67,12 @@ class TipperController {
     public List<TipperDto> findAll() {
         List<Tipper> tippers = tipperService.getAll();
         List<TipperDto> tipperDtos = new ArrayList<>();
-        tippers.forEach(tipper -> {
-            tipperDtos.add(modelMapper.map(tipper, TipperDto.class));
-        });
+        tippers.forEach(tipper -> tipperDtos.add(modelMapper.map(tipper, TipperDto.class)));
         return tipperDtos;
     }
+
+    private TipperDto getTipperDto(Tipper createdModel) {
+        return modelMapper.map(createdModel, TipperDto.class);
+    }
+
 }

@@ -51,9 +51,7 @@ class CompTeamController {
 
 
         List<CompetitionTeamDto> competitionTeamDtos = new ArrayList<>();
-        models.forEach(comp -> {
-            competitionTeamDtos.add(myMapper.map(comp, CompetitionTeamDto.class));
-        });
+        models.forEach(comp -> competitionTeamDtos.add(myMapper.map(comp, CompetitionTeamDto.class)));
         return competitionTeamDtos;
     }
 
@@ -67,9 +65,7 @@ class CompTeamController {
         List<CompetitionTeamDto> registered = new ArrayList<>();
         if (!models.isEmpty()) {
             ModelMapper myMapper = MapperUtil.getModelMapperForCompTeam();
-            models.forEach(ct -> {
-                registered.add(myMapper.map(ct, CompetitionTeamDto.class));
-            });
+            models.forEach(ct -> registered.add(myMapper.map(ct, CompetitionTeamDto.class)));
         }
         boolean hasClubs = comp.getCompetitionFamily().isHasClubs();
         final List<Team> unregisteredTeams = compTeamService.findUnregisteredTeams(hasClubs, models);
@@ -112,7 +108,7 @@ class CompTeamController {
         log.info(" add compTeams {}", registeredCompTeams.size());
         List<Long> addedTeamIds = new ArrayList<>();
         for (CompetitionTeamDto toBeAdded : registeredCompTeams) {
-            Optional<CompetitionTeam> candidate = compTeamService.findByTeamIdAndCompId(toBeAdded.getTeamId(), toBeAdded.getCompId());
+            final Optional<CompetitionTeam> candidate = getCompetitionTeamOptional(toBeAdded);
             if (candidate.isPresent()) {
                 continue;
             }
@@ -121,7 +117,7 @@ class CompTeamController {
         }
         log.info(" delete compTeams {}", unregisteredCompTeams.size());
         for (CompetitionTeamDto tobeDeleted : unregisteredCompTeams) {
-            Optional<CompetitionTeam> candidate = compTeamService.findByTeamIdAndCompId(tobeDeleted.getTeamId(), tobeDeleted.getCompId());
+            final Optional<CompetitionTeam> candidate = getCompetitionTeamOptional(tobeDeleted);
             if (candidate.isEmpty() || addedTeamIds.contains(tobeDeleted.getTeamId())) {
                 continue;
             }
@@ -130,19 +126,17 @@ class CompTeamController {
 
     }
 
+
     @PutMapping(value = "/compTeam/{id}")
     public CompetitionTeamDto update(@PathVariable Long id, @RequestBody CompetitionTeamDto dto) {
-        log.debug("UpdatecompTeam {}", dto);
-        CompetitionTeam updatedModel = compTeamService.update(id, dto)
+         CompetitionTeam updatedModel = compTeamService.update(id, dto)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        log.debug("Updated compTeam {}", updatedModel);
-        return myMapper.map(updatedModel, CompetitionTeamDto.class);
+         return myMapper.map(updatedModel, CompetitionTeamDto.class);
 
     }
 
     @DeleteMapping(value = "/compTeam/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-
         compTeamService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
@@ -157,6 +151,9 @@ class CompTeamController {
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
 
+    private Optional<CompetitionTeam> getCompetitionTeamOptional(CompetitionTeamDto toBeAdded) {
+        return compTeamService.findByTeamIdAndCompId(toBeAdded.getTeamId(), toBeAdded.getCompId());
     }
 }

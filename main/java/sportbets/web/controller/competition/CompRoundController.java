@@ -94,9 +94,7 @@ public class CompRoundController {
         }
         List<SpieltagDto> spieltagDtos = new ArrayList<>();
         ModelMapper modelMapper = MapperUtil.getModelMapperForCompetitionRound();
-        spieltags.forEach(spieltag -> {
-            spieltagDtos.add(modelMapper.map(spieltag, SpieltagDto.class));
-        });
+        spieltags.forEach(spieltag -> spieltagDtos.add(modelMapper.map(spieltag, SpieltagDto.class)));
         return spieltagDtos;
     }
 

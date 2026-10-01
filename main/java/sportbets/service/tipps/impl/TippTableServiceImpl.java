@@ -85,8 +85,9 @@ public class TippTableServiceImpl implements TippTableService {
             log.debug("winPointsRow  : {}", winPointsRow);
             SumWinPointsSummaryRow sumWinPointsSummaryRow = resultIterator.next();
             if (isFirstRow) {
-                winPointsFirst = winPointsRow.getSumWinPoints().intValue();
-                winPointsLatest = winPointsRow.getSumWinPoints().intValue();
+                winPointsFirst = winPointsRow.getSumWinPoints()==null?0:winPointsRow.getSumWinPoints().intValue();
+                winPointsLatest = winPointsRow.getSumWinPoints()==null?0:winPointsRow.getSumWinPoints().intValue();
+
                 sumWinPointsSummaryRow.setSumWinPoints(winPointsFirst);
                 sumWinPointsSummaryRow.setDiffAbsolute(0);
                 sumWinPointsSummaryRow.setDiffRelative(0);
@@ -167,8 +168,8 @@ public class TippTableServiceImpl implements TippTableService {
         for (SumWinPointsRow sumRow : latestMinusOne) {
             SumWinPointsSummaryRow row = null;
             if (isFirstRow) {
-                winPointsNow = sumRow.getSumWinPoints().intValue();
-                winPointsBefore = sumRow.getSumWinPoints().intValue();
+                winPointsNow = sumRow.getSumWinPoints()==null? 0:sumRow.getSumWinPoints().intValue();
+                winPointsBefore = sumRow.getSumWinPoints()==null? 0:sumRow.getSumWinPoints().intValue();
                 row = new SumWinPointsSummaryRow(sumRow.getUsername(), winPointsNow, 0, position);
                 isFirstRow = false;
                 tippTableRows.add(row);
@@ -210,14 +211,14 @@ public class TippTableServiceImpl implements TippTableService {
             boolean firstRow = true;
             for (SumWinPointsRow sumRow : sumWinPointsRows) {
                 if (firstRow) {
-                    winPointsFirst = sumRow.getSumWinPoints().intValue();
-                    winPointsLatest = sumRow.getSumWinPoints().intValue();
+                    winPointsFirst = sumRow.getSumWinPoints()==null?0: sumRow.getSumWinPoints().intValue();
+                    winPointsLatest =sumRow.getSumWinPoints()==null?0: sumRow.getSumWinPoints().intValue();
                     SumWinPointsSummaryRow summary = new SumWinPointsSummaryRow(sumRow.getUsername(), winPointsFirst, position, 1);
                     summary.setDiffAbsolute(0);
                     summary.setDiffRelative(0);
                     tippTableRows.add(summary);
                 } else {
-                    winPointsNow = sumRow.getSumWinPoints().intValue();
+                    winPointsNow =sumRow.getSumWinPoints()==null?0: sumRow.getSumWinPoints().intValue();
                     if (winPointsNow < winPointsLatest) {
                         position = ++position + samePosition;
                     } else if (winPointsNow == winPointsLatest) {

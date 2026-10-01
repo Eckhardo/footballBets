@@ -13,7 +13,6 @@ import sportbets.persistence.entity.community.Tipper;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionRound;
 import sportbets.persistence.entity.competition.Spieltag;
-import sportbets.persistence.repository.competition.SpielRepository;
 import sportbets.persistence.rowObject.SumWinPointsRow;
 import sportbets.persistence.rowObject.SumWinPointsSummaryRow;
 import sportbets.service.community.CommunityMembershipService;

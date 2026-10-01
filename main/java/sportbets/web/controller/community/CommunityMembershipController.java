@@ -18,6 +18,7 @@ import sportbets.web.dto.community.TipperDto;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/commMembs")
@@ -26,7 +27,7 @@ public class CommunityMembershipController {
 
     private static final Logger log = LoggerFactory.getLogger(CommunityMembershipController.class);
     private final CommunityMembershipService commMembService;
-    ModelMapper myModelMapper = MapperUtil.getModelMapperForCommunityMembership();
+    final ModelMapper myModelMapper = MapperUtil.getModelMapperForCommunityMembership();
 
 
     public CommunityMembershipController(CommunityMembershipService commMembService) {
@@ -39,9 +40,7 @@ public class CommunityMembershipController {
         log.debug(":findAll");
         List<CommunityMembership> commMembs = commMembService.getAll();
         List<CommunityMembershipDto> commMembDtos = new ArrayList<>();
-        commMembs.forEach(comp -> {
-            commMembDtos.add(myModelMapper.map(comp, CommunityMembershipDto.class));
-        });
+        commMembs.forEach(communityMembership -> commMembDtos.add(myModelMapper.map(communityMembership, CommunityMembershipDto.class)));
         return commMembDtos;
     }
 
@@ -49,17 +48,16 @@ public class CommunityMembershipController {
     public CommunityMembershipDto findOne(@PathVariable Long id) {
         log.debug(":findOne::{}", id);
         CommunityMembership model = commMembService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        log.debug("Community found with {}", model);
-        return myModelMapper.map(model, CommunityMembershipDto.class);
+        return getCommunityMembershipDto(model);
 
     }
+
 
     @GetMapping("/{communityId}/tipper/{tipperId}")
     public CommunityMembershipDto findCommMemb(@PathVariable Long communityId,@PathVariable Long tipperId) {
         log.debug(":findCommMemb:: tipperId:{}, commId:{}", tipperId,communityId);
         CommunityMembership model = commMembService. findByCommIdAndTipperId(communityId,tipperId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        log.debug("Community found with {}", model);
-        return myModelMapper.map(model, CommunityMembershipDto.class);
+        return getCommunityMembershipDto(model);
 
     }
 
@@ -97,11 +95,9 @@ public class CommunityMembershipController {
     public List<TipperDto> findTippers(@PathVariable Long commId) {
         log.debug(":find tippers");
         List<Tipper> tippers = commMembService.findTippers(commId);
-        List<TipperDto> tipperDtos = new ArrayList<>();
+        List<TipperDto> tipperDtos;
         ModelMapper modelMapper = new ModelMapper();
-        tippers.forEach(tipper -> {
-            tipperDtos.add(modelMapper.map(tipper, TipperDto.class));
-        });
+        tipperDtos = tippers.stream().map(tipper -> modelMapper.map(tipper, TipperDto.class)).collect(Collectors.toList());
         return tipperDtos;
     }
 
@@ -112,4 +108,7 @@ public class CommunityMembershipController {
 
     }
 
+    private CommunityMembershipDto getCommunityMembershipDto(CommunityMembership model) {
+        return myModelMapper.map(model, CommunityMembershipDto.class);
+    }
 }

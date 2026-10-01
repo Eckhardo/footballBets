@@ -34,14 +34,13 @@ public class AuthController {
     private final TipperRoleService tipperRoleService;
     private final CommunityMembershipService communityMembershipService;
     private final CompFamilyService compFamilyService;
-    private final ModelMapper modelMapper;
 
-    public AuthController(TipperService tipperService, TipperRoleService tipperRoleService, CommunityMembershipService communityMembershipService, CompFamilyService compFamilyService, ModelMapper modelMapper) {
+
+    public AuthController(TipperService tipperService, TipperRoleService tipperRoleService, CommunityMembershipService communityMembershipService, CompFamilyService compFamilyService) {
         this.tipperService = tipperService;
         this.tipperRoleService = tipperRoleService;
         this.communityMembershipService = communityMembershipService;
         this.compFamilyService = compFamilyService;
-        this.modelMapper = modelMapper;
     }
 
 
@@ -77,7 +76,7 @@ public class AuthController {
                     } else if (tipperRole.getRole() instanceof CompetitionRole) {
                         umsInfo.getAdminCompetitions().add(((CompetitionRole) tipperRole.getRole()).getCompetition().getId());
                     } else {
-                        // do nothing
+                      throw new RuntimeException("tipperRole not defined");
                     }
 
                 }

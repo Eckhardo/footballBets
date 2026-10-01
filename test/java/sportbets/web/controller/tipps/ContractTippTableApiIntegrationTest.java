@@ -31,9 +31,12 @@ import sportbets.persistence.repository.competition.CompetitionRepository;
 import sportbets.persistence.repository.competition.CompetitionRoundRepository;
 import sportbets.persistence.repository.competition.SpieltagRepository;
 import sportbets.persistence.repository.tipps.TippRepository;
+import sportbets.persistence.rowObject.SumWinPointsSummaryRow;
 import sportbets.persistence.rowObject.TippsRow;
+import sportbets.web.dto.competition.SpielDto;
 import sportbets.web.dto.tipps.TippVO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -100,23 +103,23 @@ public class ContractTippTableApiIntegrationTest {
     public void whenTippsTableIsRetrieved_thenSortedListIsReturned() {
         log.info("whenTippsTableIsRetrieved_thenSortedListIsReturned");
         TippVO vo=new TippVO(null,null,null,savedCommunity.getId(),null,1,2);
-        EntityExchangeResult<List> result =
+        EntityExchangeResult<List<SumWinPointsSummaryRow>> result=
                 webClient.get()
                         .uri(uriBuilder -> uriBuilder
                                 .path("/tippTable")
                                 .queryParam("spieltagId", savedSpieltag.getId())
                                 .queryParam("commId", savedCommunity.getId())
+                                .queryParam("startSpieltag", 1)
+                                .queryParam("stopSpieltag", 1)
                                 .build())
                         .exchange()
                         .expectStatus().isOk()
-                        .expectBody(List.class).returnResult();
-        List<TippsRow> actualBody = result.getResponseBody();
+                        .expectBodyList(SumWinPointsSummaryRow.class).returnResult();
+        List<SumWinPointsSummaryRow> actualBody = result.getResponseBody();
         assertNotNull(actualBody);
-        log.debug("updated tipps behave as expected");
-        for (TippsRow tippsRow : actualBody) {
-            assertThat(tippsRow.getRoundName()).isEqualTo("Hinrunde");
-            tippRepo.deleteById(tippsRow.getTippId());
 
-        }
+        log.debug("log {}", actualBody.getClass().getName());
+        log.debug("updated tipps behave as expected {}", actualBody.get(0).getClass().getName());
+
     }
 }

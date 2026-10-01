@@ -54,8 +54,6 @@ public class MatchController {
     @PostMapping("/matches")
     @ResponseStatus(HttpStatus.CREATED)
     public SpielDto post(@RequestBody @Valid SpielDto spielDto) {
-        log.debug("New match {}", spielDto);
-
         Spiel createdModel = spielService.save(spielDto);
         return myMapper.map(createdModel, SpielDto.class);
     }
@@ -66,12 +64,9 @@ public class MatchController {
         log.debug("Save New matches");
         assert spielDtos != null;
         Long spieltagId = spielDtos.get(0).getSpieltagId();
-        log.debug("New match day list for spieltag id {}", spieltagId);
-        List<SpielDto> createdDtos = new ArrayList<>();
+         List<SpielDto> createdDtos = new ArrayList<>();
         List<Spiel> createdModels = spielService.saveList(spieltagId, spielDtos);
-
         for (Spiel model : createdModels) {
-
             SpielDto createdDto = myMapper.map(model, SpielDto.class);
             createdDtos.add(createdDto);
             log.debug("SpielDto saved {}", createdDto);
@@ -83,18 +78,13 @@ public class MatchController {
     @PutMapping(value = "/matches/{id}")
     public SpielDto update(@PathVariable Long id, @RequestBody SpielDto spielDto) {
         log.debug("Update match  {}", spielDto);
-
-
         Spiel updatedModel = spielService.updateOne(id, spielDto)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        SpielDto updatedDto = myMapper.map(updatedModel, SpielDto.class);
-        log.debug("Spiel RETURN do {}", updatedDto);
-        return updatedDto;
+        return myMapper.map(updatedModel, SpielDto.class);
     }
 
     @DeleteMapping(value = "/matches/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-
         spielService.deleteById(id);
         return ResponseEntity.noContent().build();
 

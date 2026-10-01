@@ -22,6 +22,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 public class SpieltagController {
@@ -43,9 +44,7 @@ public class SpieltagController {
 
         List<Spieltag> matchdays = spieltagService.getAll();
         List<SpieltagDto> spieltagDtos = new ArrayList<>();
-        matchdays.forEach(comp -> {
-            spieltagDtos.add(myMapper.map(comp, SpieltagDto.class));
-        });
+        matchdays.forEach(comp -> spieltagDtos.add(myMapper.map(comp, SpieltagDto.class)));
         return spieltagDtos;
     }
 
@@ -53,14 +52,8 @@ public class SpieltagController {
     public List<SpielDto> findAllForMatchday(@PathVariable Long matchdayId) {
         log.debug(" SpielDto:findAll::");
         List<Spiel> matches = spielService.getAllForMatchday(matchdayId);
-
-
-        List<SpielDto> spielDtos = new ArrayList<>();
         ModelMapper modelMapper = MapperUtil.getModelMapperForSpiel();
-        matches.forEach(match -> {
-            spielDtos.add(modelMapper.map(match, SpielDto.class));
-        });
-        return spielDtos;
+        return matches.stream().map(match -> modelMapper.map(match, SpielDto.class)).collect(Collectors.toList());
     }
 
 

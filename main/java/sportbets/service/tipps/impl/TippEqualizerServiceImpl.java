@@ -4,12 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sportbets.persistence.entity.community.CommunityMembership;
 import sportbets.persistence.entity.competition.Spiel;
 import sportbets.persistence.entity.tipps.Tipp;
 import sportbets.persistence.entity.tipps.TippModus;
 import sportbets.persistence.repository.competition.SpielRepository;
-import sportbets.persistence.repository.competition.SpieltagRepository;
 import sportbets.persistence.repository.tipps.TippRepository;
 import sportbets.service.tipps.TippEqualizerService;
 

@@ -37,9 +37,7 @@ public class CompetitionMembershipController {
         log.debug(":findAll");
         List<CompetitionMembership> compMembs = compMembService.getAll();
         List<CompetitionMembershipDto> commMembDtos = new ArrayList<>();
-        compMembs.forEach(comp -> {
-            commMembDtos.add(myMapper.map(comp, CompetitionMembershipDto.class));
-        });
+        compMembs.forEach(comp -> commMembDtos.add(myMapper.map(comp, CompetitionMembershipDto.class)));
         return commMembDtos;
     }
 
@@ -57,9 +55,7 @@ public class CompetitionMembershipController {
     public CompetitionMembershipDto post(@RequestBody @Valid CompetitionMembershipDto newCommMemb) {
         log.debug("New compMemb {}", newCommMemb);
         CompetitionMembership createdModel = compMembService.save(newCommMemb);
-        CompetitionMembershipDto createdDto = myMapper.map(createdModel, CompetitionMembershipDto.class);
-        log.debug("compMemb RETURN do {}", createdDto);
-        return createdDto;
+        return myMapper.map(createdModel, CompetitionMembershipDto.class);
     }
 
     @PutMapping(value = "/{id}")
@@ -67,17 +63,12 @@ public class CompetitionMembershipController {
 
         CompetitionMembership updatedComm = this.compMembService.update(id, membershipDto).orElseThrow();
         log.debug("Updated compMemb entity {}", updatedComm);
-        CompetitionMembershipDto updatedDto = myMapper.map(updatedComm, CompetitionMembershipDto.class);
-        log.debug("CompMembDto RETURN  {}", updatedDto);
-        return updatedDto;
-
-
+        return myMapper.map(updatedComm, CompetitionMembershipDto.class);
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<HttpStatus> delete(@PathVariable Long id) {
-        log.debug("CompetitionMembershipController.delete::{}", id);
-        try {
+         try {
             compMembService.deleteById(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
@@ -87,21 +78,16 @@ public class CompetitionMembershipController {
 
     @GetMapping("/{commId}/competitions")
     public List<CompetitionDto> findCompetitions(@PathVariable Long commId) {
-        log.debug(":find competitiuons");
        return  compMembService.findCompetitions(commId);
-
     }
+
     @GetMapping("/{commId}/competition")
     public CompetitionDto findCompetition(@PathVariable Long commId) {
-        log.debug(":find competitiuons");
         return  compMembService.findCurrentCompetition(commId);
-
     }
+
     @GetMapping("/{commId}/compMemb/{compId}")
     public CompetitionMembershipDto findCompMemb(@PathVariable Long commId,@PathVariable Long compId) {
-        log.debug(":find competitiuons");
         return  compMembService.findCompMemb(commId,compId);
-
     }
-
 }

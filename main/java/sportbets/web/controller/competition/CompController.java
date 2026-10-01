@@ -37,54 +37,38 @@ public class CompController {
 
     @GetMapping
     public List<CompetitionDto> findAll() {
-
         List<Competition> competitions = compService.getAll();
         List<CompetitionDto> competitionDtos = new ArrayList<>();
-        competitions.forEach(comp -> {
-            competitionDtos.add(myMapper.map(comp, CompetitionDto.class));
-
-        });
+        competitions.forEach(comp -> competitionDtos.add(myMapper.map(comp, CompetitionDto.class)));
         return competitionDtos;
     }
 
     @GetMapping("/{id}")
     public CompetitionDto findOne(@PathVariable Long id) {
-        log.debug("CompController:findOne::{}", id);
         Competition model = compService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        log.debug("Competition found with {}", model);
-        return myMapper.map(model, CompetitionDto.class);
+          return myMapper.map(model, CompetitionDto.class);
 
     }
 
     @GetMapping("/{id}/teams")
     public List<TeamDto> findAllTeams(@PathVariable Long id) {
-
-        List<TeamDto> teamDtos = compService.findTeamsForComp(id);
-        log.debug("TeamDtos found with {}", teamDtos);
-        return teamDtos;
+        return compService.findTeamsForComp(id);
     }
 
     @GetMapping("/{compId}/matchdays")
     public List<SpieltagDto> findAllForCompetition(@PathVariable Long compId) {
         log.info("SpieltagDto:findAll::{}", compId);
         List<Spieltag> matchdays = spieltagService.getAllForCompetition(compId);
-        List<SpieltagDto> spieltagDtos = new ArrayList<>();
-        ModelMapper modelMapper = MapperUtil.getModelMapperForCompetitionRound();
-        matchdays.forEach(matchday -> {
-            spieltagDtos.add(modelMapper.map(matchday, SpieltagDto.class));
-        });
-        log.info("return SpieltagDto:size::{}", spieltagDtos.size());
-        return spieltagDtos;
+        return getSpieltagDtos(matchdays);
     }
+
 
     @GetMapping("/{familyId}/competitions")
     public List<CompetitionDto> findAllCompsByFamId(@PathVariable Long familyId) {
         log.info("CompetitionDto:findAllCompsByFamId::{}", familyId);
         List<Competition> comps = compService.findByFamilyId(familyId);
         List<CompetitionDto> compDtos = new ArrayList<>();
-        comps.forEach(comp -> {
-            compDtos.add(myMapper.map(comp, CompetitionDto.class));
-        });
+        comps.forEach(comp -> compDtos.add(myMapper.map(comp, CompetitionDto.class)));
         return compDtos;
     }
 
@@ -95,10 +79,7 @@ public class CompController {
         List<CompetitionRound> compRounds = compService.getAllFormComp(id);
         List<CompetitionRoundDto> roundDtos = new ArrayList<>();
         ModelMapper modelMapper = MapperUtil.getModelMapperForCompetition();
-        compRounds.forEach(comp -> {
-            roundDtos.add(modelMapper.map(comp, CompetitionRoundDto.class));
-
-        });
+        compRounds.forEach(comp -> roundDtos.add(modelMapper.map(comp, CompetitionRoundDto.class)));
         for(CompetitionRoundDto roundDto : roundDtos) {
             log.debug("Round found with {}", roundDto);
         }
@@ -109,7 +90,6 @@ public class CompController {
     @ResponseStatus(HttpStatus.CREATED)
     public OldCompetitionDto post(@RequestBody @Valid OldCompetitionDto oldCompetitionDto) {
         log.error("Example for API Structrual Change without using versioning: content-negotiation mechanism  {}", oldCompetitionDto);
-
         return oldCompetitionDto;
     }
 
@@ -118,32 +98,26 @@ public class CompController {
     @ResponseStatus(HttpStatus.CREATED)
     public CompetitionDto postNewStructure(@RequestBody @Valid CompetitionDto newComp) {
         log.debug("New competition with new media type {}", newComp);
-
         Competition createdModel = compService.save(newComp);
-
-        CompetitionDto createdDto = myMapper.map(createdModel, CompetitionDto.class);
-        log.debug("Competition RETURN do {}", createdDto);
-        return createdDto;
+        return myMapper.map(createdModel, CompetitionDto.class);
     }
 
     @PutMapping(value = "/{id}")
     public CompetitionDto update(@PathVariable Long id, @RequestBody CompetitionDto compDto) {
-
         Competition updatedComp = this.compService.updateComp(id, compDto).orElseThrow();
-
-        log.debug("Updated competition {}", updatedComp);
-
-        CompetitionDto updatedDto = myMapper.map(updatedComp, CompetitionDto.class);
-        log.debug("Competition RETURN do {}", updatedDto);
-        return updatedDto;
-
-
+        return myMapper.map(updatedComp, CompetitionDto.class);
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        log.debug("CompController.delete::{}", id);
         compService.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    private static List<SpieltagDto> getSpieltagDtos(List<Spieltag> matchdays) {
+        List<SpieltagDto> spieltagDtos = new ArrayList<>();
+        ModelMapper modelMapper = MapperUtil.getModelMapperForCompetitionRound();
+        matchdays.forEach(matchday -> spieltagDtos.add(modelMapper.map(matchday, SpieltagDto.class)));
+        return spieltagDtos;
     }
 }

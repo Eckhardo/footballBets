@@ -26,10 +26,9 @@ public class TeamController {
     @GetMapping("/teams/{id}")
     public TeamDto findOne(@PathVariable Long id) {
         log.debug("TeamDto:findOne::{}", id);
-        TeamDto teamDto = teamService.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        return teamDto;
+        return teamService.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/teams")

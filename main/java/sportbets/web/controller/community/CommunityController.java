@@ -35,9 +35,7 @@ public class CommunityController {
         List<Community> communities = communityService.getAll();
         List<CommunityDto> communityDtos = new ArrayList<>();
 
-        communities.forEach(comp -> {
-            communityDtos.add(modelMapper.map(comp, CommunityDto.class));
-        });
+        communities.forEach(comp -> communityDtos.add(modelMapper.map(comp, CommunityDto.class)));
         return communityDtos;
     }
 
@@ -45,9 +43,7 @@ public class CommunityController {
     public CommunityDto findOne(@PathVariable Long commId) {
         log.debug(":findOne::{}", commId);
         Optional<Community> model = communityService.findById(commId);
-
         if (model.isPresent()) {
-            log.debug("Community found with {}", model.get().getName());
             return modelMapper.map(model, CommunityDto.class);
         }
         else{
@@ -60,9 +56,7 @@ public class CommunityController {
     public CommunityDto post(@RequestBody @Valid CommunityDto newComm) {
         log.debug("New community {}", newComm);
         Community createdModel = communityService.save(newComm);
-        CommunityDto createdDto = modelMapper.map(createdModel, CommunityDto.class);
-        log.debug("Community RETURN do {}", createdDto);
-        return createdDto;
+        return getCommunityDto(createdModel);
     }
 
     @PutMapping(value = "/{id}")
@@ -70,9 +64,7 @@ public class CommunityController {
 
         Community updatedComm = this.communityService.update(id, commDto).orElseThrow();
         log.debug("Updated community {}", updatedComm);
-        CommunityDto updatedDto = modelMapper.map(updatedComm, CommunityDto.class);
-        log.debug("Community RETURN do {}", updatedDto);
-        return updatedDto;
+        return getCommunityDto(updatedComm);
 
 
     }
@@ -92,12 +84,16 @@ public class CommunityController {
         log.debug(":find community for url {}", name);
         Optional<Community> model = communityService.findByName(name);
         if (model.isPresent()) {
-            log.debug("Community found with {}", model.get().getName());
-          CommunityDto dto= modelMapper.map(model, CommunityDto.class);
+           CommunityDto dto= modelMapper.map(model, CommunityDto.class);
           return ResponseEntity.ok(dto);
         }
         else{
             return ResponseEntity.noContent().build();
         }
     }
+
+    private CommunityDto getCommunityDto(Community createdModel) {
+        return modelMapper.map(createdModel, CommunityDto.class);
+    }
+
 }
