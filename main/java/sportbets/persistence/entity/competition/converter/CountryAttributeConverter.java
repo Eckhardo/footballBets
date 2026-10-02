@@ -11,7 +11,6 @@ public class CountryAttributeConverter implements AttributeConverter<Country, St
     public String convertToDatabaseColumn(Country attribute) {
         if (attribute == null)
             return null;
-
         return switch (attribute) {
             case GERMANY -> attribute.getIsoCode();
             case ENGLAND -> attribute.getIsoCode();
@@ -25,7 +24,6 @@ public class CountryAttributeConverter implements AttributeConverter<Country, St
     public Country convertToEntityAttribute(String dbData) {
         if (dbData == null)
             return null;
-
         return switch (dbData) {
             case "DE" -> Country.GERMANY;
             case "IT" -> Country.ITALY;
@@ -34,6 +32,4 @@ public class CountryAttributeConverter implements AttributeConverter<Country, St
             default -> throw new IllegalArgumentException(dbData + " not supported.");
         };
     }
-
 }
-

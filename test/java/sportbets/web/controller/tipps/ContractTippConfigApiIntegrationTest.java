@@ -214,15 +214,12 @@ public class ContractTippConfigApiIntegrationTest {
                 .exists();
         savedCompMemb = compMembRepo.findByCommIdAndCompId(savedCommunity.getId(), savedComp.getId()).orElseThrow();
         assertNotNull(savedCompMemb);
-
     }
 
     @AfterEach
     public void cleanup() {
         // Clean up all entities created during tests
         log.debug("cleanup");
-
-
         CompetitionFamily fam = familyRepository.findByName(compFamilyDto.getName()).orElseThrow(() -> new EntityNotFoundException(compFamilyDto.getName()));
         assertNotNull(fam);
         webClient.delete()
@@ -240,7 +237,6 @@ public class ContractTippConfigApiIntegrationTest {
                 .expectStatus()
                 .isNoContent();
     }
-
 
     @Test
     @Order(1)
@@ -260,14 +256,12 @@ public class ContractTippConfigApiIntegrationTest {
                 .jsonPath("$.id")
                 .exists();
 
-        log.debug("retrieveTippConfigRows_withValidCompMembId_thenSuccess");
         webClient.get()
                 .uri("/tippConfig/rows/" + savedCompMemb.getId())
                 .exchange()
                 .expectStatus()
                 .isOk()
                 .expectBodyList(TippConfigRow.class).hasSize(1);
-
     }
 
     @Test
@@ -298,7 +292,6 @@ public class ContractTippConfigApiIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isOk();
-
     }
 
     @Test
@@ -334,7 +327,5 @@ public class ContractTippConfigApiIntegrationTest {
                 .value(Long.class, equalTo(entity.getId()))
                 .jsonPath("$.tippModusId")
                 .value(Long.class, equalTo(entity.getTippModus().getId()));
-
     }
-
 }

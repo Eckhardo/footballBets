@@ -34,7 +34,6 @@ import sportbets.persistence.repository.competition.SpieltagRepository;
 import sportbets.persistence.repository.tipps.TippRepository;
 import sportbets.persistence.rowObject.TippRow;
 import sportbets.persistence.rowObject.TippsRow;
-import sportbets.web.dto.tipps.TippVO;
 import sportbets.web.dto.tipps.TippsContainerDto;
 
 import java.util.List;
@@ -210,8 +209,7 @@ public class ContractTippRowsApiIntegrationTest {
     @Test
     public void whenTippsRowsAreRetrieved_thenSortedListIsReturned() {
         log.info("whenTippsRowsAreRetrieved_thenSortedListIsReturned");
-        TippVO vo=new TippVO(null,null,savedSpieltag.getId(),savedCommunity.getId(),null,null,null);
-        EntityExchangeResult<List> result =
+         EntityExchangeResult<List<TippsRow>> result =
                 webClient.get()
                         .uri(uriBuilder -> uriBuilder
                                 .path("/tippRows")
@@ -220,7 +218,7 @@ public class ContractTippRowsApiIntegrationTest {
                                 .build())
                         .exchange()
                         .expectStatus().isOk()
-                        .expectBody(List.class).returnResult();
+                        .expectBodyList(TippsRow.class).returnResult();
         List<TippsRow> actualBody = result.getResponseBody();
         assertNotNull(actualBody);
           log.debug("updated tipps behave as expected");

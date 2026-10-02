@@ -51,8 +51,6 @@ public class CompetitionRoleServiceTest {
         compDto.setFamilyId(savedFam.getId());
         savedComp = compService.save(compDto);
         assertNotNull(savedComp);
-
-
     }
 
 
@@ -80,13 +78,9 @@ public class CompetitionRoleServiceTest {
         log.debug("findCompRole");
 
         List<CompetitionRole> roles = competitionRoleService.getAllCompRoles();
-
         assertThat(roles).isNotNull();
         CompetitionRole savedRole = roles.stream().filter((r) -> r.getName().equals(TestConstants.createValidCompetitionDto().getName())).findFirst().get();
-
         assertEquals(savedComp.getId(), savedRole.getCompetition().getId());
         assertEquals(savedComp.getName(), savedRole.getCompetition().getName());
     }
-
-
 }

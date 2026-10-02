@@ -37,8 +37,6 @@ public class TippModelMapperTest {
         log.info("\n convert tippmodus toto");
 
         final ModelMapper myMapper = new MapperUtilTipps().modelMapperForTotoTipp();
-        Collection<TypeMap<?, ?>> typeMaps = myMapper.getTypeMaps();
-
 
         TippModusToto entity =  TestConstants.createValidTippModusToto();
         entity.setId(20L);

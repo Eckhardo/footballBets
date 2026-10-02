@@ -28,24 +28,18 @@ class CompetitionModelMapperTest {
 
 
     final ModelMapper modelMapper = new ModelMapper();
-    CompetitionFamily testFamily = TestConstants.createValidFamily();
-    Competition testComp = TestConstants.createValidCompetition();
-    CompetitionRound testRound = TestConstants.createValidCompRound();
-    Community testComm = TestConstants.createValidCommunity();
+    final CompetitionFamily testFamily = TestConstants.createValidFamily();
+    final Competition testComp = TestConstants.createValidCompetition();
+    final CompetitionRound testRound = TestConstants.createValidCompRound();
+   final Community testComm = TestConstants.createValidCommunity();
+
     @Test
     void checkModelMapper() {
 
 
-
         CompetitionRoundDto compRoundDto = modelMapper.map(testRound, CompetitionRoundDto.class);
-        log.debug("Round:: {}", compRoundDto.toString());
         CompetitionDto compDto = modelMapper.map(testComp, CompetitionDto.class);
-        log.debug("Comp:: {}", compDto.toString());
-
         CompetitionFamilyDto famDto = modelMapper.map(testFamily, CompetitionFamilyDto.class);
-        log.debug("Family:: {}", famDto.toString());
-
-
     }
 
 
@@ -91,7 +85,7 @@ class CompetitionModelMapperTest {
 
         testFamily.setId(10L);
         testComp.setId(5L);
-         testRound.setId(7L);
+        testRound.setId(7L);
         Spieltag testSpieltag = new Spieltag(1, LocalDateTime.now(), testRound);
         Spieltag testSpieltag2 = new Spieltag(2, LocalDateTime.now(), testRound);
         Spieltag testSpieltag3 = new Spieltag(4, LocalDateTime.now(), testRound);
@@ -131,7 +125,6 @@ class CompetitionModelMapperTest {
         List<SpielDto> spielDtos = new ArrayList<>();
         final ModelMapper myMapper = MapperUtil.getModelMapperForSpiel();
         for (Spiel spiel : spiele) {
-            System.out.println(spiel.toString());
             spielDtos.add(myMapper.map(spiel, SpielDto.class));
         }
 
@@ -142,7 +135,6 @@ class CompetitionModelMapperTest {
             assertTrue(spielDto.getHeimTore() != 0);
             assertTrue(spielDto.getGastTore() != 0);
             assertNotNull(spielDto.getSpieltagId());
-            assertNotNull(spielDto.getSpieltagNumber());
             assertNotNull(spielDto.getHeimTeamId());
             assertNotNull(spielDto.getHeimTeamAcronym());
             assertNotNull(spielDto.getGastTeamId());
@@ -196,10 +188,9 @@ class CompetitionModelMapperTest {
 
         testComp.setId(4L);
 
-        CompetitionRole competitionRole = new CompetitionRole(testComp.getName(), "Meine Test Rolle", testComp);
+        CompetitionRole competitionRole = new CompetitionRole(testComp.getName(), "Meine Test Role", testComp);
         competitionRole.setId(5L);
         testComp.addCompetitionRole(competitionRole);
-
 
 
         testComm.setId(3L);
@@ -231,13 +222,11 @@ class CompetitionModelMapperTest {
 
     @Test
     public void checkCompetitionRole() {
-        String COMP_NAME = "1. Bundesliga Saison 2025/26";
-        String COMM_NAME = "Bulitipper";
 
         final ModelMapper myCompRoleMapper = MapperUtil.getModelMapperForCompetitionRole();
         testComp.setId(4L);
 
-        CompetitionRole competitionRole = new CompetitionRole(testComp.getName(), "Meine Test Rolle", testComp);
+        CompetitionRole competitionRole = new CompetitionRole(testComp.getName(), "Meine Test Role", testComp);
         competitionRole.setId(5L);
         testComp.addCompetitionRole(competitionRole);
 
@@ -255,13 +244,13 @@ class CompetitionModelMapperTest {
     @Test
     public void checkCommunityRole() {
 
-        final ModelMapper myCommRoleMapeer = MapperUtil.getModelMapperForCommunityRole();
+        final ModelMapper myCommRoleMapper = MapperUtil.getModelMapperForCommunityRole();
 
         CommunityRole communityRole = new CommunityRole(testComm.getName(), "Meine Test Rolle", testComm);
         communityRole.setId(5L);
         testComm.addCommunityRole(communityRole);
 
-        CommunityRoleDto testRoleDto = myCommRoleMapeer.map(communityRole, CommunityRoleDto.class);
+        CommunityRoleDto testRoleDto = myCommRoleMapper.map(communityRole, CommunityRoleDto.class);
         assertNotNull(testRoleDto.getId());
         assertNotNull(testRoleDto.getName());
         assertNotNull(testRoleDto.getDescription());

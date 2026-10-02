@@ -133,7 +133,7 @@ public class ContractCompTeamApiIntegrationTest {
         teamDto1.setId(entity2.getId());
         CompetitionTeamDto compTeamDto2 = new CompetitionTeamDto(null, comp.getId(), comp.getName(), teamDto1.getId(), teamDto1.getAcronym(), true);
         log.debug("Post competition team 1{}", compTeamDto);
-        // save newcompTeam dto 1
+        // save new compTeam dto 1
         webClient.post()
                 .uri("/compTeam")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -142,7 +142,7 @@ public class ContractCompTeamApiIntegrationTest {
                 .expectStatus()
                 .isCreated();
         log.debug("post compTeam 2{}", compTeamDto2);
-        // save newcompTeam dto 2
+        // save new compTeam dto 2
         webClient.post()
                 .uri("/compTeam")
                 .contentType(MediaType.APPLICATION_JSON)

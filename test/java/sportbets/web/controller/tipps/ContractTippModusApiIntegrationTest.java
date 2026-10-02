@@ -398,7 +398,6 @@ public class ContractTippModusApiIntegrationTest {
 
     }
 
-
     @Test
     @Order(6)
     void retrieveTippModusListForCommunity_withValidInput_thenSuccess() {
@@ -437,6 +436,7 @@ public class ContractTippModusApiIntegrationTest {
                 .jsonPath("$.type")
                 .isEqualTo(TippModusType.TIPPMODUS_POINT.getDisplayName());
         resultTest.setCommId(community.getId());
+
         webClient.post()
                 .uri("/tippModus/result")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -452,15 +452,12 @@ public class ContractTippModusApiIntegrationTest {
                 .jsonPath("$.type")
                 .isEqualTo(TippModusType.TIPPMODUS_RESULT.getDisplayName());
 
-
         webClient.get()
                 .uri("/tippModus/community/" + community.getId())
                 .exchange()
                 .expectStatus()
                 .isOk()
                 .expectBodyList(TippModusDto.class).hasSize(3);
-
-
 
         webClient.get()
                 .uri("/tippModus/types")

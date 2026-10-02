@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import sportbets.persistence.builder.CompetitionConstants;
 import sportbets.persistence.entity.competition.Competition;
 import sportbets.persistence.entity.competition.CompetitionRound;
 import sportbets.persistence.repository.competition.CompTableRepository;
@@ -32,8 +33,7 @@ public class CompetitionTableServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(CompetitionTableServiceTest.class);
 
-
-    private static final String TEST_COMP = "1. Bundesliga Saison 2025";
+    private static final String TEST_COMP = CompetitionConstants.BUNDESLIGA_NAME_2025;
     Competition myComp;
     CompetitionRound myRound;
     @Autowired
@@ -45,18 +45,15 @@ public class CompetitionTableServiceTest {
 
     @BeforeEach
     public void setup() {
-
         Competition comp = compService.findByName(TEST_COMP).orElseThrow();
         myComp = compService.findByIdJoinFetchRounds(comp.getId());
         assertNotNull(myComp);
         myRound = myComp.getCompetitionRounds().stream().findFirst().orElseThrow();
         log.info("myRound  {}", myRound);
-
     }
 
     @AfterEach
     public void tearDown() {
-
     }
 
     @Test
@@ -72,23 +69,15 @@ public class CompetitionTableServiceTest {
     @Test
     public void retrieveTableDataHeim() {
         TableSearchCriteria searchCriteria = new TableSearchCriteria(myComp.getId(), 1, 18, true);
-
         List<TeamPositionSummaryRow> rows = compTableService.findTableHeimOrGastForLigaModus(searchCriteria);
         assertThat(18).isEqualTo(rows.size());
-        rows.sort(Comparator.comparing(TeamPositionSummaryRow::getPoints).reversed());
-        rows.forEach(row -> System.out.println(row.getTeamName() + " " + row.getPoints()));
-    }
-
+       }
 
     @Test
     public void retrieveTableForRound() {
 
         TableSearchCriteria searchCriteria = new TableSearchCriteria(myComp.getId(), 18, 34, true);
-
         List<TeamPositionSummaryRow> rows = compTableService.findTableHeimOrGastForLigaModus(searchCriteria);
         assertThat(18).isEqualTo(rows.size());
-        rows.sort(Comparator.comparing(TeamPositionSummaryRow::getPoints).reversed());
-        rows.forEach(row -> System.out.println(row.getTeamName() + " " + row.getPoints()));
-
     }
 }

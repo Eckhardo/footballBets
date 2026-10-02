@@ -201,7 +201,6 @@ Competition savedComp;
         testSpiel1.setHeimTeamId(savedTeam1.getId());
         testSpiel1.setGastTeamId(savedTeam2.getId());
         testSpiel1.setSpieltagId(savedSpieltag.getId());
-        log.debug("post match 1  {}", testSpiel1);
         webClient.post()
                 .uri("/matches")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -210,11 +209,9 @@ Competition savedComp;
                 .expectStatus()
                 .isCreated();
 
-
         testSpiel2.setHeimTeamId(savedTeam2.getId());
         testSpiel2.setGastTeamId(savedTeam3.getId());
         testSpiel2.setSpieltagId(savedSpieltag.getId());
-        log.debug("post match 2 {}", testSpiel2);
         webClient.post()
                 .uri("/matches")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -245,7 +242,6 @@ Competition savedComp;
         testSpiel1.setHeimTeamId(savedTeam1.getId());
         testSpiel1.setGastTeamId(savedTeam2.getId());
         testSpiel1.setSpieltagId(savedSpieltag.getId());
-        log.debug("post match 1  {}", testSpiel1);
         webClient.post()
                 .uri("/matches")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -258,8 +254,7 @@ Competition savedComp;
         testSpiel2.setHeimTeamId(savedTeam2.getId());
         testSpiel2.setGastTeamId(savedTeam3.getId());
         testSpiel2.setSpieltagId(savedSpieltag.getId());
-        log.debug("post match 2 {}", testSpiel2);
-        webClient.post()
+         webClient.post()
                 .uri("/matches")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(testSpiel2)
@@ -303,7 +298,6 @@ Competition savedComp;
         testSpiel1.setHeimTeamId(savedTeam1.getId());
         testSpiel1.setGastTeamId(savedTeam2.getId());
         testSpiel1.setSpieltagId(savedSpieltag.getId());
-        log.debug("post match 1  {}", testSpiel1);
         webClient.post()
                 .uri("/matches")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -316,8 +310,7 @@ Competition savedComp;
         testSpiel2.setHeimTeamId(savedTeam2.getId());
         testSpiel2.setGastTeamId(savedTeam3.getId());
         testSpiel2.setSpieltagId(savedSpieltag.getId());
-        log.debug("post match 2 {}", testSpiel2);
-        webClient.post()
+         webClient.post()
                 .uri("/matches")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(testSpiel2)
@@ -345,8 +338,7 @@ Competition savedComp;
 
         Spieltag spieltag = spieltagRepository.findByNumberWithRoundId(TEST_MATCH_DAY, round.getId()).orElseThrow(() -> new EntityNotFoundException(String.valueOf(TEST_MATCH_DAY)));
         assertNotNull(spieltag);
-        log.debug("spieltag {}", spieltag);
-        List<Spiel> spiele = spielRepository.findAllForMatchday(spieltag.getId());
+         List<Spiel> spiele = spielRepository.findAllForMatchday(spieltag.getId());
         assertNotNull(spiele);
         for (Spiel spiel : spiele) {
             spielRepository.deleteById(spiel.getId());
@@ -370,8 +362,6 @@ Competition savedComp;
         testSpiel1.setHeimTeamId(savedTeam1.getId());
         testSpiel1.setGastTeamId(savedTeam2.getId());
         testSpiel1.setSpieltagId(savedSpieltag.getId());
-
-
         testSpiel2.setHeimTeamId(savedTeam2.getId());
         testSpiel2.setGastTeamId(savedTeam3.getId());
         testSpiel2.setSpieltagId(savedSpieltag.getId());
@@ -383,7 +373,6 @@ Competition savedComp;
                 .exchange()
                 .expectStatus()
                 .isCreated();
-
 
         CompetitionRound round = competitionRoundRepository.findByNameAndCompId(compRoundDto.getName(), savedComp.getId()).orElseThrow(() -> new EntityNotFoundException(compRoundDto.getName()));
         assertNotNull(round);
@@ -409,8 +398,5 @@ Competition savedComp;
             assertThat(spielDto.getGastTore()).isIn(List.of(testSpiel1.getGastTore(), testSpiel2.getGastTore()));
 
         }
-
-
     }
-
 }

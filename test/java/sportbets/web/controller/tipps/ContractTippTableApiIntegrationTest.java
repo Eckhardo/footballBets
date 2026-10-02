@@ -32,14 +32,10 @@ import sportbets.persistence.repository.competition.CompetitionRoundRepository;
 import sportbets.persistence.repository.competition.SpieltagRepository;
 import sportbets.persistence.repository.tipps.TippRepository;
 import sportbets.persistence.rowObject.SumWinPointsSummaryRow;
-import sportbets.persistence.rowObject.TippsRow;
-import sportbets.web.dto.competition.SpielDto;
 import sportbets.web.dto.tipps.TippVO;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static sportbets.persistence.builder.CompetitionConstants.BUNDESLIGA_NAME_2026;
 

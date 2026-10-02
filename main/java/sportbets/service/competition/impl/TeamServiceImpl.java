@@ -58,21 +58,18 @@ public class TeamServiceImpl implements TeamService {
         if (entity.isPresent()) {
             throw new EntityExistsException("Team already exist with given name:" + teamDto.getName());
         }
-        log.info("Now: Save team {}", teamDto);
         Team model = modelMapper.map(teamDto, Team.class);
         Team savedEntity = teamRepository.save(model);
-        log.info(" Saved team {}", savedEntity);
         return modelMapper.map(savedEntity, TeamDto.class);
     }
 
     @Override
     @Transactional
     public Optional<TeamDto> updateTeam(Long id, TeamDto teamDto) {
-        log.debug("updateDto:: {}", teamDto);
+        log.debug("updateTeam:: {}", teamDto);
         Team entity = teamRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Team not found"));
         Team updatedEntity = updateFields(entity, teamDto);
         Team savedEntity = teamRepository.save(updatedEntity);
-        log.debug("updated Team  with {}", savedEntity);
         return Optional.of(modelMapper.map(savedEntity, TeamDto.class));
 
     }
@@ -104,9 +101,7 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public List<TeamDto> getAll() {
-
         log.info("getAll");
-
         List<Team> teams = teamRepository.findAll();
         return convertToDTO(teams);
     }
