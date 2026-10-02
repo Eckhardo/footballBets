@@ -70,8 +70,6 @@ public class ContractCompMembApiIntegrationTest {
                 .uri("/communities/" + community.getId())
                 .exchange()
                 .expectStatus().isNoContent();
-
-
     }
 
     @BeforeEach
@@ -136,7 +134,7 @@ public class ContractCompMembApiIntegrationTest {
 
     @Test
     @Order(1)
-    void createNewCompetiitonMembership_withValidDtoInput_thenSuccess() {
+    void createNewCompetitionMembership_withValidDtoInput_thenSuccess() {
 
         Competition competition = compRepo.findByName(compDto.getName()).orElseThrow();
         Community community = communityRepository.findByName(communityDto.getName()).orElseThrow();

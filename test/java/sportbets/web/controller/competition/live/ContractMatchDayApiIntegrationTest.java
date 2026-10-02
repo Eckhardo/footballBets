@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.lang.NonNull;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import sportbets.FootballBetsApplication;
@@ -53,18 +54,6 @@ public class ContractMatchDayApiIntegrationTest {
     CompetitionRound savedRound;
     Competition savedComp = null;
 
-    @AfterEach
-    public void cleanup() {
-        // Clean up all entities created during tests
-        log.info("\n cleanup \n");
-
-        CompetitionFamily fam = competitionFamilyRepository.findByName(compFamilyDto.getName()).orElseThrow(() -> new EntityNotFoundException(compFamilyDto.getName()));
-        webClient.delete()
-                .uri("/families/" + fam.getId())
-                .exchange()
-                .expectStatus()
-                .isNoContent();
-    }
 
     @BeforeEach
     public void setUp() {
@@ -76,7 +65,7 @@ public class ContractMatchDayApiIntegrationTest {
                 .expectStatus()
                 .isCreated()
         ;
-        CompetitionFamily fam = competitionFamilyRepository.findByName(compFamilyDto.getName()).orElseThrow(() -> new EntityNotFoundException(compFamilyDto.getName()));
+        CompetitionFamily fam = getCompetitionFamily();
         compDto.setFamilyId(fam.getId());
 
         webClient.post()
@@ -86,7 +75,7 @@ public class ContractMatchDayApiIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isCreated();
-        savedComp = competitionRepository.findByName(compDto.getName()).orElseThrow(() -> new EntityNotFoundException(compDto.getName()));
+        savedComp = getCompetition(compDto);
         compRoundDto.setCompId(savedComp.getId());
         compRoundDto.setCompName(savedComp.getName());
 
@@ -99,10 +88,7 @@ public class ContractMatchDayApiIntegrationTest {
                 .isCreated().expectBody().jsonPath("$.compId")
                 .exists();
 
-
-
         savedRound = competitionRoundRepository.findByNameAndCompId(compRoundDto.getName(), savedComp.getId()).orElseThrow(() -> new EntityNotFoundException(compRoundDto.getName()));
-
         matchDayDto.setCompRoundId(savedRound.getId());
         matchDayDto.setCompRoundName(savedRound.getName());
         webClient.post()
@@ -119,12 +105,25 @@ public class ContractMatchDayApiIntegrationTest {
                 .exists();
     }
 
+    @AfterEach
+    public void cleanup() {
+        // Clean up all entities created during tests
+        log.info("\n cleanup \n");
+
+        CompetitionFamily fam = getCompetitionFamily();
+        webClient.delete()
+                .uri("/families/" + fam.getId())
+                .exchange()
+                .expectStatus()
+                .isNoContent();
+    }
+
 
     @Test
     @Order(1)
     void whenCompIdProvided_ThenFetchAllMatchDays() {
 
-        Competition comp = competitionRepository.findByName(compDto.getName()).orElseThrow(() -> new EntityNotFoundException(compDto.getName()));
+        Competition comp = getCompetition(compDto);
         Long id = comp.getId();
         webClient.get()
                 .uri("/competitions/" + id + "/matchdays")
@@ -165,5 +164,13 @@ public class ContractMatchDayApiIntegrationTest {
 
     }
 
+    @NonNull
+    private Competition getCompetition(CompetitionDto competitionDto) {
+        return competitionRepository.findByName(competitionDto.getName()).orElseThrow(() -> new EntityNotFoundException(compDto.getName()));
+    }
 
+    @NonNull
+    private CompetitionFamily getCompetitionFamily() {
+        return competitionFamilyRepository.findByName(compFamilyDto.getName()).orElseThrow(() -> new EntityNotFoundException(compFamilyDto.getName()));
+    }
 }

@@ -54,18 +54,13 @@ public class MatchdayServiceTest {
         CompetitionDto compDto = createValidCompetitionDto();
         compDto.setFamilyId(savedFam.getId());
         savedComp = compService.save(compDto);
-        log.debug("set up Test data: saved competition ");
         CompetitionRoundDto compRoundDto = TestConstants.createValidCompRoundDto();
         compRoundDto.setCompId(savedComp.getId());
         savedCompRound = compRoundService.save(compRoundDto);
-        log.debug("set up Test data: saved competitionRound ");
-
-
-    }
+     }
 
     @AfterEach
     public void tearDown() {
-
         log.debug("Delete All Test data");
         familyService.deleteByName(competitionFamily.getName());
     }
@@ -87,8 +82,6 @@ public class MatchdayServiceTest {
 
     @Test
     void whenValidMatchday_thenMatchdayShouldBeUpdated() {
-
-
         matchDayDto.setCompRoundId(savedCompRound.getId());
         matchDayDto.setCompRoundName(savedCompRound.getName());
         Spieltag savedMatchday = spieltagService.save(matchDayDto);

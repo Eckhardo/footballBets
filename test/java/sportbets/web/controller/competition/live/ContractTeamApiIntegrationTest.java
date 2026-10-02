@@ -29,7 +29,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ContractTeamApiIntegrationTest {
     private static final Logger log = LoggerFactory.getLogger(ContractTeamApiIntegrationTest.class);
-     final TeamDto teamDto = TestConstants.createValidTeamDto();
+    final TeamDto teamDto = TestConstants.createValidTeamDto();
     final TeamDto teamDto1 = TestConstants.createValidTeamDto2();
     final TeamDto FRANCE = new TeamDto(null, "TestCountry", "TEST", false);
     @Autowired
@@ -68,34 +68,11 @@ public class ContractTeamApiIntegrationTest {
     public void cleanup() {
         // Clean up all entities created during tests
         log.debug("cleanup");
-        Team team = teamRepository.findByName(teamDto.getName()).orElseThrow(() -> new EntityNotFoundException(teamDto.getName()));
-        Long id = team.getId();
-        log.debug("delete team with id::{}", id);
-        webClient.delete()
-                .uri("/teams/" + id)
-                .exchange()
-                .expectStatus()
-                .isNoContent();
-
-
-        Team team2 = teamRepository.findByName(teamDto1.getName()).orElseThrow(() -> new EntityNotFoundException(teamDto1.getName()));
-        Long id2 = team2.getId();
-        log.debug("delete team with id::{}", id2);
-        webClient.delete()
-                .uri("/teams/" + id2)
-                .exchange()
-                .expectStatus()
-                .isNoContent();
-
-        Team team3 = teamRepository.findByName(FRANCE.getName()).orElseThrow(() -> new EntityNotFoundException(FRANCE.getName()));
-        Long id3 = team3.getId();
-        log.debug("delete team with id::{}", id3);
-        webClient.delete()
-                .uri("/teams/" + id3)
-                .exchange()
-                .expectStatus()
-                .isNoContent();
+        deleteTeam(teamDto);
+        deleteTeam(teamDto1);
+        deleteTeam(FRANCE);
     }
+
 
     @Test
     @Order(1)
@@ -195,5 +172,16 @@ public class ContractTeamApiIntegrationTest {
                     // Perform custom assertions with AssertJ or JUnit
                     assertThat(items).extracting(TeamDto::isHasClub).contains(false);
                 });
+    }
+
+    private void deleteTeam(TeamDto teamDto) {
+        Team team = teamRepository.findByName(teamDto.getName()).orElseThrow(() -> new EntityNotFoundException(teamDto.getName()));
+        Long id = team.getId();
+        log.debug("delete team with id::{}", id);
+        webClient.delete()
+                .uri("/teams/" + id)
+                .exchange()
+                .expectStatus()
+                .isNoContent();
     }
 }

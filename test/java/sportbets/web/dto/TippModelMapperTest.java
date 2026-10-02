@@ -3,7 +3,6 @@ package sportbets.web.dto;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sportbets.persistence.entity.community.Community;
@@ -16,8 +15,6 @@ import sportbets.web.dto.tipps.TippDto;
 import sportbets.web.dto.tipps.TippModusPointDto;
 import sportbets.web.dto.tipps.TippModusResultDto;
 import sportbets.web.dto.tipps.TippModusTotoDto;
-
-import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -37,8 +34,6 @@ public class TippModelMapperTest {
         log.info("\n convert tippmodus toto");
 
         final ModelMapper myMapper = new MapperUtilTipps().modelMapperForTotoTipp();
-        Collection<TypeMap<?, ?>> typeMaps = myMapper.getTypeMaps();
-
 
         TippModusToto entity =  TestConstants.createValidTippModusToto();
         entity.setId(20L);
