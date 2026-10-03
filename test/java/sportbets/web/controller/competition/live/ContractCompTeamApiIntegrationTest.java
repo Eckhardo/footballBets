@@ -56,7 +56,34 @@ public class ContractCompTeamApiIntegrationTest {
     @Autowired
     TeamRepository teamRepository;
 
+    @AfterEach
+    public void cleanup() {
+        // Clean up all entities created during tests
+        log.debug("cleanup");
 
+        CompetitionFamily fam = competitionFamilyRepository.findByName(compFamilyDto.getName()).orElseThrow(() -> new EntityNotFoundException(compFamilyDto.getName()));
+        webClient.delete()
+                .uri("/families/" + fam.getId())
+                .exchange()
+                .expectStatus()
+                .isNoContent();
+        Team team = teamRepository.findByName(teamDto.getName()).orElseThrow(() -> new EntityNotFoundException(teamDto.getName()));
+        Long id = team.getId();
+        log.debug("delete team with id::{}", id);
+        webClient.delete()
+                .uri("/teams/" + id)
+                .exchange()
+                .expectStatus()
+                .isNoContent();
+        Team team2 = teamRepository.findByName(teamDto1.getName()).orElseThrow(() -> new EntityNotFoundException(teamDto1.getName()));
+        Long id2 = team2.getId();
+        log.debug("delete team with id::{}", id2);
+        webClient.delete()
+                .uri("/teams/" + id2)
+                .exchange()
+                .expectStatus()
+                .isNoContent();
+    }
 
     @BeforeEach
     public void setUp() {
@@ -67,9 +94,10 @@ public class ContractCompTeamApiIntegrationTest {
                 .bodyValue(compFamilyDto)
                 .exchange()
                 .expectStatus()
-                .isCreated();
+                .isCreated()
+        ;
 
-        CompetitionFamily fam = getCompetitionFamily();
+        CompetitionFamily fam = competitionFamilyRepository.findByName(compFamilyDto.getName()).orElseThrow(() -> new EntityNotFoundException(compFamilyDto.getName()));
         compDto.setFamilyId(fam.getId());
         // save new competition
         webClient.post()
@@ -80,39 +108,57 @@ public class ContractCompTeamApiIntegrationTest {
                 .expectStatus()
                 .isCreated();
         // save new team 1
-        saveNewTeam(teamDto);
-        saveNewTeam(teamDto1);
-        Competition comp = getComp(compDto.getName());
-
-        CompetitionTeamDto compTeamDto = getCompTeamDto(teamDto, comp);
-        CompetitionTeamDto compTeamDto2 = getCompTeamDto(teamDto1, comp);
-        log.debug("Post competition team 1{}", compTeamDto);
-        saveNewCompTeam(compTeamDto);
-        log.debug("post compTeam 2{}", compTeamDto2);
-        saveNewCompTeam(compTeamDto2);
-    }
-    @AfterEach
-    public void cleanup() {
-        // Clean up all entities created during tests
-        log.debug("cleanup");
-
-        CompetitionFamily fam = getCompetitionFamily();
-        webClient.delete()
-                .uri("/families/" + fam.getId())
+        webClient.post()
+                .uri("/teams")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(teamDto)
                 .exchange()
                 .expectStatus()
-                .isNoContent();
-        deleteTeam(teamDto);
-        deleteTeam(teamDto1);
-    }
+                .isCreated();
 
+        // save new team 2
+        webClient.post()
+                .uri("/teams")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(teamDto1)
+                .exchange()
+                .expectStatus()
+                .isCreated();
+        Competition comp = competitionRepository.findByName(compDto.getName()).orElseThrow(() -> new EntityNotFoundException(compDto.getName()));
+
+        Team entity = teamRepository.findByName(teamDto.getName()).orElseThrow(() -> new EntityNotFoundException("Team not found"));
+        teamDto.setId(entity.getId());
+        CompetitionTeamDto compTeamDto = new CompetitionTeamDto(null, comp.getId(), comp.getName(), teamDto.getId(), teamDto.getAcronym(), true);
+
+        Team entity2 = teamRepository.findByName(teamDto1.getName()).orElseThrow(() -> new EntityNotFoundException("Team not found"));
+        teamDto1.setId(entity2.getId());
+        CompetitionTeamDto compTeamDto2 = new CompetitionTeamDto(null, comp.getId(), comp.getName(), teamDto1.getId(), teamDto1.getAcronym(), true);
+        log.debug("Post competition team 1{}", compTeamDto);
+        // save newcompTeam dto 1
+        webClient.post()
+                .uri("/compTeam")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(compTeamDto)
+                .exchange()
+                .expectStatus()
+                .isCreated();
+        log.debug("post compTeam 2{}", compTeamDto2);
+        // save newcompTeam dto 2
+        webClient.post()
+                .uri("/compTeam")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(compTeamDto2)
+                .exchange()
+                .expectStatus()
+                .isCreated();
+    }
 
     @Test
     @Order(1)
     void givenPreloadedData_whenGetSingleTeam_thenResponseContainsFields() {
         log.debug("givenPreloadedData_whenGetSingleTeam_thenResponseContainsFields");
 
-        Team team = getTeam(teamDto, teamDto.getName());
+        Team team = teamRepository.findByName(teamDto.getName()).orElseThrow(() -> new EntityNotFoundException(teamDto.getName()));
         Long id = team.getId();
         webClient.get()
                 .uri("/teams/" + id)
@@ -126,31 +172,58 @@ public class ContractCompTeamApiIntegrationTest {
                 .isEqualTo(teamDto.getName())
                 .jsonPath("$.acronym")
                 .value(String.class, equalTo(team.getAcronym()));
+
     }
 
 
     @Test
     @Order(2)
     void whenCompTeamIsUpdated_ThenDetailsHaveChanged() {
-        Competition comp = getComp(compDto.getName());
-        Team team = getTeam(teamDto, "entity not found");
+        Competition comp = competitionRepository.findByName(compDto.getName()).orElseThrow(() -> new EntityNotFoundException(compDto.getName()));
+        Team team = teamRepository.findByName(teamDto.getName()).orElseThrow(() -> new EntityNotFoundException("entity not found"));
         List<CompetitionTeam> compTeams = compTeamRepo.getAllForComp(comp.getId());
         assertNotNull(compTeams);
         CompetitionTeam compTeam = compTeams.stream().findFirst().orElseThrow(() -> new EntityNotFoundException("entity not found"));
         assertNotNull(compTeam);
+        CompetitionTeamDto compTeamDto = new CompetitionTeamDto(compTeam.getId(), comp.getId(), comp.getName(), team.getId(), team.getAcronym(), true);
 
-        updateCompTeam(compTeam, comp, team);
-        Team team2 = getTeam(teamDto1, "entity not found");
-        updateCompTeam(compTeam, comp, team2);
+
+        webClient.put()
+                .uri("/compTeam/" + compTeam.getId())
+                .bodyValue(compTeamDto)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody()
+                .jsonPath("$.teamId").isEqualTo(team.getId())
+                .jsonPath("$.compId").isEqualTo(comp.getId())
+                .jsonPath("$.teamAcronym").isEqualTo(team.getAcronym())
+                .jsonPath("$.compName").isEqualTo(comp.getName());
+
+
+        Team team2 = teamRepository.findByName(teamDto1.getName()).orElseThrow(() -> new EntityNotFoundException("entity not found"));
+        CompetitionTeamDto compTeamDto2 = new CompetitionTeamDto(compTeam.getId(), comp.getId(), comp.getName(), team2.getId(), team2.getAcronym(), true);
+
+        webClient.put()
+                .uri("/compTeam/" + compTeam.getId())
+                .bodyValue(compTeamDto2)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody()
+                .jsonPath("$.teamId").isEqualTo(team2.getId())
+                .jsonPath("$.compId").isEqualTo(comp.getId())
+                .jsonPath("$.teamAcronym").isEqualTo(team2.getAcronym())
+                .jsonPath("$.compName").isEqualTo(comp.getName());
 
 
     }
 
-
     @Test
     @Order(2)
     void whenCompIdIsProvided_ThenAllCompTeamsAreRetrieved() {
-        Competition comp = getComp(compDto.getName());
+        Competition comp = competitionRepository.findByName(compDto.getName()).orElseThrow(() -> new EntityNotFoundException(compDto.getName()));
+
         webClient.get()
                 .uri("/compTeams/" + comp.getId())
                 .exchange()
@@ -165,7 +238,7 @@ public class ContractCompTeamApiIntegrationTest {
     @Order(3)
     void whenCompIdIsProvided_ThenRegisteredAndUnregisteredCompTeamsAreRetrieved() {
         String TEST_COMP = "1. Bundesliga Saison 2025";
-        Competition entity = getComp(TEST_COMP);
+        Competition entity = competitionRepository.findByName(TEST_COMP).orElseThrow(() -> new EntityNotFoundException(TEST_COMP));
         Long id = entity.getId();
 
         EntityExchangeResult<List<CompetitionTeamDto>> result = webClient.get()
@@ -184,72 +257,4 @@ public class ContractCompTeamApiIntegrationTest {
 
     }
 
-    @NonNull
-    private Team getTeam(TeamDto teamDto, String entity_not_found) {
-        return teamRepository.findByName(teamDto.getName()).orElseThrow(() -> new EntityNotFoundException(entity_not_found));
-    }
-
-    private void updateCompTeam(CompetitionTeam compTeam, Competition comp, Team team) {
-        CompetitionTeamDto compTeamDto = new CompetitionTeamDto(compTeam.getId(), comp.getId(), comp.getName(), team.getId(), team.getAcronym(), true);
-
-
-        webClient.put()
-                .uri("/compTeam/" + compTeam.getId())
-                .bodyValue(compTeamDto)
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .expectBody()
-                .jsonPath("$.teamId").isEqualTo(team.getId())
-                .jsonPath("$.compId").isEqualTo(comp.getId())
-                .jsonPath("$.teamAcronym").isEqualTo(team.getAcronym())
-                .jsonPath("$.compName").isEqualTo(comp.getName());
-    }
-    @NonNull
-    private CompetitionFamily getCompetitionFamily() {
-        return competitionFamilyRepository.findByName(compFamilyDto.getName()).orElseThrow(() -> new EntityNotFoundException(compFamilyDto.getName()));
-    }
-
-    private void deleteTeam(TeamDto teamDto) {
-        Team team = getTeam(teamDto, teamDto.getName());
-        Long id = team.getId();
-        log.debug("delete team with id::{}", id);
-        webClient.delete()
-                .uri("/teams/" + id)
-                .exchange()
-                .expectStatus()
-                .isNoContent();
-    }
-
-    @NonNull
-    private CompetitionTeamDto getCompTeamDto(TeamDto teamDto, Competition comp) {
-        Team entity = getTeam(teamDto, "Team not found");
-        teamDto.setId(entity.getId());
-        return new CompetitionTeamDto(null, comp.getId(), comp.getName(), teamDto.getId(), teamDto.getAcronym(), true);
-    }
-
-    @NonNull
-    private Competition getComp(String compDto) {
-        return competitionRepository.findByName(compDto).orElseThrow(() -> new EntityNotFoundException(compDto));
-    }
-
-    private void saveNewTeam(TeamDto teamDto) {
-        webClient.post()
-                .uri("/teams")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(teamDto)
-                .exchange()
-                .expectStatus()
-                .isCreated();
-    }
-
-    private void saveNewCompTeam(CompetitionTeamDto compTeamDto) {
-        webClient.post()
-                .uri("/compTeam")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(compTeamDto)
-                .exchange()
-                .expectStatus()
-                .isCreated();
-    }
 }
