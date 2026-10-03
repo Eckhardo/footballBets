@@ -31,5 +31,4 @@ public interface TipperService {
 
     Optional<Tipper> authenticate(String username, String password);
 
-    boolean isUserNamePermitted(String username);
 }

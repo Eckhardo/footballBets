@@ -147,10 +147,4 @@ class TipperServiceImpl implements TipperService {
     public Optional<Tipper> authenticate(String username, String password) {
         return tipperRepo.authenticateTipper(username, password);
     }
-
-    @Override
-    public boolean isUserNamePermitted(String username) {
-        Optional<Tipper> tipper = tipperRepo.checkUserName(username);
-        return tipper.isEmpty();
-    }
 }

@@ -99,16 +99,8 @@ public class Tipper {
         return isCommunityAdmin;
     }
 
-    public void setCommunityAdmin(boolean communityAdmin) {
-        isCommunityAdmin = communityAdmin;
-    }
-
     public boolean isCompetitionAdmin() {
         return isCompetitionAdmin;
-    }
-
-    public void setCompetitionAdmin(boolean competitionAdmin) {
-        isCompetitionAdmin = competitionAdmin;
     }
 
     public String getPasswort() {

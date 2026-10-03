@@ -47,9 +47,4 @@ public class TippEqualizerServiceImpl implements TippEqualizerService {
 
     }
 
-    @Override
-    @Transactional
-    public void equalizeTippsForCompetition(Long competitionId) {
-
-    }
 }
