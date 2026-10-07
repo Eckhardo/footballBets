@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import sportbets.persistence.entity.competition.Competition;
@@ -38,6 +39,11 @@ public class CompController {
     @GetMapping
     public List<CompetitionDto> findAll() {
         List<Competition> competitions = compService.getAll();
+        return convertToDtos(competitions);
+    }
+
+    @NonNull
+    private List<CompetitionDto> convertToDtos(List<Competition> competitions) {
         List<CompetitionDto> competitionDtos = new ArrayList<>();
         competitions.forEach(comp -> competitionDtos.add(myMapper.map(comp, CompetitionDto.class)));
         return competitionDtos;
@@ -67,9 +73,7 @@ public class CompController {
     public List<CompetitionDto> findAllCompsByFamId(@PathVariable Long familyId) {
         log.info("CompetitionDto:findAllCompsByFamId::{}", familyId);
         List<Competition> comps = compService.findByFamilyId(familyId);
-        List<CompetitionDto> compDtos = new ArrayList<>();
-        comps.forEach(comp -> compDtos.add(myMapper.map(comp, CompetitionDto.class)));
-        return compDtos;
+        return convertToDtos(comps);
     }
 
 

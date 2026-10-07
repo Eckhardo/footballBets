@@ -95,17 +95,21 @@ public class CommunityServiceImpl implements CommunityService {
             Community myCom = communityRepo.getCommunityById(id);
             CommunityRole commRole = roleRepo.findByCommunityName(myCom.getName()).orElseThrow(() -> new EntityNotFoundException("no community role present for community:" + id));
 
-            if (tipperRoleRepo.existsByRoleId(commRole.getId())) {
-                log.debug("delete tipper role");
-                TipperRole tipperRole = tipperRoleRepo.getByRoleId(commRole.getId());
-                tipperRole.getTipper().setDefaultCommunityId(null);
-
-                tipperRoleRepo.delete(tipperRole);
-
-            }
+            deleteTipperRoöe(commRole);
             communityRepo.deleteById(id);
         }
 
+    }
+
+    private void deleteTipperRoöe(CommunityRole commRole) {
+        if (tipperRoleRepo.existsByRoleId(commRole.getId())) {
+            log.debug("delete tipper role");
+            TipperRole tipperRole = tipperRoleRepo.getByRoleId(commRole.getId());
+            tipperRole.getTipper().setDefaultCommunityId(null);
+
+            tipperRoleRepo.delete(tipperRole);
+
+        }
     }
 
     @Override
@@ -117,14 +121,7 @@ public class CommunityServiceImpl implements CommunityService {
             Community myCom = communityRepo.getByName(name);
             CommunityRole commRole = roleRepo.findByCommunityName(myCom.getName()).orElseThrow(() -> new EntityNotFoundException("no community role present for community:" + name));
 
-            if (tipperRoleRepo.existsByRoleId(commRole.getId())) {
-                log.debug("delete tipper role");
-                TipperRole tipperRole = tipperRoleRepo.getByRoleId(commRole.getId());
-                tipperRole.getTipper().setDefaultCommunityId(null);
-
-                tipperRoleRepo.delete(tipperRole);
-
-            }
+            deleteTipperRoöe(commRole);
             communityRepo.deleteById(myCom.getId());
         }
         log.debug("Community to be delete:: {}", name);

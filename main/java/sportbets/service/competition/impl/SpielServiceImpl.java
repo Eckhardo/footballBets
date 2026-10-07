@@ -6,6 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -111,6 +112,15 @@ public class SpielServiceImpl implements SpielService {
         checkIfSpielIsAlreadyPresent(spielDto);
         final Competition comp = getCompetition(spielDto.getSpieltagId());
         final Spieltag spieltag = getSpieltag(spielDto.getSpieltagId());
+        Spiel model = calcSpielFormula(spielDto, spieltag, comp);
+
+        log.debug("finally save Spiel :: {}", model);
+        return spielRepo.save(model);
+
+    }
+
+    @NonNull
+    private Spiel calcSpielFormula(SpielDto spielDto, Spieltag spieltag, Competition comp) {
         Team heimTeam = retrieveTeam(spielDto.getHeimTeamId());
         Team gastTeam = retrieveTeam(spielDto.getGastTeamId());
         Spiel model = modelMapper.map(spielDto, Spiel.class);
@@ -131,10 +141,7 @@ public class SpielServiceImpl implements SpielService {
                 false, model.getGastTore(), model
                 .getHeimTore(), 0);
         calculateWinPointsAndTrends(gastFormel, model, comp);
-
-        log.debug("finally save Spiel :: {}", model);
-        return spielRepo.save(model);
-
+        return model;
     }
 
 
@@ -148,25 +155,7 @@ public class SpielServiceImpl implements SpielService {
         List<Spiel> toSaveList = new ArrayList<>();
         for (SpielDto spielDto : dtos) {
             checkIfSpielIsAlreadyPresent(spielDto);
-            Team heimTeam = retrieveTeam(spielDto.getHeimTeamId());
-            Team gastTeam = retrieveTeam(spielDto.getGastTeamId());
-            Spiel model = modelMapper.map(spielDto, Spiel.class);
-            log.debug("model Spiel :: {}", model);
-            model.setSpieltag(spieltag);
-            model.setHeimTeam(heimTeam);
-            model.setGastTeam(gastTeam);
-
-            SpielFormula heimFormel = new SpielFormula(model, heimTeam.getName(), heimTeam.getAcronym(),
-                    true, model.getHeimTore(), model
-                    .getGastTore(), 0);
-            calculateWinPointsAndTrends(heimFormel, model, comp);
-
-            //  spielFormulaRepo.save(heimFormel);
-
-            SpielFormula gastFormel = new SpielFormula(model, gastTeam.getName(), gastTeam.getAcronym(),
-                    false, model.getGastTore(), model
-                    .getHeimTore(), 0);
-            calculateWinPointsAndTrends(gastFormel, model, comp);
+            Spiel model = calcSpielFormula(spielDto, spieltag, comp);
 
             toSaveList.add(model);
         }
