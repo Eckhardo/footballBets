@@ -16,7 +16,7 @@ import java.util.Set;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class TippModus {
 
-     @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
     @Column(name = "id", nullable = false)
     private Long id;
@@ -151,10 +151,10 @@ public abstract class TippModus {
     public String toString() {
         return
                 "id=" + id +
-                ", name=" + name +
-                ", type=" + type +
-                ", deadline=" + deadline +
-                ", createdOn=" + createdOn +
-                ", community=" + community;
+                        ", name=" + name +
+                        ", type=" + type +
+                        ", deadline=" + deadline +
+                        ", createdOn=" + createdOn +
+                        ", community=" + community;
     }
 }

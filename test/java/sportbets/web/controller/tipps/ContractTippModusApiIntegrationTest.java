@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.http.ProblemDetail;
+import org.springframework.lang.NonNull;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import sportbets.FootballBetsApplication;
@@ -86,23 +87,7 @@ public class ContractTippModusApiIntegrationTest {
     @Order(1)
     void saveRetrieveAndUpdateTippModusToto_withValidInput_thenSuccess() {
         log.debug("saveRetrieveAndUpdateTippModusToto_withValidInput_thenSuccess");
-        Community community = communityRepository.findByName(communityDto.getName()).orElseThrow();
-        totoTest.setCommId(community.getId());
-
-        webClient.post()
-                .uri("/tippModus/toto")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(totoTest)
-                .exchange()
-                .expectStatus()
-                .isCreated()
-                .expectBody()
-                .jsonPath("$.id")
-                .exists()
-                .jsonPath("$.commName")
-                .isEqualTo(communityDto.getName())
-                .jsonPath("$.type")
-                .isEqualTo(TippModusType.TIPPMODUS_TOTO.getDisplayName());
+        Community community = persistCommunity();
 
         List<TippModusToto> totoList = tippModusRepository.findTippModusToto(community.getId());
         Long totoId = totoList.get(0).getId();
@@ -354,23 +339,7 @@ public class ContractTippModusApiIntegrationTest {
     @Order(5)
     void retrieveTippModusTotoListForCommunity_withValidInput_thenSuccess() {
 
-        Community community = communityRepository.findByName(communityDto.getName()).orElseThrow();
-        totoTest.setCommId(community.getId());
-
-        webClient.post()
-                .uri("/tippModus/toto")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(totoTest)
-                .exchange()
-                .expectStatus()
-                .isCreated()
-                .expectBody()
-                .jsonPath("$.id")
-                .exists()
-                .jsonPath("$.commName")
-                .isEqualTo(communityDto.getName())
-                .jsonPath("$.type")
-                .isEqualTo(TippModusType.TIPPMODUS_TOTO.getDisplayName());
+        Community community = persistCommunity();
 
         totoTest.setName("toot2");
 
@@ -398,10 +367,8 @@ public class ContractTippModusApiIntegrationTest {
 
     }
 
-    @Test
-    @Order(6)
-    void retrieveTippModusListForCommunity_withValidInput_thenSuccess() {
-
+    @NonNull
+    private Community persistCommunity () {
         Community community = communityRepository.findByName(communityDto.getName()).orElseThrow();
         totoTest.setCommId(community.getId());
 
@@ -419,6 +386,14 @@ public class ContractTippModusApiIntegrationTest {
                 .isEqualTo(communityDto.getName())
                 .jsonPath("$.type")
                 .isEqualTo(TippModusType.TIPPMODUS_TOTO.getDisplayName());
+        return community;
+    }
+
+    @Test
+    @Order(6)
+    void retrieveTippModusListForCommunity_withValidInput_thenSuccess() {
+
+        Community community = persistCommunity();
 
         pointTest.setCommId(community.getId());
         webClient.post()

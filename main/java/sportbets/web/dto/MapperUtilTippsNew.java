@@ -27,7 +27,7 @@ public class MapperUtilTippsNew {
     Converter<TippModusType, String> tippModusToString = new AbstractConverter<TippModusType, String>() {
         protected String convert(TippModusType source) {
             log.info("Converting TippModusType to String {}", source.getDisplayName());
-            return source == null ? null : source.getDisplayName();
+            return source.getDisplayName();
         }
     };
     Provider<TippModusDto> hierarchyProvider = request -> {

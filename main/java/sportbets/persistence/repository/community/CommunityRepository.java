@@ -14,7 +14,7 @@ public interface CommunityRepository extends JpaRepository<Community, Long> {
     // Checks for an exact case-sensitive match
     boolean existsByName(String name);
 
-    boolean existsById(@NotNull Long id);
+    boolean existsById(Long id);
 
     Community getCommunityById(Long id);
 

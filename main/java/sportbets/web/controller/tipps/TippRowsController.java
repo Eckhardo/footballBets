@@ -42,7 +42,7 @@ public class TippRowsController {
     @GetMapping("{spieltagId}/container/{commMembId}")
     public TippsContainerDto findTippContainerForTipper(@PathVariable Long spieltagId, @PathVariable Long commMembId) {
         log.debug(":findTippContainerForTipper r::{} {}", spieltagId, commMembId);
-        TippsContainerDto container = null;
+        TippsContainerDto container;
         List<TippRow> updateableRows = tippService.findTippRowsForTipper(spieltagId, commMembId);
         log.debug(":updateableRows:: {}",updateableRows.size());
         if (updateableRows.isEmpty()) {

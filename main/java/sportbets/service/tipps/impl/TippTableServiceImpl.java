@@ -103,8 +103,6 @@ public class TippTableServiceImpl implements TippTableService {
 
         }
         sumRows.sort(Comparator.comparing(SumWinPointsSummaryRow::getSumWinPoints).reversed());
-        winPointsNow = 0;
-        winPointsFirst = 0;
         winPointsLatest = 0;
         int position = 1;
         int samePosition = 0;

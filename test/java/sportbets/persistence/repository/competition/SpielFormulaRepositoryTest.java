@@ -48,8 +48,8 @@ public class SpielFormulaRepositoryTest {
         List<TeamPositionSummaryRow> rows = compTableRepository.findTableForLigaModus(searchCriteria.getCompId(), searchCriteria.getStartSpieltag(), searchCriteria.getEndSpieltag());
         assertNotNull(rows);
         assertThat(rows.size()).isGreaterThan(17);
-        rows.sort(Comparator.comparing(TeamPositionSummaryRow::getPoints).reversed());
-        rows.forEach(row -> System.out.println(row.getTeamName() + " " + row.getPoints()));
+        rows.sort(Comparator.comparing(TeamPositionSummaryRow::points).reversed());
+        rows.forEach(row -> System.out.println(row.teamName() + " " + row.points()));
 
     }
 
@@ -64,8 +64,8 @@ public class SpielFormulaRepositoryTest {
 
         assertNotNull(rows);
         assertThat(rows.size()).isGreaterThan(17);
-        rows.sort(Comparator.comparing(TeamPositionSummaryRow::getPoints).reversed());
-        rows.forEach(row -> System.out.println(row.getTeamName() + " " + row.getPoints()));
+        rows.sort(Comparator.comparing(TeamPositionSummaryRow::points).reversed());
+        rows.forEach(row -> System.out.println(row.teamName() + " " + row.points()));
 
     }
 
@@ -84,8 +84,8 @@ public class SpielFormulaRepositoryTest {
 
         assertNotNull(rows);
         assertThat(rows.size()).isGreaterThan(17);
-        rows.sort(Comparator.comparing(TeamPositionSummaryRow::getPoints).reversed());
-        rows.forEach(row -> System.out.println(row.getTeamName() + " " + row.getPoints()));
+        rows.sort(Comparator.comparing(TeamPositionSummaryRow::points).reversed());
+        rows.forEach(row -> System.out.println(row.teamName() + " " + row.points()));
     }
 
 
