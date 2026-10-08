@@ -76,13 +76,13 @@ public class TippConfigServiceImpl implements TippConfigService {
     @Override
     @Transactional
     public Optional<TippConfigDto> update(Long id, TippConfigRow dto) {
-        log.debug("update dto: {}", dto.getTippModusId());
+        log.debug("update dto: {}", dto.tippModusId());
         final TippConfig tippConfig = getTippConfig(id);
-        CompetitionMembership compMemb = compMembRepo.findById(dto.getCompMembId()).orElseThrow(() -> new EntityNotFoundException("CompMemb not found with id:" + dto.getCompMembId()));
-        Spieltag spieltag = spieltagRepo.findById(dto.getSpieltagId()).orElseThrow(() -> new EntityNotFoundException("Spieltag not found with id:" + dto.getSpieltagId()));
+        CompetitionMembership compMemb = compMembRepo.findById(dto.compMembId()).orElseThrow(() -> new EntityNotFoundException("CompMemb not found with id:" + dto.compMembId()));
+        Spieltag spieltag = spieltagRepo.findById(dto.spieltagId()).orElseThrow(() -> new EntityNotFoundException("Spieltag not found with id:" + dto.spieltagId()));
 
         log.debug("tippConfig dto: {}", tippConfig);
-        TippModus tippModus = tippModusRepo.findById(dto.getTippModusId()).orElseThrow(() -> new EntityNotFoundException("TippModus not found with id:" + dto.getTippModusId()));
+        TippModus tippModus = tippModusRepo.findById(dto.tippModusId()).orElseThrow(() -> new EntityNotFoundException("TippModus not found with id:" + dto.tippModusId()));
         log.debug("tippModus dto: {}", tippModus);
         tippConfig.setTippModus(tippModus);
         TippConfig saved = tippConfigRepo.save(tippConfig);

@@ -6,6 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -58,9 +59,19 @@ public class CompetitionMembershipServiceImpl implements CompetitionMembershipSe
             throw new EntityExistsException("CompetitionMembership  already exist with given id:" + membershipDto.getId());
         }
 
+        Result result = getCommAndComp(membershipDto);
+        return membershipRepository.save(new CompetitionMembership(result.community(), result.competition()));
+    }
+
+    @NonNull
+    private Result getCommAndComp(CompetitionMembershipDto membershipDto) {
         Community community = communityRepository.findByName(membershipDto.getCommName()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         Competition competition = compRepo.findById(membershipDto.getCompId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        return membershipRepository.save(new CompetitionMembership(community, competition));
+        Result result = new Result(community, competition);
+        return result;
+    }
+
+    private record Result(Community community, Competition competition) {
     }
 
 

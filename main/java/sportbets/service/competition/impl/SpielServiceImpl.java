@@ -71,7 +71,7 @@ public class SpielServiceImpl implements SpielService {
         log.debug("numberOfAllowedMatchdays :: {}", numberOfAllowedMatchdays);
         // assert  size of matchdays is equal to size allowed matchdays (aka all matchdays have to be present)
         if (matchdaysSize != numberOfAllowedMatchdays) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Number of allowed matchdays is not eqaul to number of existing matchdays ");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Number of allowed matchdays is not equal to number of existing matchdays ");
         }
 
         Team heimTeam = retrieveTeam(matchBatchRecord.heimTeamId());

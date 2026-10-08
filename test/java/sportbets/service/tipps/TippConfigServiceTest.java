@@ -191,10 +191,10 @@ public class TippConfigServiceTest {
         assertFalse(configRows.isEmpty());
         assertEquals(1, configRows.size());
         TippConfigRow row=configRows.stream().findFirst().orElseThrow();
-        assertEquals(savedTippConfig.getId(), row.getId());
-        assertEquals(savedTippModus.getId(), row.getTippModusId());
-       TippConfigRow updatedRow=new TippConfigRow(row.getId(),row.getCompetitionName(),row.getCompMembId(),row.getRoundName(),savedTippModus2.getId(),savedTippModus2.getName(),savedMatchday.getId(),savedMatchday.getSpieltagNumber());
-        Optional<TippConfigDto> updatedDto= tippConfigService.update(updatedRow.getId(),updatedRow);
+        assertEquals(savedTippConfig.getId(), row.id());
+        assertEquals(savedTippModus.getId(), row.tippModusId());
+       TippConfigRow updatedRow=new TippConfigRow(row.id(),row.competitionName(),row.compMembId(),row.roundName(),savedTippModus2.getId(),savedTippModus2.getName(),savedMatchday.getId(),savedMatchday.getSpieltagNumber());
+        Optional<TippConfigDto> updatedDto= tippConfigService.update(updatedRow.id(),updatedRow);
         assertTrue(updatedDto.isPresent());
         TippConfigDto updated=updatedDto.get();
         assertEquals(savedTippModus2.getId(), updated.getTippModusId());
@@ -202,8 +202,8 @@ public class TippConfigServiceTest {
         assertFalse(configRows2.isEmpty());
         assertEquals(1, configRows2.size());
         TippConfigRow row2=configRows2.stream().findFirst().orElseThrow();
-        assertEquals(savedTippModus2.getName(), row2.getTippModusName());
-        assertEquals(savedTippModus2.getId(), row2.getTippModusId());
+        assertEquals(savedTippModus2.getName(), row2.tippModusName());
+        assertEquals(savedTippModus2.getId(), row2.tippModusId());
 
     }
 }

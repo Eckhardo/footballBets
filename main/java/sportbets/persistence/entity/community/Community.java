@@ -139,7 +139,7 @@ public class Community {
         return "Community{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", description='" + description + +'\'' +
+                ", description='" + description + '\'' +
                 ", ROLE name =" + (communityRoles.isEmpty() ? "nothing" : communityRoles.stream().findFirst().get().getName()) +
                 '}';
     }

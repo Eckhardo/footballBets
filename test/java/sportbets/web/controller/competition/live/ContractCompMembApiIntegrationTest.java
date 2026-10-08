@@ -84,37 +84,9 @@ public class ContractCompMembApiIntegrationTest {
                 .isCreated()
         ;
         CompetitionFamily fam = competitionFamilyRepository.findByName(compFamilyDto.getName()).orElseThrow(() -> new EntityNotFoundException(compFamilyDto.getName()));
-        compDto.setFamilyId(fam.getId());
-        compDto.setFamilyName(compFamilyDto.getName());
+        persistComp(compDto, fam);
 
-        webClient.post()
-                .uri("/competitions")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(compDto)
-                .exchange()
-                .expectStatus()
-                .isCreated()
-                .expectBody()
-                .jsonPath("$.id")
-                .exists()
-                .jsonPath("$.name")
-                .isEqualTo(compDto.getName());
-
-        compDto2.setFamilyId(fam.getId());
-        compDto2.setFamilyName(compFamilyDto.getName());
-
-        webClient.post()
-                .uri("/competitions")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(compDto2)
-                .exchange()
-                .expectStatus()
-                .isCreated()
-                .expectBody()
-                .jsonPath("$.id")
-                .exists()
-                .jsonPath("$.name")
-                .isEqualTo(compDto2.getName());
+        persistComp(compDto2, fam);
 
         webClient.post()
                 .uri("/communities")
@@ -130,6 +102,24 @@ public class ContractCompMembApiIntegrationTest {
                 .isEqualTo(communityDto.getName());
 
 
+    }
+
+    private void persistComp(CompetitionDto compDto, CompetitionFamily fam) {
+        compDto.setFamilyId(fam.getId());
+        compDto.setFamilyName(compFamilyDto.getName());
+
+        webClient.post()
+                .uri("/competitions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(compDto)
+                .exchange()
+                .expectStatus()
+                .isCreated()
+                .expectBody()
+                .jsonPath("$.id")
+                .exists()
+                .jsonPath("$.name")
+                .isEqualTo(compDto.getName());
     }
 
     @Test

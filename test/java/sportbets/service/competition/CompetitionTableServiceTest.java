@@ -62,8 +62,8 @@ public class CompetitionTableServiceTest {
 
         List<TeamPositionSummaryRow> rows = compTableService.findTableForLigaModus(searchCriteria);
         assertThat(18).isEqualTo(rows.size());
-        rows.sort(Comparator.comparing(TeamPositionSummaryRow::getPoints).reversed());
-        rows.forEach(row -> System.out.println(row.getTeamName() + " " + row.getPoints()));
+        rows.sort(Comparator.comparing(TeamPositionSummaryRow::points).reversed());
+        rows.forEach(row -> System.out.println(row.teamName() + " " + row.points()));
     }
 
     @Test

@@ -98,18 +98,6 @@ public class TippRow implements Serializable {
         return spielId;
     }
 
-    public void setSpielId(Long spielId) {
-        this.spielId = spielId;
-    }
-
-    public LocalDateTime getAnpfiffdate() {
-        return anpfiffdate;
-    }
-
-    public void setAnpfiffdate(LocalDateTime anpfiffdate) {
-        this.anpfiffdate = anpfiffdate;
-    }
-
     public Integer getHeimTore() {
         return heimTore;
     }

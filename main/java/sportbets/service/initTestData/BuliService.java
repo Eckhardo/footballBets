@@ -80,7 +80,7 @@ public class BuliService {
     private CommunityMembershipRepository commMembRepo;
     Competition savedComp = null;
     CompetitionRound savedHinrunde = null;
-    CompetitionRound savedRückrunde = null;
+    CompetitionRound savedRueckrunde = null;
     Community savedCommunity = null;
 
     @Transactional
@@ -89,7 +89,7 @@ public class BuliService {
         savedComp = compRepo.save(new Competition(BUNDESLIGA_NAME_2025, "1. Deutsche Fussball Bundesliga Saison 2025/26", 3, 1, fam));
 
         savedHinrunde = compRoundRepo.save(new CompetitionRound(1, "Hinrunde", savedComp, false, 18, 17, 1));
-        savedRückrunde = compRoundRepo.save(new CompetitionRound(2, "Rueckrunde", savedComp, false, 18, 17, 18));
+        savedRueckrunde = compRoundRepo.save(new CompetitionRound(2, "Rueckrunde", savedComp, false, 18, 17, 18));
 
 
         Community community = new Community("Bulitipper", "Die Dinos des Tippens");
@@ -138,7 +138,7 @@ public class BuliService {
         }
 
         List<Spieltag> spieltagHin = spieltagRepo.saveAll(SpieltagConstants.getSpieltageHinrunde(savedHinrunde, hinDates));
-        List<Spieltag> spieltagRueck = spieltagRepo.saveAll(SpieltagConstants.getSpieltageRueckrunde(savedRückrunde, rueckDates));
+        List<Spieltag> spieltagRueck = spieltagRepo.saveAll(SpieltagConstants.getSpieltageRueckrunde(savedRueckrunde, rueckDates));
 
         TippModus buliModus = tippModusRepo.save(new TippModusPoint("name1", TippModusType.TIPPMODUS_POINT, 2, community, 4));
         TippModus buliModus2 =  tippModusRepo.save(new TippModusPoint("name2", TippModusType.TIPPMODUS_POINT, 2, community, 6));
@@ -151,7 +151,7 @@ public class BuliService {
             log.debug("save matchdays hin");
         }
         for (Spieltag sptagRueck : spieltagRueck) {
-            Spieltag mySp = spieltagRepo.findByNumberWithRoundId(sptagRueck.getSpieltagNumber(), savedRückrunde.getId()).orElseThrow();
+            Spieltag mySp = spieltagRepo.findByNumberWithRoundId(sptagRueck.getSpieltagNumber(), savedRueckrunde.getId()).orElseThrow();
            TippConfig tippConfig = new TippConfig(mySp, compMemb, buliModus2);
             tippConfigRepository.save(tippConfig);
             log.debug("save matchdays rueck");
